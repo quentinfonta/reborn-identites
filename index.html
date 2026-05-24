@@ -6,203 +6,164 @@
   <title>Identités REBORN</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
   <style>
     :root {
-      --bg: #f9f8f6;
-      --surface: #ffffff;
-      --surface2: #f3f2ef;
-      --border: rgba(0,0,0,0.10);
-      --border-md: rgba(0,0,0,0.18);
-      --text: #1a1a18;
-      --text-muted: #6b6b67;
-      --text-faint: #9e9e98;
-      --green-bg: #eaf3de;
-      --green-border: #639922;
-      --green-text: #3b6d11;
-      --danger-bg: #fcebeb;
-      --danger-text: #a32d2d;
-      --radius: 10px;
-      --radius-lg: 14px;
+      --bg: #0a0a0a; --surface: #111111; --surface2: #1a1a1a; --surface3: #222222;
+      --border: rgba(255,255,255,0.07); --border-md: rgba(255,255,255,0.13); --border-strong: rgba(255,255,255,0.22);
+      --text: #f0ede8; --text-muted: #888880; --text-faint: #555550;
+      --green-bg: rgba(99,153,34,0.12); --green-border: rgba(99,153,34,0.5); --green-text: #8dc94a;
+      --gold-bg: rgba(186,117,23,0.12); --gold-border: rgba(186,117,23,0.45); --gold-text: #d4933a;
+      --red-bg: rgba(163,45,45,0.12); --red-border: rgba(163,45,45,0.4); --red-text: #e06060;
+      --accent: #c8b89a; --radius: 10px; --radius-lg: 14px;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      padding: 2rem 1.5rem 4rem;
-    }
-    .container { max-width: 860px; margin: 0 auto; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 2rem 1.5rem 5rem; }
+    .container { max-width: 920px; margin: 0 auto; }
 
-    /* Header */
-    .header {
-      display: flex; align-items: flex-start; justify-content: space-between;
-      flex-wrap: wrap; gap: 12px; margin-bottom: 1.75rem;
-    }
-    .header-left .title { font-size: 26px; font-weight: 600; letter-spacing: -0.3px; }
-    .header-left .subtitle { font-size: 14px; color: var(--text-muted); margin-top: 4px; }
-    .admin-toggle {
-      display: flex; align-items: center; gap: 6px;
-      padding: 8px 16px; border-radius: var(--radius);
-      border: 1px solid var(--border-md); background: var(--surface);
-      color: var(--text-muted); font-size: 13px; font-family: inherit;
-      cursor: pointer; transition: all 0.15s;
-    }
-    .admin-toggle:hover { background: var(--surface2); color: var(--text); }
+    .header { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+    .logo { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
+    .title { font-size: 26px; font-weight: 600; letter-spacing: -0.3px; }
+    .subtitle { font-size: 14px; color: var(--text-muted); margin-top: 5px; font-style: italic; }
+    .header-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .header-btn { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: var(--radius); border: 1px solid var(--border-md); background: var(--surface2); color: var(--text-muted); font-size: 13px; font-family: inherit; cursor: pointer; transition: all 0.15s; }
+    .header-btn:hover { border-color: var(--border-strong); color: var(--text); }
+    .header-btn.progress-btn { border-color: var(--gold-border); color: var(--gold-text); background: var(--gold-bg); }
+    .header-btn.progress-btn:hover { opacity: 0.8; }
 
-    /* Admin panel */
-    .admin-panel {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius-lg); padding: 1.25rem 1.5rem;
-      margin-bottom: 1.5rem; display: none;
-    }
+    .admin-panel { background: var(--surface); border: 1px solid var(--border-md); border-radius: var(--radius-lg); padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; display: none; }
     .admin-panel.open { display: block; }
-    .admin-title { font-size: 14px; font-weight: 500; margin-bottom: 0.875rem; }
+    .panel-label { font-size: 11px; font-weight: 500; color: var(--text-faint); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 1rem; }
     .admin-form { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; }
-    .field { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 150px; }
-    .field label { font-size: 12px; color: var(--text-muted); }
-    .field input, .field select {
-      padding: 8px 12px; border: 1px solid var(--border-md);
-      border-radius: var(--radius); background: var(--bg);
-      color: var(--text); font-size: 14px; font-family: inherit;
-      transition: border-color 0.15s;
-    }
-    .field input:focus, .field select:focus { outline: none; border-color: #888; }
-    .add-btn {
-      display: flex; align-items: center; gap: 6px;
-      padding: 9px 18px; border-radius: var(--radius);
-      border: 1px solid var(--green-border); background: var(--green-bg);
-      color: var(--green-text); font-size: 13px; font-weight: 500;
-      font-family: inherit; cursor: pointer; white-space: nowrap; transition: opacity 0.15s;
-    }
+    .field { display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 150px; }
+    .field label { font-size: 11px; color: var(--text-faint); text-transform: uppercase; letter-spacing: 1px; }
+    .field input, .field select { padding: 8px 12px; border: 1px solid var(--border-md); border-radius: var(--radius); background: var(--surface2); color: var(--text); font-size: 14px; font-family: inherit; transition: border-color 0.15s; }
+    .field input:focus, .field select:focus { outline: none; border-color: var(--border-strong); }
+    .field select option { background: #1a1a1a; }
+    .add-btn { display: flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: var(--radius); border: 1px solid var(--green-border); background: var(--green-bg); color: var(--green-text); font-size: 13px; font-weight: 500; font-family: inherit; cursor: pointer; white-space: nowrap; }
     .add-btn:hover { opacity: 0.8; }
-    .new-cat-wrap { display: none; flex: 1; min-width: 150px; flex-direction: column; gap: 4px; }
+    .new-cat-wrap { display: none; flex: 1; min-width: 150px; flex-direction: column; gap: 5px; }
     .new-cat-wrap.show { display: flex; }
-    .admin-list {
-      margin-top: 1rem; border-top: 1px solid var(--border);
-      padding-top: 0.75rem; display: flex; flex-direction: column; gap: 3px;
-      max-height: 200px; overflow-y: auto;
-    }
-    .admin-item {
-      display: flex; align-items: center; gap: 8px;
-      padding: 6px 8px; border-radius: var(--radius);
-      font-size: 13px; transition: background 0.1s;
-    }
+    .admin-list { margin-top: 1rem; border-top: 1px solid var(--border); padding-top: 0.75rem; display: flex; flex-direction: column; gap: 2px; max-height: 180px; overflow-y: auto; }
+    .admin-item { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 7px; font-size: 13px; transition: background 0.1s; }
     .admin-item:hover { background: var(--surface2); }
-    .admin-item-text { flex: 1; }
-    .admin-item-cat { font-size: 11px; color: var(--text-muted); }
-    .del-btn {
-      background: none; border: none; cursor: pointer;
-      color: var(--text-faint); padding: 3px 5px; border-radius: 6px;
-      display: flex; align-items: center; transition: all 0.15s;
-    }
-    .del-btn:hover { color: var(--danger-text); background: var(--danger-bg); }
+    .admin-item-text { flex: 1; color: var(--text); }
+    .admin-item-cat { font-size: 11px; color: var(--text-faint); }
+    .del-btn { background: none; border: none; cursor: pointer; color: var(--text-faint); padding: 3px 5px; border-radius: 6px; display: flex; align-items: center; transition: all 0.15s; }
+    .del-btn:hover { color: var(--red-text); background: var(--red-bg); }
 
-    /* Search & filters */
-    .controls { margin-bottom: 0.75rem; }
+    .controls { margin-bottom: 0.875rem; }
     .search-wrap { position: relative; }
-    .search-wrap i {
-      position: absolute; left: 11px; top: 50%;
-      transform: translateY(-50%); font-size: 16px;
-      color: var(--text-muted); pointer-events: none;
-    }
-    #search {
-      width: 100%; padding: 9px 14px 9px 36px;
-      border: 1px solid var(--border-md); border-radius: var(--radius);
-      background: var(--surface); color: var(--text);
-      font-size: 14px; font-family: inherit; transition: border-color 0.15s;
-    }
-    #search:focus { outline: none; border-color: #888; }
+    .search-wrap i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 16px; color: var(--text-faint); pointer-events: none; }
+    #search { width: 100%; padding: 10px 14px 10px 38px; border: 1px solid var(--border-md); border-radius: var(--radius); background: var(--surface); color: var(--text); font-size: 14px; font-family: inherit; }
+    #search::placeholder { color: var(--text-faint); }
+    #search:focus { outline: none; border-color: var(--border-strong); }
     .filters { display: flex; flex-wrap: wrap; gap: 6px; margin: 0.875rem 0 1rem; }
-    .filter-btn {
-      padding: 5px 14px; border-radius: 20px;
-      border: 1px solid var(--border-md); background: var(--surface);
-      color: var(--text-muted); font-size: 13px; font-family: inherit;
-      cursor: pointer; transition: all 0.15s;
-    }
-    .filter-btn:hover { color: var(--text); border-color: #888; }
-    .filter-btn.active {
-      background: var(--text); color: var(--bg);
-      border-color: var(--text); font-weight: 500;
-    }
-    .stats { font-size: 13px; color: var(--text-muted); margin-bottom: 0.875rem; }
-    .stats span { font-weight: 500; color: var(--text); }
+    .filter-btn { padding: 5px 13px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface); color: var(--text-muted); font-size: 12px; font-family: inherit; cursor: pointer; transition: all 0.15s; }
+    .filter-btn:hover { color: var(--text); border-color: var(--border-md); }
+    .filter-btn.active { background: var(--accent); color: #0a0a0a; border-color: var(--accent); font-weight: 600; }
+    .stats { font-size: 13px; color: var(--text-faint); margin-bottom: 0.875rem; }
+    .stats span { font-weight: 500; color: var(--text-muted); }
 
-    /* Grid */
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
-    .card {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius-lg); padding: 0.875rem 1rem;
-      cursor: pointer; transition: all 0.15s; user-select: none;
-    }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 7px; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 0.875rem 1rem; cursor: pointer; transition: all 0.15s; user-select: none; }
     .card:hover { border-color: var(--border-md); background: var(--surface2); }
     .card.checked { border-color: var(--green-border); background: var(--green-bg); }
     .card.checked .identity { color: var(--green-text); }
+    .card.worked { border-color: var(--gold-border); background: var(--gold-bg); cursor: default; }
+    .card.worked .identity { color: var(--gold-text); }
+    .card.worked:hover { border-color: var(--gold-border); background: var(--gold-bg); }
+    .card.worked .cat-badge { border-color: var(--gold-border); color: var(--gold-text); }
     .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
-    .identity { font-size: 14px; font-weight: 500; line-height: 1.4; flex: 1; }
-    .check-icon {
-      width: 20px; height: 20px; border-radius: 50%;
-      border: 1.5px solid var(--border-md); display: flex;
-      align-items: center; justify-content: center;
-      flex-shrink: 0; margin-top: 1px; transition: all 0.15s;
-    }
+    .identity { font-size: 13px; font-weight: 500; line-height: 1.45; flex: 1; color: var(--text); }
+    .check-icon { width: 18px; height: 18px; border-radius: 50%; border: 1px solid var(--border-md); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; transition: all 0.15s; }
     .card.checked .check-icon { background: var(--green-bg); border-color: var(--green-border); }
-    .check-icon i { font-size: 12px; color: var(--green-text); opacity: 0; transition: opacity 0.15s; }
-    .card.checked .check-icon i { opacity: 1; }
-    .cat-badge {
-      display: inline-block; margin-top: 8px; font-size: 11px;
-      padding: 2px 8px; border-radius: 10px;
-      border: 1px solid var(--border); color: var(--text-muted);
-    }
+    .card.worked .check-icon { background: var(--gold-bg); border-color: var(--gold-border); }
+    .check-icon i { font-size: 11px; opacity: 0; transition: opacity 0.15s; }
+    .card.checked .check-icon i { opacity: 1; color: var(--green-text); }
+    .card.worked .check-icon i { opacity: 1; color: var(--gold-text); }
+    .cat-badge { display: inline-block; margin-top: 7px; font-size: 10px; padding: 2px 7px; border-radius: 8px; border: 1px solid var(--border); color: var(--text-faint); }
     .card.checked .cat-badge { border-color: var(--green-border); color: var(--green-text); }
-    .no-results { padding: 2.5rem; text-align: center; color: var(--text-muted); font-size: 14px; grid-column: 1/-1; }
+    .no-results { padding: 3rem; text-align: center; color: var(--text-faint); font-size: 14px; grid-column: 1/-1; }
 
-    /* Summary */
-    .summary-bar {
-      margin-top: 1.75rem; padding: 1.25rem 1.5rem;
-      background: var(--surface); border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-    }
-    .summary-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.875rem; }
-    .summary-title { font-size: 14px; font-weight: 500; }
-    .summary-count { font-size: 13px; color: var(--text-muted); }
-    .selected-list { display: flex; flex-wrap: wrap; gap: 6px; }
-    .sel-tag {
-      font-size: 12px; padding: 4px 11px; border-radius: 10px;
-      background: var(--green-bg); color: var(--green-text);
-      border: 1px solid var(--green-border);
-    }
-    .empty-sel { font-size: 13px; color: var(--text-faint); font-style: italic; }
+    .session-bar { margin-top: 2rem; background: var(--surface); border-radius: var(--radius-lg); border: 1px solid var(--border-md); overflow: hidden; }
+    .session-header { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 8px; }
+    .session-title { font-size: 13px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+    .session-count { font-size: 13px; color: var(--text-faint); }
+    .session-body { padding: 1rem 1.5rem; }
+    .current-sel { display: flex; flex-wrap: wrap; gap: 6px; min-height: 32px; margin-bottom: 1rem; }
+    .sel-tag { font-size: 12px; padding: 4px 11px; border-radius: 8px; background: var(--green-bg); color: var(--green-text); border: 1px solid var(--green-border); }
+    .empty-sel { font-size: 13px; color: var(--text-faint); font-style: italic; align-self: center; }
+    .validate-btn { display: flex; align-items: center; gap: 8px; width: 100%; padding: 11px 18px; border-radius: var(--radius); border: 1px solid var(--gold-border); background: var(--gold-bg); color: var(--gold-text); font-size: 14px; font-weight: 500; font-family: inherit; cursor: pointer; justify-content: center; transition: opacity 0.15s; }
+    .validate-btn:hover { opacity: 0.8; }
+    .validate-btn:disabled { opacity: 0.3; cursor: default; }
 
-    /* Export */
-    .export-wrap { margin-top: 1rem; text-align: right; }
-    .export-btn {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 7px 14px; border-radius: var(--radius);
-      border: 1px solid var(--border-md); background: var(--surface);
-      color: var(--text-muted); font-size: 13px; font-family: inherit;
-      cursor: pointer; transition: all 0.15s;
-    }
-    .export-btn:hover { background: var(--surface2); color: var(--text); }
+    .worked-section { margin-top: 1.5rem; background: var(--surface); border-radius: var(--radius-lg); border: 1px solid var(--border); overflow: hidden; }
+    .worked-header { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 8px; }
+    .worked-title { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; color: var(--gold-text); text-transform: uppercase; letter-spacing: 1px; }
+    .worked-count-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; background: var(--gold-bg); border: 1px solid var(--gold-border); color: var(--gold-text); }
+    .clear-worked-btn { display: flex; align-items: center; gap: 5px; padding: 5px 12px; border-radius: var(--radius); border: 1px solid var(--red-border); background: var(--red-bg); color: var(--red-text); font-size: 12px; font-family: inherit; cursor: pointer; transition: opacity 0.15s; }
+    .clear-worked-btn:hover { opacity: 0.8; }
+    .worked-body { padding: 1rem 1.5rem; }
+    .worked-empty { font-size: 13px; color: var(--text-faint); font-style: italic; }
+    .worked-session { margin-bottom: 1.25rem; }
+    .worked-session:last-child { margin-bottom: 0; }
+    .worked-date { font-size: 11px; color: var(--text-faint); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+    .worked-date::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .worked-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .worked-tag { font-size: 12px; padding: 4px 11px; border-radius: 8px; background: var(--gold-bg); color: var(--gold-text); border: 1px solid var(--gold-border); display: flex; align-items: center; gap: 6px; }
+    .remove-worked { background: none; border: none; cursor: pointer; color: var(--gold-text); opacity: 0.4; font-size: 12px; padding: 0; display: flex; align-items: center; transition: opacity 0.15s; }
+    .remove-worked:hover { opacity: 1; }
 
-    /* Toast */
-    .toast {
-      position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%);
-      background: var(--green-bg); color: var(--green-text);
-      border: 1px solid var(--green-border); border-radius: var(--radius);
-      padding: 9px 18px; font-size: 13px; font-weight: 500;
-      opacity: 0; transition: opacity 0.2s; pointer-events: none; z-index: 99;
-      white-space: nowrap;
-    }
+    /* PROGRESSION OVERLAY */
+    .progress-overlay { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 200; overflow-y: auto; padding: 2rem 1.5rem 4rem; }
+    .progress-overlay.show { display: block; }
+    .progress-inner { max-width: 780px; margin: 0 auto; }
+    .progress-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+    .progress-heading { font-size: 22px; font-weight: 600; }
+    .progress-sub { font-size: 14px; color: var(--text-muted); margin-top: 4px; }
+    .close-btn { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: var(--radius); border: 1px solid var(--border-md); background: var(--surface2); color: var(--text-muted); font-size: 13px; font-family: inherit; cursor: pointer; transition: all 0.15s; }
+    .close-btn:hover { border-color: var(--border-strong); color: var(--text); }
+
+    .stat-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 2rem; }
+    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1rem 1.25rem; }
+    .stat-label { font-size: 11px; color: var(--text-faint); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+    .stat-value { font-size: 28px; font-weight: 600; color: var(--text); }
+    .stat-unit { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+
+    .chart-section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 1.5rem; }
+    .chart-title { font-size: 13px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1.5rem; }
+    .bar-chart { display: flex; flex-direction: column; gap: 10px; }
+    .bar-row { display: flex; align-items: center; gap: 12px; }
+    .bar-label { font-size: 12px; color: var(--text-muted); width: 110px; flex-shrink: 0; text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .bar-track { flex: 1; height: 28px; background: var(--surface2); border-radius: 6px; overflow: hidden; position: relative; }
+    .bar-fill { height: 100%; border-radius: 6px; background: linear-gradient(90deg, rgba(186,117,23,0.6), rgba(212,147,58,0.9)); transition: width 0.6s ease; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; min-width: 28px; }
+    .bar-count { font-size: 12px; font-weight: 600; color: var(--gold-text); }
+    .bar-empty { font-size: 12px; color: var(--text-faint); font-style: italic; }
+
+    .cat-chart { display: flex; flex-direction: column; gap: 8px; }
+    .cat-row { display: flex; align-items: center; gap: 12px; }
+    .cat-label { font-size: 12px; color: var(--text-muted); width: 110px; flex-shrink: 0; text-align: right; }
+    .cat-track { flex: 1; height: 22px; background: var(--surface2); border-radius: 5px; overflow: hidden; }
+    .cat-fill { height: 100%; border-radius: 5px; background: rgba(200,184,154,0.25); border-right: 2px solid var(--accent); display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; min-width: 24px; }
+    .cat-count { font-size: 11px; font-weight: 600; color: var(--accent); }
+    .no-data { font-size: 14px; color: var(--text-faint); font-style: italic; padding: 1rem 0; }
+
+    /* CONFIRM MODAL */
+    .confirm-remove { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 300; align-items: center; justify-content: center; }
+    .confirm-remove.show { display: flex; }
+    .confirm-box { background: var(--surface2); border: 1px solid var(--border-strong); border-radius: var(--radius-lg); padding: 1.5rem; max-width: 360px; width: 90%; }
+    .confirm-title { font-size: 16px; font-weight: 500; margin-bottom: 0.5rem; }
+    .confirm-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 1.5rem; line-height: 1.5; }
+    .confirm-actions { display: flex; gap: 8px; }
+    .confirm-yes { flex: 1; padding: 9px; border-radius: var(--radius); border: 1px solid var(--red-border); background: var(--red-bg); color: var(--red-text); font-size: 13px; font-family: inherit; cursor: pointer; font-weight: 500; }
+    .confirm-no { flex: 1; padding: 9px; border-radius: var(--radius); border: 1px solid var(--border-md); background: var(--surface); color: var(--text-muted); font-size: 13px; font-family: inherit; cursor: pointer; }
+
+    .toast { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%); background: var(--surface3); color: var(--text); border: 1px solid var(--border-strong); border-radius: var(--radius); padding: 9px 18px; font-size: 13px; font-weight: 500; opacity: 0; transition: opacity 0.2s; pointer-events: none; z-index: 400; white-space: nowrap; }
     .toast.show { opacity: 1; }
 
-    @media (max-width: 500px) {
-      body { padding: 1.25rem 1rem 3rem; }
-      .header { flex-direction: column; }
-      .grid { grid-template-columns: 1fr 1fr; }
-    }
+    @media (max-width: 500px) { body { padding: 1.25rem 1rem 3rem; } .grid { grid-template-columns: 1fr 1fr; } .bar-label, .cat-label { width: 80px; font-size: 11px; } }
   </style>
 </head>
 <body>
@@ -210,132 +171,132 @@
 
   <div class="header">
     <div class="header-left">
-      <div class="title">Identités REBORN</div>
+      <div class="logo">REBORN</div>
+      <div class="title">Dictionnaire des identités</div>
       <div class="subtitle">Coche les identités qui résonnent avec toi aujourd'hui</div>
     </div>
-    <button class="admin-toggle" id="admin-toggle" aria-expanded="false">
-      <i class="ti ti-settings" aria-hidden="true"></i> Gérer les identités
-    </button>
+    <div class="header-actions">
+      <button class="header-btn progress-btn" id="progress-btn"><i class="ti ti-chart-bar" aria-hidden="true"></i> Progression</button>
+      <button class="header-btn" id="admin-toggle" aria-expanded="false"><i class="ti ti-settings" aria-hidden="true"></i> Gérer</button>
+    </div>
   </div>
 
   <div class="admin-panel" id="admin-panel">
-    <div class="admin-title">Ajouter une identité</div>
+    <div class="panel-label">Ajouter une identité</div>
     <div class="admin-form">
-      <div class="field">
-        <label for="new-text">Identité</label>
-        <input type="text" id="new-text" placeholder="Je suis …" />
-      </div>
-      <div class="field">
-        <label for="cat-select">Catégorie</label>
-        <select id="cat-select"></select>
-      </div>
-      <div class="new-cat-wrap" id="new-cat-wrap">
-        <label for="new-cat">Nouvelle catégorie</label>
-        <input type="text" id="new-cat" placeholder="Nom…" />
-      </div>
-      <button class="add-btn" id="add-btn">
-        <i class="ti ti-plus" aria-hidden="true"></i> Ajouter
-      </button>
+      <div class="field"><label for="new-text">Identité</label><input type="text" id="new-text" placeholder="Je suis …" /></div>
+      <div class="field"><label for="cat-select">Catégorie</label><select id="cat-select"></select></div>
+      <div class="new-cat-wrap" id="new-cat-wrap"><label for="new-cat">Nouvelle catégorie</label><input type="text" id="new-cat" placeholder="Nom…" /></div>
+      <button class="add-btn" id="add-btn"><i class="ti ti-plus" aria-hidden="true"></i> Ajouter</button>
     </div>
     <div class="admin-list" id="admin-list"></div>
   </div>
 
-  <div class="controls">
-    <div class="search-wrap">
-      <i class="ti ti-search" aria-hidden="true"></i>
-      <input type="text" id="search" placeholder="Rechercher une identité…" />
-    </div>
-  </div>
-
+  <div class="controls"><div class="search-wrap"><i class="ti ti-search" aria-hidden="true"></i><input type="text" id="search" placeholder="Rechercher…" /></div></div>
   <div class="filters" id="filters"></div>
   <div class="stats" id="stats"></div>
   <div class="grid" id="grid"></div>
 
-  <div class="summary-bar">
-    <div class="summary-top">
-      <span class="summary-title">Identités sélectionnées</span>
-      <span class="summary-count" id="sel-count">0 / 0</span>
+  <div class="session-bar">
+    <div class="session-header">
+      <span class="session-title">Session en cours</span>
+      <span class="session-count" id="session-count">0 identité sélectionnée</span>
     </div>
-    <div class="selected-list" id="selected-list">
-      <span class="empty-sel">Aucune identité sélectionnée pour le moment</span>
-    </div>
-    <div class="export-wrap">
-      <button class="export-btn" id="export-btn">
-        <i class="ti ti-copy" aria-hidden="true"></i> Copier la sélection
-      </button>
+    <div class="session-body">
+      <div class="current-sel" id="current-sel"><span class="empty-sel">Aucune identité cochée</span></div>
+      <button class="validate-btn" id="validate-btn" disabled><i class="ti ti-check" aria-hidden="true"></i> Valider la session — marquer comme travaillées</button>
     </div>
   </div>
 
+  <div class="worked-section" id="worked-section" style="display:none">
+    <div class="worked-header">
+      <div class="worked-title"><i class="ti ti-award" aria-hidden="true"></i> Identités travaillées <span class="worked-count-badge" id="worked-count-badge">0</span></div>
+      <button class="clear-worked-btn" id="clear-worked-btn"><i class="ti ti-trash" aria-hidden="true"></i> Tout effacer</button>
+    </div>
+    <div class="worked-body" id="worked-body"></div>
+  </div>
+
 </div>
+
+<!-- PROGRESSION OVERLAY -->
+<div class="progress-overlay" id="progress-overlay">
+  <div class="progress-inner">
+    <div class="progress-top">
+      <div>
+        <div class="progress-heading">Progression</div>
+        <div class="progress-sub">Historique des identités travaillées</div>
+      </div>
+      <button class="close-btn" id="close-progress"><i class="ti ti-x" aria-hidden="true"></i> Fermer</button>
+    </div>
+    <div class="stat-cards" id="stat-cards"></div>
+    <div class="chart-section">
+      <div class="chart-title">Identités travaillées par session</div>
+      <div class="bar-chart" id="bar-chart"></div>
+    </div>
+    <div class="chart-section">
+      <div class="chart-title">Répartition par catégorie</div>
+      <div class="cat-chart" id="cat-chart"></div>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div class="confirm-remove" id="confirm-modal">
+  <div class="confirm-box">
+    <div class="confirm-title" id="confirm-title">Retirer cette identité ?</div>
+    <div class="confirm-sub" id="confirm-sub">Cette identité sera retirée de la liste des travaillées.</div>
+    <div class="confirm-actions">
+      <button class="confirm-no" id="confirm-no">Annuler</button>
+      <button class="confirm-yes" id="confirm-yes">Supprimer</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
 const DEFAULT_DATA = [
-  {id:1,text:"Je suis bloqué",cat:"Blocage"},
-  {id:2,text:"Je suis figé",cat:"Blocage"},
-  {id:3,text:"Je suis paralysé",cat:"Blocage"},
-  {id:4,text:"Je suis freiné",cat:"Blocage"},
-  {id:5,text:"Je suis retenu",cat:"Blocage"},
-  {id:6,text:"Je suis jugé",cat:"Peur"},
-  {id:7,text:"Je suis rejeté",cat:"Peur"},
-  {id:8,text:"Je suis abandonné",cat:"Peur"},
-  {id:9,text:"Je suis humilié",cat:"Peur"},
-  {id:10,text:"Je suis trahi",cat:"Peur"},
-  {id:11,text:"Je suis écrasé",cat:"Peur"},
-  {id:12,text:"Je suis ignoré",cat:"Peur"},
-  {id:13,text:"Je suis perdu",cat:"Confusion"},
-  {id:14,text:"Je suis désorienté",cat:"Confusion"},
-  {id:15,text:"Je suis divisé",cat:"Confusion"},
-  {id:16,text:"Je suis épuisé",cat:"Épuisement"},
-  {id:17,text:"Je suis vidé",cat:"Épuisement"},
-  {id:18,text:"Je suis saturé",cat:"Épuisement"},
-  {id:19,text:"Je suis brûlé",cat:"Épuisement"},
-  {id:20,text:"Je suis contrôlé",cat:"Contrôle"},
-  {id:21,text:"Je suis manipulé",cat:"Contrôle"},
-  {id:22,text:"Je suis soumis",cat:"Contrôle"},
-  {id:23,text:"Je suis dominé",cat:"Contrôle"},
-  {id:24,text:"Je suis coupable",cat:"Culpabilité"},
-  {id:25,text:"Je suis honteux",cat:"Culpabilité"},
-  {id:26,text:"Je suis condamné",cat:"Culpabilité"},
-  {id:27,text:"Je suis indigne",cat:"Culpabilité"},
-  {id:28,text:"Je suis insuffisant",cat:"Valeur"},
-  {id:29,text:"Je suis incompétent",cat:"Valeur"},
-  {id:30,text:"Je suis inutile",cat:"Valeur"},
-  {id:31,text:"Je suis invisible",cat:"Valeur"},
-  {id:32,text:"Je suis libéré",cat:"Libération"},
-  {id:33,text:"Je suis affranchi",cat:"Libération"},
-  {id:34,text:"Je suis délivré",cat:"Libération"},
-  {id:35,text:"Je suis guéri",cat:"Libération"},
-  {id:36,text:"Je suis transformé",cat:"Transformation"},
-  {id:37,text:"Je suis renouvelé",cat:"Transformation"},
-  {id:38,text:"Je suis reconstruit",cat:"Transformation"},
-  {id:39,text:"Je suis ancré",cat:"Puissance"},
-  {id:40,text:"Je suis centré",cat:"Puissance"},
-  {id:41,text:"Je suis aligné",cat:"Puissance"},
-  {id:42,text:"Je suis souverain",cat:"Puissance"},
-  {id:43,text:"Je suis accompli",cat:"Puissance"},
-  {id:44,text:"Je suis assumé",cat:"Puissance"},
-  {id:45,text:"Je suis choisi",cat:"Connexion"},
-  {id:46,text:"Je suis aimé",cat:"Connexion"},
-  {id:47,text:"Je suis compris",cat:"Connexion"},
-  {id:48,text:"Je suis accepté",cat:"Connexion"},
+  {id:1,text:"Je suis anéanti",cat:"Destruction"},{id:2,text:"Je suis annihilé",cat:"Destruction"},{id:3,text:"Je suis démoli",cat:"Destruction"},{id:4,text:"Je suis dévasté",cat:"Destruction"},{id:5,text:"Je suis effondré",cat:"Destruction"},{id:6,text:"Je suis ravagé",cat:"Destruction"},{id:7,text:"Je suis ruiné",cat:"Destruction"},{id:8,text:"Je suis saccagé",cat:"Destruction"},{id:9,text:"Je suis brisé",cat:"Destruction"},{id:10,text:"Je suis cassé",cat:"Destruction"},{id:11,text:"Je suis fissuré",cat:"Destruction"},{id:12,text:"Je suis fracturé",cat:"Destruction"},{id:13,text:"Je suis fragmenté",cat:"Destruction"},{id:14,text:"Je suis morcelé",cat:"Destruction"},{id:15,text:"Je suis lacéré",cat:"Destruction"},{id:16,text:"Je suis mutilé",cat:"Destruction"},{id:17,text:"Je suis disloqué",cat:"Destruction"},{id:18,text:"Je suis déchiré",cat:"Destruction"},{id:19,text:"Je suis meurtri",cat:"Destruction"},{id:20,text:"Je suis esquinté",cat:"Destruction"},{id:21,text:"Je suis délabré",cat:"Destruction"},{id:22,text:"Je suis abîmé",cat:"Destruction"},{id:23,text:"Je suis détérioré",cat:"Destruction"},{id:24,text:"Je suis endommagé",cat:"Destruction"},
+  {id:30,text:"Je suis abandonné",cat:"Abandon"},{id:31,text:"Je suis rejeté",cat:"Abandon"},{id:32,text:"Je suis délaissé",cat:"Abandon"},{id:33,text:"Je suis laissé",cat:"Abandon"},{id:34,text:"Je suis exclu",cat:"Abandon"},{id:35,text:"Je suis banni",cat:"Abandon"},{id:36,text:"Je suis ostracisé",cat:"Abandon"},{id:37,text:"Je suis marginalisé",cat:"Abandon"},{id:38,text:"Je suis relégué",cat:"Abandon"},{id:39,text:"Je suis écarté",cat:"Abandon"},{id:40,text:"Je suis ignoré",cat:"Abandon"},{id:41,text:"Je suis négligé",cat:"Abandon"},{id:42,text:"Je suis oublié",cat:"Abandon"},{id:43,text:"Je suis invisible",cat:"Abandon"},{id:44,text:"Je suis invisibilisé",cat:"Abandon"},{id:45,text:"Je suis non-attendu",cat:"Abandon"},{id:46,text:"Je suis non-désiré",cat:"Abandon"},{id:47,text:"Je suis non-voulu",cat:"Abandon"},{id:48,text:"Je suis disparu",cat:"Abandon"},
+  {id:60,text:"Je suis honteux",cat:"Honte"},{id:61,text:"Je suis indigne",cat:"Honte"},{id:62,text:"Je suis illégitime",cat:"Honte"},{id:63,text:"Je suis non-aimable",cat:"Honte"},{id:64,text:"Je suis non-mérité",cat:"Honte"},{id:65,text:"Je suis imparfait",cat:"Honte"},{id:66,text:"Je suis incomplet",cat:"Honte"},{id:67,text:"Je suis inachevé",cat:"Honte"},{id:68,text:"Je suis inadapté",cat:"Honte"},{id:69,text:"Je suis inapte",cat:"Honte"},{id:70,text:"Je suis incapable",cat:"Honte"},{id:71,text:"Je suis défaillant",cat:"Honte"},{id:72,text:"Je suis défectueux",cat:"Honte"},{id:73,text:"Je suis raté",cat:"Honte"},{id:74,text:"Je suis abâtardi",cat:"Honte"},{id:75,text:"Je suis souillé",cat:"Honte"},{id:76,text:"Je suis maculé",cat:"Honte"},{id:77,text:"Je suis taché",cat:"Honte"},{id:78,text:"Je suis sali",cat:"Honte"},{id:79,text:"Je suis entaché",cat:"Honte"},{id:80,text:"Je suis profané",cat:"Honte"},
+  {id:100,text:"Je suis coupable",cat:"Culpabilité"},{id:101,text:"Je suis fautif",cat:"Culpabilité"},{id:102,text:"Je suis condamné",cat:"Culpabilité"},{id:103,text:"Je suis damné",cat:"Culpabilité"},{id:104,text:"Je suis maudit",cat:"Culpabilité"},{id:105,text:"Je suis puni",cat:"Culpabilité"},{id:106,text:"Je suis sanctionné",cat:"Culpabilité"},{id:107,text:"Je suis châtié",cat:"Culpabilité"},{id:108,text:"Je suis réprimandé",cat:"Culpabilité"},{id:109,text:"Je suis accusé",cat:"Culpabilité"},{id:110,text:"Je suis incriminé",cat:"Culpabilité"},{id:111,text:"Je suis dénoncé",cat:"Culpabilité"},{id:112,text:"Je suis jugé",cat:"Culpabilité"},{id:113,text:"Je suis sacrifié",cat:"Culpabilité"},{id:114,text:"Je suis crucifié",cat:"Culpabilité"},{id:115,text:"Je suis immolé",cat:"Culpabilité"},{id:116,text:"Je suis supplicié",cat:"Culpabilité"},{id:117,text:"Je suis martyrisé",cat:"Culpabilité"},
+  {id:130,text:"Je suis contrôlé",cat:"Contrôle"},{id:131,text:"Je suis manipulé",cat:"Contrôle"},{id:132,text:"Je suis dominé",cat:"Contrôle"},{id:133,text:"Je suis soumis",cat:"Contrôle"},{id:134,text:"Je suis domestiqué",cat:"Contrôle"},{id:135,text:"Je suis colonisé",cat:"Contrôle"},{id:136,text:"Je suis instrumentalisé",cat:"Contrôle"},{id:137,text:"Je suis possédé",cat:"Contrôle"},{id:138,text:"Je suis emprisonné",cat:"Contrôle"},{id:139,text:"Je suis enfermé",cat:"Contrôle"},{id:140,text:"Je suis enchaîné",cat:"Contrôle"},{id:141,text:"Je suis ligoté",cat:"Contrôle"},{id:142,text:"Je suis attaché",cat:"Contrôle"},{id:143,text:"Je suis retenu",cat:"Contrôle"},{id:144,text:"Je suis cadenassé",cat:"Contrôle"},{id:145,text:"Je suis verrouillé",cat:"Contrôle"},{id:146,text:"Je suis barricadé",cat:"Contrôle"},{id:147,text:"Je suis cloisonné",cat:"Contrôle"},{id:148,text:"Je suis muré",cat:"Contrôle"},{id:149,text:"Je suis cloué",cat:"Contrôle"},{id:150,text:"Je suis piégé",cat:"Contrôle"},{id:151,text:"Je suis coincé",cat:"Contrôle"},{id:152,text:"Je suis bloqué",cat:"Contrôle"},{id:153,text:"Je suis figé",cat:"Contrôle"},{id:154,text:"Je suis paralysé",cat:"Contrôle"},{id:155,text:"Je suis immobilisé",cat:"Contrôle"},{id:156,text:"Je suis stoppé",cat:"Contrôle"},{id:157,text:"Je suis arrêté",cat:"Contrôle"},{id:158,text:"Je suis freiné",cat:"Contrôle"},{id:159,text:"Je suis bridé",cat:"Contrôle"},{id:160,text:"Je suis entravé",cat:"Contrôle"},{id:161,text:"Je suis contraint",cat:"Contrôle"},
+  {id:180,text:"Je suis diminué",cat:"Dévaluation"},{id:181,text:"Je suis amoindri",cat:"Dévaluation"},{id:182,text:"Je suis rabaissé",cat:"Dévaluation"},{id:183,text:"Je suis abaissé",cat:"Dévaluation"},{id:184,text:"Je suis dévalorisé",cat:"Dévaluation"},{id:185,text:"Je suis déprécié",cat:"Dévaluation"},{id:186,text:"Je suis mésestimé",cat:"Dévaluation"},{id:187,text:"Je suis sous-estimé",cat:"Dévaluation"},{id:188,text:"Je suis minimisé",cat:"Dévaluation"},{id:189,text:"Je suis humilié",cat:"Dévaluation"},{id:190,text:"Je suis bafoué",cat:"Dévaluation"},{id:191,text:"Je suis avili",cat:"Dévaluation"},{id:192,text:"Je suis aplati",cat:"Dévaluation"},{id:193,text:"Je suis écrasé",cat:"Dévaluation"},{id:194,text:"Je suis superflu",cat:"Dévaluation"},{id:195,text:"Je suis inutile",cat:"Dévaluation"},{id:196,text:"Je suis insuffisant",cat:"Dévaluation"},{id:197,text:"Je suis incompétent",cat:"Dévaluation"},
+  {id:220,text:"Je suis trahi",cat:"Trahison"},{id:221,text:"Je suis corrompu",cat:"Trahison"},{id:222,text:"Je suis vendu",cat:"Trahison"},{id:223,text:"Je suis livré",cat:"Trahison"},{id:224,text:"Je suis exposé",cat:"Trahison"},{id:225,text:"Je suis démasqué",cat:"Trahison"},{id:226,text:"Je suis dénudé",cat:"Trahison"},{id:227,text:"Je suis déshonoré",cat:"Trahison"},{id:228,text:"Je suis désavoué",cat:"Trahison"},{id:229,text:"Je suis renié",cat:"Trahison"},{id:230,text:"Je suis repoussé",cat:"Trahison"},
+  {id:250,text:"Je suis vide",cat:"Vide"},{id:251,text:"Je suis vidé",cat:"Vide"},{id:252,text:"Je suis évidé",cat:"Vide"},{id:253,text:"Je suis creux",cat:"Vide"},{id:254,text:"Je suis absent",cat:"Vide"},{id:255,text:"Je suis évanoui",cat:"Vide"},{id:256,text:"Je suis évaporé",cat:"Vide"},{id:257,text:"Je suis volatilisé",cat:"Vide"},{id:258,text:"Je suis envolé",cat:"Vide"},{id:259,text:"Je suis dilué",cat:"Vide"},{id:260,text:"Je suis dissous",cat:"Vide"},{id:261,text:"Je suis fondu",cat:"Vide"},{id:262,text:"Je suis dispersé",cat:"Vide"},{id:263,text:"Je suis éparpillé",cat:"Vide"},{id:264,text:"Je suis dissocié",cat:"Vide"},{id:265,text:"Je suis effacé",cat:"Vide"},{id:266,text:"Je suis annulé",cat:"Vide"},{id:267,text:"Je suis supprimé",cat:"Vide"},{id:268,text:"Je suis mort",cat:"Vide"},
+  {id:290,text:"Je suis épuisé",cat:"Épuisement"},{id:291,text:"Je suis à bout",cat:"Épuisement"},{id:292,text:"Je suis drainé",cat:"Épuisement"},{id:293,text:"Je suis lessivé",cat:"Épuisement"},{id:294,text:"Je suis pompé",cat:"Épuisement"},{id:295,text:"Je suis consumé",cat:"Épuisement"},{id:296,text:"Je suis brûlé",cat:"Épuisement"},{id:297,text:"Je suis cramé",cat:"Épuisement"},{id:298,text:"Je suis grillé",cat:"Épuisement"},{id:299,text:"Je suis saturé",cat:"Épuisement"},{id:300,text:"Je suis surchargé",cat:"Épuisement"},{id:301,text:"Je suis débordé",cat:"Épuisement"},{id:302,text:"Je suis submergé",cat:"Épuisement"},{id:303,text:"Je suis asséché",cat:"Épuisement"},{id:304,text:"Je suis tari",cat:"Épuisement"},{id:305,text:"Je suis appauvri",cat:"Épuisement"},
+  {id:320,text:"Je suis perdu",cat:"Confusion"},{id:321,text:"Je suis désorienté",cat:"Confusion"},{id:322,text:"Je suis déboussolé",cat:"Confusion"},{id:323,text:"Je suis égaré",cat:"Confusion"},{id:324,text:"Je suis flottant",cat:"Confusion"},{id:325,text:"Je suis divisé",cat:"Confusion"},{id:326,text:"Je suis décalé",cat:"Confusion"},{id:327,text:"Je suis déphasé",cat:"Confusion"},{id:328,text:"Je suis déplacé",cat:"Confusion"},{id:329,text:"Je suis désaxé",cat:"Confusion"},{id:330,text:"Je suis déséquilibré",cat:"Confusion"},{id:331,text:"Je suis bancal",cat:"Confusion"},{id:332,text:"Je suis confus",cat:"Confusion"},{id:333,text:"Je suis embrouillé",cat:"Confusion"},{id:334,text:"Je suis biaisé",cat:"Confusion"},{id:335,text:"Je suis déréglé",cat:"Confusion"},{id:336,text:"Je suis détraqué",cat:"Confusion"},{id:337,text:"Je suis déstructuré",cat:"Confusion"},
+  {id:360,text:"Je suis pétrifié",cat:"Rigidité"},{id:361,text:"Je suis congelé",cat:"Rigidité"},{id:362,text:"Je suis gelé",cat:"Rigidité"},{id:363,text:"Je suis glacé",cat:"Rigidité"},{id:364,text:"Je suis calcifié",cat:"Rigidité"},{id:365,text:"Je suis fossilisé",cat:"Rigidité"},{id:366,text:"Je suis momifié",cat:"Rigidité"},{id:367,text:"Je suis cristallisé",cat:"Rigidité"},{id:368,text:"Je suis solidifié",cat:"Rigidité"},{id:369,text:"Je suis rigidifié",cat:"Rigidité"},{id:370,text:"Je suis durci",cat:"Rigidité"},{id:371,text:"Je suis enkysté",cat:"Rigidité"},{id:372,text:"Je suis anesthésié",cat:"Rigidité"},{id:373,text:"Je suis endormi",cat:"Rigidité"},{id:374,text:"Je suis assoupi",cat:"Rigidité"},{id:375,text:"Je suis engourdi",cat:"Rigidité"},
+  {id:400,text:"Je suis contaminé",cat:"Contamination"},{id:401,text:"Je suis infecté",cat:"Contamination"},{id:402,text:"Je suis empoisonné",cat:"Contamination"},{id:403,text:"Je suis pollué",cat:"Contamination"},{id:404,text:"Je suis vicié",cat:"Contamination"},{id:405,text:"Je suis falsifié",cat:"Contamination"},{id:406,text:"Je suis faussé",cat:"Contamination"},{id:407,text:"Je suis altéré",cat:"Contamination"},{id:408,text:"Je suis dénaturé",cat:"Contamination"},{id:409,text:"Je suis perverti",cat:"Contamination"},{id:410,text:"Je suis gangrené",cat:"Contamination"},{id:411,text:"Je suis rongé",cat:"Contamination"},{id:412,text:"Je suis pourri",cat:"Contamination"},
+  {id:440,text:"Je suis masqué",cat:"Masque"},{id:441,text:"Je suis caché",cat:"Masque"},{id:442,text:"Je suis déguisé",cat:"Masque"},{id:443,text:"Je suis travesti",cat:"Masque"},{id:444,text:"Je suis simulé",cat:"Masque"},{id:445,text:"Je suis feint",cat:"Masque"},{id:446,text:"Je suis fabriqué",cat:"Masque"},{id:447,text:"Je suis formaté",cat:"Masque"},{id:448,text:"Je suis conditionné",cat:"Masque"},{id:449,text:"Je suis programmé",cat:"Masque"},{id:450,text:"Je suis moulé",cat:"Masque"},{id:451,text:"Je suis modelé",cat:"Masque"},{id:452,text:"Je suis façonné",cat:"Masque"},{id:453,text:"Je suis calibré",cat:"Masque"},{id:454,text:"Je suis truqué",cat:"Masque"},
+  {id:480,text:"Je suis blessé",cat:"Blessure"},{id:481,text:"Je suis touché",cat:"Blessure"},{id:482,text:"Je suis atteint",cat:"Blessure"},{id:483,text:"Je suis frappé",cat:"Blessure"},{id:484,text:"Je suis heurté",cat:"Blessure"},{id:485,text:"Je suis choqué",cat:"Blessure"},{id:486,text:"Je suis traumatisé",cat:"Blessure"},{id:487,text:"Je suis horrifié",cat:"Blessure"},{id:488,text:"Je suis hanté",cat:"Blessure"},{id:489,text:"Je suis torturé",cat:"Blessure"},{id:490,text:"Je suis tordu",cat:"Blessure"},{id:491,text:"Je suis courbé",cat:"Blessure"},{id:492,text:"Je suis plié",cat:"Blessure"},{id:493,text:"Je suis accablé",cat:"Blessure"},{id:494,text:"Je suis terrassé",cat:"Blessure"},
+  {id:520,text:"Je suis traversé",cat:"Transition"},{id:521,text:"Je suis bousculé",cat:"Transition"},{id:522,text:"Je suis perturbé",cat:"Transition"},{id:523,text:"Je suis troublé",cat:"Transition"},{id:524,text:"Je suis déstabilisé",cat:"Transition"},{id:525,text:"Je suis appelé",cat:"Transition"},{id:526,text:"Je suis emporté",cat:"Transition"},{id:527,text:"Je suis lancé",cat:"Transition"},{id:528,text:"Je suis propulsé",cat:"Transition"},{id:529,text:"Je suis projeté",cat:"Transition"},
+  {id:560,text:"Je suis libéré",cat:"Libération"},{id:561,text:"Je suis affranchi",cat:"Libération"},{id:562,text:"Je suis délivré",cat:"Libération"},{id:563,text:"Je suis émancipé",cat:"Libération"},{id:564,text:"Je suis désenchaîné",cat:"Libération"},{id:565,text:"Je suis débloqué",cat:"Libération"},{id:566,text:"Je suis déconditionné",cat:"Libération"},{id:567,text:"Je suis déprogrammé",cat:"Libération"},{id:568,text:"Je suis purifié",cat:"Libération"},{id:569,text:"Je suis épuré",cat:"Libération"},{id:570,text:"Je suis nettoyé",cat:"Libération"},{id:571,text:"Je suis lavé",cat:"Libération"},{id:572,text:"Je suis blanchi",cat:"Libération"},{id:573,text:"Je suis acquitté",cat:"Libération"},{id:574,text:"Je suis absous",cat:"Libération"},{id:575,text:"Je suis pardonné",cat:"Libération"},{id:576,text:"Je suis guéri",cat:"Libération"},{id:577,text:"Je suis cicatrisé",cat:"Libération"},{id:578,text:"Je suis réparé",cat:"Libération"},{id:579,text:"Je suis restauré",cat:"Libération"},{id:580,text:"Je suis rétabli",cat:"Libération"},{id:581,text:"Je suis ressuscité",cat:"Libération"},{id:582,text:"Je suis réanimé",cat:"Libération"},
+  {id:620,text:"Je suis transformé",cat:"Transformation"},{id:621,text:"Je suis métamorphosé",cat:"Transformation"},{id:622,text:"Je suis transmué",cat:"Transformation"},{id:623,text:"Je suis renouvelé",cat:"Transformation"},{id:624,text:"Je suis reconstruit",cat:"Transformation"},{id:625,text:"Je suis rebâti",cat:"Transformation"},{id:626,text:"Je suis refondé",cat:"Transformation"},{id:627,text:"Je suis restructuré",cat:"Transformation"},{id:628,text:"Je suis réaligné",cat:"Transformation"},{id:629,text:"Je suis réajusté",cat:"Transformation"},{id:630,text:"Je suis redressé",cat:"Transformation"},{id:631,text:"Je suis réorienté",cat:"Transformation"},{id:632,text:"Je suis réunifié",cat:"Transformation"},{id:633,text:"Je suis mûri",cat:"Transformation"},{id:634,text:"Je suis forgé",cat:"Transformation"},{id:635,text:"Je suis sculpté",cat:"Transformation"},{id:636,text:"Je suis trempé",cat:"Transformation"},{id:637,text:"Je suis affiné",cat:"Transformation"},
+  {id:680,text:"Je suis ancré",cat:"Puissance"},{id:681,text:"Je suis centré",cat:"Puissance"},{id:682,text:"Je suis aligné",cat:"Puissance"},{id:683,text:"Je suis souverain",cat:"Puissance"},{id:684,text:"Je suis autonomisé",cat:"Puissance"},{id:685,text:"Je suis habilité",cat:"Puissance"},{id:686,text:"Je suis armé",cat:"Puissance"},{id:687,text:"Je suis équipé",cat:"Puissance"},{id:688,text:"Je suis fortifié",cat:"Puissance"},{id:689,text:"Je suis blindé",cat:"Puissance"},{id:690,text:"Je suis renforcé",cat:"Puissance"},{id:691,text:"Je suis stabilisé",cat:"Puissance"},{id:692,text:"Je suis enraciné",cat:"Puissance"},{id:693,text:"Je suis assumé",cat:"Puissance"},{id:694,text:"Je suis affirmé",cat:"Puissance"},{id:695,text:"Je suis aguerri",cat:"Puissance"},{id:696,text:"Je suis endurci",cat:"Puissance"},{id:697,text:"Je suis dynamisé",cat:"Puissance"},{id:698,text:"Je suis mobilisé",cat:"Puissance"},{id:699,text:"Je suis activé",cat:"Puissance"},{id:700,text:"Je suis puissant",cat:"Puissance"},{id:701,text:"Je suis vivant",cat:"Puissance"},{id:702,text:"Je suis vivifié",cat:"Puissance"},
+  {id:740,text:"Je suis accompli",cat:"Accomplissement"},{id:741,text:"Je suis réalisé",cat:"Accomplissement"},{id:742,text:"Je suis abouti",cat:"Accomplissement"},{id:743,text:"Je suis construit",cat:"Accomplissement"},{id:744,text:"Je suis bâti",cat:"Accomplissement"},{id:745,text:"Je suis créé",cat:"Accomplissement"},{id:746,text:"Je suis développé",cat:"Accomplissement"},{id:747,text:"Je suis cultivé",cat:"Accomplissement"},{id:748,text:"Je suis incarné",cat:"Accomplissement"},{id:749,text:"Je suis manifesté",cat:"Accomplissement"},{id:750,text:"Je suis exprimé",cat:"Accomplissement"},{id:751,text:"Je suis visible",cat:"Accomplissement"},{id:752,text:"Je suis présent",cat:"Accomplissement"},{id:753,text:"Je suis habité",cat:"Accomplissement"},
+  {id:800,text:"Je suis aimé",cat:"Connexion"},{id:801,text:"Je suis accepté",cat:"Connexion"},{id:802,text:"Je suis accueilli",cat:"Connexion"},{id:803,text:"Je suis choisi",cat:"Connexion"},{id:804,text:"Je suis désiré",cat:"Connexion"},{id:805,text:"Je suis attendu",cat:"Connexion"},{id:806,text:"Je suis compris",cat:"Connexion"},{id:807,text:"Je suis entendu",cat:"Connexion"},{id:808,text:"Je suis reconnu",cat:"Connexion"},{id:809,text:"Je suis inclus",cat:"Connexion"},{id:810,text:"Je suis relié",cat:"Connexion"},{id:811,text:"Je suis connecté",cat:"Connexion"},{id:812,text:"Je suis réuni",cat:"Connexion"},{id:813,text:"Je suis réconcilié",cat:"Connexion"},
+  {id:850,text:"Je suis apaisé",cat:"Paix"},{id:851,text:"Je suis soulagé",cat:"Paix"},{id:852,text:"Je suis allégé",cat:"Paix"},{id:853,text:"Je suis délesté",cat:"Paix"},{id:854,text:"Je suis débarrassé",cat:"Paix"},{id:855,text:"Je suis ressourcé",cat:"Paix"},{id:856,text:"Je suis nourri",cat:"Paix"},{id:857,text:"Je suis comblé",cat:"Paix"},{id:858,text:"Je suis épanoui",cat:"Paix"},{id:859,text:"Je suis harmonisé",cat:"Paix"},{id:860,text:"Je suis équilibré",cat:"Paix"},
+  {id:900,text:"Je suis éveillé",cat:"Éveil"},{id:901,text:"Je suis éclairé",cat:"Éveil"},{id:902,text:"Je suis révélé",cat:"Éveil"},{id:903,text:"Je suis dévoilé",cat:"Éveil"},{id:904,text:"Je suis nommé",cat:"Éveil"},{id:905,text:"Je suis défini",cat:"Éveil"},{id:906,text:"Je suis revendiqué",cat:"Éveil"},{id:907,text:"Je suis transcendé",cat:"Éveil"},{id:908,text:"Je suis inspiré",cat:"Éveil"},{id:909,text:"Je suis enflammé",cat:"Éveil"},{id:910,text:"Je suis célébré",cat:"Éveil"},{id:911,text:"Je suis sacré",cat:"Éveil"},{id:912,text:"Je suis honoré",cat:"Éveil"},{id:913,text:"Je suis dignifié",cat:"Éveil"},{id:914,text:"Je suis légitimé",cat:"Éveil"},{id:915,text:"Je suis valorisé",cat:"Éveil"},{id:916,text:"Je suis respecté",cat:"Éveil"},
 ];
 
-const STORAGE_KEY = "reborn_identities_v1";
+const KEY_DATA = "reborn_data_v3";
+const KEY_WORKED = "reborn_worked_v3";
 
-function load() {
-  try { const s = localStorage.getItem(STORAGE_KEY); return s ? JSON.parse(s) : DEFAULT_DATA; }
-  catch(e) { return DEFAULT_DATA; }
-}
-function save(data) {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e) {}
-}
+function load() { try { const s = localStorage.getItem(KEY_DATA); return s ? JSON.parse(s) : DEFAULT_DATA; } catch(e) { return DEFAULT_DATA; } }
+function saveData(d) { try { localStorage.setItem(KEY_DATA, JSON.stringify(d)); } catch(e) {} }
+function loadWorked() { try { const s = localStorage.getItem(KEY_WORKED); return s ? JSON.parse(s) : []; } catch(e) { return []; } }
+function saveWorked(w) { try { localStorage.setItem(KEY_WORKED, JSON.stringify(w)); } catch(e) {} }
 
 let DATA = load();
+let WORKED = loadWorked();
 let activeFilter = "Tous";
 let query = "";
 let checked = new Set();
 let adminOpen = false;
+let pendingRemove = null;
+
+function workedIds() { return new Set(WORKED.flatMap(s => s.ids)); }
 
 function showToast(msg) {
   const t = document.getElementById("toast");
@@ -348,45 +309,25 @@ function cats() { return ["Tous", ...new Set(DATA.map(d => d.cat))]; }
 function buildCatSelect() {
   const sel = document.getElementById("cat-select");
   const existing = [...new Set(DATA.map(d => d.cat))];
-  sel.innerHTML = existing.map(c => `<option value="${c}">${c}</option>`).join("") +
-    `<option value="__new__">+ Nouvelle catégorie…</option>`;
-  sel.onchange = () => {
-    document.getElementById("new-cat-wrap").classList.toggle("show", sel.value === "__new__");
-  };
+  sel.innerHTML = existing.map(c => `<option value="${c}">${c}</option>`).join("") + `<option value="__new__">+ Nouvelle catégorie…</option>`;
+  sel.onchange = () => { document.getElementById("new-cat-wrap").classList.toggle("show", sel.value === "__new__"); };
 }
 
 function buildFilters() {
   const el = document.getElementById("filters");
-  el.innerHTML = cats().map(c =>
-    `<button class="filter-btn${c === activeFilter ? " active" : ""}" data-cat="${c}">${c}</button>`
-  ).join("");
-  el.querySelectorAll(".filter-btn").forEach(btn => {
-    btn.addEventListener("click", () => { activeFilter = btn.dataset.cat; render(); });
-  });
+  el.innerHTML = cats().map(c => `<button class="filter-btn${c===activeFilter?" active":""}" data-cat="${c}">${c}</button>`).join("");
+  el.querySelectorAll(".filter-btn").forEach(btn => { btn.addEventListener("click", () => { activeFilter = btn.dataset.cat; render(); }); });
 }
 
 function buildAdminList() {
   const list = document.getElementById("admin-list");
   const custom = DATA.filter(d => !DEFAULT_DATA.find(dd => dd.id === d.id));
-  const toShow = custom.length ? custom : DATA.slice(-8);
-  if (!toShow.length) { list.innerHTML = `<div style="font-size:13px;color:#9e9e98;padding:4px 0">Aucune identité personnalisée</div>`; return; }
-  list.innerHTML = toShow.map(d => `
-    <div class="admin-item" data-id="${d.id}">
-      <span class="admin-item-text">${d.text}</span>
-      <span class="admin-item-cat">${d.cat}</span>
-      <button class="del-btn" aria-label="Supprimer ${d.text}">
-        <i class="ti ti-trash" aria-hidden="true" style="font-size:15px"></i>
-      </button>
-    </div>
-  `).join("");
+  if (!custom.length) { list.innerHTML = `<div style="font-size:13px;color:#555550;padding:4px 0">Tes ajouts apparaîtront ici</div>`; return; }
+  list.innerHTML = custom.map(d => `<div class="admin-item" data-id="${d.id}"><span class="admin-item-text">${d.text}</span><span class="admin-item-cat">${d.cat}</span><button class="del-btn"><i class="ti ti-trash" style="font-size:14px"></i></button></div>`).join("");
   list.querySelectorAll(".del-btn").forEach(btn => {
     btn.addEventListener("click", () => {
       const id = +btn.closest(".admin-item").dataset.id;
-      DATA = DATA.filter(d => d.id !== id);
-      checked.delete(id);
-      save(DATA);
-      render();
-      showToast("Identité supprimée");
+      DATA = DATA.filter(d => d.id !== id); checked.delete(id); saveData(DATA); render(); showToast("Supprimé");
     });
   });
 }
@@ -400,46 +341,151 @@ function filtered() {
 }
 
 function render() {
-  buildFilters();
-  buildCatSelect();
+  buildFilters(); buildCatSelect();
   if (adminOpen) buildAdminList();
+  const wids = workedIds();
   const items = filtered();
   const grid = document.getElementById("grid");
-  document.getElementById("stats").innerHTML = items.length
-    ? `<span>${items.length}</span> identité${items.length > 1 ? "s" : ""}${activeFilter !== "Tous" ? " — " + activeFilter : ""}`
-    : "";
-  if (!items.length) {
-    grid.innerHTML = `<div class="no-results"><i class="ti ti-search" style="font-size:28px;display:block;margin-bottom:10px;opacity:0.3" aria-hidden="true"></i>Aucun résultat</div>`;
-    renderSummary(); return;
-  }
-  grid.innerHTML = items.map(d => `
-    <div class="card${checked.has(d.id) ? " checked" : ""}" data-id="${d.id}" role="checkbox" aria-checked="${checked.has(d.id)}" tabindex="0">
-      <div class="card-top">
-        <span class="identity">${d.text}</span>
-        <div class="check-icon" aria-hidden="true"><i class="ti ti-check"></i></div>
-      </div>
-      <span class="cat-badge">${d.cat}</span>
-    </div>
-  `).join("");
-  grid.querySelectorAll(".card").forEach(card => {
-    const toggle = () => {
-      const id = +card.dataset.id;
-      if (checked.has(id)) checked.delete(id); else checked.add(id);
-      render();
-    };
+  document.getElementById("stats").innerHTML = items.length ? `<span>${items.length}</span> identité${items.length>1?"s":""}${activeFilter!=="Tous"?" — "+activeFilter:""}` : "";
+  if (!items.length) { grid.innerHTML = `<div class="no-results"><i class="ti ti-search" style="font-size:26px;display:block;margin-bottom:10px;opacity:0.2"></i>Aucun résultat</div>`; renderSession(); renderWorked(); return; }
+  grid.innerHTML = items.map(d => {
+    const isWorked = wids.has(d.id);
+    const isChecked = checked.has(d.id);
+    const cls = isWorked ? "worked" : isChecked ? "checked" : "";
+    const icon = isWorked ? "ti-award" : "ti-check";
+    return `<div class="card${cls?" "+cls:""}" data-id="${d.id}" ${isWorked?"":"role=\"checkbox\" aria-checked=\""+isChecked+"\""} tabindex="0"><div class="card-top"><span class="identity">${d.text}</span><div class="check-icon"><i class="ti ${icon}"></i></div></div><span class="cat-badge">${d.cat}</span></div>`;
+  }).join("");
+  grid.querySelectorAll(".card:not(.worked)").forEach(card => {
+    const toggle = () => { const id = +card.dataset.id; if (checked.has(id)) checked.delete(id); else checked.add(id); render(); };
     card.addEventListener("click", toggle);
-    card.addEventListener("keydown", e => { if (e.key === " " || e.key === "Enter") { e.preventDefault(); toggle(); } });
+    card.addEventListener("keydown", e => { if (e.key===" "||e.key==="Enter") { e.preventDefault(); toggle(); } });
   });
-  renderSummary();
+  renderSession(); renderWorked();
 }
 
-function renderSummary() {
+function renderSession() {
   const sel = DATA.filter(d => checked.has(d.id));
-  document.getElementById("sel-count").textContent = `${sel.length} / ${DATA.length}`;
-  const list = document.getElementById("selected-list");
-  if (!sel.length) { list.innerHTML = `<span class="empty-sel">Aucune identité sélectionnée pour le moment</span>`; return; }
-  list.innerHTML = sel.map(d => `<span class="sel-tag">${d.text}</span>`).join("");
+  const count = sel.length;
+  document.getElementById("session-count").textContent = `${count} identité${count>1?"s":""} sélectionnée${count>1?"s":""}`;
+  const list = document.getElementById("current-sel");
+  list.innerHTML = sel.length ? sel.map(d => `<span class="sel-tag">${d.text}</span>`).join("") : `<span class="empty-sel">Aucune identité cochée</span>`;
+  document.getElementById("validate-btn").disabled = sel.length === 0;
 }
+
+function renderWorked() {
+  const section = document.getElementById("worked-section");
+  const body = document.getElementById("worked-body");
+  const badge = document.getElementById("worked-count-badge");
+  const total = WORKED.reduce((acc, s) => acc + s.ids.length, 0);
+  badge.textContent = total;
+  if (!WORKED.length) { section.style.display = "none"; return; }
+  section.style.display = "block";
+  body.innerHTML = WORKED.slice().reverse().map((session, ri) => {
+    const si = WORKED.length - 1 - ri;
+    const identities = session.ids.map(id => DATA.find(d => d.id === id)).filter(Boolean);
+    if (!identities.length) return "";
+    return `<div class="worked-session"><div class="worked-date">${session.date}</div><div class="worked-tags">${identities.map(d => `<span class="worked-tag">${d.text}<button class="remove-worked" data-session="${si}" data-id="${d.id}"><i class="ti ti-x" style="font-size:11px"></i></button></span>`).join("")}</div></div>`;
+  }).join("");
+  body.querySelectorAll(".remove-worked").forEach(btn => {
+    btn.addEventListener("click", () => {
+      pendingRemove = { sessionIdx: +btn.dataset.session, id: +btn.dataset.id };
+      const identity = DATA.find(d => d.id === pendingRemove.id);
+      document.getElementById("confirm-title").textContent = "Retirer cette identité ?";
+      document.getElementById("confirm-sub").textContent = `"${identity ? identity.text : ""}" sera retirée de la liste des identités travaillées.`;
+      document.getElementById("confirm-modal").classList.add("show");
+    });
+  });
+}
+
+// PROGRESSION
+function renderProgress() {
+  const total = WORKED.reduce((acc, s) => acc + s.ids.length, 0);
+  const sessions = WORKED.length;
+  const avg = sessions ? Math.round(total / sessions) : 0;
+
+  // Stat cards
+  document.getElementById("stat-cards").innerHTML = [
+    { label: "Sessions", value: sessions, unit: "au total" },
+    { label: "Identités travaillées", value: total, unit: "au total" },
+    { label: "Par session", value: avg, unit: "en moyenne" },
+  ].map(s => `<div class="stat-card"><div class="stat-label">${s.label}</div><div class="stat-value">${s.value}</div><div class="stat-unit">${s.unit}</div></div>`).join("");
+
+  // Bar chart — par session
+  const barEl = document.getElementById("bar-chart");
+  if (!WORKED.length) { barEl.innerHTML = `<div class="no-data">Aucune session validée pour le moment.</div>`; }
+  else {
+    const max = Math.max(...WORKED.map(s => s.ids.length));
+    barEl.innerHTML = WORKED.map(s => {
+      const pct = max > 0 ? Math.round((s.ids.length / max) * 100) : 0;
+      return `<div class="bar-row"><span class="bar-label">${s.date}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.max(pct,4)}%"><span class="bar-count">${s.ids.length}</span></div></div></div>`;
+    }).join("");
+  }
+
+  // Cat chart — répartition par catégorie
+  const catEl = document.getElementById("cat-chart");
+  if (!WORKED.length) { catEl.innerHTML = `<div class="no-data">Aucune donnée disponible.</div>`; }
+  else {
+    const allWorkedIds = WORKED.flatMap(s => s.ids);
+    const catCounts = {};
+    allWorkedIds.forEach(id => {
+      const item = DATA.find(d => d.id === id);
+      if (item) catCounts[item.cat] = (catCounts[item.cat] || 0) + 1;
+    });
+    const sorted = Object.entries(catCounts).sort((a, b) => b[1] - a[1]);
+    const maxCat = sorted.length ? sorted[0][1] : 1;
+    catEl.innerHTML = sorted.map(([cat, count]) => {
+      const pct = Math.round((count / maxCat) * 100);
+      return `<div class="cat-row"><span class="cat-label">${cat}</span><div class="cat-track"><div class="cat-fill" style="width:${Math.max(pct,4)}%"><span class="cat-count">${count}</span></div></div></div>`;
+    }).join("");
+  }
+}
+
+document.getElementById("progress-btn").addEventListener("click", () => {
+  renderProgress();
+  document.getElementById("progress-overlay").classList.add("show");
+});
+document.getElementById("close-progress").addEventListener("click", () => {
+  document.getElementById("progress-overlay").classList.remove("show");
+});
+
+document.getElementById("validate-btn").addEventListener("click", () => {
+  if (checked.size === 0) return;
+  const date = new Date().toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
+  const wids = workedIds();
+  const newIds = [...checked].filter(id => !wids.has(id));
+  if (newIds.length) { WORKED.push({ date, ids: newIds }); saveWorked(WORKED); }
+  checked.clear(); render();
+  showToast(`✓ ${newIds.length} identité${newIds.length>1?"s":""} marquée${newIds.length>1?"s":""} comme travaillée${newIds.length>1?"s":""}`);
+});
+
+document.getElementById("confirm-yes").addEventListener("click", () => {
+  if (!pendingRemove) return;
+  const { sessionIdx, id } = pendingRemove;
+  WORKED[sessionIdx].ids = WORKED[sessionIdx].ids.filter(i => i !== id);
+  if (!WORKED[sessionIdx].ids.length) WORKED.splice(sessionIdx, 1);
+  saveWorked(WORKED); pendingRemove = null;
+  document.getElementById("confirm-modal").classList.remove("show");
+  render(); showToast("Identité retirée");
+});
+document.getElementById("confirm-no").addEventListener("click", () => {
+  pendingRemove = null;
+  document.getElementById("confirm-modal").classList.remove("show");
+});
+
+document.getElementById("clear-worked-btn").addEventListener("click", () => {
+  pendingRemove = "all";
+  document.getElementById("confirm-title").textContent = "Effacer tout l'historique ?";
+  document.getElementById("confirm-sub").textContent = "Toutes les identités travaillées seront supprimées. Cette action est irréversible.";
+  document.getElementById("confirm-modal").classList.add("show");
+  const btn = document.getElementById("confirm-yes");
+  const handler = () => {
+    WORKED = []; saveWorked(WORKED); pendingRemove = null;
+    document.getElementById("confirm-modal").classList.remove("show");
+    render(); showToast("Historique effacé");
+    btn.removeEventListener("click", handler);
+  };
+  btn.addEventListener("click", handler);
+});
 
 document.getElementById("admin-toggle").addEventListener("click", () => {
   adminOpen = !adminOpen;
@@ -457,27 +503,15 @@ document.getElementById("add-btn").addEventListener("click", () => {
   if (!text) { textEl.focus(); return; }
   if (!text.toLowerCase().startsWith("je suis")) text = "Je suis " + text;
   if (!cat) { newCatEl.focus(); return; }
-  DATA.push({ id: Date.now(), text, cat });
-  save(DATA);
+  DATA.push({ id: Date.now(), text, cat }); saveData(DATA);
   textEl.value = ""; newCatEl.value = "";
   catSel.value = catSel.options[0].value;
   document.getElementById("new-cat-wrap").classList.remove("show");
-  render();
-  showToast("✓ Ajouté — " + text);
+  render(); showToast("✓ Ajouté — " + text);
 });
 
-document.getElementById("new-text").addEventListener("keydown", e => {
-  if (e.key === "Enter") document.getElementById("add-btn").click();
-});
-
+document.getElementById("new-text").addEventListener("keydown", e => { if (e.key === "Enter") document.getElementById("add-btn").click(); });
 document.getElementById("search").addEventListener("input", e => { query = e.target.value; render(); });
-
-document.getElementById("export-btn").addEventListener("click", () => {
-  const sel = DATA.filter(d => checked.has(d.id));
-  if (!sel.length) { showToast("Aucune identité sélectionnée"); return; }
-  const text = sel.map(d => `• ${d.text} (${d.cat})`).join("\n");
-  navigator.clipboard.writeText(text).then(() => showToast("✓ Sélection copiée !")).catch(() => showToast("Copie non supportée"));
-});
 
 render();
 </script>
