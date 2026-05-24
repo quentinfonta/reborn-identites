@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Identités REBORN</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <style>
+    :root {
+      --bg: #f9f8f6;
+      --surface: #ffffff;
+      --surface2: #f3f2ef;
+      --border: rgba(0,0,0,0.10);
+      --border-md: rgba(0,0,0,0.18);
+      --text: #1a1a18;
+      --text-muted: #6b6b67;
+      --text-faint: #9e9e98;
+      --green-bg: #eaf3de;
+      --green-border: #639922;
+      --green-text: #3b6d11;
+      --danger-bg: #fcebeb;
+      --danger-text: #a32d2d;
+      --radius: 10px;
+      --radius-lg: 14px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 2rem 1.5rem 4rem;
+    }
+    .container { max-width: 860px; margin: 0 auto; }
+
+    /* Header */
+    .header {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      flex-wrap: wrap; gap: 12px; margin-bottom: 1.75rem;
+    }
+    .header-left .title { font-size: 26px; font-weight: 600; letter-spacing: -0.3px; }
+    .header-left .subtitle { font-size: 14px; color: var(--text-muted); margin-top: 4px; }
+    .admin-toggle {
+      display: flex; align-items: center; gap: 6px;
+      padding: 8px 16px; border-radius: var(--radius);
+      border: 1px solid var(--border-md); background: var(--surface);
+      color: var(--text-muted); font-size: 13px; font-family: inherit;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .admin-toggle:hover { background: var(--surface2); color: var(--text); }
+
+    /* Admin panel */
+    .admin-panel {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem; display: none;
+    }
+    .admin-panel.open { display: block; }
+    .admin-title { font-size: 14px; font-weight: 500; margin-bottom: 0.875rem; }
+    .admin-form { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; }
+    .field { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 150px; }
+    .field label { font-size: 12px; color: var(--text-muted); }
+    .field input, .field select {
+      padding: 8px 12px; border: 1px solid var(--border-md);
+      border-radius: var(--radius); background: var(--bg);
+      color: var(--text); font-size: 14px; font-family: inherit;
+      transition: border-color 0.15s;
+    }
+    .field input:focus, .field select:focus { outline: none; border-color: #888; }
+    .add-btn {
+      display: flex; align-items: center; gap: 6px;
+      padding: 9px 18px; border-radius: var(--radius);
+      border: 1px solid var(--green-border); background: var(--green-bg);
+      color: var(--green-text); font-size: 13px; font-weight: 500;
+      font-family: inherit; cursor: pointer; white-space: nowrap; transition: opacity 0.15s;
+    }
+    .add-btn:hover { opacity: 0.8; }
+    .new-cat-wrap { display: none; flex: 1; min-width: 150px; flex-direction: column; gap: 4px; }
+    .new-cat-wrap.show { display: flex; }
+    .admin-list {
+      margin-top: 1rem; border-top: 1px solid var(--border);
+      padding-top: 0.75rem; display: flex; flex-direction: column; gap: 3px;
+      max-height: 200px; overflow-y: auto;
+    }
+    .admin-item {
+      display: flex; align-items: center; gap: 8px;
+      padding: 6px 8px; border-radius: var(--radius);
+      font-size: 13px; transition: background 0.1s;
+    }
+    .admin-item:hover { background: var(--surface2); }
+    .admin-item-text { flex: 1; }
+    .admin-item-cat { font-size: 11px; color: var(--text-muted); }
+    .del-btn {
+      background: none; border: none; cursor: pointer;
+      color: var(--text-faint); padding: 3px 5px; border-radius: 6px;
+      display: flex; align-items: center; transition: all 0.15s;
+    }
+    .del-btn:hover { color: var(--danger-text); background: var(--danger-bg); }
+
+    /* Search & filters */
+    .controls { margin-bottom: 0.75rem; }
+    .search-wrap { position: relative; }
+    .search-wrap i {
+      position: absolute; left: 11px; top: 50%;
+      transform: translateY(-50%); font-size: 16px;
+      color: var(--text-muted); pointer-events: none;
+    }
+    #search {
+      width: 100%; padding: 9px 14px 9px 36px;
+      border: 1px solid var(--border-md); border-radius: var(--radius);
+      background: var(--surface); color: var(--text);
+      font-size: 14px; font-family: inherit; transition: border-color 0.15s;
+    }
+    #search:focus { outline: none; border-color: #888; }
+    .filters { display: flex; flex-wrap: wrap; gap: 6px; margin: 0.875rem 0 1rem; }
+    .filter-btn {
+      padding: 5px 14px; border-radius: 20px;
+      border: 1px solid var(--border-md); background: var(--surface);
+      color: var(--text-muted); font-size: 13px; font-family: inherit;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .filter-btn:hover { color: var(--text); border-color: #888; }
+    .filter-btn.active {
+      background: var(--text); color: var(--bg);
+      border-color: var(--text); font-weight: 500;
+    }
+    .stats { font-size: 13px; color: var(--text-muted); margin-bottom: 0.875rem; }
+    .stats span { font-weight: 500; color: var(--text); }
+
+    /* Grid */
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
+    .card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 0.875rem 1rem;
+      cursor: pointer; transition: all 0.15s; user-select: none;
+    }
+    .card:hover { border-color: var(--border-md); background: var(--surface2); }
+    .card.checked { border-color: var(--green-border); background: var(--green-bg); }
+    .card.checked .identity { color: var(--green-text); }
+    .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+    .identity { font-size: 14px; font-weight: 500; line-height: 1.4; flex: 1; }
+    .check-icon {
+      width: 20px; height: 20px; border-radius: 50%;
+      border: 1.5px solid var(--border-md); display: flex;
+      align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 1px; transition: all 0.15s;
+    }
+    .card.checked .check-icon { background: var(--green-bg); border-color: var(--green-border); }
+    .check-icon i { font-size: 12px; color: var(--green-text); opacity: 0; transition: opacity 0.15s; }
+    .card.checked .check-icon i { opacity: 1; }
+    .cat-badge {
+      display: inline-block; margin-top: 8px; font-size: 11px;
+      padding: 2px 8px; border-radius: 10px;
+      border: 1px solid var(--border); color: var(--text-muted);
+    }
+    .card.checked .cat-badge { border-color: var(--green-border); color: var(--green-text); }
+    .no-results { padding: 2.5rem; text-align: center; color: var(--text-muted); font-size: 14px; grid-column: 1/-1; }
+
+    /* Summary */
+    .summary-bar {
+      margin-top: 1.75rem; padding: 1.25rem 1.5rem;
+      background: var(--surface); border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+    }
+    .summary-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.875rem; }
+    .summary-title { font-size: 14px; font-weight: 500; }
+    .summary-count { font-size: 13px; color: var(--text-muted); }
+    .selected-list { display: flex; flex-wrap: wrap; gap: 6px; }
+    .sel-tag {
+      font-size: 12px; padding: 4px 11px; border-radius: 10px;
+      background: var(--green-bg); color: var(--green-text);
+      border: 1px solid var(--green-border);
+    }
+    .empty-sel { font-size: 13px; color: var(--text-faint); font-style: italic; }
+
+    /* Export */
+    .export-wrap { margin-top: 1rem; text-align: right; }
+    .export-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 7px 14px; border-radius: var(--radius);
+      border: 1px solid var(--border-md); background: var(--surface);
+      color: var(--text-muted); font-size: 13px; font-family: inherit;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .export-btn:hover { background: var(--surface2); color: var(--text); }
+
+    /* Toast */
+    .toast {
+      position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%);
+      background: var(--green-bg); color: var(--green-text);
+      border: 1px solid var(--green-border); border-radius: var(--radius);
+      padding: 9px 18px; font-size: 13px; font-weight: 500;
+      opacity: 0; transition: opacity 0.2s; pointer-events: none; z-index: 99;
+      white-space: nowrap;
+    }
+    .toast.show { opacity: 1; }
+
+    @media (max-width: 500px) {
+      body { padding: 1.25rem 1rem 3rem; }
+      .header { flex-direction: column; }
+      .grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="header-left">
+      <div class="title">Identités REBORN</div>
+      <div class="subtitle">Coche les identités qui résonnent avec toi aujourd'hui</div>
+    </div>
+    <button class="admin-toggle" id="admin-toggle" aria-expanded="false">
+      <i class="ti ti-settings" aria-hidden="true"></i> Gérer les identités
+    </button>
+  </div>
+
+  <div class="admin-panel" id="admin-panel">
+    <div class="admin-title">Ajouter une identité</div>
+    <div class="admin-form">
+      <div class="field">
+        <label for="new-text">Identité</label>
+        <input type="text" id="new-text" placeholder="Je suis …" />
+      </div>
+      <div class="field">
+        <label for="cat-select">Catégorie</label>
+        <select id="cat-select"></select>
+      </div>
+      <div class="new-cat-wrap" id="new-cat-wrap">
+        <label for="new-cat">Nouvelle catégorie</label>
+        <input type="text" id="new-cat" placeholder="Nom…" />
+      </div>
+      <button class="add-btn" id="add-btn">
+        <i class="ti ti-plus" aria-hidden="true"></i> Ajouter
+      </button>
+    </div>
+    <div class="admin-list" id="admin-list"></div>
+  </div>
+
+  <div class="controls">
+    <div class="search-wrap">
+      <i class="ti ti-search" aria-hidden="true"></i>
+      <input type="text" id="search" placeholder="Rechercher une identité…" />
+    </div>
+  </div>
+
+  <div class="filters" id="filters"></div>
+  <div class="stats" id="stats"></div>
+  <div class="grid" id="grid"></div>
+
+  <div class="summary-bar">
+    <div class="summary-top">
+      <span class="summary-title">Identités sélectionnées</span>
+      <span class="summary-count" id="sel-count">0 / 0</span>
+    </div>
+    <div class="selected-list" id="selected-list">
+      <span class="empty-sel">Aucune identité sélectionnée pour le moment</span>
+    </div>
+    <div class="export-wrap">
+      <button class="export-btn" id="export-btn">
+        <i class="ti ti-copy" aria-hidden="true"></i> Copier la sélection
+      </button>
+    </div>
+  </div>
+
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const DEFAULT_DATA = [
+  {id:1,text:"Je suis bloqué",cat:"Blocage"},
+  {id:2,text:"Je suis figé",cat:"Blocage"},
+  {id:3,text:"Je suis paralysé",cat:"Blocage"},
+  {id:4,text:"Je suis freiné",cat:"Blocage"},
+  {id:5,text:"Je suis retenu",cat:"Blocage"},
+  {id:6,text:"Je suis jugé",cat:"Peur"},
+  {id:7,text:"Je suis rejeté",cat:"Peur"},
+  {id:8,text:"Je suis abandonné",cat:"Peur"},
+  {id:9,text:"Je suis humilié",cat:"Peur"},
+  {id:10,text:"Je suis trahi",cat:"Peur"},
+  {id:11,text:"Je suis écrasé",cat:"Peur"},
+  {id:12,text:"Je suis ignoré",cat:"Peur"},
+  {id:13,text:"Je suis perdu",cat:"Confusion"},
+  {id:14,text:"Je suis désorienté",cat:"Confusion"},
+  {id:15,text:"Je suis divisé",cat:"Confusion"},
+  {id:16,text:"Je suis épuisé",cat:"Épuisement"},
+  {id:17,text:"Je suis vidé",cat:"Épuisement"},
+  {id:18,text:"Je suis saturé",cat:"Épuisement"},
+  {id:19,text:"Je suis brûlé",cat:"Épuisement"},
+  {id:20,text:"Je suis contrôlé",cat:"Contrôle"},
+  {id:21,text:"Je suis manipulé",cat:"Contrôle"},
+  {id:22,text:"Je suis soumis",cat:"Contrôle"},
+  {id:23,text:"Je suis dominé",cat:"Contrôle"},
+  {id:24,text:"Je suis coupable",cat:"Culpabilité"},
+  {id:25,text:"Je suis honteux",cat:"Culpabilité"},
+  {id:26,text:"Je suis condamné",cat:"Culpabilité"},
+  {id:27,text:"Je suis indigne",cat:"Culpabilité"},
+  {id:28,text:"Je suis insuffisant",cat:"Valeur"},
+  {id:29,text:"Je suis incompétent",cat:"Valeur"},
+  {id:30,text:"Je suis inutile",cat:"Valeur"},
+  {id:31,text:"Je suis invisible",cat:"Valeur"},
+  {id:32,text:"Je suis libéré",cat:"Libération"},
+  {id:33,text:"Je suis affranchi",cat:"Libération"},
+  {id:34,text:"Je suis délivré",cat:"Libération"},
+  {id:35,text:"Je suis guéri",cat:"Libération"},
+  {id:36,text:"Je suis transformé",cat:"Transformation"},
+  {id:37,text:"Je suis renouvelé",cat:"Transformation"},
+  {id:38,text:"Je suis reconstruit",cat:"Transformation"},
+  {id:39,text:"Je suis ancré",cat:"Puissance"},
+  {id:40,text:"Je suis centré",cat:"Puissance"},
+  {id:41,text:"Je suis aligné",cat:"Puissance"},
+  {id:42,text:"Je suis souverain",cat:"Puissance"},
+  {id:43,text:"Je suis accompli",cat:"Puissance"},
+  {id:44,text:"Je suis assumé",cat:"Puissance"},
+  {id:45,text:"Je suis choisi",cat:"Connexion"},
+  {id:46,text:"Je suis aimé",cat:"Connexion"},
+  {id:47,text:"Je suis compris",cat:"Connexion"},
+  {id:48,text:"Je suis accepté",cat:"Connexion"},
+];
+
+const STORAGE_KEY = "reborn_identities_v1";
+
+function load() {
+  try { const s = localStorage.getItem(STORAGE_KEY); return s ? JSON.parse(s) : DEFAULT_DATA; }
+  catch(e) { return DEFAULT_DATA; }
+}
+function save(data) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e) {}
+}
+
+let DATA = load();
+let activeFilter = "Tous";
+let query = "";
+let checked = new Set();
+let adminOpen = false;
+
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 2200);
+}
+
+function cats() { return ["Tous", ...new Set(DATA.map(d => d.cat))]; }
+
+function buildCatSelect() {
+  const sel = document.getElementById("cat-select");
+  const existing = [...new Set(DATA.map(d => d.cat))];
+  sel.innerHTML = existing.map(c => `<option value="${c}">${c}</option>`).join("") +
+    `<option value="__new__">+ Nouvelle catégorie…</option>`;
+  sel.onchange = () => {
+    document.getElementById("new-cat-wrap").classList.toggle("show", sel.value === "__new__");
+  };
+}
+
+function buildFilters() {
+  const el = document.getElementById("filters");
+  el.innerHTML = cats().map(c =>
+    `<button class="filter-btn${c === activeFilter ? " active" : ""}" data-cat="${c}">${c}</button>`
+  ).join("");
+  el.querySelectorAll(".filter-btn").forEach(btn => {
+    btn.addEventListener("click", () => { activeFilter = btn.dataset.cat; render(); });
+  });
+}
+
+function buildAdminList() {
+  const list = document.getElementById("admin-list");
+  const custom = DATA.filter(d => !DEFAULT_DATA.find(dd => dd.id === d.id));
+  const toShow = custom.length ? custom : DATA.slice(-8);
+  if (!toShow.length) { list.innerHTML = `<div style="font-size:13px;color:#9e9e98;padding:4px 0">Aucune identité personnalisée</div>`; return; }
+  list.innerHTML = toShow.map(d => `
+    <div class="admin-item" data-id="${d.id}">
+      <span class="admin-item-text">${d.text}</span>
+      <span class="admin-item-cat">${d.cat}</span>
+      <button class="del-btn" aria-label="Supprimer ${d.text}">
+        <i class="ti ti-trash" aria-hidden="true" style="font-size:15px"></i>
+      </button>
+    </div>
+  `).join("");
+  list.querySelectorAll(".del-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const id = +btn.closest(".admin-item").dataset.id;
+      DATA = DATA.filter(d => d.id !== id);
+      checked.delete(id);
+      save(DATA);
+      render();
+      showToast("Identité supprimée");
+    });
+  });
+}
+
+function filtered() {
+  return DATA.filter(d => {
+    const catOk = activeFilter === "Tous" || d.cat === activeFilter;
+    const qOk = !query || d.text.toLowerCase().includes(query.toLowerCase()) || d.cat.toLowerCase().includes(query.toLowerCase());
+    return catOk && qOk;
+  });
+}
+
+function render() {
+  buildFilters();
+  buildCatSelect();
+  if (adminOpen) buildAdminList();
+  const items = filtered();
+  const grid = document.getElementById("grid");
+  document.getElementById("stats").innerHTML = items.length
+    ? `<span>${items.length}</span> identité${items.length > 1 ? "s" : ""}${activeFilter !== "Tous" ? " — " + activeFilter : ""}`
+    : "";
+  if (!items.length) {
+    grid.innerHTML = `<div class="no-results"><i class="ti ti-search" style="font-size:28px;display:block;margin-bottom:10px;opacity:0.3" aria-hidden="true"></i>Aucun résultat</div>`;
+    renderSummary(); return;
+  }
+  grid.innerHTML = items.map(d => `
+    <div class="card${checked.has(d.id) ? " checked" : ""}" data-id="${d.id}" role="checkbox" aria-checked="${checked.has(d.id)}" tabindex="0">
+      <div class="card-top">
+        <span class="identity">${d.text}</span>
+        <div class="check-icon" aria-hidden="true"><i class="ti ti-check"></i></div>
+      </div>
+      <span class="cat-badge">${d.cat}</span>
+    </div>
+  `).join("");
+  grid.querySelectorAll(".card").forEach(card => {
+    const toggle = () => {
+      const id = +card.dataset.id;
+      if (checked.has(id)) checked.delete(id); else checked.add(id);
+      render();
+    };
+    card.addEventListener("click", toggle);
+    card.addEventListener("keydown", e => { if (e.key === " " || e.key === "Enter") { e.preventDefault(); toggle(); } });
+  });
+  renderSummary();
+}
+
+function renderSummary() {
+  const sel = DATA.filter(d => checked.has(d.id));
+  document.getElementById("sel-count").textContent = `${sel.length} / ${DATA.length}`;
+  const list = document.getElementById("selected-list");
+  if (!sel.length) { list.innerHTML = `<span class="empty-sel">Aucune identité sélectionnée pour le moment</span>`; return; }
+  list.innerHTML = sel.map(d => `<span class="sel-tag">${d.text}</span>`).join("");
+}
+
+document.getElementById("admin-toggle").addEventListener("click", () => {
+  adminOpen = !adminOpen;
+  document.getElementById("admin-panel").classList.toggle("open", adminOpen);
+  document.getElementById("admin-toggle").setAttribute("aria-expanded", adminOpen);
+  if (adminOpen) buildAdminList();
+});
+
+document.getElementById("add-btn").addEventListener("click", () => {
+  const textEl = document.getElementById("new-text");
+  const catSel = document.getElementById("cat-select");
+  const newCatEl = document.getElementById("new-cat");
+  let text = textEl.value.trim();
+  let cat = catSel.value === "__new__" ? newCatEl.value.trim() : catSel.value;
+  if (!text) { textEl.focus(); return; }
+  if (!text.toLowerCase().startsWith("je suis")) text = "Je suis " + text;
+  if (!cat) { newCatEl.focus(); return; }
+  DATA.push({ id: Date.now(), text, cat });
+  save(DATA);
+  textEl.value = ""; newCatEl.value = "";
+  catSel.value = catSel.options[0].value;
+  document.getElementById("new-cat-wrap").classList.remove("show");
+  render();
+  showToast("✓ Ajouté — " + text);
+});
+
+document.getElementById("new-text").addEventListener("keydown", e => {
+  if (e.key === "Enter") document.getElementById("add-btn").click();
+});
+
+document.getElementById("search").addEventListener("input", e => { query = e.target.value; render(); });
+
+document.getElementById("export-btn").addEventListener("click", () => {
+  const sel = DATA.filter(d => checked.has(d.id));
+  if (!sel.length) { showToast("Aucune identité sélectionnée"); return; }
+  const text = sel.map(d => `• ${d.text} (${d.cat})`).join("\n");
+  navigator.clipboard.writeText(text).then(() => showToast("✓ Sélection copiée !")).catch(() => showToast("Copie non supportée"));
+});
+
+render();
+</script>
+</body>
+</html>
