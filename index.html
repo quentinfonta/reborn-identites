@@ -20,43 +20,66 @@
       --accent:#c8b89a;--radius:10px;--radius-lg:14px;
     }
     *{box-sizing:border-box;margin:0;padding:0;}
-    body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:2rem 1.5rem 5rem;}
-    .container{max-width:920px;margin:0 auto;}
+    body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 
-    /* PROFILE SCREEN */
-    .profile-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;gap:2rem;}
-    .profile-logo{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);}
-    .profile-title{font-size:28px;font-weight:600;letter-spacing:-0.3px;text-align:center;}
-    .profile-sub{font-size:15px;color:var(--text-muted);text-align:center;}
+    /* SCREENS */
+    .screen{display:none;min-height:100vh;padding:2rem 1.5rem 5rem;}
+    .screen.show{display:flex;flex-direction:column;}
+    #profile-screen{align-items:center;justify-content:center;gap:2rem;}
+    #pin-screen{align-items:center;justify-content:center;gap:1.5rem;}
+    #app-screen{display:none;padding:2rem 1.5rem 5rem;}
+    #app-screen.show{display:block;}
+
+    .brand{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);}
+    .screen-title{font-size:26px;font-weight:600;letter-spacing:-0.3px;text-align:center;}
+    .screen-sub{font-size:14px;color:var(--text-muted);text-align:center;}
+
+    /* PROFILE BOX */
     .profile-box{background:var(--surface);border:1px solid var(--border-md);border-radius:var(--radius-lg);padding:2rem;width:100%;max-width:440px;}
-    .profile-box-title{font-size:13px;font-weight:500;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:1.25rem;}
-    .profile-list{display:flex;flex-direction:column;gap:6px;margin-bottom:1.25rem;max-height:240px;overflow-y:auto;}
+    .box-label{font-size:11px;font-weight:500;color:var(--text-faint);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:1rem;}
+    .profile-list{display:flex;flex-direction:column;gap:6px;margin-bottom:1.25rem;max-height:260px;overflow-y:auto;}
     .profile-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface2);cursor:pointer;transition:all 0.15s;}
     .profile-item:hover{border-color:var(--border-md);background:var(--surface3);}
     .profile-avatar{width:32px;height:32px;border-radius:50%;background:var(--gold-bg);border:1px solid var(--gold-border);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--gold-text);flex-shrink:0;}
     .profile-name{font-size:14px;font-weight:500;flex:1;}
     .profile-meta{font-size:11px;color:var(--text-faint);}
-    .profile-divider{display:flex;align-items:center;gap:10px;margin:1rem 0;color:var(--text-faint);font-size:12px;}
-    .profile-divider::before,.profile-divider::after{content:'';flex:1;height:1px;background:var(--border);}
-    .new-profile-form{display:flex;gap:8px;}
-    .new-profile-input{flex:1;padding:9px 12px;border:1px solid var(--border-md);border-radius:var(--radius);background:var(--surface2);color:var(--text);font-size:14px;font-family:inherit;}
-    .new-profile-input::placeholder{color:var(--text-faint);}
-    .new-profile-input:focus{outline:none;border-color:var(--border-strong);}
-    .new-profile-btn{padding:9px 16px;border-radius:var(--radius);border:1px solid var(--green-border);background:var(--green-bg);color:var(--green-text);font-size:13px;font-weight:500;font-family:inherit;cursor:pointer;white-space:nowrap;}
-    .new-profile-btn:hover{opacity:0.8;}
-    .profile-loading{display:flex;align-items:center;gap:8px;color:var(--text-faint);font-size:14px;}
+    .divider{display:flex;align-items:center;gap:10px;margin:1rem 0;color:var(--text-faint);font-size:12px;}
+    .divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border);}
+    .new-profile-form{display:flex;flex-direction:column;gap:8px;}
+    .input-row{display:flex;gap:8px;}
+    .txt-input{flex:1;padding:9px 12px;border:1px solid var(--border-md);border-radius:var(--radius);background:var(--surface2);color:var(--text);font-size:14px;font-family:inherit;transition:border-color 0.15s;}
+    .txt-input::placeholder{color:var(--text-faint);}
+    .txt-input:focus{outline:none;border-color:var(--border-strong);}
+    .pin-hint{font-size:12px;color:var(--text-faint);}
+    .green-btn{padding:9px 16px;border-radius:var(--radius);border:1px solid var(--green-border);background:var(--green-bg);color:var(--green-text);font-size:13px;font-weight:500;font-family:inherit;cursor:pointer;white-space:nowrap;}
+    .green-btn:hover{opacity:0.8;}
 
-    /* MAIN APP */
-    .app-screen{display:none;}
-    .app-screen.show{display:block;}
+    /* PIN SCREEN */
+    .pin-box{background:var(--surface);border:1px solid var(--border-md);border-radius:var(--radius-lg);padding:2rem;width:100%;max-width:360px;display:flex;flex-direction:column;align-items:center;gap:1.25rem;}
+    .pin-avatar{width:52px;height:52px;border-radius:50%;background:var(--gold-bg);border:1px solid var(--gold-border);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:600;color:var(--gold-text);}
+    .pin-name{font-size:18px;font-weight:600;}
+    .pin-label{font-size:13px;color:var(--text-muted);}
+    .pin-dots{display:flex;gap:10px;margin:0.25rem 0;}
+    .pin-dot{width:12px;height:12px;border-radius:50%;border:1.5px solid var(--border-md);background:transparent;transition:all 0.15s;}
+    .pin-dot.filled{background:var(--accent);border-color:var(--accent);}
+    .pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:200px;}
+    .pin-key{padding:14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:18px;font-weight:500;font-family:inherit;cursor:pointer;text-align:center;transition:all 0.15s;}
+    .pin-key:hover{background:var(--surface3);border-color:var(--border-md);}
+    .pin-key.del{font-size:14px;color:var(--text-muted);}
+    .pin-error{font-size:13px;color:var(--red-text);min-height:18px;text-align:center;}
+    .back-link{font-size:13px;color:var(--text-faint);cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
+    .back-link:hover{color:var(--text-muted);}
+
+    /* APP */
+    .app-container{max-width:920px;margin:0 auto;}
     .header{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border);}
     .logo{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:6px;}
     .title{font-size:26px;font-weight:600;letter-spacing:-0.3px;}
     .subtitle{font-size:14px;color:var(--text-muted);margin-top:5px;font-style:italic;}
     .header-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
-    .current-profile-badge{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;border:1px solid var(--gold-border);background:var(--gold-bg);color:var(--gold-text);font-size:13px;font-weight:500;}
-    .switch-profile-btn{background:none;border:none;cursor:pointer;color:var(--gold-text);opacity:0.6;padding:0;display:flex;align-items:center;transition:opacity 0.15s;}
-    .switch-profile-btn:hover{opacity:1;}
+    .profile-badge{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;border:1px solid var(--gold-border);background:var(--gold-bg);color:var(--gold-text);font-size:13px;font-weight:500;}
+    .icon-btn{background:none;border:none;cursor:pointer;color:var(--gold-text);opacity:0.6;padding:0;display:flex;align-items:center;transition:opacity 0.15s;}
+    .icon-btn:hover{opacity:1;}
     .header-btn{display:flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface2);color:var(--text-muted);font-size:13px;font-family:inherit;cursor:pointer;transition:all 0.15s;}
     .header-btn:hover{border-color:var(--border-strong);color:var(--text);}
     .header-btn.progress-btn{border-color:var(--blue-border);color:var(--blue-text);background:var(--blue-bg);}
@@ -144,37 +167,33 @@
     .remove-worked{background:none;border:none;cursor:pointer;color:var(--gold-text);opacity:0.4;font-size:12px;padding:0;display:flex;align-items:center;transition:opacity 0.15s;}
     .remove-worked:hover{opacity:1;}
 
-    /* PROGRESSION OVERLAY */
+    /* OVERLAYS */
     .overlay{display:none;position:fixed;inset:0;background:var(--bg);z-index:200;overflow-y:auto;padding:2rem 1.5rem 4rem;}
     .overlay.show{display:block;}
     .overlay-inner{max-width:780px;margin:0 auto;}
     .overlay-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border);}
     .overlay-heading{font-size:22px;font-weight:600;}
     .overlay-sub{font-size:14px;color:var(--text-muted);margin-top:4px;}
-    .close-btn{display:flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface2);color:var(--text-muted);font-size:13px;font-family:inherit;cursor:pointer;transition:all 0.15s;}
+    .close-btn{display:flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface2);color:var(--text-muted);font-size:13px;font-family:inherit;cursor:pointer;}
     .close-btn:hover{border-color:var(--border-strong);color:var(--text);}
     .stat-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:2rem;}
     .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.25rem;}
     .stat-label{font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
-    .stat-value{font-size:28px;font-weight:600;color:var(--text);}
+    .stat-value{font-size:28px;font-weight:600;}
     .stat-unit{font-size:13px;color:var(--text-muted);margin-top:2px;}
     .chart-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:1.5rem;}
     .chart-title{font-size:13px;font-weight:500;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:1.5rem;}
-    .bar-chart{display:flex;flex-direction:column;gap:10px;}
-    .bar-row{display:flex;align-items:center;gap:12px;}
-    .bar-label{font-size:12px;color:var(--text-muted);width:130px;flex-shrink:0;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-    .bar-track{flex:1;height:28px;background:var(--surface2);border-radius:6px;overflow:hidden;}
+    .bar-chart,.cat-chart{display:flex;flex-direction:column;gap:10px;}
+    .bar-row,.cat-row{display:flex;align-items:center;gap:12px;}
+    .bar-label,.cat-label{font-size:12px;color:var(--text-muted);width:130px;flex-shrink:0;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .bar-track,.cat-track{flex:1;height:28px;background:var(--surface2);border-radius:6px;overflow:hidden;}
+    .cat-track{height:22px;}
     .bar-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,rgba(186,117,23,0.5),rgba(212,147,58,0.85));display:flex;align-items:center;justify-content:flex-end;padding-right:8px;min-width:28px;}
     .bar-count{font-size:12px;font-weight:600;color:var(--gold-text);}
-    .cat-chart{display:flex;flex-direction:column;gap:8px;}
-    .cat-row{display:flex;align-items:center;gap:12px;}
-    .cat-label{font-size:12px;color:var(--text-muted);width:130px;flex-shrink:0;text-align:right;}
-    .cat-track{flex:1;height:22px;background:var(--surface2);border-radius:5px;overflow:hidden;}
     .cat-fill{height:100%;border-radius:5px;background:rgba(200,184,154,0.2);border-right:2px solid var(--accent);display:flex;align-items:center;justify-content:flex-end;padding-right:8px;min-width:24px;}
     .cat-count{font-size:11px;font-weight:600;color:var(--accent);}
     .no-data{font-size:14px;color:var(--text-faint);font-style:italic;padding:1rem 0;}
 
-    /* CONFIRM MODAL */
     .confirm-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:300;align-items:center;justify-content:center;}
     .confirm-overlay.show{display:flex;}
     .confirm-box{background:var(--surface2);border:1px solid var(--border-strong);border-radius:var(--radius-lg);padding:1.5rem;max-width:360px;width:90%;}
@@ -186,51 +205,75 @@
 
     .toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--surface3);color:var(--text);border:1px solid var(--border-strong);border-radius:var(--radius);padding:9px 18px;font-size:13px;font-weight:500;opacity:0;transition:opacity 0.2s;pointer-events:none;z-index:400;white-space:nowrap;}
     .toast.show{opacity:1;}
-    .spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--border-md);border-top-color:var(--accent);border-radius:50%;animation:spin 0.7s linear infinite;}
+    .spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--border-md);border-top-color:var(--accent);border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;}
     @keyframes spin{to{transform:rotate(360deg);}}
-    @media(max-width:500px){body{padding:1.25rem 1rem 3rem;}.grid{grid-template-columns:1fr 1fr;}.bar-label,.cat-label{width:80px;font-size:11px;}}
+    .shake{animation:shake 0.35s ease;}
+    @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+    @media(max-width:500px){.screen{padding:1.25rem 1rem 3rem;}.grid{grid-template-columns:1fr 1fr;}.bar-label,.cat-label{width:80px;font-size:11px;}}
   </style>
 </head>
 <body>
 
 <!-- PROFILE SCREEN -->
-<div class="profile-screen" id="profile-screen">
-  <div class="profile-logo">REBORN</div>
+<div class="screen show" id="profile-screen">
+  <div class="brand">REBORN</div>
   <div>
-    <div class="profile-title">Dictionnaire des identités</div>
-    <div class="profile-sub" style="margin-top:8px">Choisis ou crée un profil pour commencer</div>
+    <div class="screen-title">Dictionnaire des identités</div>
+    <div class="screen-sub" style="margin-top:8px">Choisis ton profil pour commencer</div>
   </div>
   <div class="profile-box">
-    <div class="profile-box-title">Profils existants</div>
-    <div class="profile-list" id="profile-list">
-      <div class="profile-loading"><span class="spinner"></span> Chargement…</div>
-    </div>
-    <div class="profile-divider">ou</div>
+    <div class="box-label">Profils existants</div>
+    <div class="profile-list" id="profile-list"><span class="spinner"></span></div>
+    <div class="divider">ou</div>
     <div class="new-profile-form">
-      <input type="text" class="new-profile-input" id="new-profile-input" placeholder="Prénom du client…" />
-      <button class="new-profile-btn" id="new-profile-btn">Créer</button>
+      <div class="box-label" style="margin-bottom:0.5rem">Créer un nouveau profil</div>
+      <div class="input-row">
+        <input type="text" class="txt-input" id="new-profile-name" placeholder="Prénom…" />
+        <input type="text" class="txt-input" id="new-profile-pin" placeholder="Code PIN (4 chiffres)" maxlength="4" style="width:160px;flex:none;" />
+      </div>
+      <div class="pin-hint">Le code PIN protège l'accès à ce profil. Note-le bien.</div>
+      <button class="green-btn" id="new-profile-btn" style="align-self:flex-end">Créer le profil</button>
     </div>
   </div>
 </div>
 
-<!-- MAIN APP -->
-<div class="app-screen" id="app-screen">
-<div class="container">
+<!-- PIN SCREEN -->
+<div class="screen" id="pin-screen">
+  <div class="pin-box">
+    <div class="pin-avatar" id="pin-avatar"></div>
+    <div class="pin-name" id="pin-name"></div>
+    <div class="pin-label">Entre ton code PIN</div>
+    <div class="pin-dots" id="pin-dots">
+      <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
+    </div>
+    <div class="pin-error" id="pin-error"></div>
+    <div class="pin-pad" id="pin-pad">
+      <button class="pin-key" data-v="1">1</button><button class="pin-key" data-v="2">2</button><button class="pin-key" data-v="3">3</button>
+      <button class="pin-key" data-v="4">4</button><button class="pin-key" data-v="5">5</button><button class="pin-key" data-v="6">6</button>
+      <button class="pin-key" data-v="7">7</button><button class="pin-key" data-v="8">8</button><button class="pin-key" data-v="9">9</button>
+      <div></div><button class="pin-key" data-v="0">0</button><button class="pin-key del" data-v="del"><i class="ti ti-backspace"></i></button>
+    </div>
+    <span class="back-link" id="pin-back">← Changer de profil</span>
+  </div>
+</div>
 
+<!-- APP SCREEN -->
+<div id="app-screen">
+<div class="app-container">
   <div class="header">
-    <div class="header-left">
+    <div>
       <div class="logo">REBORN</div>
       <div class="title">Dictionnaire des identités</div>
       <div class="subtitle">Coche les identités qui résonnent avec toi aujourd'hui</div>
     </div>
     <div class="header-actions">
-      <div class="current-profile-badge">
+      <div class="profile-badge">
         <i class="ti ti-user" aria-hidden="true"></i>
         <span id="current-profile-name">—</span>
-        <button class="switch-profile-btn" id="switch-profile-btn" title="Changer de profil"><i class="ti ti-switch-horizontal" style="font-size:14px"></i></button>
+        <button class="icon-btn" id="switch-profile-btn" title="Changer de profil"><i class="ti ti-switch-horizontal" style="font-size:14px"></i></button>
       </div>
-      <button class="header-btn progress-btn" id="progress-btn"><i class="ti ti-chart-bar" aria-hidden="true"></i> Progression</button>
-      <button class="header-btn" id="admin-toggle"><i class="ti ti-settings" aria-hidden="true"></i> Gérer</button>
+      <button class="header-btn progress-btn" id="progress-btn"><i class="ti ti-chart-bar"></i> Progression</button>
+      <button class="header-btn" id="admin-toggle"><i class="ti ti-settings"></i> Gérer</button>
     </div>
   </div>
 
@@ -240,12 +283,12 @@
       <div class="field"><label for="new-text">Identité</label><input type="text" id="new-text" placeholder="Je suis …" /></div>
       <div class="field"><label for="cat-select">Catégorie</label><select id="cat-select"></select></div>
       <div class="new-cat-wrap" id="new-cat-wrap"><label for="new-cat">Nouvelle catégorie</label><input type="text" id="new-cat" placeholder="Nom…" /></div>
-      <button class="add-btn" id="add-btn"><i class="ti ti-plus" aria-hidden="true"></i> Ajouter</button>
+      <button class="add-btn" id="add-btn"><i class="ti ti-plus"></i> Ajouter</button>
     </div>
     <div class="admin-list" id="admin-list"></div>
   </div>
 
-  <div class="controls"><div class="search-wrap"><i class="ti ti-search" aria-hidden="true"></i><input type="text" id="search" placeholder="Rechercher…" /></div></div>
+  <div class="controls"><div class="search-wrap"><i class="ti ti-search"></i><input type="text" id="search" placeholder="Rechercher…" /></div></div>
   <div class="filters" id="filters"></div>
   <div class="stats" id="stats"></div>
   <div class="grid" id="grid"></div>
@@ -257,18 +300,17 @@
     </div>
     <div class="session-body">
       <div class="current-sel" id="current-sel"><span class="empty-sel">Aucune identité cochée</span></div>
-      <button class="validate-btn" id="validate-btn" disabled><i class="ti ti-check" aria-hidden="true"></i> Valider la session — marquer comme travaillées</button>
+      <button class="validate-btn" id="validate-btn" disabled><i class="ti ti-check"></i> Valider la session — marquer comme travaillées</button>
     </div>
   </div>
 
   <div class="worked-section" id="worked-section" style="display:none">
     <div class="worked-header">
-      <div class="worked-title"><i class="ti ti-award" aria-hidden="true"></i> Identités travaillées <span class="worked-count-badge" id="worked-count-badge">0</span></div>
-      <button class="clear-worked-btn" id="clear-worked-btn"><i class="ti ti-trash" aria-hidden="true"></i> Tout effacer</button>
+      <div class="worked-title"><i class="ti ti-award"></i> Identités travaillées <span class="worked-count-badge" id="worked-count-badge">0</span></div>
+      <button class="clear-worked-btn" id="clear-worked-btn"><i class="ti ti-trash"></i> Tout effacer</button>
     </div>
     <div class="worked-body" id="worked-body"></div>
   </div>
-
 </div>
 </div>
 
@@ -276,8 +318,8 @@
 <div class="overlay" id="progress-overlay">
   <div class="overlay-inner">
     <div class="overlay-top">
-      <div><div class="overlay-heading">Progression</div><div class="overlay-sub" id="progress-profile-name"></div></div>
-      <button class="close-btn" id="close-progress"><i class="ti ti-x" aria-hidden="true"></i> Fermer</button>
+      <div><div class="overlay-heading">Progression</div><div class="overlay-sub" id="progress-sub"></div></div>
+      <button class="close-btn" id="close-progress"><i class="ti ti-x"></i> Fermer</button>
     </div>
     <div class="stat-cards" id="stat-cards"></div>
     <div class="chart-section"><div class="chart-title">Identités travaillées par session</div><div class="bar-chart" id="bar-chart"></div></div>
@@ -285,11 +327,10 @@
   </div>
 </div>
 
-<!-- CONFIRM MODAL -->
 <div class="confirm-overlay" id="confirm-modal">
   <div class="confirm-box">
-    <div class="confirm-title" id="confirm-title">Confirmer</div>
-    <div class="confirm-sub" id="confirm-sub"></div>
+    <div class="confirm-title" id="confirm-title"></div>
+    <div class="confirm-sub" id="confirm-sub-text"></div>
     <div class="confirm-actions"><button class="confirm-no" id="confirm-no">Annuler</button><button class="confirm-yes" id="confirm-yes">Confirmer</button></div>
   </div>
 </div>
@@ -301,14 +342,17 @@ const SUPABASE_URL = "https://bxtsgyrgqdfeawpwuqqq.supabase.co";
 const SUPABASE_KEY = "sb_publishable_ch7sWjHrxpkztmy5ACkYKg_WC68M_-3";
 
 async function sb(path, opts={}) {
-  const res = await fetch(SUPABASE_URL + "/rest/v1/" + path, {
-    headers: { "apikey": SUPABASE_KEY, "Authorization": "Bearer " + SUPABASE_KEY, "Content-Type": "application/json", "Prefer": opts.prefer || "return=representation", ...opts.headers },
-    method: opts.method || "GET",
-    body: opts.body ? JSON.stringify(opts.body) : undefined
+  const res = await fetch(SUPABASE_URL+"/rest/v1/"+path, {
+    headers:{"apikey":SUPABASE_KEY,"Authorization":"Bearer "+SUPABASE_KEY,"Content-Type":"application/json","Prefer":opts.prefer||"return=representation",...(opts.headers||{})},
+    method:opts.method||"GET", body:opts.body?JSON.stringify(opts.body):undefined
   });
-  if (!res.ok) { const e = await res.text(); throw new Error(e); }
   const txt = await res.text();
   return txt ? JSON.parse(txt) : null;
+}
+
+async function hashPin(pin) {
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(pin+"REBORN_SALT"));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")).join("");
 }
 
 const DEFAULT_DATA = [
@@ -345,27 +389,40 @@ let checked = new Set();
 let adminOpen = false;
 let pendingConfirm = null;
 
-function workedIds() { return new Set(WORKED.flatMap(s => s.ids)); }
+// PIN STATE
+let pinTarget = null;
+let pinValue = "";
 
-function showToast(msg) {
-  const t = document.getElementById("toast");
-  t.textContent = msg; t.classList.add("show");
-  setTimeout(() => t.classList.remove("show"), 2500);
+function workedIds() { return new Set(WORKED.flatMap(s=>s.ids)); }
+function showToast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2500);}
+
+function showScreen(id) {
+  ["profile-screen","pin-screen"].forEach(s => {
+    const el = document.getElementById(s);
+    el.classList.remove("show");
+  });
+  document.getElementById("app-screen").classList.remove("show");
+  if (id === "app") {
+    document.getElementById("app-screen").classList.add("show");
+  } else {
+    document.getElementById(id).classList.add("show");
+  }
 }
 
-// PROFILE SCREEN
+// PROFILES
 async function loadProfiles() {
+  const list = document.getElementById("profile-list");
+  list.innerHTML = `<span class="spinner"></span>`;
   try {
-    const profiles = await sb("profiles?select=*&order=created_at.desc");
-    const list = document.getElementById("profile-list");
+    const profiles = await sb("profiles?select=*&order=created_at.asc");
     if (!profiles || !profiles.length) {
-      list.innerHTML = `<div style="font-size:13px;color:var(--text-faint);font-style:italic;padding:4px 0">Aucun profil existant</div>`;
+      list.innerHTML = `<div style="font-size:13px;color:var(--text-faint);font-style:italic;padding:4px 0">Aucun profil — crée-en un ci-dessous</div>`;
       return;
     }
     list.innerHTML = profiles.map(p => {
       const initials = p.name.slice(0,2).toUpperCase();
-      const date = new Date(p.created_at).toLocaleDateString("fr-FR",{day:"numeric",month:"short",year:"numeric"});
-      return `<div class="profile-item" data-id="${p.id}" data-name="${p.name}">
+      const date = new Date(p.created_at).toLocaleDateString("fr-FR",{day:"numeric",month:"short"});
+      return `<div class="profile-item" data-id="${p.id}" data-name="${p.name}" data-hash="${p.pin_hash}">
         <div class="profile-avatar">${initials}</div>
         <div class="profile-name">${p.name}</div>
         <div class="profile-meta">depuis le ${date}</div>
@@ -373,266 +430,243 @@ async function loadProfiles() {
       </div>`;
     }).join("");
     list.querySelectorAll(".profile-item").forEach(item => {
-      item.addEventListener("click", () => selectProfile(item.dataset.id, item.dataset.name));
+      item.addEventListener("click", () => openPinScreen(item.dataset.id, item.dataset.name, item.dataset.hash));
     });
   } catch(e) {
-    document.getElementById("profile-list").innerHTML = `<div style="font-size:13px;color:var(--red-text)">Erreur de connexion</div>`;
+    list.innerHTML = `<div style="font-size:13px;color:var(--red-text)">Erreur de connexion</div>`;
   }
 }
 
-async function selectProfile(id, name) {
+function openPinScreen(id, name, hash) {
+  pinTarget = { id, name, hash };
+  pinValue = "";
+  document.getElementById("pin-avatar").textContent = name.slice(0,2).toUpperCase();
+  document.getElementById("pin-name").textContent = name;
+  document.getElementById("pin-error").textContent = "";
+  updatePinDots();
+  showScreen("pin-screen");
+}
+
+function updatePinDots() {
+  document.querySelectorAll(".pin-dot").forEach((dot,i) => {
+    dot.classList.toggle("filled", i < pinValue.length);
+  });
+}
+
+document.querySelectorAll(".pin-key").forEach(key => {
+  key.addEventListener("click", async () => {
+    const v = key.dataset.v;
+    if (v === "del") {
+      pinValue = pinValue.slice(0,-1);
+      updatePinDots();
+      return;
+    }
+    if (pinValue.length >= 4) return;
+    pinValue += v;
+    updatePinDots();
+    if (pinValue.length === 4) {
+      const hash = await hashPin(pinValue);
+      if (hash === pinTarget.hash) {
+        await enterProfile(pinTarget.id, pinTarget.name);
+      } else {
+        document.getElementById("pin-error").textContent = "Code incorrect — réessaie";
+        document.getElementById("pin-dots").classList.add("shake");
+        setTimeout(() => {
+          document.getElementById("pin-dots").classList.remove("shake");
+          pinValue = "";
+          updatePinDots();
+          document.getElementById("pin-error").textContent = "";
+        }, 500);
+      }
+    }
+  });
+});
+
+document.getElementById("pin-back").addEventListener("click", () => {
+  pinTarget = null; pinValue = "";
+  showScreen("profile-screen");
+});
+
+async function enterProfile(id, name) {
   currentProfile = { id, name };
   document.getElementById("current-profile-name").textContent = name;
-  document.getElementById("profile-screen").style.display = "none";
-  document.getElementById("app-screen").classList.add("show");
   checked.clear();
   await loadWorkedSessions();
+  showScreen("app");
   render();
 }
 
 async function loadWorkedSessions() {
   try {
     const sessions = await sb(`sessions?profile_id=eq.${currentProfile.id}&select=*&order=created_at.asc`);
-    WORKED = (sessions || []).map(s => ({ id: s.id, date: s.date, ids: s.ids }));
-  } catch(e) {
-    WORKED = [];
-  }
+    WORKED = (sessions||[]).map(s=>({id:s.id,date:s.date,ids:s.ids}));
+  } catch(e) { WORKED=[]; }
 }
 
 document.getElementById("new-profile-btn").addEventListener("click", async () => {
-  const input = document.getElementById("new-profile-input");
-  const name = input.value.trim();
-  if (!name) { input.focus(); return; }
+  const name = document.getElementById("new-profile-name").value.trim();
+  const pin = document.getElementById("new-profile-pin").value.trim();
+  if (!name) { document.getElementById("new-profile-name").focus(); return; }
+  if (!/^\d{4}$/.test(pin)) { showToast("Le code PIN doit être exactement 4 chiffres"); document.getElementById("new-profile-pin").focus(); return; }
   try {
-    const result = await sb("profiles", { method: "POST", body: { name }, prefer: "return=representation" });
+    const pin_hash = await hashPin(pin);
+    const result = await sb("profiles", {method:"POST", body:{name, pin_hash}, prefer:"return=representation"});
     if (result && result[0]) {
-      input.value = "";
-      await selectProfile(result[0].id, result[0].name);
+      document.getElementById("new-profile-name").value = "";
+      document.getElementById("new-profile-pin").value = "";
+      await enterProfile(result[0].id, result[0].name);
     }
   } catch(e) { showToast("Erreur lors de la création"); }
 });
 
-document.getElementById("new-profile-input").addEventListener("keydown", e => {
-  if (e.key === "Enter") document.getElementById("new-profile-btn").click();
-});
+document.getElementById("new-profile-name").addEventListener("keydown", e => { if(e.key==="Enter") document.getElementById("new-profile-btn").click(); });
 
 document.getElementById("switch-profile-btn").addEventListener("click", () => {
-  currentProfile = null; WORKED = []; checked.clear();
-  document.getElementById("app-screen").classList.remove("show");
-  document.getElementById("profile-screen").style.display = "flex";
+  currentProfile=null; WORKED=[]; checked.clear();
+  showScreen("profile-screen");
   loadProfiles();
 });
 
-// MAIN RENDER
-function cats() { return ["Tous", ...new Set(DATA.map(d => d.cat))]; }
-
-function buildCatSelect() {
-  const sel = document.getElementById("cat-select");
-  const existing = [...new Set(DATA.map(d => d.cat))];
-  sel.innerHTML = existing.map(c => `<option value="${c}">${c}</option>`).join("") + `<option value="__new__">+ Nouvelle catégorie…</option>`;
-  sel.onchange = () => { document.getElementById("new-cat-wrap").classList.toggle("show", sel.value === "__new__"); };
+// RENDER
+function cats(){return["Tous",...new Set(DATA.map(d=>d.cat))];}
+function buildCatSelect(){
+  const sel=document.getElementById("cat-select");
+  sel.innerHTML=[...new Set(DATA.map(d=>d.cat))].map(c=>`<option value="${c}">${c}</option>`).join("")+`<option value="__new__">+ Nouvelle catégorie…</option>`;
+  sel.onchange=()=>{document.getElementById("new-cat-wrap").classList.toggle("show",sel.value==="__new__");};
 }
-
-function buildFilters() {
-  const el = document.getElementById("filters");
-  el.innerHTML = cats().map(c => `<button class="filter-btn${c===activeFilter?" active":""}" data-cat="${c}">${c}</button>`).join("");
-  el.querySelectorAll(".filter-btn").forEach(btn => { btn.addEventListener("click", () => { activeFilter = btn.dataset.cat; render(); }); });
+function buildFilters(){
+  const el=document.getElementById("filters");
+  el.innerHTML=cats().map(c=>`<button class="filter-btn${c===activeFilter?" active":""}" data-cat="${c}">${c}</button>`).join("");
+  el.querySelectorAll(".filter-btn").forEach(btn=>{btn.addEventListener("click",()=>{activeFilter=btn.dataset.cat;render();});});
 }
-
-function buildAdminList() {
-  const list = document.getElementById("admin-list");
-  const custom = DATA.filter(d => !DEFAULT_DATA.find(dd => dd.id === d.id));
-  if (!custom.length) { list.innerHTML = `<div style="font-size:13px;color:var(--text-faint);padding:4px 0">Tes ajouts apparaîtront ici</div>`; return; }
-  list.innerHTML = custom.map(d => `<div class="admin-item" data-id="${d.id}"><span class="admin-item-text">${d.text}</span><span class="admin-item-cat">${d.cat}</span><button class="del-btn"><i class="ti ti-trash" style="font-size:14px"></i></button></div>`).join("");
-  list.querySelectorAll(".del-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const id = +btn.closest(".admin-item").dataset.id;
-      DATA = DATA.filter(d => d.id !== id); checked.delete(id); render(); showToast("Supprimé");
-    });
-  });
+function buildAdminList(){
+  const list=document.getElementById("admin-list");
+  const custom=DATA.filter(d=>!DEFAULT_DATA.find(dd=>dd.id===d.id));
+  if(!custom.length){list.innerHTML=`<div style="font-size:13px;color:var(--text-faint);padding:4px 0">Tes ajouts apparaîtront ici</div>`;return;}
+  list.innerHTML=custom.map(d=>`<div class="admin-item" data-id="${d.id}"><span class="admin-item-text">${d.text}</span><span class="admin-item-cat">${d.cat}</span><button class="del-btn"><i class="ti ti-trash" style="font-size:14px"></i></button></div>`).join("");
+  list.querySelectorAll(".del-btn").forEach(btn=>{btn.addEventListener("click",()=>{const id=+btn.closest(".admin-item").dataset.id;DATA=DATA.filter(d=>d.id!==id);checked.delete(id);render();showToast("Supprimé");});});
 }
+function filtered(){return DATA.filter(d=>{const catOk=activeFilter==="Tous"||d.cat===activeFilter;const qOk=!query||d.text.toLowerCase().includes(query.toLowerCase())||d.cat.toLowerCase().includes(query.toLowerCase());return catOk&&qOk;});}
 
-function filtered() {
-  return DATA.filter(d => {
-    const catOk = activeFilter === "Tous" || d.cat === activeFilter;
-    const qOk = !query || d.text.toLowerCase().includes(query.toLowerCase()) || d.cat.toLowerCase().includes(query.toLowerCase());
-    return catOk && qOk;
-  });
-}
-
-function render() {
-  buildFilters(); buildCatSelect();
-  if (adminOpen) buildAdminList();
-  const wids = workedIds();
-  const items = filtered();
-  const grid = document.getElementById("grid");
-  document.getElementById("stats").innerHTML = items.length ? `<span>${items.length}</span> identité${items.length>1?"s":""}${activeFilter!=="Tous"?" — "+activeFilter:""}` : "";
-  if (!items.length) { grid.innerHTML = `<div class="no-results"><i class="ti ti-search" style="font-size:26px;display:block;margin-bottom:10px;opacity:0.2"></i>Aucun résultat</div>`; renderSession(); renderWorked(); return; }
-  grid.innerHTML = items.map(d => {
-    const isWorked = wids.has(d.id);
-    const isChecked = checked.has(d.id);
-    const cls = isWorked ? "worked" : isChecked ? "checked" : "";
-    const icon = isWorked ? "ti-award" : "ti-check";
+function render(){
+  buildFilters();buildCatSelect();
+  if(adminOpen)buildAdminList();
+  const wids=workedIds();
+  const items=filtered();
+  const grid=document.getElementById("grid");
+  document.getElementById("stats").innerHTML=items.length?`<span>${items.length}</span> identité${items.length>1?"s":""}${activeFilter!=="Tous"?" — "+activeFilter:""}`:""
+  if(!items.length){grid.innerHTML=`<div class="no-results"><i class="ti ti-search" style="font-size:26px;display:block;margin-bottom:10px;opacity:0.2"></i>Aucun résultat</div>`;renderSession();renderWorked();return;}
+  grid.innerHTML=items.map(d=>{
+    const isWorked=wids.has(d.id);const isChecked=checked.has(d.id);
+    const cls=isWorked?"worked":isChecked?"checked":"";
+    const icon=isWorked?"ti-award":"ti-check";
     return `<div class="card${cls?" "+cls:""}" data-id="${d.id}" ${isWorked?"":"role=\"checkbox\" aria-checked=\""+isChecked+"\""} tabindex="0"><div class="card-top"><span class="identity">${d.text}</span><div class="check-icon"><i class="ti ${icon}"></i></div></div><span class="cat-badge">${d.cat}</span></div>`;
   }).join("");
-  grid.querySelectorAll(".card:not(.worked)").forEach(card => {
-    const toggle = () => { const id = +card.dataset.id; if (checked.has(id)) checked.delete(id); else checked.add(id); render(); };
-    card.addEventListener("click", toggle);
-    card.addEventListener("keydown", e => { if (e.key===" "||e.key==="Enter") { e.preventDefault(); toggle(); } });
+  grid.querySelectorAll(".card:not(.worked)").forEach(card=>{
+    const toggle=()=>{const id=+card.dataset.id;if(checked.has(id))checked.delete(id);else checked.add(id);render();};
+    card.addEventListener("click",toggle);
+    card.addEventListener("keydown",e=>{if(e.key===" "||e.key==="Enter"){e.preventDefault();toggle();}});
   });
-  renderSession(); renderWorked();
+  renderSession();renderWorked();
 }
 
-function renderSession() {
-  const sel = DATA.filter(d => checked.has(d.id));
-  const count = sel.length;
-  document.getElementById("session-count").textContent = `${count} identité${count>1?"s":""} sélectionnée${count>1?"s":""}`;
-  const list = document.getElementById("current-sel");
-  list.innerHTML = sel.length ? sel.map(d => `<span class="sel-tag">${d.text}</span>`).join("") : `<span class="empty-sel">Aucune identité cochée</span>`;
-  document.getElementById("validate-btn").disabled = sel.length === 0;
+function renderSession(){
+  const sel=DATA.filter(d=>checked.has(d.id));const count=sel.length;
+  document.getElementById("session-count").textContent=`${count} identité${count>1?"s":""} sélectionnée${count>1?"s":""}`;
+  const list=document.getElementById("current-sel");
+  list.innerHTML=sel.length?sel.map(d=>`<span class="sel-tag">${d.text}</span>`).join(""):`<span class="empty-sel">Aucune identité cochée</span>`;
+  document.getElementById("validate-btn").disabled=sel.length===0;
 }
 
-function renderWorked() {
-  const section = document.getElementById("worked-section");
-  const body = document.getElementById("worked-body");
-  const badge = document.getElementById("worked-count-badge");
-  const total = WORKED.reduce((acc, s) => acc + s.ids.length, 0);
-  badge.textContent = total;
-  if (!WORKED.length) { section.style.display = "none"; return; }
-  section.style.display = "block";
-  body.innerHTML = WORKED.slice().reverse().map(session => {
-    const identities = session.ids.map(id => DATA.find(d => d.id === id)).filter(Boolean);
-    if (!identities.length) return "";
-    return `<div class="worked-session"><div class="worked-date">${session.date}</div><div class="worked-tags">${identities.map(d => `<span class="worked-tag">${d.text}<button class="remove-worked" data-session-id="${session.id}" data-id="${d.id}"><i class="ti ti-x" style="font-size:11px"></i></button></span>`).join("")}</div></div>`;
+function renderWorked(){
+  const section=document.getElementById("worked-section");
+  const body=document.getElementById("worked-body");
+  const total=WORKED.reduce((acc,s)=>acc+s.ids.length,0);
+  document.getElementById("worked-count-badge").textContent=total;
+  if(!WORKED.length){section.style.display="none";return;}
+  section.style.display="block";
+  body.innerHTML=WORKED.slice().reverse().map(session=>{
+    const identities=session.ids.map(id=>DATA.find(d=>d.id===id)).filter(Boolean);
+    if(!identities.length)return "";
+    return `<div class="worked-session"><div class="worked-date">${session.date}</div><div class="worked-tags">${identities.map(d=>`<span class="worked-tag">${d.text}<button class="remove-worked" data-session-id="${session.id}" data-id="${d.id}"><i class="ti ti-x" style="font-size:11px"></i></button></span>`).join("")}</div></div>`;
   }).join("");
-  body.querySelectorAll(".remove-worked").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const sessionId = btn.dataset.sessionId;
-      const id = +btn.dataset.id;
-      const identity = DATA.find(d => d.id === id);
-      showConfirm("Retirer cette identité ?", `"${identity ? identity.text : ""}" sera retirée de la liste des travaillées.`, async () => {
-        const session = WORKED.find(s => s.id === sessionId);
-        if (!session) return;
-        session.ids = session.ids.filter(i => i !== id);
-        if (!session.ids.length) {
-          await sb(`sessions?id=eq.${sessionId}`, { method: "DELETE", prefer: "" });
-          WORKED = WORKED.filter(s => s.id !== sessionId);
-        } else {
-          await sb(`sessions?id=eq.${sessionId}`, { method: "PATCH", body: { ids: session.ids }, prefer: "" });
-        }
-        render(); showToast("Identité retirée");
+  body.querySelectorAll(".remove-worked").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      const sessionId=btn.dataset.sessionId;const id=+btn.dataset.id;
+      const identity=DATA.find(d=>d.id===id);
+      showConfirm("Retirer cette identité ?",`"${identity?identity.text:""}" sera retirée des identités travaillées.`,async()=>{
+        const session=WORKED.find(s=>s.id===sessionId);if(!session)return;
+        session.ids=session.ids.filter(i=>i!==id);
+        if(!session.ids.length){await sb(`sessions?id=eq.${sessionId}`,{method:"DELETE",prefer:""});WORKED=WORKED.filter(s=>s.id!==sessionId);}
+        else{await sb(`sessions?id=eq.${sessionId}`,{method:"PATCH",body:{ids:session.ids},prefer:""});}
+        render();showToast("Identité retirée");
       });
     });
   });
 }
 
-// VALIDATE SESSION
-document.getElementById("validate-btn").addEventListener("click", async () => {
-  if (checked.size === 0 || !currentProfile) return;
-  const btn = document.getElementById("validate-btn");
-  btn.disabled = true;
-  const date = new Date().toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
-  const wids = workedIds();
-  const newIds = [...checked].filter(id => !wids.has(id));
-  if (!newIds.length) { checked.clear(); render(); return; }
-  try {
-    const result = await sb("sessions", { method: "POST", body: { profile_id: currentProfile.id, date, ids: newIds }, prefer: "return=representation" });
-    if (result && result[0]) WORKED.push({ id: result[0].id, date, ids: newIds });
-    checked.clear(); render();
-    showToast(`✓ ${newIds.length} identité${newIds.length>1?"s":""} marquée${newIds.length>1?"s":""} comme travaillée${newIds.length>1?"s":""}`);
-  } catch(e) { showToast("Erreur lors de la sauvegarde"); btn.disabled = false; }
+document.getElementById("validate-btn").addEventListener("click",async()=>{
+  if(checked.size===0||!currentProfile)return;
+  const btn=document.getElementById("validate-btn");btn.disabled=true;
+  const date=new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
+  const wids=workedIds();const newIds=[...checked].filter(id=>!wids.has(id));
+  if(!newIds.length){checked.clear();render();return;}
+  try{
+    const result=await sb("sessions",{method:"POST",body:{profile_id:currentProfile.id,date,ids:newIds},prefer:"return=representation"});
+    if(result&&result[0])WORKED.push({id:result[0].id,date,ids:newIds});
+    checked.clear();render();showToast(`✓ ${newIds.length} identité${newIds.length>1?"s":""} marquée${newIds.length>1?"s":""} comme travaillée${newIds.length>1?"s":""}`);
+  }catch(e){showToast("Erreur lors de la sauvegarde");btn.disabled=false;}
 });
 
-// CLEAR ALL
-document.getElementById("clear-worked-btn").addEventListener("click", () => {
-  showConfirm("Effacer tout l'historique ?", "Toutes les sessions de ce profil seront supprimées. Action irréversible.", async () => {
-    try {
-      await sb(`sessions?profile_id=eq.${currentProfile.id}`, { method: "DELETE", prefer: "" });
-      WORKED = []; render(); showToast("Historique effacé");
-    } catch(e) { showToast("Erreur"); }
+document.getElementById("clear-worked-btn").addEventListener("click",()=>{
+  showConfirm("Effacer tout l'historique ?","Toutes les sessions de ce profil seront supprimées. Action irréversible.",async()=>{
+    try{await sb(`sessions?profile_id=eq.${currentProfile.id}`,{method:"DELETE",prefer:""});WORKED=[];render();showToast("Historique effacé");}
+    catch(e){showToast("Erreur");}
   });
 });
 
-// CONFIRM MODAL
-function showConfirm(title, sub, onYes) {
-  document.getElementById("confirm-title").textContent = title;
-  document.getElementById("confirm-sub").textContent = sub;
-  pendingConfirm = onYes;
+function showConfirm(title,sub,onYes){
+  document.getElementById("confirm-title").textContent=title;
+  document.getElementById("confirm-sub-text").textContent=sub;
+  pendingConfirm=onYes;
   document.getElementById("confirm-modal").classList.add("show");
 }
-document.getElementById("confirm-yes").addEventListener("click", async () => {
+document.getElementById("confirm-yes").addEventListener("click",async()=>{
   document.getElementById("confirm-modal").classList.remove("show");
-  if (pendingConfirm) { await pendingConfirm(); pendingConfirm = null; }
+  if(pendingConfirm){await pendingConfirm();pendingConfirm=null;}
 });
-document.getElementById("confirm-no").addEventListener("click", () => {
-  pendingConfirm = null;
-  document.getElementById("confirm-modal").classList.remove("show");
-});
+document.getElementById("confirm-no").addEventListener("click",()=>{pendingConfirm=null;document.getElementById("confirm-modal").classList.remove("show");});
 
 // PROGRESSION
-function renderProgress() {
-  const name = currentProfile ? currentProfile.name : "";
-  document.getElementById("progress-profile-name").textContent = name ? `Profil — ${name}` : "";
-  const total = WORKED.reduce((acc, s) => acc + s.ids.length, 0);
-  const sessions = WORKED.length;
-  const avg = sessions ? Math.round(total / sessions) : 0;
-  document.getElementById("stat-cards").innerHTML = [
-    {label:"Sessions",value:sessions,unit:"au total"},
-    {label:"Identités travaillées",value:total,unit:"au total"},
-    {label:"Par session",value:avg,unit:"en moyenne"},
-  ].map(s => `<div class="stat-card"><div class="stat-label">${s.label}</div><div class="stat-value">${s.value}</div><div class="stat-unit">${s.unit}</div></div>`).join("");
-  const barEl = document.getElementById("bar-chart");
-  if (!WORKED.length) { barEl.innerHTML = `<div class="no-data">Aucune session validée pour le moment.</div>`; }
-  else {
-    const max = Math.max(...WORKED.map(s => s.ids.length));
-    barEl.innerHTML = WORKED.map(s => {
-      const pct = max > 0 ? Math.round((s.ids.length / max) * 100) : 0;
-      return `<div class="bar-row"><span class="bar-label">${s.date}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.max(pct,4)}%"><span class="bar-count">${s.ids.length}</span></div></div></div>`;
-    }).join("");
-  }
-  const catEl = document.getElementById("cat-chart");
-  if (!WORKED.length) { catEl.innerHTML = `<div class="no-data">Aucune donnée disponible.</div>`; }
-  else {
-    const allIds = WORKED.flatMap(s => s.ids);
-    const catCounts = {};
-    allIds.forEach(id => { const item = DATA.find(d => d.id === id); if (item) catCounts[item.cat] = (catCounts[item.cat]||0)+1; });
-    const sorted = Object.entries(catCounts).sort((a,b) => b[1]-a[1]);
-    const maxCat = sorted.length ? sorted[0][1] : 1;
-    catEl.innerHTML = sorted.map(([cat,count]) => {
-      const pct = Math.round((count/maxCat)*100);
-      return `<div class="cat-row"><span class="cat-label">${cat}</span><div class="cat-track"><div class="cat-fill" style="width:${Math.max(pct,4)}%"><span class="cat-count">${count}</span></div></div></div>`;
-    }).join("");
-  }
+function renderProgress(){
+  document.getElementById("progress-sub").textContent=currentProfile?"Profil — "+currentProfile.name:"";
+  const total=WORKED.reduce((acc,s)=>acc+s.ids.length,0);
+  const sessions=WORKED.length;const avg=sessions?Math.round(total/sessions):0;
+  document.getElementById("stat-cards").innerHTML=[{label:"Sessions",value:sessions,unit:"au total"},{label:"Identités travaillées",value:total,unit:"au total"},{label:"Par session",value:avg,unit:"en moyenne"}].map(s=>`<div class="stat-card"><div class="stat-label">${s.label}</div><div class="stat-value">${s.value}</div><div class="stat-unit">${s.unit}</div></div>`).join("");
+  const barEl=document.getElementById("bar-chart");
+  if(!WORKED.length){barEl.innerHTML=`<div class="no-data">Aucune session validée.</div>`;}
+  else{const max=Math.max(...WORKED.map(s=>s.ids.length));barEl.innerHTML=WORKED.map(s=>{const pct=max>0?Math.round((s.ids.length/max)*100):0;return`<div class="bar-row"><span class="bar-label">${s.date}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.max(pct,4)}%"><span class="bar-count">${s.ids.length}</span></div></div></div>`;}).join("");}
+  const catEl=document.getElementById("cat-chart");
+  if(!WORKED.length){catEl.innerHTML=`<div class="no-data">Aucune donnée.</div>`;}
+  else{const allIds=WORKED.flatMap(s=>s.ids);const catCounts={};allIds.forEach(id=>{const item=DATA.find(d=>d.id===id);if(item)catCounts[item.cat]=(catCounts[item.cat]||0)+1;});const sorted=Object.entries(catCounts).sort((a,b)=>b[1]-a[1]);const maxCat=sorted.length?sorted[0][1]:1;catEl.innerHTML=sorted.map(([cat,count])=>{const pct=Math.round((count/maxCat)*100);return`<div class="cat-row"><span class="cat-label">${cat}</span><div class="cat-track"><div class="cat-fill" style="width:${Math.max(pct,4)}%"><span class="cat-count">${count}</span></div></div></div>`;}).join("");}
 }
 
-document.getElementById("progress-btn").addEventListener("click", () => { renderProgress(); document.getElementById("progress-overlay").classList.add("show"); });
-document.getElementById("close-progress").addEventListener("click", () => { document.getElementById("progress-overlay").classList.remove("show"); });
+document.getElementById("progress-btn").addEventListener("click",()=>{renderProgress();document.getElementById("progress-overlay").classList.add("show");});
+document.getElementById("close-progress").addEventListener("click",()=>{document.getElementById("progress-overlay").classList.remove("show");});
 
-// ADMIN
-document.getElementById("admin-toggle").addEventListener("click", () => {
-  adminOpen = !adminOpen;
-  document.getElementById("admin-panel").classList.toggle("open", adminOpen);
-  if (adminOpen) buildAdminList();
+document.getElementById("admin-toggle").addEventListener("click",()=>{adminOpen=!adminOpen;document.getElementById("admin-panel").classList.toggle("open",adminOpen);if(adminOpen)buildAdminList();});
+document.getElementById("add-btn").addEventListener("click",()=>{
+  const textEl=document.getElementById("new-text");const catSel=document.getElementById("cat-select");const newCatEl=document.getElementById("new-cat");
+  let text=textEl.value.trim();let cat=catSel.value==="__new__"?newCatEl.value.trim():catSel.value;
+  if(!text){textEl.focus();return;}
+  if(!text.toLowerCase().startsWith("je suis"))text="Je suis "+text;
+  if(!cat){newCatEl.focus();return;}
+  DATA.push({id:Date.now(),text,cat});textEl.value="";newCatEl.value="";catSel.value=catSel.options[0].value;document.getElementById("new-cat-wrap").classList.remove("show");render();showToast("✓ Ajouté — "+text);
 });
-document.getElementById("add-btn").addEventListener("click", () => {
-  const textEl = document.getElementById("new-text");
-  const catSel = document.getElementById("cat-select");
-  const newCatEl = document.getElementById("new-cat");
-  let text = textEl.value.trim();
-  let cat = catSel.value === "__new__" ? newCatEl.value.trim() : catSel.value;
-  if (!text) { textEl.focus(); return; }
-  if (!text.toLowerCase().startsWith("je suis")) text = "Je suis " + text;
-  if (!cat) { newCatEl.focus(); return; }
-  DATA.push({ id: Date.now(), text, cat });
-  textEl.value = ""; newCatEl.value = "";
-  catSel.value = catSel.options[0].value;
-  document.getElementById("new-cat-wrap").classList.remove("show");
-  render(); showToast("✓ Ajouté — " + text);
-});
-document.getElementById("new-text").addEventListener("keydown", e => { if (e.key==="Enter") document.getElementById("add-btn").click(); });
-document.getElementById("search").addEventListener("input", e => { query = e.target.value; render(); });
+document.getElementById("new-text").addEventListener("keydown",e=>{if(e.key==="Enter")document.getElementById("add-btn").click();});
+document.getElementById("search").addEventListener("input",e=>{query=e.target.value;render();});
 
-// INIT
+// INIT — ajouter la colonne pin_hash si besoin est géré côté SQL
 loadProfiles();
 </script>
 </body>
