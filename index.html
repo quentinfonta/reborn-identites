@@ -220,6 +220,7 @@
         <input type="text" class="txt-input" id="new-profile-pin" placeholder="Code PIN (4 chiffres)" maxlength="4" style="width:160px;flex:none;" />
       </div>
       <div class="pin-hint">Le code PIN protège l'accès à ce profil.</div>
+      <div id="create-error" style="font-size:13px;color:var(--red-text);min-height:16px;"></div>
       <button class="green-btn" id="new-profile-btn" style="align-self:flex-end">Créer le profil</button>
     </div>
   </div>
@@ -1046,11 +1047,25 @@ async function loadWorkedSessions(){try{const sessions=await sb(`sessions?profil
 
 document.getElementById("new-profile-btn").addEventListener("click",async()=>{
   const name=document.getElementById("new-profile-name").value.trim();const pin=document.getElementById("new-profile-pin").value.trim();
-  if(!name){document.getElementById("new-profile-name").focus();return;}
-  if(!/^\d{4}$/.test(pin)){showToast("Le code PIN doit être exactement 4 chiffres");document.getElementById("new-profile-pin").focus();return;}
-  try{const pin_hash=await hashPin(pin);const result=await sb("profiles",{method:"POST",body:{name,pin_hash},prefer:"return=representation"});
-  if(result&&result[0]){document.getElementById("new-profile-name").value="";document.getElementById("new-profile-pin").value="";await enterProfile(result[0].id,result[0].name);}}
-  catch(e){showToast("Erreur lors de la création");}
+  const errEl=document.getElementById("create-error");
+  errEl.textContent="";
+  if(!name){document.getElementById("new-profile-name").focus();errEl.textContent="Entre un prénom.";return;}
+  if(!/^\d{4}$/.test(pin)){errEl.textContent="Le code PIN doit être exactement 4 chiffres.";document.getElementById("new-profile-pin").focus();return;}
+  const btn=document.getElementById("new-profile-btn");
+  btn.textContent="Création…";btn.disabled=true;
+  try{
+    const pin_hash=await hashPin(pin);
+    const res=await fetch("https://bxtsgyrgqdfeawpwuqqq.supabase.co/rest/v1/profiles",{
+      method:"POST",
+      headers:{"apikey":"sb_publishable_ch7sWjHrxpkztmy5ACkYKg_WC68M_-3","Authorization":"Bearer sb_publishable_ch7sWjHrxpkztmy5ACkYKg_WC68M_-3","Content-Type":"application/json","Prefer":"return=representation"},
+      body:JSON.stringify({name,pin_hash})
+    });
+    const txt=await res.text();
+    if(!res.ok){errEl.textContent="Erreur "+res.status+": "+txt;btn.textContent="Créer le profil";btn.disabled=false;return;}
+    const result=JSON.parse(txt);
+    if(result&&result[0]){document.getElementById("new-profile-name").value="";document.getElementById("new-profile-pin").value="";await enterProfile(result[0].id,result[0].name);}
+    else{errEl.textContent="Réponse inattendue: "+txt;btn.textContent="Créer le profil";btn.disabled=false;}
+  }catch(e){errEl.textContent="Erreur réseau: "+e.message;btn.textContent="Créer le profil";btn.disabled=false;}
 });
 document.getElementById("new-profile-name").addEventListener("keydown",e=>{if(e.key==="Enter")document.getElementById("new-profile-btn").click();});
 document.getElementById("switch-profile-btn").addEventListener("click",()=>{currentProfile=null;WORKED=[];checked.clear();showScreen("profile-screen");loadProfiles();});
