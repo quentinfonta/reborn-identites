@@ -18,23 +18,19 @@
       --red-bg:rgba(163,45,45,0.12);--red-border:rgba(163,45,45,0.4);--red-text:#e06060;
       --blue-bg:rgba(55,138,221,0.12);--blue-border:rgba(55,138,221,0.4);--blue-text:#5aaaf0;
       --accent:#c8b89a;--radius:10px;--radius-lg:14px;
+      --star-on:#c8b89a;--star-off:#2a2a2a;
     }
     *{box-sizing:border-box;margin:0;padding:0;}
     body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
-
-    /* SCREENS */
     .screen{display:none;min-height:100vh;padding:2rem 1.5rem 5rem;}
     .screen.show{display:flex;flex-direction:column;}
     #profile-screen{align-items:center;justify-content:center;gap:2rem;}
     #pin-screen{align-items:center;justify-content:center;gap:1.5rem;}
     #app-screen{display:none;padding:2rem 1.5rem 5rem;}
     #app-screen.show{display:block;}
-
     .brand{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);}
     .screen-title{font-size:26px;font-weight:600;letter-spacing:-0.3px;text-align:center;}
     .screen-sub{font-size:14px;color:var(--text-muted);text-align:center;}
-
-    /* PROFILE BOX */
     .profile-box{background:var(--surface);border:1px solid var(--border-md);border-radius:var(--radius-lg);padding:2rem;width:100%;max-width:440px;}
     .box-label{font-size:11px;font-weight:500;color:var(--text-faint);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:1rem;}
     .profile-list{display:flex;flex-direction:column;gap:6px;margin-bottom:1.25rem;max-height:260px;overflow-y:auto;}
@@ -47,14 +43,12 @@
     .divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border);}
     .new-profile-form{display:flex;flex-direction:column;gap:8px;}
     .input-row{display:flex;gap:8px;}
-    .txt-input{flex:1;padding:9px 12px;border:1px solid var(--border-md);border-radius:var(--radius);background:var(--surface2);color:var(--text);font-size:14px;font-family:inherit;transition:border-color 0.15s;}
+    .txt-input{flex:1;padding:9px 12px;border:1px solid var(--border-md);border-radius:var(--radius);background:var(--surface2);color:var(--text);font-size:14px;font-family:inherit;}
     .txt-input::placeholder{color:var(--text-faint);}
     .txt-input:focus{outline:none;border-color:var(--border-strong);}
     .pin-hint{font-size:12px;color:var(--text-faint);}
     .green-btn{padding:9px 16px;border-radius:var(--radius);border:1px solid var(--green-border);background:var(--green-bg);color:var(--green-text);font-size:13px;font-weight:500;font-family:inherit;cursor:pointer;white-space:nowrap;}
     .green-btn:hover{opacity:0.8;}
-
-    /* PIN SCREEN */
     .pin-box{background:var(--surface);border:1px solid var(--border-md);border-radius:var(--radius-lg);padding:2rem;width:100%;max-width:360px;display:flex;flex-direction:column;align-items:center;gap:1.25rem;}
     .pin-avatar{width:52px;height:52px;border-radius:50%;background:var(--gold-bg);border:1px solid var(--gold-border);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:600;color:var(--gold-text);}
     .pin-name{font-size:18px;font-weight:600;}
@@ -69,8 +63,6 @@
     .pin-error{font-size:13px;color:var(--red-text);min-height:18px;text-align:center;}
     .back-link{font-size:13px;color:var(--text-faint);cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
     .back-link:hover{color:var(--text-muted);}
-
-    /* APP */
     .app-container{max-width:920px;margin:0 auto;}
     .header{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border);}
     .logo{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:6px;}
@@ -83,7 +75,6 @@
     .header-btn{display:flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface2);color:var(--text-muted);font-size:13px;font-family:inherit;cursor:pointer;transition:all 0.15s;}
     .header-btn:hover{border-color:var(--border-strong);color:var(--text);}
     .header-btn.progress-btn{border-color:var(--blue-border);color:var(--blue-text);background:var(--blue-bg);}
-
     .admin-panel{background:var(--surface);border:1px solid var(--border-md);border-radius:var(--radius-lg);padding:1.25rem 1.5rem;margin-bottom:1.5rem;display:none;}
     .admin-panel.open{display:block;}
     .panel-label{font-size:11px;font-weight:500;color:var(--text-faint);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:1rem;}
@@ -98,14 +89,19 @@
     .new-cat-wrap{display:none;flex:1;min-width:150px;flex-direction:column;gap:5px;}
     .new-cat-wrap.show{display:flex;}
     .admin-list{margin-top:1rem;border-top:1px solid var(--border);padding-top:0.75rem;display:flex;flex-direction:column;gap:2px;max-height:180px;overflow-y:auto;}
-    .admin-item{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:7px;font-size:13px;transition:background 0.1s;}
+    .admin-item{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:7px;font-size:13px;}
     .admin-item:hover{background:var(--surface2);}
     .admin-item-text{flex:1;color:var(--text);}
     .admin-item-cat{font-size:11px;color:var(--text-faint);}
     .del-btn{background:none;border:none;cursor:pointer;color:var(--text-faint);padding:3px 5px;border-radius:6px;display:flex;align-items:center;transition:all 0.15s;}
     .del-btn:hover{color:var(--red-text);background:var(--red-bg);}
-
-    .controls{margin-bottom:0.875rem;}
+    .depth-filter{display:flex;align-items:center;gap:8px;margin:0 0 0.75rem;flex-wrap:wrap;}
+    .depth-label{font-size:12px;color:var(--text-faint);}
+    .depth-btn{display:flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--text-muted);font-size:12px;font-family:inherit;cursor:pointer;transition:all 0.15s;}
+    .depth-btn:hover{border-color:var(--border-md);color:var(--text);}
+    .depth-btn.active{background:var(--surface2);border-color:var(--border-strong);color:var(--text);}
+    .depth-btn .stars{color:var(--star-on);letter-spacing:-1px;}
+    .controls{margin-bottom:0.75rem;}
     .search-wrap{position:relative;}
     .search-wrap i{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:16px;color:var(--text-faint);pointer-events:none;}
     #search{width:100%;padding:10px 14px 10px 38px;border:1px solid var(--border-md);border-radius:var(--radius);background:var(--surface);color:var(--text);font-size:14px;font-family:inherit;}
@@ -117,7 +113,6 @@
     .filter-btn.active{background:var(--accent);color:#0a0a0a;border-color:var(--accent);font-weight:600;}
     .stats{font-size:13px;color:var(--text-faint);margin-bottom:0.875rem;}
     .stats span{font-weight:500;color:var(--text-muted);}
-
     .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:7px;}
     .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:0.875rem 1rem;cursor:pointer;transition:all 0.15s;user-select:none;}
     .card:hover{border-color:var(--border-md);background:var(--surface2);}
@@ -135,10 +130,13 @@
     .check-icon i{font-size:11px;opacity:0;transition:opacity 0.15s;}
     .card.checked .check-icon i{opacity:1;color:var(--green-text);}
     .card.worked .check-icon i{opacity:1;color:var(--gold-text);}
-    .cat-badge{display:inline-block;margin-top:7px;font-size:10px;padding:2px 7px;border-radius:8px;border:1px solid var(--border);color:var(--text-faint);}
+    .card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:8px;}
+    .cat-badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:8px;border:1px solid var(--border);color:var(--text-faint);}
     .card.checked .cat-badge{border-color:var(--green-border);color:var(--green-text);}
+    .depth-stars{font-size:10px;letter-spacing:-1px;}
+    .s-on{color:var(--star-on);}
+    .s-off{color:var(--star-off);}
     .no-results{padding:3rem;text-align:center;color:var(--text-faint);font-size:14px;grid-column:1/-1;}
-
     .session-bar{margin-top:2rem;background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border-md);overflow:hidden;}
     .session-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.5rem;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:8px;}
     .session-title{font-size:13px;font-weight:500;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;}
@@ -150,12 +148,11 @@
     .validate-btn{display:flex;align-items:center;gap:8px;width:100%;padding:11px 18px;border-radius:var(--radius);border:1px solid var(--gold-border);background:var(--gold-bg);color:var(--gold-text);font-size:14px;font-weight:500;font-family:inherit;cursor:pointer;justify-content:center;transition:opacity 0.15s;}
     .validate-btn:hover{opacity:0.8;}
     .validate-btn:disabled{opacity:0.3;cursor:default;}
-
     .worked-section{margin-top:1.5rem;background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border);overflow:hidden;}
     .worked-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.5rem;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:8px;}
     .worked-title{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--gold-text);text-transform:uppercase;letter-spacing:1px;}
     .worked-count-badge{font-size:11px;padding:2px 8px;border-radius:20px;background:var(--gold-bg);border:1px solid var(--gold-border);color:var(--gold-text);}
-    .clear-worked-btn{display:flex;align-items:center;gap:5px;padding:5px 12px;border-radius:var(--radius);border:1px solid var(--red-border);background:var(--red-bg);color:var(--red-text);font-size:12px;font-family:inherit;cursor:pointer;transition:opacity 0.15s;}
+    .clear-worked-btn{display:flex;align-items:center;gap:5px;padding:5px 12px;border-radius:var(--radius);border:1px solid var(--red-border);background:var(--red-bg);color:var(--red-text);font-size:12px;font-family:inherit;cursor:pointer;}
     .clear-worked-btn:hover{opacity:0.8;}
     .worked-body{padding:1rem 1.5rem;}
     .worked-session{margin-bottom:1.25rem;}
@@ -164,10 +161,8 @@
     .worked-date::after{content:'';flex:1;height:1px;background:var(--border);}
     .worked-tags{display:flex;flex-wrap:wrap;gap:6px;}
     .worked-tag{font-size:12px;padding:4px 11px;border-radius:8px;background:var(--gold-bg);color:var(--gold-text);border:1px solid var(--gold-border);display:flex;align-items:center;gap:6px;}
-    .remove-worked{background:none;border:none;cursor:pointer;color:var(--gold-text);opacity:0.4;font-size:12px;padding:0;display:flex;align-items:center;transition:opacity 0.15s;}
+    .remove-worked{background:none;border:none;cursor:pointer;color:var(--gold-text);opacity:0.4;font-size:12px;padding:0;display:flex;align-items:center;}
     .remove-worked:hover{opacity:1;}
-
-    /* OVERLAYS */
     .overlay{display:none;position:fixed;inset:0;background:var(--bg);z-index:200;overflow-y:auto;padding:2rem 1.5rem 4rem;}
     .overlay.show{display:block;}
     .overlay-inner{max-width:780px;margin:0 auto;}
@@ -193,7 +188,6 @@
     .cat-fill{height:100%;border-radius:5px;background:rgba(200,184,154,0.2);border-right:2px solid var(--accent);display:flex;align-items:center;justify-content:flex-end;padding-right:8px;min-width:24px;}
     .cat-count{font-size:11px;font-weight:600;color:var(--accent);}
     .no-data{font-size:14px;color:var(--text-faint);font-style:italic;padding:1rem 0;}
-
     .confirm-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:300;align-items:center;justify-content:center;}
     .confirm-overlay.show{display:flex;}
     .confirm-box{background:var(--surface2);border:1px solid var(--border-strong);border-radius:var(--radius-lg);padding:1.5rem;max-width:360px;width:90%;}
@@ -202,7 +196,6 @@
     .confirm-actions{display:flex;gap:8px;}
     .confirm-yes{flex:1;padding:9px;border-radius:var(--radius);border:1px solid var(--red-border);background:var(--red-bg);color:var(--red-text);font-size:13px;font-family:inherit;cursor:pointer;font-weight:500;}
     .confirm-no{flex:1;padding:9px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface);color:var(--text-muted);font-size:13px;font-family:inherit;cursor:pointer;}
-
     .toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--surface3);color:var(--text);border:1px solid var(--border-strong);border-radius:var(--radius);padding:9px 18px;font-size:13px;font-weight:500;opacity:0;transition:opacity 0.2s;pointer-events:none;z-index:400;white-space:nowrap;}
     .toast.show{opacity:1;}
     .spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--border-md);border-top-color:var(--accent);border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;}
@@ -213,14 +206,9 @@
   </style>
 </head>
 <body>
-
-<!-- PROFILE SCREEN -->
 <div class="screen show" id="profile-screen">
   <div class="brand">REBORN</div>
-  <div>
-    <div class="screen-title">Dictionnaire des identités</div>
-    <div class="screen-sub" style="margin-top:8px">Choisis ton profil pour commencer</div>
-  </div>
+  <div><div class="screen-title">Dictionnaire des identités</div><div class="screen-sub" style="margin-top:8px">Choisis ton profil pour commencer</div></div>
   <div class="profile-box">
     <div class="box-label">Profils existants</div>
     <div class="profile-list" id="profile-list"><span class="spinner"></span></div>
@@ -231,13 +219,12 @@
         <input type="text" class="txt-input" id="new-profile-name" placeholder="Prénom…" />
         <input type="text" class="txt-input" id="new-profile-pin" placeholder="Code PIN (4 chiffres)" maxlength="4" style="width:160px;flex:none;" />
       </div>
-      <div class="pin-hint">Le code PIN protège l'accès à ce profil. Note-le bien.</div>
+      <div class="pin-hint">Le code PIN protège l'accès à ce profil.</div>
       <button class="green-btn" id="new-profile-btn" style="align-self:flex-end">Créer le profil</button>
     </div>
   </div>
 </div>
 
-<!-- PIN SCREEN -->
 <div class="screen" id="pin-screen">
   <div class="pin-box">
     <div class="pin-avatar" id="pin-avatar"></div>
@@ -247,7 +234,7 @@
       <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
     </div>
     <div class="pin-error" id="pin-error"></div>
-    <div class="pin-pad" id="pin-pad">
+    <div class="pin-pad">
       <button class="pin-key" data-v="1">1</button><button class="pin-key" data-v="2">2</button><button class="pin-key" data-v="3">3</button>
       <button class="pin-key" data-v="4">4</button><button class="pin-key" data-v="5">5</button><button class="pin-key" data-v="6">6</button>
       <button class="pin-key" data-v="7">7</button><button class="pin-key" data-v="8">8</button><button class="pin-key" data-v="9">9</button>
@@ -257,7 +244,6 @@
   </div>
 </div>
 
-<!-- APP SCREEN -->
 <div id="app-screen">
 <div class="app-container">
   <div class="header">
@@ -267,43 +253,42 @@
       <div class="subtitle">Coche les identités qui résonnent avec toi aujourd'hui</div>
     </div>
     <div class="header-actions">
-      <div class="profile-badge">
-        <i class="ti ti-user" aria-hidden="true"></i>
-        <span id="current-profile-name">—</span>
-        <button class="icon-btn" id="switch-profile-btn" title="Changer de profil"><i class="ti ti-switch-horizontal" style="font-size:14px"></i></button>
-      </div>
+      <div class="profile-badge"><i class="ti ti-user"></i><span id="current-profile-name">—</span><button class="icon-btn" id="switch-profile-btn"><i class="ti ti-switch-horizontal" style="font-size:14px"></i></button></div>
       <button class="header-btn progress-btn" id="progress-btn"><i class="ti ti-chart-bar"></i> Progression</button>
       <button class="header-btn" id="admin-toggle"><i class="ti ti-settings"></i> Gérer</button>
     </div>
   </div>
-
   <div class="admin-panel" id="admin-panel">
     <div class="panel-label">Ajouter une identité</div>
     <div class="admin-form">
-      <div class="field"><label for="new-text">Identité</label><input type="text" id="new-text" placeholder="Je suis …" /></div>
-      <div class="field"><label for="cat-select">Catégorie</label><select id="cat-select"></select></div>
-      <div class="new-cat-wrap" id="new-cat-wrap"><label for="new-cat">Nouvelle catégorie</label><input type="text" id="new-cat" placeholder="Nom…" /></div>
+      <div class="field"><label>Identité</label><input type="text" id="new-text" placeholder="Je suis …" /></div>
+      <div class="field"><label>Catégorie</label><select id="cat-select"></select></div>
+      <div class="new-cat-wrap" id="new-cat-wrap"><label>Nouvelle catégorie</label><input type="text" id="new-cat" placeholder="Nom…" /></div>
+      <div class="field" style="max-width:130px"><label>Profondeur</label><select id="depth-select"><option value="1">★ Surface</option><option value="2">★★</option><option value="3">★★★</option><option value="4">★★★★</option><option value="5">★★★★★ Noyau</option></select></div>
       <button class="add-btn" id="add-btn"><i class="ti ti-plus"></i> Ajouter</button>
     </div>
     <div class="admin-list" id="admin-list"></div>
   </div>
-
   <div class="controls"><div class="search-wrap"><i class="ti ti-search"></i><input type="text" id="search" placeholder="Rechercher…" /></div></div>
+  <div class="depth-filter">
+    <span class="depth-label">Profondeur :</span>
+    <button class="depth-btn active" data-depth="0">Toutes</button>
+    <button class="depth-btn" data-depth="1"><span class="stars">★</span></button>
+    <button class="depth-btn" data-depth="2"><span class="stars">★★</span></button>
+    <button class="depth-btn" data-depth="3"><span class="stars">★★★</span></button>
+    <button class="depth-btn" data-depth="4"><span class="stars">★★★★</span></button>
+    <button class="depth-btn" data-depth="5"><span class="stars">★★★★★</span></button>
+  </div>
   <div class="filters" id="filters"></div>
   <div class="stats" id="stats"></div>
   <div class="grid" id="grid"></div>
-
   <div class="session-bar">
-    <div class="session-header">
-      <span class="session-title">Session en cours</span>
-      <span class="session-count" id="session-count">0 identité sélectionnée</span>
-    </div>
+    <div class="session-header"><span class="session-title">Session en cours</span><span class="session-count" id="session-count">0 identité sélectionnée</span></div>
     <div class="session-body">
       <div class="current-sel" id="current-sel"><span class="empty-sel">Aucune identité cochée</span></div>
       <button class="validate-btn" id="validate-btn" disabled><i class="ti ti-check"></i> Valider la session — marquer comme travaillées</button>
     </div>
   </div>
-
   <div class="worked-section" id="worked-section" style="display:none">
     <div class="worked-header">
       <div class="worked-title"><i class="ti ti-award"></i> Identités travaillées <span class="worked-count-badge" id="worked-count-badge">0</span></div>
@@ -314,7 +299,6 @@
 </div>
 </div>
 
-<!-- PROGRESSION OVERLAY -->
 <div class="overlay" id="progress-overlay">
   <div class="overlay-inner">
     <div class="overlay-top">
@@ -334,339 +318,787 @@
     <div class="confirm-actions"><button class="confirm-no" id="confirm-no">Annuler</button><button class="confirm-yes" id="confirm-yes">Confirmer</button></div>
   </div>
 </div>
-
 <div class="toast" id="toast"></div>
-
 <script>
-const SUPABASE_URL = "https://bxtsgyrgqdfeawpwuqqq.supabase.co";
-const SUPABASE_KEY = "sb_publishable_ch7sWjHrxpkztmy5ACkYKg_WC68M_-3";
-
-async function sb(path, opts={}) {
-  const res = await fetch(SUPABASE_URL+"/rest/v1/"+path, {
-    headers:{"apikey":SUPABASE_KEY,"Authorization":"Bearer "+SUPABASE_KEY,"Content-Type":"application/json","Prefer":opts.prefer||"return=representation",...(opts.headers||{})},
-    method:opts.method||"GET", body:opts.body?JSON.stringify(opts.body):undefined
-  });
-  const txt = await res.text();
-  return txt ? JSON.parse(txt) : null;
-}
-
-async function hashPin(pin) {
-  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(pin+"REBORN_SALT"));
-  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")).join("");
-}
+const SUPABASE_URL="https://bxtsgyrgqdfeawpwuqqq.supabase.co";
+const SUPABASE_KEY="sb_publishable_ch7sWjHrxpkztmy5ACkYKg_WC68M_-3";
+async function sb(path,opts={}){const res=await fetch(SUPABASE_URL+"/rest/v1/"+path,{headers:{"apikey":SUPABASE_KEY,"Authorization":"Bearer "+SUPABASE_KEY,"Content-Type":"application/json","Prefer":opts.prefer||"return=representation",...(opts.headers||{})},method:opts.method||"GET",body:opts.body?JSON.stringify(opts.body):undefined});const txt=await res.text();return txt?JSON.parse(txt):null;}
+async function hashPin(pin){const buf=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(pin+"REBORN_SALT"));return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")).join("");}
 
 const DEFAULT_DATA = [
-  {id:1,text:"Je suis anéanti",cat:"Destruction"},{id:2,text:"Je suis annihilé",cat:"Destruction"},{id:3,text:"Je suis démoli",cat:"Destruction"},{id:4,text:"Je suis dévasté",cat:"Destruction"},{id:5,text:"Je suis effondré",cat:"Destruction"},{id:6,text:"Je suis ravagé",cat:"Destruction"},{id:7,text:"Je suis ruiné",cat:"Destruction"},{id:8,text:"Je suis saccagé",cat:"Destruction"},{id:9,text:"Je suis brisé",cat:"Destruction"},{id:10,text:"Je suis cassé",cat:"Destruction"},{id:11,text:"Je suis fissuré",cat:"Destruction"},{id:12,text:"Je suis fracturé",cat:"Destruction"},{id:13,text:"Je suis fragmenté",cat:"Destruction"},{id:14,text:"Je suis morcelé",cat:"Destruction"},{id:15,text:"Je suis lacéré",cat:"Destruction"},{id:16,text:"Je suis mutilé",cat:"Destruction"},{id:17,text:"Je suis disloqué",cat:"Destruction"},{id:18,text:"Je suis déchiré",cat:"Destruction"},{id:19,text:"Je suis meurtri",cat:"Destruction"},{id:20,text:"Je suis esquinté",cat:"Destruction"},{id:21,text:"Je suis délabré",cat:"Destruction"},{id:22,text:"Je suis abîmé",cat:"Destruction"},{id:23,text:"Je suis détérioré",cat:"Destruction"},{id:24,text:"Je suis endommagé",cat:"Destruction"},
-  {id:30,text:"Je suis abandonné",cat:"Abandon"},{id:31,text:"Je suis rejeté",cat:"Abandon"},{id:32,text:"Je suis délaissé",cat:"Abandon"},{id:33,text:"Je suis laissé",cat:"Abandon"},{id:34,text:"Je suis exclu",cat:"Abandon"},{id:35,text:"Je suis banni",cat:"Abandon"},{id:36,text:"Je suis ostracisé",cat:"Abandon"},{id:37,text:"Je suis marginalisé",cat:"Abandon"},{id:38,text:"Je suis relégué",cat:"Abandon"},{id:39,text:"Je suis écarté",cat:"Abandon"},{id:40,text:"Je suis ignoré",cat:"Abandon"},{id:41,text:"Je suis négligé",cat:"Abandon"},{id:42,text:"Je suis oublié",cat:"Abandon"},{id:43,text:"Je suis invisible",cat:"Abandon"},{id:44,text:"Je suis invisibilisé",cat:"Abandon"},{id:45,text:"Je suis non-attendu",cat:"Abandon"},{id:46,text:"Je suis non-désiré",cat:"Abandon"},{id:47,text:"Je suis non-voulu",cat:"Abandon"},{id:48,text:"Je suis disparu",cat:"Abandon"},
-  {id:60,text:"Je suis honteux",cat:"Honte"},{id:61,text:"Je suis indigne",cat:"Honte"},{id:62,text:"Je suis illégitime",cat:"Honte"},{id:63,text:"Je suis non-aimable",cat:"Honte"},{id:64,text:"Je suis non-mérité",cat:"Honte"},{id:65,text:"Je suis imparfait",cat:"Honte"},{id:66,text:"Je suis incomplet",cat:"Honte"},{id:67,text:"Je suis inachevé",cat:"Honte"},{id:68,text:"Je suis inadapté",cat:"Honte"},{id:69,text:"Je suis inapte",cat:"Honte"},{id:70,text:"Je suis incapable",cat:"Honte"},{id:71,text:"Je suis défaillant",cat:"Honte"},{id:72,text:"Je suis défectueux",cat:"Honte"},{id:73,text:"Je suis raté",cat:"Honte"},{id:74,text:"Je suis abâtardi",cat:"Honte"},{id:75,text:"Je suis souillé",cat:"Honte"},{id:76,text:"Je suis maculé",cat:"Honte"},{id:77,text:"Je suis taché",cat:"Honte"},{id:78,text:"Je suis sali",cat:"Honte"},{id:79,text:"Je suis entaché",cat:"Honte"},{id:80,text:"Je suis profané",cat:"Honte"},
-  {id:100,text:"Je suis coupable",cat:"Culpabilité"},{id:101,text:"Je suis fautif",cat:"Culpabilité"},{id:102,text:"Je suis condamné",cat:"Culpabilité"},{id:103,text:"Je suis damné",cat:"Culpabilité"},{id:104,text:"Je suis maudit",cat:"Culpabilité"},{id:105,text:"Je suis puni",cat:"Culpabilité"},{id:106,text:"Je suis sanctionné",cat:"Culpabilité"},{id:107,text:"Je suis châtié",cat:"Culpabilité"},{id:108,text:"Je suis réprimandé",cat:"Culpabilité"},{id:109,text:"Je suis accusé",cat:"Culpabilité"},{id:110,text:"Je suis incriminé",cat:"Culpabilité"},{id:111,text:"Je suis dénoncé",cat:"Culpabilité"},{id:112,text:"Je suis jugé",cat:"Culpabilité"},{id:113,text:"Je suis sacrifié",cat:"Culpabilité"},{id:114,text:"Je suis crucifié",cat:"Culpabilité"},{id:115,text:"Je suis immolé",cat:"Culpabilité"},{id:116,text:"Je suis supplicié",cat:"Culpabilité"},{id:117,text:"Je suis martyrisé",cat:"Culpabilité"},
-  {id:130,text:"Je suis contrôlé",cat:"Contrôle"},{id:131,text:"Je suis manipulé",cat:"Contrôle"},{id:132,text:"Je suis dominé",cat:"Contrôle"},{id:133,text:"Je suis soumis",cat:"Contrôle"},{id:134,text:"Je suis domestiqué",cat:"Contrôle"},{id:135,text:"Je suis colonisé",cat:"Contrôle"},{id:136,text:"Je suis instrumentalisé",cat:"Contrôle"},{id:137,text:"Je suis possédé",cat:"Contrôle"},{id:138,text:"Je suis emprisonné",cat:"Contrôle"},{id:139,text:"Je suis enfermé",cat:"Contrôle"},{id:140,text:"Je suis enchaîné",cat:"Contrôle"},{id:141,text:"Je suis ligoté",cat:"Contrôle"},{id:142,text:"Je suis attaché",cat:"Contrôle"},{id:143,text:"Je suis retenu",cat:"Contrôle"},{id:144,text:"Je suis cadenassé",cat:"Contrôle"},{id:145,text:"Je suis verrouillé",cat:"Contrôle"},{id:146,text:"Je suis barricadé",cat:"Contrôle"},{id:147,text:"Je suis cloisonné",cat:"Contrôle"},{id:148,text:"Je suis muré",cat:"Contrôle"},{id:149,text:"Je suis cloué",cat:"Contrôle"},{id:150,text:"Je suis piégé",cat:"Contrôle"},{id:151,text:"Je suis coincé",cat:"Contrôle"},{id:152,text:"Je suis bloqué",cat:"Contrôle"},{id:153,text:"Je suis figé",cat:"Contrôle"},{id:154,text:"Je suis paralysé",cat:"Contrôle"},{id:155,text:"Je suis immobilisé",cat:"Contrôle"},{id:156,text:"Je suis stoppé",cat:"Contrôle"},{id:157,text:"Je suis arrêté",cat:"Contrôle"},{id:158,text:"Je suis freiné",cat:"Contrôle"},{id:159,text:"Je suis bridé",cat:"Contrôle"},{id:160,text:"Je suis entravé",cat:"Contrôle"},{id:161,text:"Je suis contraint",cat:"Contrôle"},
-  {id:180,text:"Je suis diminué",cat:"Dévaluation"},{id:181,text:"Je suis amoindri",cat:"Dévaluation"},{id:182,text:"Je suis rabaissé",cat:"Dévaluation"},{id:183,text:"Je suis abaissé",cat:"Dévaluation"},{id:184,text:"Je suis dévalorisé",cat:"Dévaluation"},{id:185,text:"Je suis déprécié",cat:"Dévaluation"},{id:186,text:"Je suis mésestimé",cat:"Dévaluation"},{id:187,text:"Je suis sous-estimé",cat:"Dévaluation"},{id:188,text:"Je suis minimisé",cat:"Dévaluation"},{id:189,text:"Je suis humilié",cat:"Dévaluation"},{id:190,text:"Je suis bafoué",cat:"Dévaluation"},{id:191,text:"Je suis avili",cat:"Dévaluation"},{id:192,text:"Je suis aplati",cat:"Dévaluation"},{id:193,text:"Je suis écrasé",cat:"Dévaluation"},{id:194,text:"Je suis superflu",cat:"Dévaluation"},{id:195,text:"Je suis inutile",cat:"Dévaluation"},{id:196,text:"Je suis insuffisant",cat:"Dévaluation"},{id:197,text:"Je suis incompétent",cat:"Dévaluation"},
-  {id:220,text:"Je suis trahi",cat:"Trahison"},{id:221,text:"Je suis corrompu",cat:"Trahison"},{id:222,text:"Je suis vendu",cat:"Trahison"},{id:223,text:"Je suis livré",cat:"Trahison"},{id:224,text:"Je suis exposé",cat:"Trahison"},{id:225,text:"Je suis démasqué",cat:"Trahison"},{id:226,text:"Je suis dénudé",cat:"Trahison"},{id:227,text:"Je suis déshonoré",cat:"Trahison"},{id:228,text:"Je suis désavoué",cat:"Trahison"},{id:229,text:"Je suis renié",cat:"Trahison"},{id:230,text:"Je suis repoussé",cat:"Trahison"},
-  {id:250,text:"Je suis vide",cat:"Vide"},{id:251,text:"Je suis vidé",cat:"Vide"},{id:252,text:"Je suis évidé",cat:"Vide"},{id:253,text:"Je suis creux",cat:"Vide"},{id:254,text:"Je suis absent",cat:"Vide"},{id:255,text:"Je suis évanoui",cat:"Vide"},{id:256,text:"Je suis évaporé",cat:"Vide"},{id:257,text:"Je suis volatilisé",cat:"Vide"},{id:258,text:"Je suis envolé",cat:"Vide"},{id:259,text:"Je suis dilué",cat:"Vide"},{id:260,text:"Je suis dissous",cat:"Vide"},{id:261,text:"Je suis fondu",cat:"Vide"},{id:262,text:"Je suis dispersé",cat:"Vide"},{id:263,text:"Je suis éparpillé",cat:"Vide"},{id:264,text:"Je suis dissocié",cat:"Vide"},{id:265,text:"Je suis effacé",cat:"Vide"},{id:266,text:"Je suis annulé",cat:"Vide"},{id:267,text:"Je suis supprimé",cat:"Vide"},{id:268,text:"Je suis mort",cat:"Vide"},
-  {id:290,text:"Je suis épuisé",cat:"Épuisement"},{id:291,text:"Je suis à bout",cat:"Épuisement"},{id:292,text:"Je suis drainé",cat:"Épuisement"},{id:293,text:"Je suis lessivé",cat:"Épuisement"},{id:294,text:"Je suis pompé",cat:"Épuisement"},{id:295,text:"Je suis consumé",cat:"Épuisement"},{id:296,text:"Je suis brûlé",cat:"Épuisement"},{id:297,text:"Je suis cramé",cat:"Épuisement"},{id:298,text:"Je suis grillé",cat:"Épuisement"},{id:299,text:"Je suis saturé",cat:"Épuisement"},{id:300,text:"Je suis surchargé",cat:"Épuisement"},{id:301,text:"Je suis débordé",cat:"Épuisement"},{id:302,text:"Je suis submergé",cat:"Épuisement"},{id:303,text:"Je suis asséché",cat:"Épuisement"},{id:304,text:"Je suis tari",cat:"Épuisement"},{id:305,text:"Je suis appauvri",cat:"Épuisement"},
-  {id:320,text:"Je suis perdu",cat:"Confusion"},{id:321,text:"Je suis désorienté",cat:"Confusion"},{id:322,text:"Je suis déboussolé",cat:"Confusion"},{id:323,text:"Je suis égaré",cat:"Confusion"},{id:324,text:"Je suis flottant",cat:"Confusion"},{id:325,text:"Je suis divisé",cat:"Confusion"},{id:326,text:"Je suis décalé",cat:"Confusion"},{id:327,text:"Je suis déphasé",cat:"Confusion"},{id:328,text:"Je suis déplacé",cat:"Confusion"},{id:329,text:"Je suis désaxé",cat:"Confusion"},{id:330,text:"Je suis déséquilibré",cat:"Confusion"},{id:331,text:"Je suis bancal",cat:"Confusion"},{id:332,text:"Je suis confus",cat:"Confusion"},{id:333,text:"Je suis embrouillé",cat:"Confusion"},{id:334,text:"Je suis biaisé",cat:"Confusion"},{id:335,text:"Je suis déréglé",cat:"Confusion"},{id:336,text:"Je suis détraqué",cat:"Confusion"},{id:337,text:"Je suis déstructuré",cat:"Confusion"},
-  {id:360,text:"Je suis pétrifié",cat:"Rigidité"},{id:361,text:"Je suis congelé",cat:"Rigidité"},{id:362,text:"Je suis gelé",cat:"Rigidité"},{id:363,text:"Je suis glacé",cat:"Rigidité"},{id:364,text:"Je suis calcifié",cat:"Rigidité"},{id:365,text:"Je suis fossilisé",cat:"Rigidité"},{id:366,text:"Je suis momifié",cat:"Rigidité"},{id:367,text:"Je suis cristallisé",cat:"Rigidité"},{id:368,text:"Je suis solidifié",cat:"Rigidité"},{id:369,text:"Je suis rigidifié",cat:"Rigidité"},{id:370,text:"Je suis durci",cat:"Rigidité"},{id:371,text:"Je suis enkysté",cat:"Rigidité"},{id:372,text:"Je suis anesthésié",cat:"Rigidité"},{id:373,text:"Je suis endormi",cat:"Rigidité"},{id:374,text:"Je suis assoupi",cat:"Rigidité"},{id:375,text:"Je suis engourdi",cat:"Rigidité"},
-  {id:400,text:"Je suis contaminé",cat:"Contamination"},{id:401,text:"Je suis infecté",cat:"Contamination"},{id:402,text:"Je suis empoisonné",cat:"Contamination"},{id:403,text:"Je suis pollué",cat:"Contamination"},{id:404,text:"Je suis vicié",cat:"Contamination"},{id:405,text:"Je suis falsifié",cat:"Contamination"},{id:406,text:"Je suis faussé",cat:"Contamination"},{id:407,text:"Je suis altéré",cat:"Contamination"},{id:408,text:"Je suis dénaturé",cat:"Contamination"},{id:409,text:"Je suis perverti",cat:"Contamination"},{id:410,text:"Je suis gangrené",cat:"Contamination"},{id:411,text:"Je suis rongé",cat:"Contamination"},{id:412,text:"Je suis pourri",cat:"Contamination"},
-  {id:440,text:"Je suis masqué",cat:"Masque"},{id:441,text:"Je suis caché",cat:"Masque"},{id:442,text:"Je suis déguisé",cat:"Masque"},{id:443,text:"Je suis travesti",cat:"Masque"},{id:444,text:"Je suis simulé",cat:"Masque"},{id:445,text:"Je suis feint",cat:"Masque"},{id:446,text:"Je suis fabriqué",cat:"Masque"},{id:447,text:"Je suis formaté",cat:"Masque"},{id:448,text:"Je suis conditionné",cat:"Masque"},{id:449,text:"Je suis programmé",cat:"Masque"},{id:450,text:"Je suis moulé",cat:"Masque"},{id:451,text:"Je suis modelé",cat:"Masque"},{id:452,text:"Je suis façonné",cat:"Masque"},{id:453,text:"Je suis calibré",cat:"Masque"},{id:454,text:"Je suis truqué",cat:"Masque"},
-  {id:480,text:"Je suis blessé",cat:"Blessure"},{id:481,text:"Je suis touché",cat:"Blessure"},{id:482,text:"Je suis atteint",cat:"Blessure"},{id:483,text:"Je suis frappé",cat:"Blessure"},{id:484,text:"Je suis heurté",cat:"Blessure"},{id:485,text:"Je suis choqué",cat:"Blessure"},{id:486,text:"Je suis traumatisé",cat:"Blessure"},{id:487,text:"Je suis horrifié",cat:"Blessure"},{id:488,text:"Je suis hanté",cat:"Blessure"},{id:489,text:"Je suis torturé",cat:"Blessure"},{id:490,text:"Je suis tordu",cat:"Blessure"},{id:491,text:"Je suis courbé",cat:"Blessure"},{id:492,text:"Je suis plié",cat:"Blessure"},{id:493,text:"Je suis accablé",cat:"Blessure"},{id:494,text:"Je suis terrassé",cat:"Blessure"},
-  {id:520,text:"Je suis traversé",cat:"Transition"},{id:521,text:"Je suis bousculé",cat:"Transition"},{id:522,text:"Je suis perturbé",cat:"Transition"},{id:523,text:"Je suis troublé",cat:"Transition"},{id:524,text:"Je suis déstabilisé",cat:"Transition"},{id:525,text:"Je suis appelé",cat:"Transition"},{id:526,text:"Je suis emporté",cat:"Transition"},{id:527,text:"Je suis lancé",cat:"Transition"},{id:528,text:"Je suis propulsé",cat:"Transition"},{id:529,text:"Je suis projeté",cat:"Transition"},
-  {id:560,text:"Je suis libéré",cat:"Libération"},{id:561,text:"Je suis affranchi",cat:"Libération"},{id:562,text:"Je suis délivré",cat:"Libération"},{id:563,text:"Je suis émancipé",cat:"Libération"},{id:564,text:"Je suis désenchaîné",cat:"Libération"},{id:565,text:"Je suis débloqué",cat:"Libération"},{id:566,text:"Je suis déconditionné",cat:"Libération"},{id:567,text:"Je suis déprogrammé",cat:"Libération"},{id:568,text:"Je suis purifié",cat:"Libération"},{id:569,text:"Je suis épuré",cat:"Libération"},{id:570,text:"Je suis nettoyé",cat:"Libération"},{id:571,text:"Je suis lavé",cat:"Libération"},{id:572,text:"Je suis blanchi",cat:"Libération"},{id:573,text:"Je suis acquitté",cat:"Libération"},{id:574,text:"Je suis absous",cat:"Libération"},{id:575,text:"Je suis pardonné",cat:"Libération"},{id:576,text:"Je suis guéri",cat:"Libération"},{id:577,text:"Je suis cicatrisé",cat:"Libération"},{id:578,text:"Je suis réparé",cat:"Libération"},{id:579,text:"Je suis restauré",cat:"Libération"},{id:580,text:"Je suis rétabli",cat:"Libération"},{id:581,text:"Je suis ressuscité",cat:"Libération"},{id:582,text:"Je suis réanimé",cat:"Libération"},
-  {id:620,text:"Je suis transformé",cat:"Transformation"},{id:621,text:"Je suis métamorphosé",cat:"Transformation"},{id:622,text:"Je suis transmué",cat:"Transformation"},{id:623,text:"Je suis renouvelé",cat:"Transformation"},{id:624,text:"Je suis reconstruit",cat:"Transformation"},{id:625,text:"Je suis rebâti",cat:"Transformation"},{id:626,text:"Je suis refondé",cat:"Transformation"},{id:627,text:"Je suis restructuré",cat:"Transformation"},{id:628,text:"Je suis réaligné",cat:"Transformation"},{id:629,text:"Je suis réajusté",cat:"Transformation"},{id:630,text:"Je suis redressé",cat:"Transformation"},{id:631,text:"Je suis réorienté",cat:"Transformation"},{id:632,text:"Je suis réunifié",cat:"Transformation"},{id:633,text:"Je suis mûri",cat:"Transformation"},{id:634,text:"Je suis forgé",cat:"Transformation"},{id:635,text:"Je suis sculpté",cat:"Transformation"},{id:636,text:"Je suis trempé",cat:"Transformation"},{id:637,text:"Je suis affiné",cat:"Transformation"},
-  {id:680,text:"Je suis ancré",cat:"Puissance"},{id:681,text:"Je suis centré",cat:"Puissance"},{id:682,text:"Je suis aligné",cat:"Puissance"},{id:683,text:"Je suis souverain",cat:"Puissance"},{id:684,text:"Je suis autonomisé",cat:"Puissance"},{id:685,text:"Je suis habilité",cat:"Puissance"},{id:686,text:"Je suis armé",cat:"Puissance"},{id:687,text:"Je suis équipé",cat:"Puissance"},{id:688,text:"Je suis fortifié",cat:"Puissance"},{id:689,text:"Je suis blindé",cat:"Puissance"},{id:690,text:"Je suis renforcé",cat:"Puissance"},{id:691,text:"Je suis stabilisé",cat:"Puissance"},{id:692,text:"Je suis enraciné",cat:"Puissance"},{id:693,text:"Je suis assumé",cat:"Puissance"},{id:694,text:"Je suis affirmé",cat:"Puissance"},{id:695,text:"Je suis aguerri",cat:"Puissance"},{id:696,text:"Je suis endurci",cat:"Puissance"},{id:697,text:"Je suis dynamisé",cat:"Puissance"},{id:698,text:"Je suis mobilisé",cat:"Puissance"},{id:699,text:"Je suis activé",cat:"Puissance"},{id:700,text:"Je suis puissant",cat:"Puissance"},{id:701,text:"Je suis vivant",cat:"Puissance"},{id:702,text:"Je suis vivifié",cat:"Puissance"},
-  {id:740,text:"Je suis accompli",cat:"Accomplissement"},{id:741,text:"Je suis réalisé",cat:"Accomplissement"},{id:742,text:"Je suis abouti",cat:"Accomplissement"},{id:743,text:"Je suis construit",cat:"Accomplissement"},{id:744,text:"Je suis bâti",cat:"Accomplissement"},{id:745,text:"Je suis créé",cat:"Accomplissement"},{id:746,text:"Je suis développé",cat:"Accomplissement"},{id:747,text:"Je suis cultivé",cat:"Accomplissement"},{id:748,text:"Je suis incarné",cat:"Accomplissement"},{id:749,text:"Je suis manifesté",cat:"Accomplissement"},{id:750,text:"Je suis exprimé",cat:"Accomplissement"},{id:751,text:"Je suis visible",cat:"Accomplissement"},{id:752,text:"Je suis présent",cat:"Accomplissement"},{id:753,text:"Je suis habité",cat:"Accomplissement"},
-  {id:800,text:"Je suis aimé",cat:"Connexion"},{id:801,text:"Je suis accepté",cat:"Connexion"},{id:802,text:"Je suis accueilli",cat:"Connexion"},{id:803,text:"Je suis choisi",cat:"Connexion"},{id:804,text:"Je suis désiré",cat:"Connexion"},{id:805,text:"Je suis attendu",cat:"Connexion"},{id:806,text:"Je suis compris",cat:"Connexion"},{id:807,text:"Je suis entendu",cat:"Connexion"},{id:808,text:"Je suis reconnu",cat:"Connexion"},{id:809,text:"Je suis inclus",cat:"Connexion"},{id:810,text:"Je suis relié",cat:"Connexion"},{id:811,text:"Je suis connecté",cat:"Connexion"},{id:812,text:"Je suis réuni",cat:"Connexion"},{id:813,text:"Je suis réconcilié",cat:"Connexion"},
-  {id:850,text:"Je suis apaisé",cat:"Paix"},{id:851,text:"Je suis soulagé",cat:"Paix"},{id:852,text:"Je suis allégé",cat:"Paix"},{id:853,text:"Je suis délesté",cat:"Paix"},{id:854,text:"Je suis débarrassé",cat:"Paix"},{id:855,text:"Je suis ressourcé",cat:"Paix"},{id:856,text:"Je suis nourri",cat:"Paix"},{id:857,text:"Je suis comblé",cat:"Paix"},{id:858,text:"Je suis épanoui",cat:"Paix"},{id:859,text:"Je suis harmonisé",cat:"Paix"},{id:860,text:"Je suis équilibré",cat:"Paix"},
-  {id:900,text:"Je suis éveillé",cat:"Éveil"},{id:901,text:"Je suis éclairé",cat:"Éveil"},{id:902,text:"Je suis révélé",cat:"Éveil"},{id:903,text:"Je suis dévoilé",cat:"Éveil"},{id:904,text:"Je suis nommé",cat:"Éveil"},{id:905,text:"Je suis défini",cat:"Éveil"},{id:906,text:"Je suis revendiqué",cat:"Éveil"},{id:907,text:"Je suis transcendé",cat:"Éveil"},{id:908,text:"Je suis inspiré",cat:"Éveil"},{id:909,text:"Je suis enflammé",cat:"Éveil"},{id:910,text:"Je suis célébré",cat:"Éveil"},{id:911,text:"Je suis sacré",cat:"Éveil"},{id:912,text:"Je suis honoré",cat:"Éveil"},{id:913,text:"Je suis dignifié",cat:"Éveil"},{id:914,text:"Je suis légitimé",cat:"Éveil"},{id:915,text:"Je suis valorisé",cat:"Éveil"},{id:916,text:"Je suis respecté",cat:"Éveil"},
+  {id:372,text:'Je suis anesthésié',cat:'Rigidité',depth:1},
+  {id:374,text:'Je suis assoupi',cat:'Rigidité',depth:1},
+  {id:373,text:'Je suis endormi',cat:'Rigidité',depth:1},
+  {id:375,text:'Je suis engourdi',cat:'Rigidité',depth:1},
+  {id:362,text:'Je suis gelé',cat:'Rigidité',depth:2},
+  {id:361,text:'Je suis congelé',cat:'Rigidité',depth:2},
+  {id:363,text:'Je suis glacé',cat:'Rigidité',depth:2},
+  {id:369,text:'Je suis rigidifié',cat:'Rigidité',depth:3},
+  {id:368,text:'Je suis solidifié',cat:'Rigidité',depth:3},
+  {id:367,text:'Je suis cristallisé',cat:'Rigidité',depth:3},
+  {id:364,text:'Je suis calcifié',cat:'Rigidité',depth:4},
+  {id:365,text:'Je suis fossilisé',cat:'Rigidité',depth:4},
+  {id:366,text:'Je suis momifié',cat:'Rigidité',depth:4},
+  {id:371,text:'Je suis enkysté',cat:'Rigidité',depth:5},
+  {id:360,text:'Je suis pétrifié',cat:'Rigidité',depth:5},
+  {id:292,text:'Je suis drainé',cat:'Épuisement',depth:1},
+  {id:293,text:'Je suis lessivé',cat:'Épuisement',depth:1},
+  {id:291,text:'Je suis à bout',cat:'Épuisement',depth:1},
+  {id:294,text:'Je suis pompé',cat:'Épuisement',depth:2},
+  {id:299,text:'Je suis saturé',cat:'Épuisement',depth:2},
+  {id:301,text:'Je suis débordé',cat:'Épuisement',depth:2},
+  {id:302,text:'Je suis submergé',cat:'Épuisement',depth:2},
+  {id:295,text:'Je suis consumé',cat:'Épuisement',depth:3},
+  {id:296,text:'Je suis brûlé',cat:'Épuisement',depth:3},
+  {id:297,text:'Je suis cramé',cat:'Épuisement',depth:3},
+  {id:298,text:'Je suis grillé',cat:'Épuisement',depth:3},
+  {id:303,text:'Je suis asséché',cat:'Épuisement',depth:4},
+  {id:304,text:'Je suis tari',cat:'Épuisement',depth:4},
+  {id:290,text:'Je suis épuisé',cat:'Épuisement',depth:4},
+  {id:305,text:'Je suis appauvri',cat:'Épuisement',depth:5},
+  {id:320,text:'Je suis perdu',cat:'Confusion',depth:1},
+  {id:321,text:'Je suis désorienté',cat:'Confusion',depth:1},
+  {id:322,text:'Je suis déboussolé',cat:'Confusion',depth:1},
+  {id:323,text:'Je suis égaré',cat:'Confusion',depth:2},
+  {id:324,text:'Je suis flottant',cat:'Confusion',depth:2},
+  {id:326,text:'Je suis décalé',cat:'Confusion',depth:2},
+  {id:327,text:'Je suis déphasé',cat:'Confusion',depth:2},
+  {id:331,text:'Je suis bancal',cat:'Confusion',depth:3},
+  {id:332,text:'Je suis confus',cat:'Confusion',depth:3},
+  {id:333,text:'Je suis embrouillé',cat:'Confusion',depth:3},
+  {id:334,text:'Je suis biaisé',cat:'Confusion',depth:3},
+  {id:1001,text:'Je suis désajusté',cat:'Confusion',depth:3},
+  {id:325,text:'Je suis divisé',cat:'Confusion',depth:4},
+  {id:335,text:'Je suis déréglé',cat:'Confusion',depth:4},
+  {id:336,text:'Je suis détraqué',cat:'Confusion',depth:4},
+  {id:1003,text:'Je suis déséquilibré',cat:'Confusion',depth:4},
+  {id:337,text:'Je suis déstructuré',cat:'Confusion',depth:5},
+  {id:158,text:'Je suis freiné',cat:'Contrôle',depth:1},
+  {id:156,text:'Je suis stoppé',cat:'Contrôle',depth:1},
+  {id:157,text:'Je suis arrêté',cat:'Contrôle',depth:1},
+  {id:159,text:'Je suis bridé',cat:'Contrôle',depth:1},
+  {id:143,text:'Je suis retenu',cat:'Contrôle',depth:2},
+  {id:161,text:'Je suis contraint',cat:'Contrôle',depth:2},
+  {id:160,text:'Je suis entravé',cat:'Contrôle',depth:2},
+  {id:151,text:'Je suis coincé',cat:'Contrôle',depth:2},
+  {id:152,text:'Je suis bloqué',cat:'Contrôle',depth:2},
+  {id:153,text:'Je suis figé',cat:'Contrôle',depth:3},
+  {id:154,text:'Je suis paralysé',cat:'Contrôle',depth:3},
+  {id:155,text:'Je suis immobilisé',cat:'Contrôle',depth:3},
+  {id:142,text:'Je suis attaché',cat:'Contrôle',depth:3},
+  {id:141,text:'Je suis ligoté',cat:'Contrôle',depth:3},
+  {id:140,text:'Je suis enchaîné',cat:'Contrôle',depth:4},
+  {id:150,text:'Je suis piégé',cat:'Contrôle',depth:4},
+  {id:144,text:'Je suis cadenassé',cat:'Contrôle',depth:4},
+  {id:145,text:'Je suis verrouillé',cat:'Contrôle',depth:4},
+  {id:146,text:'Je suis barricadé',cat:'Contrôle',depth:4},
+  {id:147,text:'Je suis cloisonné',cat:'Contrôle',depth:4},
+  {id:148,text:'Je suis muré',cat:'Contrôle',depth:4},
+  {id:149,text:'Je suis cloué',cat:'Contrôle',depth:4},
+  {id:139,text:'Je suis enfermé',cat:'Contrôle',depth:5},
+  {id:138,text:'Je suis emprisonné',cat:'Contrôle',depth:5},
+  {id:132,text:'Je suis dominé',cat:'Contrôle',depth:5},
+  {id:133,text:'Je suis soumis',cat:'Contrôle',depth:5},
+  {id:134,text:'Je suis domestiqué',cat:'Contrôle',depth:5},
+  {id:135,text:'Je suis colonisé',cat:'Contrôle',depth:5},
+  {id:136,text:'Je suis instrumentalisé',cat:'Contrôle',depth:5},
+  {id:137,text:'Je suis possédé',cat:'Contrôle',depth:5},
+  {id:131,text:'Je suis manipulé',cat:'Contrôle',depth:5},
+  {id:130,text:'Je suis contrôlé',cat:'Contrôle',depth:5},
+  {id:1010,text:'Je suis isolé',cat:'Isolement',depth:1},
+  {id:1011,text:'Je suis séparé',cat:'Isolement',depth:1},
+  {id:1012,text:'Je suis coupé',cat:'Isolement',depth:2},
+  {id:1013,text:'Je suis fermé',cat:'Isolement',depth:2},
+  {id:1014,text:'Je suis confiné',cat:'Isolement',depth:2},
+  {id:1015,text:'Je suis limité',cat:'Isolement',depth:2},
+  {id:1016,text:'Je suis restreint',cat:'Isolement',depth:3},
+  {id:1017,text:'Je suis interdit',cat:'Isolement',depth:3},
+  {id:1018,text:'Je suis censuré',cat:'Isolement',depth:3},
+  {id:1019,text:'Je suis bâillonné',cat:'Isolement',depth:4},
+  {id:1020,text:'Je suis muselé',cat:'Isolement',depth:4},
+  {id:1021,text:'Je suis enterré',cat:'Isolement',depth:4},
+  {id:1022,text:'Je suis enfoui',cat:'Isolement',depth:5},
+  {id:1023,text:'Je suis enseveli',cat:'Isolement',depth:5},
+  {id:1030,text:'Je suis chargé',cat:'Envahissement',depth:1},
+  {id:1031,text:'Je suis alourdi',cat:'Envahissement',depth:1},
+  {id:1032,text:'Je suis pesant',cat:'Envahissement',depth:2},
+  {id:1033,text:'Je suis lesté',cat:'Envahissement',depth:2},
+  {id:1034,text:'Je suis opprimé',cat:'Envahissement',depth:2},
+  {id:1035,text:'Je suis happé',cat:'Envahissement',depth:2},
+  {id:1036,text:'Je suis absorbé',cat:'Envahissement',depth:3},
+  {id:1037,text:'Je suis envahi',cat:'Envahissement',depth:3},
+  {id:1038,text:'Je suis englouti',cat:'Envahissement',depth:3},
+  {id:1039,text:'Je suis noyé',cat:'Envahissement',depth:3},
+  {id:1040,text:'Je suis étouffé',cat:'Envahissement',depth:4},
+  {id:1041,text:'Je suis étranglé',cat:'Envahissement',depth:4},
+  {id:1042,text:'Je suis avalé',cat:'Envahissement',depth:4},
+  {id:1043,text:'Je suis dévoré',cat:'Envahissement',depth:5},
+  {id:447,text:'Je suis formaté',cat:'Masque',depth:1},
+  {id:453,text:'Je suis calibré',cat:'Masque',depth:1},
+  {id:1051,text:'Je suis estampillé',cat:'Masque',depth:2},
+  {id:449,text:'Je suis programmé',cat:'Masque',depth:2},
+  {id:448,text:'Je suis conditionné',cat:'Masque',depth:2},
+  {id:450,text:'Je suis moulé',cat:'Masque',depth:2},
+  {id:451,text:'Je suis modelé',cat:'Masque',depth:2},
+  {id:452,text:'Je suis façonné',cat:'Masque',depth:3},
+  {id:446,text:'Je suis fabriqué',cat:'Masque',depth:3},
+  {id:444,text:'Je suis simulé',cat:'Masque',depth:3},
+  {id:445,text:'Je suis feint',cat:'Masque',depth:3},
+  {id:1050,text:'Je suis désformaté',cat:'Masque',depth:3},
+  {id:1052,text:'Je suis imprégné',cat:'Masque',depth:3},
+  {id:1053,text:'Je suis empreint',cat:'Masque',depth:3},
+  {id:442,text:'Je suis déguisé',cat:'Masque',depth:4},
+  {id:443,text:'Je suis travesti',cat:'Masque',depth:4},
+  {id:440,text:'Je suis masqué',cat:'Masque',depth:4},
+  {id:454,text:'Je suis truqué',cat:'Masque',depth:4},
+  {id:441,text:'Je suis caché',cat:'Masque',depth:5},
+  {id:230,text:'Je suis repoussé',cat:'Trahison',depth:1},
+  {id:1064,text:'Je suis utilisé',cat:'Trahison',depth:2},
+  {id:224,text:'Je suis exposé',cat:'Trahison',depth:2},
+  {id:1060,text:'Je suis joué',cat:'Trahison',depth:2},
+  {id:1061,text:'Je suis floué',cat:'Trahison',depth:2},
+  {id:1062,text:'Je suis trompé',cat:'Trahison',depth:3},
+  {id:225,text:'Je suis démasqué',cat:'Trahison',depth:3},
+  {id:226,text:'Je suis dénudé',cat:'Trahison',depth:3},
+  {id:228,text:'Je suis désavoué',cat:'Trahison',depth:3},
+  {id:229,text:'Je suis renié',cat:'Trahison',depth:3},
+  {id:227,text:'Je suis déshonoré',cat:'Trahison',depth:3},
+  {id:1063,text:'Je suis exploité',cat:'Trahison',depth:4},
+  {id:223,text:'Je suis livré',cat:'Trahison',depth:4},
+  {id:222,text:'Je suis vendu',cat:'Trahison',depth:4},
+  {id:221,text:'Je suis corrompu',cat:'Trahison',depth:4},
+  {id:220,text:'Je suis trahi',cat:'Trahison',depth:5},
+  {id:1073,text:'Je suis exhibé',cat:'Violation',depth:2},
+  {id:1077,text:'Je suis sali',cat:'Violation',depth:2},
+  {id:1070,text:'Je suis attouché',cat:'Violation',depth:3},
+  {id:1074,text:'Je suis outragé',cat:'Violation',depth:3},
+  {id:1078,text:'Je suis noirci',cat:'Violation',depth:3},
+  {id:1079,text:'Je suis maculé',cat:'Violation',depth:3},
+  {id:1076,text:'Je suis souillé',cat:'Violation',depth:3},
+  {id:1075,text:'Je suis profané',cat:'Violation',depth:4},
+  {id:1071,text:'Je suis pénétré',cat:'Violation',depth:4},
+  {id:1072,text:'Je suis violé',cat:'Violation',depth:5},
+  {id:40,text:'Je suis ignoré',cat:'Abandon',depth:1},
+  {id:41,text:'Je suis négligé',cat:'Abandon',depth:1},
+  {id:42,text:'Je suis oublié',cat:'Abandon',depth:2},
+  {id:39,text:'Je suis écarté',cat:'Abandon',depth:2},
+  {id:38,text:'Je suis relégué',cat:'Abandon',depth:2},
+  {id:37,text:'Je suis marginalisé',cat:'Abandon',depth:2},
+  {id:1082,text:'Je suis parti',cat:'Abandon',depth:2},
+  {id:34,text:'Je suis exclu',cat:'Abandon',depth:3},
+  {id:35,text:'Je suis banni',cat:'Abandon',depth:3},
+  {id:36,text:'Je suis ostracisé',cat:'Abandon',depth:3},
+  {id:32,text:'Je suis délaissé',cat:'Abandon',depth:3},
+  {id:33,text:'Je suis laissé',cat:'Abandon',depth:3},
+  {id:1080,text:'Je suis chassé',cat:'Abandon',depth:3},
+  {id:31,text:'Je suis rejeté',cat:'Abandon',depth:4},
+  {id:43,text:'Je suis invisible',cat:'Abandon',depth:4},
+  {id:44,text:'Je suis invisibilisé',cat:'Abandon',depth:4},
+  {id:45,text:'Je suis non-attendu',cat:'Abandon',depth:4},
+  {id:46,text:'Je suis non-désiré',cat:'Abandon',depth:4},
+  {id:47,text:'Je suis non-voulu',cat:'Abandon',depth:4},
+  {id:48,text:'Je suis disparu',cat:'Abandon',depth:4},
+  {id:1081,text:'Je suis expulsé',cat:'Abandon',depth:4},
+  {id:30,text:'Je suis abandonné',cat:'Abandon',depth:5},
+  {id:481,text:'Je suis touché',cat:'Blessure',depth:1},
+  {id:484,text:'Je suis heurté',cat:'Blessure',depth:1},
+  {id:483,text:'Je suis frappé',cat:'Blessure',depth:2},
+  {id:485,text:'Je suis choqué',cat:'Blessure',depth:2},
+  {id:482,text:'Je suis atteint',cat:'Blessure',depth:2},
+  {id:480,text:'Je suis blessé',cat:'Blessure',depth:2},
+  {id:493,text:'Je suis accablé',cat:'Blessure',depth:3},
+  {id:491,text:'Je suis courbé',cat:'Blessure',depth:3},
+  {id:492,text:'Je suis plié',cat:'Blessure',depth:3},
+  {id:490,text:'Je suis tordu',cat:'Blessure',depth:3},
+  {id:1092,text:'Je suis meurtri',cat:'Blessure',depth:3},
+  {id:1093,text:'Je suis marqué',cat:'Blessure',depth:3},
+  {id:494,text:'Je suis terrassé',cat:'Blessure',depth:4},
+  {id:489,text:'Je suis torturé',cat:'Blessure',depth:4},
+  {id:488,text:'Je suis hanté',cat:'Blessure',depth:4},
+  {id:487,text:'Je suis horrifié',cat:'Blessure',depth:4},
+  {id:1090,text:'Je suis martyrisé',cat:'Blessure',depth:4},
+  {id:1094,text:'Je suis tatoué',cat:'Blessure',depth:4},
+  {id:486,text:'Je suis traumatisé',cat:'Blessure',depth:5},
+  {id:1091,text:'Je suis supplicié',cat:'Blessure',depth:5},
+  {id:188,text:'Je suis minimisé',cat:'Dévaluation',depth:1},
+  {id:187,text:'Je suis sous-estimé',cat:'Dévaluation',depth:1},
+  {id:1103,text:'Je suis bâclé',cat:'Dévaluation',depth:1},
+  {id:186,text:'Je suis mésestimé',cat:'Dévaluation',depth:2},
+  {id:185,text:'Je suis déprécié',cat:'Dévaluation',depth:2},
+  {id:184,text:'Je suis dévalorisé',cat:'Dévaluation',depth:2},
+  {id:1101,text:'Je suis manqué',cat:'Dévaluation',depth:2},
+  {id:1102,text:'Je suis gâché',cat:'Dévaluation',depth:2},
+  {id:182,text:'Je suis rabaissé',cat:'Dévaluation',depth:3},
+  {id:183,text:'Je suis abaissé',cat:'Dévaluation',depth:3},
+  {id:181,text:'Je suis amoindri',cat:'Dévaluation',depth:3},
+  {id:180,text:'Je suis diminué',cat:'Dévaluation',depth:3},
+  {id:1100,text:'Je suis raté',cat:'Dévaluation',depth:3},
+  {id:192,text:'Je suis aplati',cat:'Dévaluation',depth:4},
+  {id:193,text:'Je suis écrasé',cat:'Dévaluation',depth:4},
+  {id:190,text:'Je suis bafoué',cat:'Dévaluation',depth:4},
+  {id:191,text:'Je suis avili',cat:'Dévaluation',depth:4},
+  {id:189,text:'Je suis humilié',cat:'Dévaluation',depth:4},
+  {id:194,text:'Je suis superflu',cat:'Dévaluation',depth:4},
+  {id:1104,text:'Je suis mal-construit',cat:'Dévaluation',depth:4},
+  {id:195,text:'Je suis inutile',cat:'Dévaluation',depth:5},
+  {id:196,text:'Je suis insuffisant',cat:'Dévaluation',depth:5},
+  {id:197,text:'Je suis incompétent',cat:'Dévaluation',depth:5},
+  {id:1110,text:'Je suis privé',cat:'Perte',depth:1},
+  {id:1111,text:'Je suis démuni',cat:'Perte',depth:2},
+  {id:1120,text:'Je suis lessivé',cat:'Perte',depth:2},
+  {id:1112,text:'Je suis dépouillé',cat:'Perte',depth:3},
+  {id:1113,text:'Je suis dépossédé',cat:'Perte',depth:3},
+  {id:1114,text:'Je suis dénué',cat:'Perte',depth:3},
+  {id:1115,text:'Je suis dépourvu',cat:'Perte',depth:3},
+  {id:1116,text:'Je suis amputé',cat:'Perte',depth:4},
+  {id:1117,text:'Je suis castré',cat:'Perte',depth:4},
+  {id:1118,text:'Je suis atrophié',cat:'Perte',depth:4},
+  {id:1119,text:'Je suis mutilé',cat:'Perte',depth:4},
+  {id:1121,text:'Je suis spolié',cat:'Perte',depth:4},
+  {id:1130,text:'Je suis usé',cat:'Usure',depth:1},
+  {id:1136,text:'Je suis ralenti',cat:'Usure',depth:1},
+  {id:1131,text:'Je suis terni',cat:'Usure',depth:2},
+  {id:1132,text:'Je suis flétri',cat:'Usure',depth:2},
+  {id:1133,text:'Je suis dégradé',cat:'Usure',depth:3},
+  {id:1134,text:'Je suis lézardé',cat:'Usure',depth:3},
+  {id:1135,text:'Je suis ramolli',cat:'Usure',depth:3},
+  {id:1137,text:'Je suis érodé',cat:'Usure',depth:3},
+  {id:1138,text:'Je suis décroché',cat:'Usure',depth:3},
+  {id:1139,text:'Je suis déformé',cat:'Usure',depth:4},
+  {id:1140,text:'Je suis altéré',cat:'Usure',depth:4},
+  {id:1141,text:'Je suis détérioré',cat:'Usure',depth:4},
+  {id:1143,text:'Je suis corrodé',cat:'Usure',depth:4},
+  {id:1142,text:'Je suis putréfié',cat:'Usure',depth:5},
+  {id:1162,text:'Je suis agacé',cat:'Résignation',depth:1},
+  {id:1160,text:'Je suis irrité',cat:'Résignation',depth:1},
+  {id:1157,text:'Je suis exaspéré',cat:'Résignation',depth:2},
+  {id:1158,text:'Je suis frustré',cat:'Résignation',depth:2},
+  {id:1159,text:'Je suis impatienté',cat:'Résignation',depth:2},
+  {id:1161,text:'Je suis contrarié',cat:'Résignation',depth:2},
+  {id:1155,text:'Je suis lâché',cat:'Résignation',depth:2},
+  {id:1150,text:'Je suis résigné',cat:'Résignation',depth:3},
+  {id:1151,text:'Je suis capitulé',cat:'Résignation',depth:3},
+  {id:1152,text:'Je suis vaincu',cat:'Résignation',depth:3},
+  {id:1153,text:'Je suis défait',cat:'Résignation',depth:4},
+  {id:1154,text:'Je suis rompu',cat:'Résignation',depth:4},
+  {id:1156,text:'Je suis abandonné à soi',cat:'Résignation',depth:5},
+  {id:407,text:'Je suis altéré',cat:'Contamination',depth:1},
+  {id:406,text:'Je suis faussé',cat:'Contamination',depth:1},
+  {id:405,text:'Je suis falsifié',cat:'Contamination',depth:2},
+  {id:404,text:'Je suis vicié',cat:'Contamination',depth:2},
+  {id:403,text:'Je suis pollué',cat:'Contamination',depth:2},
+  {id:1170,text:'Je suis frelaté',cat:'Contamination',depth:2},
+  {id:401,text:'Je suis infecté',cat:'Contamination',depth:3},
+  {id:400,text:'Je suis contaminé',cat:'Contamination',depth:3},
+  {id:402,text:'Je suis empoisonné',cat:'Contamination',depth:3},
+  {id:1171,text:'Je suis hérité',cat:'Contamination',depth:3},
+  {id:1173,text:'Je suis dévoyé',cat:'Contamination',depth:3},
+  {id:409,text:'Je suis perverti',cat:'Contamination',depth:4},
+  {id:408,text:'Je suis dénaturé',cat:'Contamination',depth:4},
+  {id:410,text:'Je suis gangrené',cat:'Contamination',depth:4},
+  {id:1172,text:'Je suis imprégné',cat:'Contamination',depth:4},
+  {id:411,text:'Je suis rongé',cat:'Contamination',depth:5},
+  {id:412,text:'Je suis pourri',cat:'Contamination',depth:5},
+  {id:108,text:'Je suis réprimandé',cat:'Culpabilité',depth:1},
+  {id:109,text:'Je suis accusé',cat:'Culpabilité',depth:1},
+  {id:1180,text:'Je suis désigné',cat:'Culpabilité',depth:1},
+  {id:106,text:'Je suis sanctionné',cat:'Culpabilité',depth:2},
+  {id:110,text:'Je suis incriminé',cat:'Culpabilité',depth:2},
+  {id:111,text:'Je suis dénoncé',cat:'Culpabilité',depth:2},
+  {id:112,text:'Je suis jugé',cat:'Culpabilité',depth:2},
+  {id:1181,text:'Je suis pointé',cat:'Culpabilité',depth:2},
+  {id:105,text:'Je suis puni',cat:'Culpabilité',depth:3},
+  {id:107,text:'Je suis châtié',cat:'Culpabilité',depth:3},
+  {id:113,text:'Je suis sacrifié',cat:'Culpabilité',depth:3},
+  {id:102,text:'Je suis condamné',cat:'Culpabilité',depth:3},
+  {id:1182,text:'Je suis stigmatisé',cat:'Culpabilité',depth:3},
+  {id:1183,text:'Je suis disculpé',cat:'Culpabilité',depth:3},
+  {id:116,text:'Je suis supplicié',cat:'Culpabilité',depth:4},
+  {id:114,text:'Je suis crucifié',cat:'Culpabilité',depth:4},
+  {id:115,text:'Je suis immolé',cat:'Culpabilité',depth:4},
+  {id:103,text:'Je suis damné',cat:'Culpabilité',depth:5},
+  {id:104,text:'Je suis maudit',cat:'Culpabilité',depth:5},
+  {id:101,text:'Je suis fautif',cat:'Culpabilité',depth:5},
+  {id:100,text:'Je suis coupable',cat:'Culpabilité',depth:5},
+  {id:65,text:'Je suis imparfait',cat:'Honte',depth:1},
+  {id:66,text:'Je suis incomplet',cat:'Honte',depth:1},
+  {id:67,text:'Je suis inachevé',cat:'Honte',depth:2},
+  {id:68,text:'Je suis inadapté',cat:'Honte',depth:2},
+  {id:69,text:'Je suis inapte',cat:'Honte',depth:2},
+  {id:70,text:'Je suis incapable',cat:'Honte',depth:2},
+  {id:71,text:'Je suis défaillant',cat:'Honte',depth:3},
+  {id:72,text:'Je suis défectueux',cat:'Honte',depth:3},
+  {id:74,text:'Je suis abâtardi',cat:'Honte',depth:3},
+  {id:1191,text:'Je suis taché',cat:'Honte',depth:3},
+  {id:1192,text:'Je suis dégoûté',cat:'Honte',depth:3},
+  {id:62,text:'Je suis illégitime',cat:'Honte',depth:4},
+  {id:64,text:'Je suis non-mérité',cat:'Honte',depth:4},
+  {id:1190,text:'Je suis entaché',cat:'Honte',depth:4},
+  {id:1193,text:'Je suis répugné',cat:'Honte',depth:4},
+  {id:1194,text:'Je suis aliéné',cat:'Honte',depth:4},
+  {id:63,text:'Je suis non-aimable',cat:'Honte',depth:5},
+  {id:61,text:'Je suis indigne',cat:'Honte',depth:5},
+  {id:60,text:'Je suis honteux',cat:'Honte',depth:5},
+  {id:262,text:'Je suis dispersé',cat:'Vide',depth:1},
+  {id:263,text:'Je suis éparpillé',cat:'Vide',depth:1},
+  {id:264,text:'Je suis dissocié',cat:'Vide',depth:2},
+  {id:259,text:'Je suis dilué',cat:'Vide',depth:2},
+  {id:260,text:'Je suis dissous',cat:'Vide',depth:2},
+  {id:261,text:'Je suis fondu',cat:'Vide',depth:2},
+  {id:1203,text:'Je suis dissimulé',cat:'Vide',depth:2},
+  {id:255,text:'Je suis évanoui',cat:'Vide',depth:3},
+  {id:256,text:'Je suis évaporé',cat:'Vide',depth:3},
+  {id:258,text:'Je suis envolé',cat:'Vide',depth:3},
+  {id:257,text:'Je suis volatilisé',cat:'Vide',depth:3},
+  {id:254,text:'Je suis absent',cat:'Vide',depth:3},
+  {id:265,text:'Je suis effacé',cat:'Vide',depth:4},
+  {id:266,text:'Je suis annulé',cat:'Vide',depth:4},
+  {id:267,text:'Je suis supprimé',cat:'Vide',depth:4},
+  {id:253,text:'Je suis creux',cat:'Vide',depth:4},
+  {id:252,text:'Je suis évidé',cat:'Vide',depth:4},
+  {id:1200,text:'Je suis biffé',cat:'Vide',depth:4},
+  {id:1201,text:'Je suis rayé',cat:'Vide',depth:4},
+  {id:251,text:'Je suis vidé',cat:'Vide',depth:5},
+  {id:250,text:'Je suis vide',cat:'Vide',depth:5},
+  {id:268,text:'Je suis mort',cat:'Vide',depth:5},
+  {id:1202,text:'Je suis tué',cat:'Vide',depth:5},
+  {id:20,text:'Je suis esquinté',cat:'Destruction',depth:1},
+  {id:22,text:'Je suis abîmé',cat:'Destruction',depth:1},
+  {id:24,text:'Je suis endommagé',cat:'Destruction',depth:1},
+  {id:23,text:'Je suis détérioré',cat:'Destruction',depth:2},
+  {id:21,text:'Je suis délabré',cat:'Destruction',depth:2},
+  {id:11,text:'Je suis fissuré',cat:'Destruction',depth:2},
+  {id:12,text:'Je suis fracturé',cat:'Destruction',depth:3},
+  {id:18,text:'Je suis déchiré',cat:'Destruction',depth:3},
+  {id:15,text:'Je suis lacéré',cat:'Destruction',depth:3},
+  {id:16,text:'Je suis mutilé',cat:'Destruction',depth:3},
+  {id:17,text:'Je suis disloqué',cat:'Destruction',depth:3},
+  {id:1210,text:'Je suis érodé',cat:'Destruction',depth:3},
+  {id:14,text:'Je suis morcelé',cat:'Destruction',depth:4},
+  {id:13,text:'Je suis fragmenté',cat:'Destruction',depth:4},
+  {id:10,text:'Je suis cassé',cat:'Destruction',depth:4},
+  {id:9,text:'Je suis brisé',cat:'Destruction',depth:4},
+  {id:8,text:'Je suis saccagé',cat:'Destruction',depth:4},
+  {id:7,text:'Je suis ruiné',cat:'Destruction',depth:4},
+  {id:1211,text:'Je suis éclaté',cat:'Destruction',depth:4},
+  {id:1212,text:'Je suis rompu',cat:'Destruction',depth:4},
+  {id:6,text:'Je suis ravagé',cat:'Destruction',depth:5},
+  {id:5,text:'Je suis effondré',cat:'Destruction',depth:5},
+  {id:4,text:'Je suis dévasté',cat:'Destruction',depth:5},
+  {id:3,text:'Je suis démoli',cat:'Destruction',depth:5},
+  {id:2,text:'Je suis annihilé',cat:'Destruction',depth:5},
+  {id:1,text:'Je suis anéanti',cat:'Destruction',depth:5},
+  {id:523,text:'Je suis troublé',cat:'Transition',depth:1},
+  {id:522,text:'Je suis perturbé',cat:'Transition',depth:1},
+  {id:521,text:'Je suis bousculé',cat:'Transition',depth:2},
+  {id:524,text:'Je suis déstabilisé',cat:'Transition',depth:2},
+  {id:1223,text:'Je suis dépassé',cat:'Transition',depth:2},
+  {id:520,text:'Je suis traversé',cat:'Transition',depth:3},
+  {id:526,text:'Je suis emporté',cat:'Transition',depth:3},
+  {id:527,text:'Je suis lancé',cat:'Transition',depth:3},
+  {id:1220,text:'Je suis convoqué',cat:'Transition',depth:3},
+  {id:1221,text:'Je suis aspiré',cat:'Transition',depth:3},
+  {id:1222,text:'Je suis précipité',cat:'Transition',depth:3},
+  {id:525,text:'Je suis appelé',cat:'Transition',depth:4},
+  {id:528,text:'Je suis propulsé',cat:'Transition',depth:4},
+  {id:529,text:'Je suis projeté',cat:'Transition',depth:4},
+  {id:1230,text:'Je suis dégelé',cat:'Déverrouillage',depth:1},
+  {id:1231,text:'Je suis dégagé',cat:'Déverrouillage',depth:1},
+  {id:1243,text:'Je suis ouvert',cat:'Déverrouillage',depth:1},
+  {id:1232,text:'Je suis décroché',cat:'Déverrouillage',depth:2},
+  {id:1233,text:'Je suis détaché',cat:'Déverrouillage',depth:2},
+  {id:1234,text:'Je suis dénoué',cat:'Déverrouillage',depth:2},
+  {id:1235,text:'Je suis délié',cat:'Déverrouillage',depth:2},
+  {id:1236,text:'Je suis décloué',cat:'Déverrouillage',depth:2},
+  {id:1249,text:'Je suis déconnecté',cat:'Déverrouillage',depth:2},
+  {id:1256,text:'Je suis déployé',cat:'Déverrouillage',depth:2},
+  {id:1237,text:'Je suis décompressé',cat:'Déverrouillage',depth:3},
+  {id:1238,text:'Je suis décomposé',cat:'Déverrouillage',depth:3},
+  {id:1239,text:'Je suis débarricadé',cat:'Déverrouillage',depth:3},
+  {id:1240,text:'Je suis déblindé',cat:'Déverrouillage',depth:3},
+  {id:1241,text:'Je suis démuré',cat:'Déverrouillage',depth:3},
+  {id:1242,text:'Je suis désarmé',cat:'Déverrouillage',depth:3},
+  {id:1245,text:'Je suis déchargé',cat:'Déverrouillage',depth:3},
+  {id:1246,text:'Je suis délesté',cat:'Déverrouillage',depth:3},
+  {id:1244,text:'Je suis descellé',cat:'Déverrouillage',depth:4},
+  {id:1247,text:'Je suis décontaminé',cat:'Déverrouillage',depth:4},
+  {id:1248,text:'Je suis désinfecté',cat:'Déverrouillage',depth:4},
+  {id:1250,text:'Je suis déconditionné',cat:'Déverrouillage',depth:4},
+  {id:1251,text:'Je suis déprogrammé',cat:'Déverrouillage',depth:4},
+  {id:1252,text:'Je suis déverrouillé',cat:'Déverrouillage',depth:4},
+  {id:1253,text:'Je suis désenchaîné',cat:'Déverrouillage',depth:4},
+  {id:1254,text:'Je suis désenkyste',cat:'Déverrouillage',depth:5},
+  {id:1255,text:'Je suis désintégré',cat:'Déverrouillage',depth:5},
+  {id:565,text:'Je suis débloqué',cat:'Libération',depth:1},
+  {id:562,text:'Je suis délivré',cat:'Libération',depth:1},
+  {id:1264,text:'Je suis allégé',cat:'Libération',depth:1},
+  {id:1265,text:'Je suis soulagé',cat:'Libération',depth:1},
+  {id:561,text:'Je suis affranchi',cat:'Libération',depth:2},
+  {id:563,text:'Je suis émancipé',cat:'Libération',depth:2},
+  {id:560,text:'Je suis libéré',cat:'Libération',depth:2},
+  {id:570,text:'Je suis nettoyé',cat:'Libération',depth:3},
+  {id:571,text:'Je suis lavé',cat:'Libération',depth:3},
+  {id:569,text:'Je suis épuré',cat:'Libération',depth:3},
+  {id:568,text:'Je suis purifié',cat:'Libération',depth:3},
+  {id:1260,text:'Je suis innocenté',cat:'Libération',depth:3},
+  {id:1262,text:'Je suis disculpé',cat:'Libération',depth:3},
+  {id:1263,text:'Je suis assaini',cat:'Libération',depth:3},
+  {id:572,text:'Je suis blanchi',cat:'Libération',depth:4},
+  {id:573,text:'Je suis acquitté',cat:'Libération',depth:4},
+  {id:574,text:'Je suis absous',cat:'Libération',depth:4},
+  {id:575,text:'Je suis pardonné',cat:'Libération',depth:4},
+  {id:577,text:'Je suis cicatrisé',cat:'Libération',depth:4},
+  {id:578,text:'Je suis réparé',cat:'Libération',depth:4},
+  {id:1261,text:'Je suis gracié',cat:'Libération',depth:4},
+  {id:579,text:'Je suis restauré',cat:'Libération',depth:5},
+  {id:580,text:'Je suis rétabli',cat:'Libération',depth:5},
+  {id:582,text:'Je suis réanimé',cat:'Libération',depth:5},
+  {id:576,text:'Je suis guéri',cat:'Libération',depth:5},
+  {id:581,text:'Je suis ressuscité',cat:'Libération',depth:5},
+  {id:1270,text:'Je suis relevé',cat:'Émergence',depth:1},
+  {id:1271,text:'Je suis remis',cat:'Émergence',depth:1},
+  {id:1272,text:'Je suis ressaisi',cat:'Émergence',depth:2},
+  {id:1273,text:'Je suis rechargé',cat:'Émergence',depth:2},
+  {id:1274,text:'Je suis rallumé',cat:'Émergence',depth:2},
+  {id:1275,text:'Je suis recentré',cat:'Émergence',depth:2},
+  {id:1282,text:'Je suis récupéré',cat:'Émergence',depth:2},
+  {id:1283,text:'Je suis réconforté',cat:'Émergence',depth:2},
+  {id:1276,text:'Je suis retrouvé',cat:'Émergence',depth:3},
+  {id:1277,text:'Je suis rouvert',cat:'Émergence',depth:3},
+  {id:1278,text:'Je suis raccroché',cat:'Émergence',depth:3},
+  {id:1279,text:'Je suis revigoré',cat:'Émergence',depth:3},
+  {id:1286,text:'Je suis raffermi',cat:'Émergence',depth:3},
+  {id:1287,text:'Je suis raffiné',cat:'Émergence',depth:3},
+  {id:1288,text:'Je suis renoué',cat:'Émergence',depth:3},
+  {id:1280,text:'Je suis revitalisé',cat:'Émergence',depth:4},
+  {id:1281,text:'Je suis réveillé',cat:'Émergence',depth:4},
+  {id:1284,text:'Je suis réhabilité',cat:'Émergence',depth:4},
+  {id:1285,text:'Je suis réapproprié',cat:'Émergence',depth:4},
+  {id:1289,text:'Je suis reconquis',cat:'Émergence',depth:4},
+  {id:1290,text:'Je suis reconstitué',cat:'Émergence',depth:4},
+  {id:1291,text:'Je suis retissé',cat:'Émergence',depth:4},
+  {id:1292,text:'Je suis réaccordé',cat:'Émergence',depth:4},
+  {id:1293,text:'Je suis renaît',cat:'Émergence',depth:5},
+  {id:630,text:'Je suis redressé',cat:'Transformation',depth:1},
+  {id:629,text:'Je suis réajusté',cat:'Transformation',depth:1},
+  {id:1301,text:'Je suis reconduit',cat:'Transformation',depth:1},
+  {id:1307,text:'Je suis dressé',cat:'Transformation',depth:1},
+  {id:1308,text:'Je suis formé',cat:'Transformation',depth:1},
+  {id:628,text:'Je suis réaligné',cat:'Transformation',depth:2},
+  {id:627,text:'Je suis restructuré',cat:'Transformation',depth:2},
+  {id:626,text:'Je suis refondé',cat:'Transformation',depth:2},
+  {id:625,text:'Je suis rebâti',cat:'Transformation',depth:2},
+  {id:1300,text:'Je suis converti',cat:'Transformation',depth:2},
+  {id:1306,text:'Je suis taillé',cat:'Transformation',depth:2},
+  {id:624,text:'Je suis reconstruit',cat:'Transformation',depth:3},
+  {id:623,text:'Je suis renouvelé',cat:'Transformation',depth:3},
+  {id:631,text:'Je suis réorienté',cat:'Transformation',depth:3},
+  {id:632,text:'Je suis réunifié',cat:'Transformation',depth:3},
+  {id:1302,text:'Je suis refondu',cat:'Transformation',depth:3},
+  {id:1304,text:'Je suis assimilé',cat:'Transformation',depth:3},
+  {id:636,text:'Je suis trempé',cat:'Transformation',depth:4},
+  {id:634,text:'Je suis forgé',cat:'Transformation',depth:4},
+  {id:635,text:'Je suis sculpté',cat:'Transformation',depth:4},
+  {id:637,text:'Je suis affiné',cat:'Transformation',depth:4},
+  {id:633,text:'Je suis mûri',cat:'Transformation',depth:4},
+  {id:1303,text:'Je suis digéré',cat:'Transformation',depth:4},
+  {id:1305,text:'Je suis intégré',cat:'Transformation',depth:4},
+  {id:1309,text:'Je suis réintégré',cat:'Transformation',depth:4},
+  {id:622,text:'Je suis transmué',cat:'Transformation',depth:5},
+  {id:621,text:'Je suis métamorphosé',cat:'Transformation',depth:5},
+  {id:620,text:'Je suis transformé',cat:'Transformation',depth:5},
+  {id:1319,text:'Je suis branché',cat:'Engagement',depth:1},
+  {id:1310,text:'Je suis engagé',cat:'Engagement',depth:2},
+  {id:1311,text:'Je suis embarqué',cat:'Engagement',depth:2},
+  {id:1312,text:'Je suis avancé',cat:'Engagement',depth:2},
+  {id:1313,text:'Je suis orienté',cat:'Engagement',depth:2},
+  {id:1314,text:'Je suis dirigé',cat:'Engagement',depth:2},
+  {id:1329,text:'Je suis invité',cat:'Engagement',depth:2},
+  {id:1330,text:'Je suis convoqué',cat:'Engagement',depth:2},
+  {id:1315,text:'Je suis focalisé',cat:'Engagement',depth:3},
+  {id:1316,text:'Je suis concentré',cat:'Engagement',depth:3},
+  {id:1317,text:'Je suis animé',cat:'Engagement',depth:3},
+  {id:1318,text:'Je suis allumé',cat:'Engagement',depth:3},
+  {id:1320,text:'Je suis entraîné',cat:'Engagement',depth:3},
+  {id:1322,text:'Je suis promu',cat:'Engagement',depth:3},
+  {id:1325,text:'Je suis élancé',cat:'Engagement',depth:3},
+  {id:1326,text:'Je suis porté',cat:'Engagement',depth:3},
+  {id:1328,text:'Je suis guidé',cat:'Engagement',depth:3},
+  {id:1331,text:'Je suis appelé',cat:'Engagement',depth:3},
+  {id:1323,text:'Je suis hissé',cat:'Engagement',depth:4},
+  {id:1324,text:'Je suis élevé',cat:'Engagement',depth:4},
+  {id:1321,text:'Je suis enflammé',cat:'Engagement',depth:4},
+  {id:1327,text:'Je suis propulsé',cat:'Engagement',depth:4},
+  {id:1332,text:'Je suis destiné',cat:'Engagement',depth:4},
+  {id:1333,text:'Je suis prédestiné',cat:'Engagement',depth:5},
+  {id:1340,text:'Je suis calmé',cat:'Paix',depth:1},
+  {id:1350,text:'Je suis posé',cat:'Paix',depth:1},
+  {id:850,text:'Je suis apaisé',cat:'Paix',depth:2},
+  {id:1341,text:'Je suis délesté',cat:'Paix',depth:2},
+  {id:1342,text:'Je suis débarrassé',cat:'Paix',depth:2},
+  {id:1344,text:'Je suis assoupli',cat:'Paix',depth:2},
+  {id:1351,text:'Je suis installé',cat:'Paix',depth:2},
+  {id:856,text:'Je suis nourri',cat:'Paix',depth:3},
+  {id:1343,text:'Je suis ressourcé',cat:'Paix',depth:3},
+  {id:1345,text:'Je suis fluidifié',cat:'Paix',depth:3},
+  {id:1352,text:'Je suis entretenu',cat:'Paix',depth:3},
+  {id:1353,text:'Je suis maintenu',cat:'Paix',depth:3},
+  {id:1354,text:'Je suis consolidé',cat:'Paix',depth:3},
+  {id:1356,text:'Je suis protégé',cat:'Paix',depth:3},
+  {id:1357,text:'Je suis préservé',cat:'Paix',depth:3},
+  {id:1358,text:'Je suis gardé',cat:'Paix',depth:3},
+  {id:857,text:'Je suis comblé',cat:'Paix',depth:4},
+  {id:859,text:'Je suis harmonisé',cat:'Paix',depth:4},
+  {id:860,text:'Je suis équilibré',cat:'Paix',depth:4},
+  {id:1346,text:'Je suis synchronisé',cat:'Paix',depth:4},
+  {id:1347,text:'Je suis réharmonisé',cat:'Paix',depth:4},
+  {id:1348,text:'Je suis réequilibré',cat:'Paix',depth:4},
+  {id:1355,text:'Je suis sanctuarisé',cat:'Paix',depth:4},
+  {id:858,text:'Je suis épanoui',cat:'Paix',depth:5},
+  {id:807,text:'Je suis entendu',cat:'Connexion',depth:1},
+  {id:806,text:'Je suis compris',cat:'Connexion',depth:1},
+  {id:1366,text:'Je suis accueillant',cat:'Connexion',depth:1},
+  {id:1367,text:'Je suis ouvert',cat:'Connexion',depth:1},
+  {id:1368,text:'Je suis disponible',cat:'Connexion',depth:1},
+  {id:1369,text:'Je suis réceptif',cat:'Connexion',depth:1},
+  {id:808,text:'Je suis reconnu',cat:'Connexion',depth:2},
+  {id:809,text:'Je suis inclus',cat:'Connexion',depth:2},
+  {id:802,text:'Je suis accueilli',cat:'Connexion',depth:2},
+  {id:1364,text:'Je suis partagé',cat:'Connexion',depth:2},
+  {id:1365,text:'Je suis reçu',cat:'Connexion',depth:2},
+  {id:810,text:'Je suis relié',cat:'Connexion',depth:3},
+  {id:811,text:'Je suis connecté',cat:'Connexion',depth:3},
+  {id:812,text:'Je suis réuni',cat:'Connexion',depth:3},
+  {id:813,text:'Je suis réconcilié',cat:'Connexion',depth:3},
+  {id:1360,text:'Je suis assemblé',cat:'Connexion',depth:3},
+  {id:1361,text:'Je suis rattaché',cat:'Connexion',depth:3},
+  {id:1362,text:'Je suis rassemblé',cat:'Connexion',depth:3},
+  {id:805,text:'Je suis attendu',cat:'Connexion',depth:4},
+  {id:804,text:'Je suis désiré',cat:'Connexion',depth:4},
+  {id:803,text:'Je suis choisi',cat:'Connexion',depth:4},
+  {id:1363,text:'Je suis appartenant',cat:'Connexion',depth:4},
+  {id:1371,text:'Je suis aimant',cat:'Connexion',depth:4},
+  {id:801,text:'Je suis accepté',cat:'Connexion',depth:5},
+  {id:800,text:'Je suis aimé',cat:'Connexion',depth:5},
+  {id:1370,text:'Je suis chéri',cat:'Connexion',depth:5},
+  {id:1380,text:'Je suis validé',cat:'Reconnaissance',depth:1},
+  {id:1381,text:'Je suis approuvé',cat:'Reconnaissance',depth:1},
+  {id:1400,text:'Je suis encouragé',cat:'Reconnaissance',depth:1},
+  {id:1382,text:'Je suis apprécié',cat:'Reconnaissance',depth:2},
+  {id:1383,text:'Je suis admiré',cat:'Reconnaissance',depth:2},
+  {id:1384,text:'Je suis estimé',cat:'Reconnaissance',depth:2},
+  {id:1385,text:'Je suis considéré',cat:'Reconnaissance',depth:2},
+  {id:1386,text:'Je suis salué',cat:'Reconnaissance',depth:2},
+  {id:1387,text:'Je suis remarqué',cat:'Reconnaissance',depth:2},
+  {id:1389,text:'Je suis identifié',cat:'Reconnaissance',depth:2},
+  {id:1390,text:'Je suis repéré',cat:'Reconnaissance',depth:2},
+  {id:1391,text:'Je suis nommé',cat:'Reconnaissance',depth:2},
+  {id:1402,text:'Je suis équipé',cat:'Reconnaissance',depth:2},
+  {id:1403,text:'Je suis préparé',cat:'Reconnaissance',depth:2},
+  {id:1388,text:'Je suis distingué',cat:'Reconnaissance',depth:3},
+  {id:1392,text:'Je suis respecté',cat:'Reconnaissance',depth:3},
+  {id:1398,text:'Je suis valorisé',cat:'Reconnaissance',depth:3},
+  {id:1399,text:'Je suis soutenu',cat:'Reconnaissance',depth:3},
+  {id:1401,text:'Je suis outillé',cat:'Reconnaissance',depth:3},
+  {id:1404,text:'Je suis accordé',cat:'Reconnaissance',depth:3},
+  {id:1405,text:'Je suis autorisé',cat:'Reconnaissance',depth:3},
+  {id:1406,text:'Je suis permis',cat:'Reconnaissance',depth:3},
+  {id:1408,text:'Je suis doté',cat:'Reconnaissance',depth:3},
+  {id:1409,text:'Je suis pourvu',cat:'Reconnaissance',depth:3},
+  {id:1393,text:'Je suis honoré',cat:'Reconnaissance',depth:4},
+  {id:1394,text:'Je suis célébré',cat:'Reconnaissance',depth:4},
+  {id:1395,text:'Je suis légitimé',cat:'Reconnaissance',depth:4},
+  {id:1396,text:'Je suis dignifié',cat:'Reconnaissance',depth:4},
+  {id:1407,text:'Je suis offert',cat:'Reconnaissance',depth:4},
+  {id:1397,text:'Je suis sacré',cat:'Reconnaissance',depth:5},
+  {id:699,text:'Je suis activé',cat:'Puissance',depth:1},
+  {id:698,text:'Je suis mobilisé',cat:'Puissance',depth:1},
+  {id:697,text:'Je suis dynamisé',cat:'Puissance',depth:2},
+  {id:690,text:'Je suis renforcé',cat:'Puissance',depth:2},
+  {id:688,text:'Je suis fortifié',cat:'Puissance',depth:2},
+  {id:686,text:'Je suis armé',cat:'Puissance',depth:3},
+  {id:685,text:'Je suis habilité',cat:'Puissance',depth:3},
+  {id:684,text:'Je suis autonomisé',cat:'Puissance',depth:3},
+  {id:691,text:'Je suis stabilisé',cat:'Puissance',depth:3},
+  {id:1410,text:'Je suis blindé',cat:'Puissance',depth:3},
+  {id:1411,text:'Je suis cuirassé',cat:'Puissance',depth:3},
+  {id:1415,text:'Je suis affiné',cat:'Puissance',depth:3},
+  {id:1416,text:'Je suis affronté',cat:'Puissance',depth:3},
+  {id:1417,text:'Je suis responsable',cat:'Puissance',depth:3},
+  {id:692,text:'Je suis enraciné',cat:'Puissance',depth:4},
+  {id:694,text:'Je suis affirmé',cat:'Puissance',depth:4},
+  {id:693,text:'Je suis assumé',cat:'Puissance',depth:4},
+  {id:695,text:'Je suis aguerri',cat:'Puissance',depth:4},
+  {id:696,text:'Je suis endurci',cat:'Puissance',depth:4},
+  {id:1412,text:'Je suis réancré',cat:'Puissance',depth:4},
+  {id:1413,text:'Je suis réenraciné',cat:'Puissance',depth:4},
+  {id:1414,text:'Je suis réaffirmé',cat:'Puissance',depth:4},
+  {id:1418,text:'Je suis unifié',cat:'Puissance',depth:4},
+  {id:1419,text:'Je suis réalisé',cat:'Puissance',depth:4},
+  {id:1420,text:'Je suis réapproprié',cat:'Puissance',depth:4},
+  {id:681,text:'Je suis centré',cat:'Puissance',depth:5},
+  {id:682,text:'Je suis aligné',cat:'Puissance',depth:5},
+  {id:680,text:'Je suis ancré',cat:'Puissance',depth:5},
+  {id:701,text:'Je suis vivant',cat:'Puissance',depth:5},
+  {id:702,text:'Je suis vivifié',cat:'Puissance',depth:5},
+  {id:700,text:'Je suis puissant',cat:'Puissance',depth:5},
+  {id:683,text:'Je suis souverain',cat:'Puissance',depth:5},
+  {id:1430,text:'Je suis verbalisé',cat:'Accomplissement',depth:1},
+  {id:750,text:'Je suis exprimé',cat:'Accomplissement',depth:1},
+  {id:1439,text:'Je suis montré',cat:'Accomplissement',depth:1},
+  {id:751,text:'Je suis visible',cat:'Accomplissement',depth:2},
+  {id:752,text:'Je suis présent',cat:'Accomplissement',depth:2},
+  {id:749,text:'Je suis manifesté',cat:'Accomplissement',depth:2},
+  {id:1431,text:'Je suis dit',cat:'Accomplissement',depth:2},
+  {id:1432,text:'Je suis formulé',cat:'Accomplissement',depth:2},
+  {id:1433,text:'Je suis articulé',cat:'Accomplissement',depth:2},
+  {id:1434,text:'Je suis clarifié',cat:'Accomplissement',depth:2},
+  {id:1437,text:'Je suis nommé',cat:'Accomplissement',depth:2},
+  {id:748,text:'Je suis incarné',cat:'Accomplissement',depth:3},
+  {id:753,text:'Je suis habité',cat:'Accomplissement',depth:3},
+  {id:747,text:'Je suis cultivé',cat:'Accomplissement',depth:3},
+  {id:746,text:'Je suis développé',cat:'Accomplissement',depth:3},
+  {id:1435,text:'Je suis défini',cat:'Accomplissement',depth:3},
+  {id:1436,text:'Je suis délimité',cat:'Accomplissement',depth:3},
+  {id:1438,text:'Je suis dévoilé',cat:'Accomplissement',depth:3},
+  {id:1442,text:'Je suis extériorisé',cat:'Accomplissement',depth:3},
+  {id:1444,text:'Je suis enrichi',cat:'Accomplissement',depth:3},
+  {id:1445,text:'Je suis alimenté',cat:'Accomplissement',depth:3},
+  {id:1446,text:'Je suis peaufiné',cat:'Accomplissement',depth:3},
+  {id:1450,text:'Je suis produit',cat:'Accomplissement',depth:3},
+  {id:745,text:'Je suis créé',cat:'Accomplissement',depth:4},
+  {id:744,text:'Je suis bâti',cat:'Accomplissement',depth:4},
+  {id:743,text:'Je suis construit',cat:'Accomplissement',depth:4},
+  {id:742,text:'Je suis abouti',cat:'Accomplissement',depth:4},
+  {id:1440,text:'Je suis révélé',cat:'Accomplissement',depth:4},
+  {id:1441,text:'Je suis revendiqué',cat:'Accomplissement',depth:4},
+  {id:1443,text:'Je suis transmis',cat:'Accomplissement',depth:4},
+  {id:1447,text:'Je suis complété',cat:'Accomplissement',depth:4},
+  {id:1448,text:'Je suis achevé',cat:'Accomplissement',depth:4},
+  {id:1449,text:'Je suis perpétué',cat:'Accomplissement',depth:4},
+  {id:741,text:'Je suis réalisé',cat:'Accomplissement',depth:5},
+  {id:740,text:'Je suis accompli',cat:'Accomplissement',depth:5},
+  {id:1464,text:'Je suis réchauffé',cat:'Éveil',depth:1},
+  {id:1467,text:'Je suis ouvert',cat:'Éveil',depth:1},
+  {id:900,text:'Je suis éveillé',cat:'Éveil',depth:2},
+  {id:901,text:'Je suis éclairé',cat:'Éveil',depth:2},
+  {id:1463,text:'Je suis réénergisé',cat:'Éveil',depth:2},
+  {id:908,text:'Je suis inspiré',cat:'Éveil',depth:3},
+  {id:915,text:'Je suis valorisé',cat:'Éveil',depth:3},
+  {id:916,text:'Je suis respecté',cat:'Éveil',depth:3},
+  {id:1462,text:'Je suis régénéré',cat:'Éveil',depth:3},
+  {id:1465,text:'Je suis dilaté',cat:'Éveil',depth:3},
+  {id:1469,text:'Je suis accompagné',cat:'Éveil',depth:3},
+  {id:1473,text:'Je suis répété',cat:'Éveil',depth:3},
+  {id:902,text:'Je suis révélé',cat:'Éveil',depth:4},
+  {id:906,text:'Je suis revendiqué',cat:'Éveil',depth:4},
+  {id:909,text:'Je suis enflammé',cat:'Éveil',depth:4},
+  {id:1460,text:'Je suis illuminé',cat:'Éveil',depth:4},
+  {id:1461,text:'Je suis élevé',cat:'Éveil',depth:4},
+  {id:1466,text:'Je suis expansé',cat:'Éveil',depth:4},
+  {id:1468,text:'Je suis contemplé',cat:'Éveil',depth:4},
+  {id:1470,text:'Je suis préservé',cat:'Éveil',depth:4},
+  {id:1471,text:'Je suis voulu',cat:'Éveil',depth:4},
+  {id:1472,text:'Je suis voué',cat:'Éveil',depth:4},
+  {id:907,text:'Je suis transcendé',cat:'Éveil',depth:5},
+  {id:1474,text:'Je suis consacré',cat:'Éveil',depth:5},
+  {id:1475,text:'Je suis immortalisé',cat:'Éveil',depth:5}
 ];
 
-let DATA = [...DEFAULT_DATA];
-let currentProfile = null;
-let WORKED = [];
-let activeFilter = "Tous";
-let query = "";
-let checked = new Set();
-let adminOpen = false;
-let pendingConfirm = null;
+function starsHtml(depth,max=5){let s="";for(let i=1;i<=max;i++){s+=`<span class="${i<=depth?"s-on":"s-off"}">★</span>`;}return s;}
 
-// PIN STATE
-let pinTarget = null;
-let pinValue = "";
+let DATA=[...DEFAULT_DATA];
+let currentProfile=null,WORKED=[],activeFilter="Tous",query="",depthFilter=0,checked=new Set(),adminOpen=false,pendingConfirm=null,pinTarget=null,pinValue="";
 
-function workedIds() { return new Set(WORKED.flatMap(s=>s.ids)); }
+function workedIds(){return new Set(WORKED.flatMap(s=>s.ids));}
 function showToast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2500);}
+function showScreen(id){["profile-screen","pin-screen"].forEach(s=>{document.getElementById(s).classList.remove("show");});document.getElementById("app-screen").classList.remove("show");if(id==="app"){document.getElementById("app-screen").classList.add("show");}else{document.getElementById(id).classList.add("show");}}
 
-function showScreen(id) {
-  ["profile-screen","pin-screen"].forEach(s => {
-    const el = document.getElementById(s);
-    el.classList.remove("show");
-  });
-  document.getElementById("app-screen").classList.remove("show");
-  if (id === "app") {
-    document.getElementById("app-screen").classList.add("show");
-  } else {
-    document.getElementById(id).classList.add("show");
-  }
+async function loadProfiles(){
+  const list=document.getElementById("profile-list");list.innerHTML=`<span class="spinner"></span>`;
+  try{const profiles=await sb("profiles?select=*&order=created_at.asc");
+  if(!profiles||!profiles.length){list.innerHTML=`<div style="font-size:13px;color:var(--text-faint);font-style:italic;padding:4px 0">Aucun profil — crée-en un ci-dessous</div>`;return;}
+  list.innerHTML=profiles.map(p=>{const initials=p.name.slice(0,2).toUpperCase();const date=new Date(p.created_at).toLocaleDateString("fr-FR",{day:"numeric",month:"short"});return`<div class="profile-item" data-id="${p.id}" data-name="${p.name}" data-hash="${p.pin_hash}"><div class="profile-avatar">${initials}</div><div class="profile-name">${p.name}</div><div class="profile-meta">depuis le ${date}</div><i class="ti ti-chevron-right" style="font-size:14px;color:var(--text-faint)"></i></div>`;}).join("");
+  list.querySelectorAll(".profile-item").forEach(item=>{item.addEventListener("click",()=>openPinScreen(item.dataset.id,item.dataset.name,item.dataset.hash));});}
+  catch(e){list.innerHTML=`<div style="font-size:13px;color:var(--red-text)">Erreur de connexion</div>`;}
 }
 
-// PROFILES
-async function loadProfiles() {
-  const list = document.getElementById("profile-list");
-  list.innerHTML = `<span class="spinner"></span>`;
-  try {
-    const profiles = await sb("profiles?select=*&order=created_at.asc");
-    if (!profiles || !profiles.length) {
-      list.innerHTML = `<div style="font-size:13px;color:var(--text-faint);font-style:italic;padding:4px 0">Aucun profil — crée-en un ci-dessous</div>`;
-      return;
-    }
-    list.innerHTML = profiles.map(p => {
-      const initials = p.name.slice(0,2).toUpperCase();
-      const date = new Date(p.created_at).toLocaleDateString("fr-FR",{day:"numeric",month:"short"});
-      return `<div class="profile-item" data-id="${p.id}" data-name="${p.name}" data-hash="${p.pin_hash}">
-        <div class="profile-avatar">${initials}</div>
-        <div class="profile-name">${p.name}</div>
-        <div class="profile-meta">depuis le ${date}</div>
-        <i class="ti ti-chevron-right" style="font-size:14px;color:var(--text-faint)"></i>
-      </div>`;
-    }).join("");
-    list.querySelectorAll(".profile-item").forEach(item => {
-      item.addEventListener("click", () => openPinScreen(item.dataset.id, item.dataset.name, item.dataset.hash));
-    });
-  } catch(e) {
-    list.innerHTML = `<div style="font-size:13px;color:var(--red-text)">Erreur de connexion</div>`;
-  }
-}
+function openPinScreen(id,name,hash){pinTarget={id,name,hash};pinValue="";document.getElementById("pin-avatar").textContent=name.slice(0,2).toUpperCase();document.getElementById("pin-name").textContent=name;document.getElementById("pin-error").textContent="";updatePinDots();showScreen("pin-screen");}
+function updatePinDots(){document.querySelectorAll(".pin-dot").forEach((dot,i)=>{dot.classList.toggle("filled",i<pinValue.length);});}
 
-function openPinScreen(id, name, hash) {
-  pinTarget = { id, name, hash };
-  pinValue = "";
-  document.getElementById("pin-avatar").textContent = name.slice(0,2).toUpperCase();
-  document.getElementById("pin-name").textContent = name;
-  document.getElementById("pin-error").textContent = "";
-  updatePinDots();
-  showScreen("pin-screen");
-}
-
-function updatePinDots() {
-  document.querySelectorAll(".pin-dot").forEach((dot,i) => {
-    dot.classList.toggle("filled", i < pinValue.length);
-  });
-}
-
-document.querySelectorAll(".pin-key").forEach(key => {
-  key.addEventListener("click", async () => {
-    const v = key.dataset.v;
-    if (v === "del") {
-      pinValue = pinValue.slice(0,-1);
-      updatePinDots();
-      return;
-    }
-    if (pinValue.length >= 4) return;
-    pinValue += v;
-    updatePinDots();
-    if (pinValue.length === 4) {
-      const hash = await hashPin(pinValue);
-      if (hash === pinTarget.hash) {
-        await enterProfile(pinTarget.id, pinTarget.name);
-      } else {
-        document.getElementById("pin-error").textContent = "Code incorrect — réessaie";
-        document.getElementById("pin-dots").classList.add("shake");
-        setTimeout(() => {
-          document.getElementById("pin-dots").classList.remove("shake");
-          pinValue = "";
-          updatePinDots();
-          document.getElementById("pin-error").textContent = "";
-        }, 500);
-      }
+document.querySelectorAll(".pin-key").forEach(key=>{
+  key.addEventListener("click",async()=>{
+    const v=key.dataset.v;
+    if(v==="del"){pinValue=pinValue.slice(0,-1);updatePinDots();return;}
+    if(pinValue.length>=4)return;
+    pinValue+=v;updatePinDots();
+    if(pinValue.length===4){
+      const hash=await hashPin(pinValue);
+      if(hash===pinTarget.hash){await enterProfile(pinTarget.id,pinTarget.name);}
+      else{document.getElementById("pin-error").textContent="Code incorrect — réessaie";document.getElementById("pin-dots").classList.add("shake");setTimeout(()=>{document.getElementById("pin-dots").classList.remove("shake");pinValue="";updatePinDots();document.getElementById("pin-error").textContent="";},500);}
     }
   });
 });
 
-document.getElementById("pin-back").addEventListener("click", () => {
-  pinTarget = null; pinValue = "";
-  showScreen("profile-screen");
+document.getElementById("pin-back").addEventListener("click",()=>{pinTarget=null;pinValue="";showScreen("profile-screen");});
+async function enterProfile(id,name){currentProfile={id,name};document.getElementById("current-profile-name").textContent=name;checked.clear();await loadWorkedSessions();showScreen("app");render();}
+async function loadWorkedSessions(){try{const sessions=await sb(`sessions?profile_id=eq.${currentProfile.id}&select=*&order=created_at.asc`);WORKED=(sessions||[]).map(s=>({id:s.id,date:s.date,ids:s.ids}));}catch(e){WORKED=[];}}
+
+document.getElementById("new-profile-btn").addEventListener("click",async()=>{
+  const name=document.getElementById("new-profile-name").value.trim();const pin=document.getElementById("new-profile-pin").value.trim();
+  if(!name){document.getElementById("new-profile-name").focus();return;}
+  if(!/^\d{4}$/.test(pin)){showToast("Le code PIN doit être exactement 4 chiffres");document.getElementById("new-profile-pin").focus();return;}
+  try{const pin_hash=await hashPin(pin);const result=await sb("profiles",{method:"POST",body:{name,pin_hash},prefer:"return=representation"});
+  if(result&&result[0]){document.getElementById("new-profile-name").value="";document.getElementById("new-profile-pin").value="";await enterProfile(result[0].id,result[0].name);}}
+  catch(e){showToast("Erreur lors de la création");}
 });
+document.getElementById("new-profile-name").addEventListener("keydown",e=>{if(e.key==="Enter")document.getElementById("new-profile-btn").click();});
+document.getElementById("switch-profile-btn").addEventListener("click",()=>{currentProfile=null;WORKED=[];checked.clear();showScreen("profile-screen");loadProfiles();});
 
-async function enterProfile(id, name) {
-  currentProfile = { id, name };
-  document.getElementById("current-profile-name").textContent = name;
-  checked.clear();
-  await loadWorkedSessions();
-  showScreen("app");
-  render();
-}
-
-async function loadWorkedSessions() {
-  try {
-    const sessions = await sb(`sessions?profile_id=eq.${currentProfile.id}&select=*&order=created_at.asc`);
-    WORKED = (sessions||[]).map(s=>({id:s.id,date:s.date,ids:s.ids}));
-  } catch(e) { WORKED=[]; }
-}
-
-document.getElementById("new-profile-btn").addEventListener("click", async () => {
-  const name = document.getElementById("new-profile-name").value.trim();
-  const pin = document.getElementById("new-profile-pin").value.trim();
-  if (!name) { document.getElementById("new-profile-name").focus(); return; }
-  if (!/^\d{4}$/.test(pin)) { showToast("Le code PIN doit être exactement 4 chiffres"); document.getElementById("new-profile-pin").focus(); return; }
-  try {
-    const pin_hash = await hashPin(pin);
-    const result = await sb("profiles", {method:"POST", body:{name, pin_hash}, prefer:"return=representation"});
-    if (result && result[0]) {
-      document.getElementById("new-profile-name").value = "";
-      document.getElementById("new-profile-pin").value = "";
-      await enterProfile(result[0].id, result[0].name);
-    }
-  } catch(e) { showToast("Erreur lors de la création"); }
-});
-
-document.getElementById("new-profile-name").addEventListener("keydown", e => { if(e.key==="Enter") document.getElementById("new-profile-btn").click(); });
-
-document.getElementById("switch-profile-btn").addEventListener("click", () => {
-  currentProfile=null; WORKED=[]; checked.clear();
-  showScreen("profile-screen");
-  loadProfiles();
-});
-
-// RENDER
 function cats(){return["Tous",...new Set(DATA.map(d=>d.cat))];}
-function buildCatSelect(){
-  const sel=document.getElementById("cat-select");
-  sel.innerHTML=[...new Set(DATA.map(d=>d.cat))].map(c=>`<option value="${c}">${c}</option>`).join("")+`<option value="__new__">+ Nouvelle catégorie…</option>`;
-  sel.onchange=()=>{document.getElementById("new-cat-wrap").classList.toggle("show",sel.value==="__new__");};
-}
-function buildFilters(){
-  const el=document.getElementById("filters");
-  el.innerHTML=cats().map(c=>`<button class="filter-btn${c===activeFilter?" active":""}" data-cat="${c}">${c}</button>`).join("");
-  el.querySelectorAll(".filter-btn").forEach(btn=>{btn.addEventListener("click",()=>{activeFilter=btn.dataset.cat;render();});});
-}
-function buildAdminList(){
-  const list=document.getElementById("admin-list");
-  const custom=DATA.filter(d=>!DEFAULT_DATA.find(dd=>dd.id===d.id));
-  if(!custom.length){list.innerHTML=`<div style="font-size:13px;color:var(--text-faint);padding:4px 0">Tes ajouts apparaîtront ici</div>`;return;}
-  list.innerHTML=custom.map(d=>`<div class="admin-item" data-id="${d.id}"><span class="admin-item-text">${d.text}</span><span class="admin-item-cat">${d.cat}</span><button class="del-btn"><i class="ti ti-trash" style="font-size:14px"></i></button></div>`).join("");
-  list.querySelectorAll(".del-btn").forEach(btn=>{btn.addEventListener("click",()=>{const id=+btn.closest(".admin-item").dataset.id;DATA=DATA.filter(d=>d.id!==id);checked.delete(id);render();showToast("Supprimé");});});
-}
-function filtered(){return DATA.filter(d=>{const catOk=activeFilter==="Tous"||d.cat===activeFilter;const qOk=!query||d.text.toLowerCase().includes(query.toLowerCase())||d.cat.toLowerCase().includes(query.toLowerCase());return catOk&&qOk;});}
+function buildCatSelect(){const sel=document.getElementById("cat-select");sel.innerHTML=[...new Set(DATA.map(d=>d.cat))].map(c=>`<option value="${c}">${c}</option>`).join("")+`<option value="__new__">+ Nouvelle catégorie…</option>`;sel.onchange=()=>{document.getElementById("new-cat-wrap").classList.toggle("show",sel.value==="__new__");};}
+function buildFilters(){const el=document.getElementById("filters");el.innerHTML=cats().map(c=>`<button class="filter-btn${c===activeFilter?" active":""}" data-cat="${c}">${c}</button>`).join("");el.querySelectorAll(".filter-btn").forEach(btn=>{btn.addEventListener("click",()=>{activeFilter=btn.dataset.cat;render();});});}
+function buildAdminList(){const list=document.getElementById("admin-list");const custom=DATA.filter(d=>!DEFAULT_DATA.find(dd=>dd.id===d.id));if(!custom.length){list.innerHTML=`<div style="font-size:13px;color:var(--text-faint);padding:4px 0">Tes ajouts apparaîtront ici</div>`;return;}list.innerHTML=custom.map(d=>`<div class="admin-item" data-id="${d.id}"><span class="admin-item-text">${d.text}</span><span class="admin-item-cat">${d.cat}</span><span style="font-size:11px;color:var(--star-on)">${"★".repeat(d.depth||1)}</span><button class="del-btn"><i class="ti ti-trash" style="font-size:14px"></i></button></div>`).join("");list.querySelectorAll(".del-btn").forEach(btn=>{btn.addEventListener("click",()=>{const id=+btn.closest(".admin-item").dataset.id;DATA=DATA.filter(d=>d.id!==id);checked.delete(id);render();showToast("Supprimé");});});}
+
+function filtered(){return DATA.filter(d=>{const catOk=activeFilter==="Tous"||d.cat===activeFilter;const qOk=!query||d.text.toLowerCase().includes(query.toLowerCase())||d.cat.toLowerCase().includes(query.toLowerCase());const depthOk=depthFilter===0||d.depth===depthFilter;return catOk&&qOk&&depthOk;});}
 
 function render(){
-  buildFilters();buildCatSelect();
-  if(adminOpen)buildAdminList();
-  const wids=workedIds();
-  const items=filtered();
-  const grid=document.getElementById("grid");
-  document.getElementById("stats").innerHTML=items.length?`<span>${items.length}</span> identité${items.length>1?"s":""}${activeFilter!=="Tous"?" — "+activeFilter:""}`:""
+  buildFilters();buildCatSelect();if(adminOpen)buildAdminList();
+  const wids=workedIds();const items=filtered();const grid=document.getElementById("grid");
+  document.getElementById("stats").innerHTML=items.length?`<span>${items.length}</span> identité${items.length>1?"s":""}${activeFilter!=="Tous"?" — "+activeFilter:""}${depthFilter>0?" — "+"★".repeat(depthFilter):""}`:""
   if(!items.length){grid.innerHTML=`<div class="no-results"><i class="ti ti-search" style="font-size:26px;display:block;margin-bottom:10px;opacity:0.2"></i>Aucun résultat</div>`;renderSession();renderWorked();return;}
   grid.innerHTML=items.map(d=>{
     const isWorked=wids.has(d.id);const isChecked=checked.has(d.id);
-    const cls=isWorked?"worked":isChecked?"checked":"";
-    const icon=isWorked?"ti-award":"ti-check";
-    return `<div class="card${cls?" "+cls:""}" data-id="${d.id}" ${isWorked?"":"role=\"checkbox\" aria-checked=\""+isChecked+"\""} tabindex="0"><div class="card-top"><span class="identity">${d.text}</span><div class="check-icon"><i class="ti ${icon}"></i></div></div><span class="cat-badge">${d.cat}</span></div>`;
+    const cls=isWorked?"worked":isChecked?"checked":"";const icon=isWorked?"ti-award":"ti-check";
+    const stars=starsHtml(d.depth||1);
+    return `<div class="card${cls?" "+cls:""}" data-id="${d.id}" ${isWorked?"":"role=\"checkbox\" aria-checked=\""+isChecked+"\""}  tabindex="0"><div class="card-top"><span class="identity">${d.text}</span><div class="check-icon"><i class="ti ${icon}"></i></div></div><div class="card-footer"><span class="cat-badge">${d.cat}</span><span class="depth-stars">${stars}</span></div></div>`;
   }).join("");
-  grid.querySelectorAll(".card:not(.worked)").forEach(card=>{
-    const toggle=()=>{const id=+card.dataset.id;if(checked.has(id))checked.delete(id);else checked.add(id);render();};
-    card.addEventListener("click",toggle);
-    card.addEventListener("keydown",e=>{if(e.key===" "||e.key==="Enter"){e.preventDefault();toggle();}});
-  });
+  grid.querySelectorAll(".card:not(.worked)").forEach(card=>{const toggle=()=>{const id=+card.dataset.id;if(checked.has(id))checked.delete(id);else checked.add(id);render();};card.addEventListener("click",toggle);card.addEventListener("keydown",e=>{if(e.key===" "||e.key==="Enter"){e.preventDefault();toggle();}});});
   renderSession();renderWorked();
 }
 
-function renderSession(){
-  const sel=DATA.filter(d=>checked.has(d.id));const count=sel.length;
-  document.getElementById("session-count").textContent=`${count} identité${count>1?"s":""} sélectionnée${count>1?"s":""}`;
-  const list=document.getElementById("current-sel");
-  list.innerHTML=sel.length?sel.map(d=>`<span class="sel-tag">${d.text}</span>`).join(""):`<span class="empty-sel">Aucune identité cochée</span>`;
-  document.getElementById("validate-btn").disabled=sel.length===0;
-}
+function renderSession(){const sel=DATA.filter(d=>checked.has(d.id));const count=sel.length;document.getElementById("session-count").textContent=`${count} identité${count>1?"s":""} sélectionnée${count>1?"s":""}`;const list=document.getElementById("current-sel");list.innerHTML=sel.length?sel.map(d=>`<span class="sel-tag">${d.text}</span>`).join(""):`<span class="empty-sel">Aucune identité cochée</span>`;document.getElementById("validate-btn").disabled=sel.length===0;}
 
-function renderWorked(){
-  const section=document.getElementById("worked-section");
-  const body=document.getElementById("worked-body");
-  const total=WORKED.reduce((acc,s)=>acc+s.ids.length,0);
-  document.getElementById("worked-count-badge").textContent=total;
-  if(!WORKED.length){section.style.display="none";return;}
-  section.style.display="block";
-  body.innerHTML=WORKED.slice().reverse().map(session=>{
-    const identities=session.ids.map(id=>DATA.find(d=>d.id===id)).filter(Boolean);
-    if(!identities.length)return "";
-    return `<div class="worked-session"><div class="worked-date">${session.date}</div><div class="worked-tags">${identities.map(d=>`<span class="worked-tag">${d.text}<button class="remove-worked" data-session-id="${session.id}" data-id="${d.id}"><i class="ti ti-x" style="font-size:11px"></i></button></span>`).join("")}</div></div>`;
-  }).join("");
-  body.querySelectorAll(".remove-worked").forEach(btn=>{
-    btn.addEventListener("click",()=>{
-      const sessionId=btn.dataset.sessionId;const id=+btn.dataset.id;
-      const identity=DATA.find(d=>d.id===id);
-      showConfirm("Retirer cette identité ?",`"${identity?identity.text:""}" sera retirée des identités travaillées.`,async()=>{
-        const session=WORKED.find(s=>s.id===sessionId);if(!session)return;
-        session.ids=session.ids.filter(i=>i!==id);
-        if(!session.ids.length){await sb(`sessions?id=eq.${sessionId}`,{method:"DELETE",prefer:""});WORKED=WORKED.filter(s=>s.id!==sessionId);}
-        else{await sb(`sessions?id=eq.${sessionId}`,{method:"PATCH",body:{ids:session.ids},prefer:""});}
-        render();showToast("Identité retirée");
-      });
-    });
-  });
-}
+function renderWorked(){const section=document.getElementById("worked-section");const body=document.getElementById("worked-body");const total=WORKED.reduce((acc,s)=>acc+s.ids.length,0);document.getElementById("worked-count-badge").textContent=total;if(!WORKED.length){section.style.display="none";return;}section.style.display="block";body.innerHTML=WORKED.slice().reverse().map(session=>{const identities=session.ids.map(id=>DATA.find(d=>d.id===id)).filter(Boolean);if(!identities.length)return"";return`<div class="worked-session"><div class="worked-date">${session.date}</div><div class="worked-tags">${identities.map(d=>`<span class="worked-tag">${d.text}<button class="remove-worked" data-session-id="${session.id}" data-id="${d.id}"><i class="ti ti-x" style="font-size:11px"></i></button></span>`).join("")}</div></div>`;}).join("");body.querySelectorAll(".remove-worked").forEach(btn=>{btn.addEventListener("click",()=>{const sessionId=btn.dataset.sessionId;const id=+btn.dataset.id;const identity=DATA.find(d=>d.id===id);showConfirm("Retirer cette identité ?",`"${identity?identity.text:""}" sera retirée des identités travaillées.`,async()=>{const session=WORKED.find(s=>s.id===sessionId);if(!session)return;session.ids=session.ids.filter(i=>i!==id);if(!session.ids.length){await sb(`sessions?id=eq.${sessionId}`,{method:"DELETE",prefer:""});WORKED=WORKED.filter(s=>s.id!==sessionId);}else{await sb(`sessions?id=eq.${sessionId}`,{method:"PATCH",body:{ids:session.ids},prefer:""});}render();showToast("Identité retirée");});});});}
 
-document.getElementById("validate-btn").addEventListener("click",async()=>{
-  if(checked.size===0||!currentProfile)return;
-  const btn=document.getElementById("validate-btn");btn.disabled=true;
-  const date=new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
-  const wids=workedIds();const newIds=[...checked].filter(id=>!wids.has(id));
-  if(!newIds.length){checked.clear();render();return;}
-  try{
-    const result=await sb("sessions",{method:"POST",body:{profile_id:currentProfile.id,date,ids:newIds},prefer:"return=representation"});
-    if(result&&result[0])WORKED.push({id:result[0].id,date,ids:newIds});
-    checked.clear();render();showToast(`✓ ${newIds.length} identité${newIds.length>1?"s":""} marquée${newIds.length>1?"s":""} comme travaillée${newIds.length>1?"s":""}`);
-  }catch(e){showToast("Erreur lors de la sauvegarde");btn.disabled=false;}
-});
+document.getElementById("validate-btn").addEventListener("click",async()=>{if(checked.size===0||!currentProfile)return;const btn=document.getElementById("validate-btn");btn.disabled=true;const date=new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});const wids=workedIds();const newIds=[...checked].filter(id=>!wids.has(id));if(!newIds.length){checked.clear();render();return;}try{const result=await sb("sessions",{method:"POST",body:{profile_id:currentProfile.id,date,ids:newIds},prefer:"return=representation"});if(result&&result[0])WORKED.push({id:result[0].id,date,ids:newIds});checked.clear();render();showToast(`✓ ${newIds.length} identité${newIds.length>1?"s":""} marquée${newIds.length>1?"s":""} comme travaillée${newIds.length>1?"s":""}`);}catch(e){showToast("Erreur lors de la sauvegarde");btn.disabled=false;}});
 
-document.getElementById("clear-worked-btn").addEventListener("click",()=>{
-  showConfirm("Effacer tout l'historique ?","Toutes les sessions de ce profil seront supprimées. Action irréversible.",async()=>{
-    try{await sb(`sessions?profile_id=eq.${currentProfile.id}`,{method:"DELETE",prefer:""});WORKED=[];render();showToast("Historique effacé");}
-    catch(e){showToast("Erreur");}
-  });
-});
+document.getElementById("clear-worked-btn").addEventListener("click",()=>{showConfirm("Effacer tout l'historique ?","Toutes les sessions de ce profil seront supprimées.",async()=>{try{await sb(`sessions?profile_id=eq.${currentProfile.id}`,{method:"DELETE",prefer:""});WORKED=[];render();showToast("Historique effacé");}catch(e){showToast("Erreur");}});});
 
-function showConfirm(title,sub,onYes){
-  document.getElementById("confirm-title").textContent=title;
-  document.getElementById("confirm-sub-text").textContent=sub;
-  pendingConfirm=onYes;
-  document.getElementById("confirm-modal").classList.add("show");
-}
-document.getElementById("confirm-yes").addEventListener("click",async()=>{
-  document.getElementById("confirm-modal").classList.remove("show");
-  if(pendingConfirm){await pendingConfirm();pendingConfirm=null;}
-});
+function showConfirm(title,sub,onYes){document.getElementById("confirm-title").textContent=title;document.getElementById("confirm-sub-text").textContent=sub;pendingConfirm=onYes;document.getElementById("confirm-modal").classList.add("show");}
+document.getElementById("confirm-yes").addEventListener("click",async()=>{document.getElementById("confirm-modal").classList.remove("show");if(pendingConfirm){await pendingConfirm();pendingConfirm=null;}});
 document.getElementById("confirm-no").addEventListener("click",()=>{pendingConfirm=null;document.getElementById("confirm-modal").classList.remove("show");});
+document.querySelectorAll(".depth-btn").forEach(btn=>{btn.addEventListener("click",()=>{depthFilter=+btn.dataset.depth;document.querySelectorAll(".depth-btn").forEach(b=>b.classList.remove("active"));btn.classList.add("active");render();});});
 
-// PROGRESSION
-function renderProgress(){
-  document.getElementById("progress-sub").textContent=currentProfile?"Profil — "+currentProfile.name:"";
-  const total=WORKED.reduce((acc,s)=>acc+s.ids.length,0);
-  const sessions=WORKED.length;const avg=sessions?Math.round(total/sessions):0;
-  document.getElementById("stat-cards").innerHTML=[{label:"Sessions",value:sessions,unit:"au total"},{label:"Identités travaillées",value:total,unit:"au total"},{label:"Par session",value:avg,unit:"en moyenne"}].map(s=>`<div class="stat-card"><div class="stat-label">${s.label}</div><div class="stat-value">${s.value}</div><div class="stat-unit">${s.unit}</div></div>`).join("");
-  const barEl=document.getElementById("bar-chart");
-  if(!WORKED.length){barEl.innerHTML=`<div class="no-data">Aucune session validée.</div>`;}
-  else{const max=Math.max(...WORKED.map(s=>s.ids.length));barEl.innerHTML=WORKED.map(s=>{const pct=max>0?Math.round((s.ids.length/max)*100):0;return`<div class="bar-row"><span class="bar-label">${s.date}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.max(pct,4)}%"><span class="bar-count">${s.ids.length}</span></div></div></div>`;}).join("");}
-  const catEl=document.getElementById("cat-chart");
-  if(!WORKED.length){catEl.innerHTML=`<div class="no-data">Aucune donnée.</div>`;}
-  else{const allIds=WORKED.flatMap(s=>s.ids);const catCounts={};allIds.forEach(id=>{const item=DATA.find(d=>d.id===id);if(item)catCounts[item.cat]=(catCounts[item.cat]||0)+1;});const sorted=Object.entries(catCounts).sort((a,b)=>b[1]-a[1]);const maxCat=sorted.length?sorted[0][1]:1;catEl.innerHTML=sorted.map(([cat,count])=>{const pct=Math.round((count/maxCat)*100);return`<div class="cat-row"><span class="cat-label">${cat}</span><div class="cat-track"><div class="cat-fill" style="width:${Math.max(pct,4)}%"><span class="cat-count">${count}</span></div></div></div>`;}).join("");}
-}
+function renderProgress(){document.getElementById("progress-sub").textContent=currentProfile?"Profil — "+currentProfile.name:"";const total=WORKED.reduce((acc,s)=>acc+s.ids.length,0);const sessions=WORKED.length;const avg=sessions?Math.round(total/sessions):0;document.getElementById("stat-cards").innerHTML=[{label:"Sessions",value:sessions,unit:"au total"},{label:"Identités travaillées",value:total,unit:"au total"},{label:"Par session",value:avg,unit:"en moyenne"}].map(s=>`<div class="stat-card"><div class="stat-label">${s.label}</div><div class="stat-value">${s.value}</div><div class="stat-unit">${s.unit}</div></div>`).join("");const barEl=document.getElementById("bar-chart");if(!WORKED.length){barEl.innerHTML=`<div class="no-data">Aucune session validée.</div>`;}else{const max=Math.max(...WORKED.map(s=>s.ids.length));barEl.innerHTML=WORKED.map(s=>{const pct=max>0?Math.round((s.ids.length/max)*100):0;return`<div class="bar-row"><span class="bar-label">${s.date}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.max(pct,4)}%"><span class="bar-count">${s.ids.length}</span></div></div></div>`;}).join("");}const catEl=document.getElementById("cat-chart");if(!WORKED.length){catEl.innerHTML=`<div class="no-data">Aucune donnée.</div>`;}else{const allIds=WORKED.flatMap(s=>s.ids);const catCounts={};allIds.forEach(id=>{const item=DATA.find(d=>d.id===id);if(item)catCounts[item.cat]=(catCounts[item.cat]||0)+1;});const sorted=Object.entries(catCounts).sort((a,b)=>b[1]-a[1]);const maxCat=sorted.length?sorted[0][1]:1;catEl.innerHTML=sorted.map(([cat,count])=>{const pct=Math.round((count/maxCat)*100);return`<div class="cat-row"><span class="cat-label">${cat}</span><div class="cat-track"><div class="cat-fill" style="width:${Math.max(pct,4)}%"><span class="cat-count">${count}</span></div></div></div>`;}).join("");}}
 
 document.getElementById("progress-btn").addEventListener("click",()=>{renderProgress();document.getElementById("progress-overlay").classList.add("show");});
 document.getElementById("close-progress").addEventListener("click",()=>{document.getElementById("progress-overlay").classList.remove("show");});
-
 document.getElementById("admin-toggle").addEventListener("click",()=>{adminOpen=!adminOpen;document.getElementById("admin-panel").classList.toggle("open",adminOpen);if(adminOpen)buildAdminList();});
-document.getElementById("add-btn").addEventListener("click",()=>{
-  const textEl=document.getElementById("new-text");const catSel=document.getElementById("cat-select");const newCatEl=document.getElementById("new-cat");
-  let text=textEl.value.trim();let cat=catSel.value==="__new__"?newCatEl.value.trim():catSel.value;
-  if(!text){textEl.focus();return;}
-  if(!text.toLowerCase().startsWith("je suis"))text="Je suis "+text;
-  if(!cat){newCatEl.focus();return;}
-  DATA.push({id:Date.now(),text,cat});textEl.value="";newCatEl.value="";catSel.value=catSel.options[0].value;document.getElementById("new-cat-wrap").classList.remove("show");render();showToast("✓ Ajouté — "+text);
-});
+document.getElementById("add-btn").addEventListener("click",()=>{const textEl=document.getElementById("new-text");const catSel=document.getElementById("cat-select");const newCatEl=document.getElementById("new-cat");const depthVal=+document.getElementById("depth-select").value;let text=textEl.value.trim();let cat=catSel.value==="__new__"?newCatEl.value.trim():catSel.value;if(!text){textEl.focus();return;}if(!text.toLowerCase().startsWith("je suis"))text="Je suis "+text;if(!cat){newCatEl.focus();return;}DATA.push({id:Date.now(),text,cat,depth:depthVal});textEl.value="";newCatEl.value="";catSel.value=catSel.options[0].value;document.getElementById("new-cat-wrap").classList.remove("show");render();showToast("✓ Ajouté — "+text);});
 document.getElementById("new-text").addEventListener("keydown",e=>{if(e.key==="Enter")document.getElementById("add-btn").click();});
 document.getElementById("search").addEventListener("input",e=>{query=e.target.value;render();});
 
-// INIT — ajouter la colonne pin_hash si besoin est géré côté SQL
 loadProfiles();
 </script>
 </body>
