@@ -146,10 +146,9 @@
     .depth-stars{font-size:10px;letter-spacing:-1px;}
     .s-on{color:var(--star-on);}
     .s-off{color:var(--star-off);}
-    .integrate-btn{display:none;background:none;border:none;cursor:pointer;color:var(--green-text);opacity:0.5;padding:2px 4px;border-radius:5px;font-size:11px;transition:all 0.15s;white-space:nowrap;}
-    .card.checked .integrate-btn{display:flex;align-items:center;gap:3px;}
-    .integrate-btn:hover{opacity:1;background:var(--purple-bg);color:var(--purple-text);}
-    .card.integrated .integrate-btn{display:none;}
+    .integrate-btn{display:none;background:none;border:1px solid transparent;cursor:pointer;color:var(--text-faint);padding:3px 8px;border-radius:6px;font-size:11px;transition:all 0.15s;white-space:nowrap;font-family:inherit;}
+    .integrate-btn.show{display:flex;align-items:center;gap:3px;}
+    .integrate-btn:hover{background:var(--purple-bg);border-color:var(--purple-border);color:var(--purple-text);}
     .no-results{padding:3rem;text-align:center;color:var(--text-faint);font-size:14px;grid-column:1/-1;}
     /* SESSION BAR */
     .session-bar{margin-top:2rem;background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border-md);overflow:hidden;}
@@ -947,6 +946,35 @@ const DEFAULT_DATA = [
   {id:907,text:'Je suis transcendé',cat:'Éveil',depth:5},
   {id:1474,text:'Je suis consacré',cat:'Éveil',depth:5},
   {id:1475,text:'Je suis immortalisé',cat:'Éveil',depth:5}
+,
+  {id:2001,text:'Je suis adopté',cat:'Connexion',depth:4},
+  {id:2002,text:'Je suis coopté',cat:'Connexion',depth:3},
+  {id:2003,text:'Je suis intronisé',cat:'Connexion',depth:4},
+  {id:2004,text:'Je suis adoubé',cat:'Connexion',depth:4},
+  {id:2005,text:'Je suis affilié',cat:'Connexion',depth:3},
+  {id:2006,text:'Je suis uni',cat:'Connexion',depth:4},
+  {id:2007,text:'Je suis fusionné',cat:'Connexion',depth:4},
+  {id:2008,text:'Je suis soudé',cat:'Connexion',depth:4},
+  {id:2009,text:'Je suis élu',cat:'Reconnaissance',depth:4},
+  {id:2010,text:'Je suis mandaté',cat:'Reconnaissance',depth:3},
+  {id:2011,text:'Je suis investi',cat:'Reconnaissance',depth:4},
+  {id:2012,text:'Je suis couronné',cat:'Reconnaissance',depth:5},
+  {id:2013,text:'Je suis affûté',cat:'Puissance',depth:3},
+  {id:2014,text:'Je suis aiguisé',cat:'Puissance',depth:3},
+  {id:2015,text:'Je suis poli',cat:'Puissance',depth:3},
+  {id:2016,text:'Je suis ciselé',cat:'Puissance',depth:4},
+  {id:2017,text:'Je suis taillé',cat:'Transformation',depth:3},
+  {id:2018,text:'Je suis broyé',cat:'Destruction',depth:4},
+  {id:2019,text:'Je suis pulvérisé',cat:'Destruction',depth:5},
+  {id:2020,text:'Je suis réduit',cat:'Dévaluation',depth:4},
+  {id:2021,text:'Je suis asservi',cat:'Contrôle',depth:5},
+  {id:2022,text:'Je suis subjugué',cat:'Contrôle',depth:5},
+  {id:2023,text:'Je suis assujetti',cat:'Contrôle',depth:5},
+  {id:2024,text:'Je suis déclassé',cat:'Abandon',depth:3},
+  {id:2025,text:'Je suis rétrogradé',cat:'Abandon',depth:3},
+  {id:2026,text:'Je suis renvoyé',cat:'Abandon',depth:3},
+  {id:2027,text:'Je suis congédié',cat:'Abandon',depth:3},
+  {id:2028,text:'Je suis évincé',cat:'Abandon',depth:4}
 ];
 
 function starsHtml(d,max=5){let s="";for(let i=1;i<=max;i++)s+=`<span class="${i<=d?"s-on":"s-off"}">★</span>`;return s;}
@@ -1048,8 +1076,10 @@ function render(){
   if(!items.length){grid.innerHTML=`<div class="no-results"><i class="ti ti-search" style="font-size:26px;display:block;margin-bottom:10px;opacity:0.2"></i>Aucun résultat</div>`;renderSession();renderIntegrated();return;}
   grid.innerHTML=items.map(d=>{
     const isIntegrated=INTEGRATED.has(d.id);
-    const isChecked=!isIntegrated&&(checked.has(d.id)||wids.has(d.id));
-    const cls=isIntegrated?"integrated":isChecked?"checked":"";
+    const isWorked=!isIntegrated&&wids.has(d.id);
+    const isChecked=!isIntegrated&&!isWorked&&checked.has(d.id);
+    const isActive=isChecked||isWorked;
+    const cls=isIntegrated?"integrated":isActive?"checked":"";
     const icon=isIntegrated?"ti-sparkles":"ti-check";
     const stars=starsHtml(d.depth||1);
     return `<div class="card${cls?" "+cls:""}" data-id="${d.id}" tabindex="0">
@@ -1057,7 +1087,7 @@ function render(){
       <div class="card-footer">
         <span class="cat-badge">${d.cat}</span>
         <div class="card-actions">
-          <button class="integrate-btn" data-id="${d.id}" title="Marquer comme intégrée"><i class="ti ti-sparkles" style="font-size:11px"></i></button>
+          <button class="integrate-btn${isActive?" show":""}" data-id="${d.id}" title="Marquer comme intégrée"><i class="ti ti-sparkles" style="font-size:11px"></i> Intégrée</button>
           <span class="depth-stars">${stars}</span>
         </div>
       </div>
@@ -1068,10 +1098,24 @@ function render(){
     card.addEventListener("click",e=>{
       if(e.target.closest(".integrate-btn"))return;
       const id=+card.dataset.id;
+      // Toggle: if worked (in sessions), can't un-work via click — only integrate
+      // If just checked, toggle off
+      if(wids.has(id)){
+        // worked cards: click does nothing, use integrate button
+        return;
+      }
       if(checked.has(id))checked.delete(id);else checked.add(id);
       render();
     });
-    card.addEventListener("keydown",e=>{if(e.key===" "||e.key==="Enter"){e.preventDefault();const id=+card.dataset.id;if(checked.has(id))checked.delete(id);else checked.add(id);render();}});
+    card.addEventListener("keydown",e=>{
+      if(e.key===" "||e.key==="Enter"){
+        e.preventDefault();
+        const id=+card.dataset.id;
+        if(wids.has(id))return;
+        if(checked.has(id))checked.delete(id);else checked.add(id);
+        render();
+      }
+    });
   });
 
   grid.querySelectorAll(".integrate-btn").forEach(btn=>{
