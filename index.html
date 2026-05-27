@@ -117,6 +117,9 @@
     /* STATES LEGEND */
     .legend{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:1.25rem;}
     .legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-faint);}
+    .legend-btn{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-faint);background:none;border:1px solid var(--border);border-radius:20px;padding:4px 12px;cursor:pointer;font-family:inherit;transition:all 0.15s;}
+    .legend-btn:hover{border-color:var(--border-md);color:var(--text);}
+    .legend-btn.active{background:var(--surface2);border-color:var(--border-strong);color:var(--text);}
     .legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
     .legend-dot.unchecked{border:1.5px solid var(--border-md);background:transparent;}
     .legend-dot.checked{background:var(--green-bg);border:1.5px solid var(--green-border);}
@@ -128,10 +131,10 @@
     .card.checked{border-color:var(--green-border);background:var(--green-bg);}
     .card.checked .identity{color:var(--green-text);}
     .card.checked .cat-badge{border-color:var(--green-border);color:var(--green-text);}
-    .card.integrated{border-color:var(--purple-border);background:var(--purple-bg);}
+    .card.integrated{border-color:var(--purple-border);background:var(--purple-bg);cursor:pointer;}
     .card.integrated .identity{color:var(--purple-text);}
     .card.integrated .cat-badge{border-color:var(--purple-border);color:var(--purple-text);}
-    .card.integrated:hover{border-color:var(--purple-border);background:var(--purple-bg);}
+    .card.integrated:hover{border-color:var(--purple-border);background:rgba(139,92,246,0.2);opacity:0.85;}
     .card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
     .identity{font-size:13px;font-weight:500;line-height:1.45;flex:1;color:var(--text);}
     .check-icon{width:18px;height:18px;border-radius:50%;border:1px solid var(--border-md);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:all 0.15s;}
@@ -296,9 +299,10 @@
     <button class="depth-btn" data-depth="5"><span class="stars">★★★★★</span></button>
   </div>
   <div class="legend">
-    <div class="legend-item"><div class="legend-dot unchecked"></div> Non touchée</div>
-    <div class="legend-item"><div class="legend-dot checked"></div> Travaillée — en mouvement</div>
-    <div class="legend-item"><div class="legend-dot integrated"></div> Intégrée — libérée</div>
+    <button class="legend-btn active" data-state="all"><div class="legend-dot unchecked"></div> Toutes</button>
+    <button class="legend-btn" data-state="untouched"><div class="legend-dot unchecked"></div> Non touchées</button>
+    <button class="legend-btn" data-state="worked"><div class="legend-dot checked"></div> Travaillées</button>
+    <button class="legend-btn" data-state="integrated"><div class="legend-dot integrated"></div> Intégrées</button>
   </div>
   <div class="filters" id="filters"></div>
   <div class="stats" id="stats"></div>
@@ -975,12 +979,39 @@ const DEFAULT_DATA = [
   {id:2026,text:'Je suis renvoyé',cat:'Abandon',depth:3},
   {id:2027,text:'Je suis congédié',cat:'Abandon',depth:3},
   {id:2028,text:'Je suis évincé',cat:'Abandon',depth:4}
+,
+  {id:2030,text:'Je suis surpris',cat:'Transition',depth:2},
+  {id:2031,text:'Je suis saisi',cat:'Transition',depth:2},
+  {id:2032,text:'Je suis soufflé',cat:'Transition',depth:2},
+  {id:2033,text:'Je suis époustouflé',cat:'Transition',depth:3},
+  {id:2034,text:'Je suis ébahi',cat:'Transition',depth:3},
+  {id:2035,text:'Je suis émerveillé',cat:'Transition',depth:3},
+  {id:2036,text:'Je suis impressionné',cat:'Transition',depth:2},
+  {id:2037,text:'Je suis bouleversé',cat:'Transition',depth:3},
+  {id:2038,text:'Je suis déconcerté',cat:'Transition',depth:2},
+  {id:2039,text:'Je suis désarçonné',cat:'Transition',depth:3},
+  {id:2040,text:'Je suis décontenancé',cat:'Transition',depth:3},
+  {id:2041,text:'Je suis sidéré',cat:'Transition',depth:3},
+  {id:2042,text:'Je suis médusé',cat:'Transition',depth:4},
+  {id:2043,text:'Je suis abasourdi',cat:'Transition',depth:3},
+  {id:2044,text:'Je suis stupéfait',cat:'Transition',depth:3}
+,
+  {id:2050,text:'Je suis éclipsé',cat:'Abandon',depth:3},
+  {id:2051,text:'Je suis banalisé',cat:'Dévaluation',depth:2},
+  {id:2052,text:'Je suis anonymisé',cat:'Abandon',depth:3},
+  {id:2053,text:'Je suis néantisé',cat:'Vide',depth:5},
+  {id:2054,text:'Je suis nié',cat:'Dévaluation',depth:4}
+,
+  {id:2060,text:'Je suis pacifié',cat:'Paix',depth:3},
+  {id:2061,text:'Je suis tempéré',cat:'Paix',depth:2},
+  {id:2062,text:'Je suis adouci',cat:'Paix',depth:2},
+  {id:2063,text:'Je suis assagi',cat:'Paix',depth:3}
 ];
 
 function starsHtml(d,max=5){let s="";for(let i=1;i<=max;i++)s+=`<span class="${i<=d?"s-on":"s-off"}">★</span>`;return s;}
 
 let DATA=[...DEFAULT_DATA];
-let currentProfile=null,SESSIONS=[],INTEGRATED=new Set(),activeFilter="Tous",query="",depthFilter=0,checked=new Set(),adminOpen=false,pendingConfirm=null,pinTarget=null,pinValue="";
+let currentProfile=null,SESSIONS=[],INTEGRATED=new Set(),activeFilter="Tous",query="",depthFilter=0,stateFilter="all",checked=new Set(),adminOpen=false,pendingConfirm=null,pinTarget=null,pinValue="";
 
 function workedIds(){return new Set(SESSIONS.flatMap(s=>s.ids));}
 function showToast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2500);}
@@ -1060,14 +1091,28 @@ document.getElementById("new-profile-btn").addEventListener("click",async()=>{
 });
 
 document.getElementById("new-profile-name").addEventListener("keydown",e=>{if(e.key==="Enter")document.getElementById("new-profile-btn").click();});
-document.getElementById("switch-profile-btn").addEventListener("click",()=>{currentProfile=null;SESSIONS=[];INTEGRATED.clear();checked.clear();showScreen("profile-screen");loadProfiles();});
+document.getElementById("switch-profile-btn").addEventListener("click",()=>{currentProfile=null;SESSIONS=[];INTEGRATED.clear();checked.clear();showScreen("profile-screen");document.querySelectorAll(".legend-btn").forEach(btn=>btn.addEventListener("click",()=>{stateFilter=btn.dataset.state;document.querySelectorAll(".legend-btn").forEach(b=>b.classList.remove("active"));btn.classList.add("active");render();}));
+
+loadProfiles();});
 
 function cats(){return["Tous",...new Set(DATA.map(d=>d.cat))];}
 function buildCatSelect(){const sel=document.getElementById("cat-select");sel.innerHTML=[...new Set(DATA.map(d=>d.cat))].map(c=>`<option value="${c}">${c}</option>`).join("")+`<option value="__new__">+ Nouvelle catégorie…</option>`;sel.onchange=()=>document.getElementById("new-cat-wrap").classList.toggle("show",sel.value==="__new__");}
 function buildFilters(){const el=document.getElementById("filters");el.innerHTML=cats().map(c=>`<button class="filter-btn${c===activeFilter?" active":""}" data-cat="${c}">${c}</button>`).join("");el.querySelectorAll(".filter-btn").forEach(btn=>btn.addEventListener("click",()=>{activeFilter=btn.dataset.cat;render();}));}
 function buildAdminList(){const list=document.getElementById("admin-list");const custom=DATA.filter(d=>!DEFAULT_DATA.find(dd=>dd.id===d.id));if(!custom.length){list.innerHTML=`<div style="font-size:13px;color:var(--text-faint);padding:4px 0">Tes ajouts apparaîtront ici</div>`;return;}list.innerHTML=custom.map(d=>`<div class="admin-item" data-id="${d.id}"><span class="admin-item-text">${d.text}</span><span class="admin-item-cat">${d.cat}</span><button class="del-btn"><i class="ti ti-trash" style="font-size:14px"></i></button></div>`).join("");list.querySelectorAll(".del-btn").forEach(btn=>btn.addEventListener("click",()=>{const id=+btn.closest(".admin-item").dataset.id;DATA=DATA.filter(d=>d.id!==id);checked.delete(id);render();showToast("Supprimé");}));}
 
-function filtered(){return DATA.filter(d=>{const catOk=activeFilter==="Tous"||d.cat===activeFilter;const qOk=!query||d.text.toLowerCase().includes(query.toLowerCase())||d.cat.toLowerCase().includes(query.toLowerCase());const depthOk=depthFilter===0||d.depth===depthFilter;return catOk&&qOk&&depthOk;});}
+function filtered(){
+  const wids=workedIds();
+  return DATA.filter(d=>{
+    const catOk=activeFilter==="Tous"||d.cat===activeFilter;
+    const qOk=!query||d.text.toLowerCase().includes(query.toLowerCase())||d.cat.toLowerCase().includes(query.toLowerCase());
+    const depthOk=depthFilter===0||d.depth===depthFilter;
+    let stateOk=true;
+    if(stateFilter==="untouched") stateOk=!checked.has(d.id)&&!wids.has(d.id)&&!INTEGRATED.has(d.id);
+    else if(stateFilter==="worked") stateOk=checked.has(d.id)||wids.has(d.id);
+    else if(stateFilter==="integrated") stateOk=INTEGRATED.has(d.id);
+    return catOk&&qOk&&depthOk&&stateOk;
+  });
+}
 
 function render(){
   buildFilters();buildCatSelect();if(adminOpen)buildAdminList();
@@ -1094,16 +1139,12 @@ function render(){
     </div>`;
   }).join("");
 
+  // Cartes non intégrées — toggle checked / non touchée (sauf si validée en session)
   grid.querySelectorAll(".card:not(.integrated)").forEach(card=>{
     card.addEventListener("click",e=>{
       if(e.target.closest(".integrate-btn"))return;
       const id=+card.dataset.id;
-      // Toggle: if worked (in sessions), can't un-work via click — only integrate
-      // If just checked, toggle off
-      if(wids.has(id)){
-        // worked cards: click does nothing, use integrate button
-        return;
-      }
+      if(wids.has(id))return; // validée en session, ne peut pas être décochée
       if(checked.has(id))checked.delete(id);else checked.add(id);
       render();
     });
@@ -1115,6 +1156,18 @@ function render(){
         if(checked.has(id))checked.delete(id);else checked.add(id);
         render();
       }
+    });
+  });
+
+  // Cartes intégrées — clic pour revenir en non touchée
+  grid.querySelectorAll(".card.integrated").forEach(card=>{
+    card.addEventListener("click",async e=>{
+      if(e.target.closest(".integrate-btn"))return;
+      const id=+card.dataset.id;
+      INTEGRATED.delete(id);
+      await saveIntegrated();
+      render();
+      showToast("Identité remise en non touchée");
     });
   });
 
@@ -1163,7 +1216,9 @@ document.getElementById("validate-btn").addEventListener("click",async()=>{
   try{
     const result=await sb("sessions",{method:"POST",body:{profile_id:currentProfile.id,date,ids:newIds},prefer:"return=representation"});
     if(result&&result[0])SESSIONS.push({id:result[0].id,date,ids:newIds});
-    checked.clear();render();
+    // Clear only the newly validated ones from checked — keep others
+    newIds.forEach(id=>checked.delete(id));
+    render();
     showToast(`✓ ${newIds.length} identité${newIds.length>1?"s":""} marquée${newIds.length>1?"s":""} comme travaillée${newIds.length>1?"s":""}`);
   }catch(e){showToast("Erreur lors de la sauvegarde");btn.disabled=false;}
 });
