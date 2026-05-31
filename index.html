@@ -108,23 +108,20 @@
     #search{width:100%;padding:10px 14px 10px 38px;border:1px solid var(--border-md);border-radius:var(--radius);background:var(--surface);color:var(--text);font-size:14px;font-family:inherit;}
     #search::placeholder{color:var(--text-faint);}
     #search:focus{outline:none;border-color:var(--border-strong);}
-    .filters{display:flex;flex-wrap:wrap;gap:6px;margin:0.875rem 0 1rem;}
+    .legend{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem;}
+    .legend-btn{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-faint);background:none;border:1px solid var(--border);border-radius:20px;padding:5px 13px;cursor:pointer;font-family:inherit;transition:all 0.15s;}
+    .legend-btn:hover{border-color:var(--border-md);color:var(--text);}
+    .legend-btn.active{background:var(--surface2);border-color:var(--border-strong);color:var(--text);}
+    .legend-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+    .legend-dot.untouched{border:1.5px solid var(--border-md);background:transparent;}
+    .legend-dot.worked{background:var(--green-bg);border:1.5px solid var(--green-border);}
+    .legend-dot.integrated{background:var(--purple-bg);border:1.5px solid var(--purple-border);}
+    .filters{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 1rem;}
     .filter-btn{padding:5px 13px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--text-muted);font-size:12px;font-family:inherit;cursor:pointer;transition:all 0.15s;}
     .filter-btn:hover{color:var(--text);border-color:var(--border-md);}
     .filter-btn.active{background:var(--accent);color:#0a0a0a;border-color:var(--accent);font-weight:600;}
     .stats{font-size:13px;color:var(--text-faint);margin-bottom:0.875rem;}
     .stats span{font-weight:500;color:var(--text-muted);}
-    /* STATES LEGEND */
-    .legend{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:1.25rem;}
-    .legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-faint);}
-    .legend-btn{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-faint);background:none;border:1px solid var(--border);border-radius:20px;padding:4px 12px;cursor:pointer;font-family:inherit;transition:all 0.15s;}
-    .legend-btn:hover{border-color:var(--border-md);color:var(--text);}
-    .legend-btn.active{background:var(--surface2);border-color:var(--border-strong);color:var(--text);}
-    .legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
-    .legend-dot.unchecked{border:1.5px solid var(--border-md);background:transparent;}
-    .legend-dot.checked{background:var(--green-bg);border:1.5px solid var(--green-border);}
-    .legend-dot.integrated{background:var(--purple-bg);border:1.5px solid var(--purple-border);}
-    /* GRID & CARDS */
     .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:7px;}
     .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:0.875rem 1rem;cursor:pointer;transition:all 0.15s;user-select:none;}
     .card:hover{border-color:var(--border-md);background:var(--surface2);}
@@ -134,26 +131,26 @@
     .card.integrated{border-color:var(--purple-border);background:var(--purple-bg);cursor:pointer;}
     .card.integrated .identity{color:var(--purple-text);}
     .card.integrated .cat-badge{border-color:var(--purple-border);color:var(--purple-text);}
-    .card.integrated:hover{border-color:var(--purple-border);background:rgba(139,92,246,0.2);opacity:0.85;}
+    .card.integrated:hover{background:rgba(139,92,246,0.2);}
     .card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
     .identity{font-size:13px;font-weight:500;line-height:1.45;flex:1;color:var(--text);}
     .check-icon{width:18px;height:18px;border-radius:50%;border:1px solid var(--border-md);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:all 0.15s;}
     .card.checked .check-icon{background:var(--green-bg);border-color:var(--green-border);}
     .card.integrated .check-icon{background:var(--purple-bg);border-color:var(--purple-border);}
     .check-icon i{font-size:11px;opacity:0;transition:opacity 0.15s;}
-    .card.checked .check-icon i{opacity:1;color:var(--green-text);}
-    .card.integrated .check-icon i{opacity:1;color:var(--purple-text);}
+    .card.checked .check-icon i,.card.integrated .check-icon i{opacity:1;}
+    .card.checked .check-icon i{color:var(--green-text);}
+    .card.integrated .check-icon i{color:var(--purple-text);}
     .card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:8px;}
     .cat-badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:8px;border:1px solid var(--border);color:var(--text-faint);}
     .card-actions{display:flex;align-items:center;gap:4px;}
     .depth-stars{font-size:10px;letter-spacing:-1px;}
     .s-on{color:var(--star-on);}
     .s-off{color:var(--star-off);}
-    .integrate-btn{display:none;background:none;border:1px solid transparent;cursor:pointer;color:var(--text-faint);padding:3px 8px;border-radius:6px;font-size:11px;transition:all 0.15s;white-space:nowrap;font-family:inherit;}
-    .integrate-btn.show{display:flex;align-items:center;gap:3px;}
+    .integrate-btn{display:none;background:none;border:1px solid transparent;cursor:pointer;color:var(--text-faint);padding:3px 8px;border-radius:6px;font-size:11px;transition:all 0.15s;white-space:nowrap;font-family:inherit;align-items:center;gap:3px;}
+    .integrate-btn.show{display:flex;}
     .integrate-btn:hover{background:var(--purple-bg);border-color:var(--purple-border);color:var(--purple-text);}
     .no-results{padding:3rem;text-align:center;color:var(--text-faint);font-size:14px;grid-column:1/-1;}
-    /* SESSION BAR */
     .session-bar{margin-top:2rem;background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border-md);overflow:hidden;}
     .session-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.5rem;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:8px;}
     .session-title{font-size:13px;font-weight:500;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;}
@@ -165,14 +162,12 @@
     .validate-btn{display:flex;align-items:center;gap:8px;width:100%;padding:11px 18px;border-radius:var(--radius);border:1px solid var(--green-border);background:var(--green-bg);color:var(--green-text);font-size:14px;font-weight:500;font-family:inherit;cursor:pointer;justify-content:center;transition:opacity 0.15s;}
     .validate-btn:hover{opacity:0.8;}
     .validate-btn:disabled{opacity:0.3;cursor:default;}
-    /* INTEGRATED SECTION */
     .integrated-section{margin-top:1.5rem;background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border);overflow:hidden;}
     .integrated-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.5rem;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:8px;}
     .integrated-title{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--purple-text);text-transform:uppercase;letter-spacing:1px;}
     .integrated-count-badge{font-size:11px;padding:2px 8px;border-radius:20px;background:var(--purple-bg);border:1px solid var(--purple-border);color:var(--purple-text);}
     .integrated-body{padding:1rem 1.5rem;display:flex;flex-wrap:wrap;gap:6px;}
     .integrated-tag{font-size:12px;padding:4px 11px;border-radius:8px;background:var(--purple-bg);color:var(--purple-text);border:1px solid var(--purple-border);}
-    /* OVERLAY */
     .overlay{display:none;position:fixed;inset:0;background:var(--bg);z-index:200;overflow-y:auto;padding:2rem 1.5rem 4rem;}
     .overlay.show{display:block;}
     .overlay-inner{max-width:780px;margin:0 auto;}
@@ -183,26 +178,23 @@
     .close-btn:hover{border-color:var(--border-strong);color:var(--text);}
     .stat-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:2rem;}
     .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.25rem;}
+    .stat-card.purple{border-color:var(--purple-border);}
+    .stat-card.purple .stat-value{color:var(--purple-text);}
     .stat-label{font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
     .stat-value{font-size:28px;font-weight:600;}
     .stat-unit{font-size:13px;color:var(--text-muted);margin-top:2px;}
-    .stat-card.purple{border-color:var(--purple-border);}
-    .stat-card.purple .stat-value{color:var(--purple-text);}
     .chart-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:1.5rem;}
     .chart-title{font-size:13px;font-weight:500;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:1.5rem;}
     .bar-chart,.cat-chart{display:flex;flex-direction:column;gap:10px;}
     .bar-row,.cat-row{display:flex;align-items:center;gap:12px;}
     .bar-label,.cat-label{font-size:12px;color:var(--text-muted);width:130px;flex-shrink:0;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-    .bar-track,.cat-track{flex:1;height:28px;background:var(--surface2);border-radius:6px;overflow:hidden;position:relative;}
+    .bar-track,.cat-track{flex:1;height:28px;background:var(--surface2);border-radius:6px;overflow:hidden;}
     .cat-track{height:22px;}
     .bar-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,rgba(99,153,34,0.4),rgba(99,153,34,0.7));display:flex;align-items:center;justify-content:flex-end;padding-right:8px;min-width:28px;}
-    .bar-fill.integrated{background:linear-gradient(90deg,rgba(139,92,246,0.4),rgba(139,92,246,0.7));}
     .bar-count{font-size:12px;font-weight:600;color:var(--green-text);}
-    .bar-fill.integrated .bar-count{color:var(--purple-text);}
     .cat-fill{height:100%;border-radius:5px;background:rgba(200,184,154,0.2);border-right:2px solid var(--accent);display:flex;align-items:center;justify-content:flex-end;padding-right:8px;min-width:24px;}
     .cat-count{font-size:11px;font-weight:600;color:var(--accent);}
     .no-data{font-size:14px;color:var(--text-faint);font-style:italic;padding:1rem 0;}
-    /* CONFIRM */
     .confirm-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:300;align-items:center;justify-content:center;}
     .confirm-overlay.show{display:flex;}
     .confirm-box{background:var(--surface2);border:1px solid var(--border-strong);border-radius:var(--radius-lg);padding:1.5rem;max-width:360px;width:90%;}
@@ -289,6 +281,7 @@
   </div>
 
   <div class="controls"><div class="search-wrap"><i class="ti ti-search"></i><input type="text" id="search" placeholder="Rechercher…" /></div></div>
+
   <div class="depth-filter">
     <span class="depth-label">Profondeur :</span>
     <button class="depth-btn active" data-depth="0">Toutes</button>
@@ -298,12 +291,14 @@
     <button class="depth-btn" data-depth="4"><span class="stars">★★★★</span></button>
     <button class="depth-btn" data-depth="5"><span class="stars">★★★★★</span></button>
   </div>
+
   <div class="legend">
-    <button class="legend-btn active" data-state="all"><div class="legend-dot unchecked"></div> Toutes</button>
-    <button class="legend-btn" data-state="untouched"><div class="legend-dot unchecked"></div> Non touchées</button>
-    <button class="legend-btn" data-state="worked"><div class="legend-dot checked"></div> Travaillées</button>
+    <button class="legend-btn active" data-state="all"><div class="legend-dot untouched"></div> Toutes</button>
+    <button class="legend-btn" data-state="untouched"><div class="legend-dot untouched"></div> Non touchées</button>
+    <button class="legend-btn" data-state="worked"><div class="legend-dot worked"></div> Travaillées</button>
     <button class="legend-btn" data-state="integrated"><div class="legend-dot integrated"></div> Intégrées</button>
   </div>
+
   <div class="filters" id="filters"></div>
   <div class="stats" id="stats"></div>
   <div class="grid" id="grid"></div>
@@ -1006,12 +1001,168 @@ const DEFAULT_DATA = [
   {id:2061,text:'Je suis tempéré',cat:'Paix',depth:2},
   {id:2062,text:'Je suis adouci',cat:'Paix',depth:2},
   {id:2063,text:'Je suis assagi',cat:'Paix',depth:3}
+,
+  {id:3001,text:'Je suis navré',cat:'Résignation',depth:2},
+  {id:3002,text:'Je suis embêté',cat:'Résignation',depth:1},
+  {id:3003,text:'Je suis idéalisé',cat:'Masque',depth:3},
+  {id:3004,text:'Je suis évité',cat:'Abandon',depth:3},
+  {id:3005,text:'Je suis dédouané',cat:'Libération',depth:3},
+  {id:3006,text:'Je suis intimidé',cat:'Contrôle',depth:3},
+  {id:3007,text:'Je suis rappelé',cat:'Connexion',depth:2},
+  {id:3008,text:'Je suis soigné',cat:'Connexion',depth:3},
+  {id:3009,text:'Je suis stimulé',cat:'Engagement',depth:2},
+  {id:3010,text:'Je suis désespéré',cat:'Résignation',depth:4},
+  {id:3011,text:'Je suis prévenu',cat:'Contrôle',depth:2},
+  {id:3012,text:'Je suis recherché',cat:'Connexion',depth:3},
+  {id:3013,text:'Je suis réclamé',cat:'Connexion',depth:3},
+  {id:3014,text:'Je suis approché',cat:'Connexion',depth:2},
+  {id:3015,text:'Je suis brutalisé',cat:'Blessure',depth:4},
+  {id:3016,text:'Je suis brusqué',cat:'Blessure',depth:2},
+  {id:3017,text:'Je suis capturé',cat:'Contrôle',depth:4},
+  {id:3018,text:'Je suis fasciné',cat:'Envahissement',depth:2},
+  {id:3019,text:'Je suis compté',cat:'Reconnaissance',depth:2},
+  {id:3020,text:'Je suis neutralisé',cat:'Contrôle',depth:4},
+  {id:3021,text:'Je suis remercié',cat:'Reconnaissance',depth:2},
+  {id:3022,text:'Je suis présenté',cat:'Reconnaissance',depth:2},
+  {id:3023,text:'Je suis poursuivi',cat:'Envahissement',depth:3},
+  {id:3024,text:'Je suis privilégié',cat:'Reconnaissance',depth:3},
+  {id:3025,text:'Je suis plaqué',cat:'Abandon',depth:3},
+  {id:3026,text:'Je suis fréquenté',cat:'Connexion',depth:2},
+  {id:3027,text:'Je suis fauché',cat:'Perte',depth:2},
+  {id:3028,text:'Je suis inquiété',cat:'Blessure',depth:2},
+  {id:3029,text:'Je suis agité',cat:'Confusion',depth:2},
+  {id:3030,text:'Je suis amélioré',cat:'Transformation',depth:2},
+  {id:3031,text:'Je suis tendu',cat:'Envahissement',depth:2},
+  {id:3032,text:'Je suis relâché',cat:'Libération',depth:2},
+  {id:3033,text:'Je suis paniqué',cat:'Blessure',depth:3},
+  {id:3034,text:'Je suis affolé',cat:'Blessure',depth:3},
+  {id:3035,text:'Je suis oppressé',cat:'Envahissement',depth:3},
+  {id:3036,text:'Je suis préoccupé',cat:'Envahissement',depth:2},
+  {id:3037,text:'Je suis menacé',cat:'Contrôle',depth:3},
+  {id:3038,text:'Je suis désengagé',cat:'Résignation',depth:3},
+  {id:3039,text:'Je suis déconsidéré',cat:'Dévaluation',depth:3},
+  {id:3040,text:'Je suis ridiculisé',cat:'Dévaluation',depth:3},
+  {id:3041,text:'Je suis foutu',cat:'Résignation',depth:4},
+  {id:3042,text:'Je suis déclenché',cat:'Transition',depth:2},
+  {id:3043,text:'Je suis moqué',cat:'Dévaluation',depth:3},
+  {id:3044,text:'Je suis flatté',cat:'Masque',depth:2},
+  {id:3045,text:'Je suis avantagé',cat:'Reconnaissance',depth:3},
+  {id:3046,text:'Je suis pénalisé',cat:'Culpabilité',depth:3},
+  {id:3047,text:'Je suis gratifié',cat:'Reconnaissance',depth:3},
+  {id:3048,text:'Je suis récompensé',cat:'Reconnaissance',depth:3},
+  {id:3049,text:'Je suis impacté',cat:'Blessure',depth:2},
+  {id:3050,text:'Je suis attaqué',cat:'Blessure',depth:3},
+  {id:3051,text:'Je suis tabassé',cat:'Blessure',depth:4},
+  {id:3052,text:'Je suis alerté',cat:'Transition',depth:2},
+  {id:3053,text:'Je suis influencé',cat:'Masque',depth:2},
+  {id:3054,text:'Je suis surveillé',cat:'Contrôle',depth:3},
+  {id:3055,text:'Je suis obligé',cat:'Contrôle',depth:3},
+  {id:3056,text:'Je suis incompris',cat:'Abandon',depth:3},
+  {id:3057,text:'Je suis exigé',cat:'Contrôle',depth:3},
+  {id:3058,text:'Je suis regardé',cat:'Connexion',depth:1},
+  {id:3059,text:'Je suis écouté',cat:'Connexion',depth:2},
+  {id:3060,text:'Je suis méprisé',cat:'Dévaluation',depth:4},
+  {id:3061,text:'Je suis angoissé',cat:'Envahissement',depth:3},
+  {id:3062,text:'Je suis flippé',cat:'Blessure',depth:2},
+  {id:3063,text:'Je suis corrigé',cat:'Culpabilité',depth:2},
+  {id:3064,text:'Je suis rectifié',cat:'Culpabilité',depth:2},
+  {id:3065,text:'Je suis engueulé',cat:'Blessure',depth:3},
+  {id:3066,text:'Je suis méfié',cat:'Trahison',depth:2},
+  {id:3067,text:'Je suis décidé',cat:'Engagement',depth:3},
+  {id:3068,text:'Je suis forcé',cat:'Contrôle',depth:4},
+  {id:3069,text:'Je suis suspecté',cat:'Culpabilité',depth:3},
+  {id:3070,text:'Je suis simplifié',cat:'Dévaluation',depth:2},
+  {id:3071,text:'Je suis indigné',cat:'Résignation',depth:3},
+  {id:3072,text:'Je suis contredit',cat:'Trahison',depth:2},
+  {id:3073,text:'Je suis contesté',cat:'Trahison',depth:2},
+  {id:3074,text:'Je suis concerné',cat:'Transition',depth:1},
+  {id:3075,text:'Je suis complimenté',cat:'Reconnaissance',depth:2},
+  {id:3076,text:'Je suis consterné',cat:'Transition',depth:3},
+  {id:3077,text:'Je suis consolé',cat:'Connexion',depth:3},
+  {id:3078,text:'Je suis commandé',cat:'Contrôle',depth:3},
+  {id:3079,text:'Je suis handicapé',cat:'Perte',depth:4},
+  {id:3080,text:'Je suis suspendu',cat:'Contrôle',depth:3},
+  {id:3081,text:'Je suis désapprouvé',cat:'Culpabilité',depth:3},
+  {id:3082,text:'Je suis ébranlé',cat:'Transition',depth:3},
+  {id:3083,text:'Je suis secoué',cat:'Transition',depth:3},
+  {id:3084,text:'Je suis piétiné',cat:'Dévaluation',depth:4},
+  {id:3085,text:'Je suis maintenu',cat:'Paix',depth:3},
+  {id:3086,text:'Je suis différencié',cat:'Accomplissement',depth:3},
+  {id:3087,text:'Je suis relancé',cat:'Émergence',depth:3},
+  {id:3088,text:'Je suis désemparé',cat:'Résignation',depth:3},
+  {id:3089,text:'Je suis méconnu',cat:'Abandon',depth:3},
+  {id:3090,text:'Je suis adapté',cat:'Transformation',depth:2},
+  {id:3091,text:'Je suis obsédé',cat:'Envahissement',depth:4},
+  {id:3092,text:'Je suis renversé',cat:'Transition',depth:3},
+  {id:3093,text:'Je suis interpellé',cat:'Transition',depth:2},
+  {id:3094,text:'Je suis défendu',cat:'Puissance',depth:3},
+  {id:3095,text:'Je suis replié',cat:'Isolement',depth:3},
+  {id:3096,text:'Je suis refermé',cat:'Isolement',depth:3},
+  {id:3097,text:'Je suis amusé',cat:'Paix',depth:1},
+  {id:3098,text:'Je suis diverti',cat:'Paix',depth:1},
+  {id:3099,text:'Je suis enchanté',cat:'Connexion',depth:3},
+  {id:3100,text:'Je suis réjoui',cat:'Paix',depth:3},
+  {id:3101,text:'Je suis tourmenté',cat:'Blessure',depth:4},
+  {id:3102,text:'Je suis secouru',cat:'Connexion',depth:3},
+  {id:3103,text:'Je suis sauvé',cat:'Connexion',depth:4},
+  {id:3104,text:'Je suis intrigué',cat:'Transition',depth:2},
+  {id:3105,text:'Je suis comparé',cat:'Dévaluation',depth:2},
+  {id:3106,text:'Je suis déplacé',cat:'Abandon',depth:2},
+  {id:3107,text:'Je suis excusé',cat:'Libération',depth:2},
+  {id:3108,text:'Je suis agressé',cat:'Blessure',depth:4},
+  {id:3109,text:'Je suis qualifié',cat:'Reconnaissance',depth:3},
+  {id:3110,text:'Je suis inondé',cat:'Envahissement',depth:3},
+  {id:3111,text:'Je suis justifié',cat:'Libération',depth:3},
+  {id:3112,text:'Je suis confirmé',cat:'Reconnaissance',depth:3},
+  {id:3113,text:'Je suis enragé',cat:'Résignation',depth:4},
+  {id:3114,text:'Je suis choyé',cat:'Connexion',depth:3},
+  {id:3115,text:'Je suis câliné',cat:'Connexion',depth:3},
+  {id:3116,text:'Je suis dorloté',cat:'Connexion',depth:3},
+  {id:3117,text:'Je suis repu',cat:'Paix',depth:3},
+  {id:3118,text:'Je suis satisfait',cat:'Paix',depth:3},
+  {id:3119,text:'Je suis rassasié',cat:'Paix',depth:4},
+  {id:3120,text:'Je suis tenu',cat:'Connexion',depth:3},
+  {id:3121,text:'Je suis gardé',cat:'Connexion',depth:3},
+  {id:3122,text:'Je suis vu',cat:'Connexion',depth:2},
+  {id:3123,text:'Je suis priorisé',cat:'Reconnaissance',depth:3},
+  {id:3124,text:'Je suis surchargé',cat:'Envahissement',depth:3},
+  {id:3125,text:'Je suis comprimé',cat:'Envahissement',depth:3},
+  {id:3126,text:'Je suis contenu',cat:'Contrôle',depth:3},
+  {id:3127,text:'Je suis dépité',cat:'Résignation',depth:2},
+  {id:3128,text:'Je suis découragé',cat:'Résignation',depth:3},
+  {id:3129,text:'Je suis insulté',cat:'Dévaluation',depth:3},
+  {id:3130,text:'Je suis alimenté',cat:'Connexion',depth:3},
+  {id:3131,text:'Je suis affecté',cat:'Blessure',depth:2},
+  {id:3132,text:'Je suis acharné',cat:'Engagement',depth:3},
+  {id:3133,text:'Je suis attardé',cat:'Résignation',depth:2},
+  {id:3134,text:'Je suis assisté',cat:'Connexion',depth:3},
+  {id:3135,text:'Je suis favorisé',cat:'Reconnaissance',depth:3},
+  {id:3136,text:'Je suis réprimé',cat:'Contrôle',depth:4},
+  {id:3137,text:'Je suis affiché',cat:'Accomplissement',depth:2},
+  {id:3138,text:'Je suis décidé',cat:'Engagement',depth:3},
+  {id:3139,text:'Je suis redouté',cat:'Trahison',depth:3},
+  {id:3140,text:'Je suis lié',cat:'Connexion',depth:3},
+  {id:3142,text:'Je suis dégradé',cat:'Dévaluation',depth:3},
+  {id:3143,text:'Je suis exagéré',cat:'Masque',depth:2},
+  {id:3144,text:'Je suis énerve',cat:'Résignation',depth:2}
+,
+  {id:4001,text:'Je suis objectivé',cat:'Dévaluation',depth:4},
+  {id:4002,text:'Je suis déshumanisé',cat:'Dévaluation',depth:4}
+,
+  {id:4010,text:'Je suis toléré',cat:'Abandon',depth:3},
+  {id:4011,text:'Je suis subi',cat:'Abandon',depth:3},
+  {id:4012,text:'Je suis contourné',cat:'Abandon',depth:3},
+  {id:4013,text:'Je suis esquivé',cat:'Abandon',depth:3},
+  {id:4014,text:'Je suis refoulé',cat:'Isolement',depth:4},
+  {id:4015,text:'Je suis tu',cat:'Isolement',depth:4}
 ];
 
 function starsHtml(d,max=5){let s="";for(let i=1;i<=max;i++)s+=`<span class="${i<=d?"s-on":"s-off"}">★</span>`;return s;}
 
 let DATA=[...DEFAULT_DATA];
-let currentProfile=null,SESSIONS=[],INTEGRATED=new Set(),activeFilter="Tous",query="",depthFilter=0,stateFilter="all",checked=new Set(),adminOpen=false,pendingConfirm=null,pinTarget=null,pinValue="";
+let currentProfile=null,SESSIONS=[],INTEGRATED=new Set();
+let activeFilter="Tous",query="",depthFilter=0,stateFilter="all";
+let checked=new Set(),adminOpen=false,pendingConfirm=null,pinTarget=null,pinValue="";
 
 function workedIds(){return new Set(SESSIONS.flatMap(s=>s.ids));}
 function showToast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2500);}
@@ -1058,7 +1209,6 @@ async function loadData(){
   try{
     const sessions=await sb(`sessions?profile_id=eq.${currentProfile.id}&select=*&order=created_at.asc`);
     SESSIONS=(sessions||[]).map(s=>({id:s.id,date:s.date,ids:s.ids}));
-    // Load integrated ids from profile
     const prof=await sb(`profiles?id=eq.${currentProfile.id}&select=integrated_ids`);
     if(prof&&prof[0]&&prof[0].integrated_ids){INTEGRATED=new Set(prof[0].integrated_ids);}
     else{INTEGRATED=new Set();}
@@ -1067,18 +1217,16 @@ async function loadData(){
 
 async function saveIntegrated(){
   try{await sb(`profiles?id=eq.${currentProfile.id}`,{method:"PATCH",body:{integrated_ids:[...INTEGRATED]},prefer:"return=minimal"});}
-  catch(e){console.warn("Could not save integrated",e);}
+  catch(e){console.warn("save integrated failed",e);}
 }
 
 document.getElementById("new-profile-btn").addEventListener("click",async()=>{
   const name=document.getElementById("new-profile-name").value.trim();
   const pin=document.getElementById("new-profile-pin").value.trim();
-  const errEl=document.getElementById("create-error");
-  errEl.textContent="";
+  const errEl=document.getElementById("create-error");errEl.textContent="";
   if(!name){document.getElementById("new-profile-name").focus();errEl.textContent="Entre un prénom.";return;}
   if(!/^\d{4}$/.test(pin)){errEl.textContent="Le code PIN doit être exactement 4 chiffres.";document.getElementById("new-profile-pin").focus();return;}
-  const btn=document.getElementById("new-profile-btn");
-  btn.textContent="Création…";btn.disabled=true;
+  const btn=document.getElementById("new-profile-btn");btn.textContent="Création…";btn.disabled=true;
   try{
     const pin_hash=await hashPin(pin);
     const res=await fetch("https://bxtsgyrgqdfeawpwuqqq.supabase.co/rest/v1/profiles",{method:"POST",headers:{"apikey":"sb_publishable_ch7sWjHrxpkztmy5ACkYKg_WC68M_-3","Authorization":"Bearer sb_publishable_ch7sWjHrxpkztmy5ACkYKg_WC68M_-3","Content-Type":"application/json","Prefer":"return=representation"},body:JSON.stringify({name,pin_hash})});
@@ -1086,14 +1234,12 @@ document.getElementById("new-profile-btn").addEventListener("click",async()=>{
     if(!res.ok){errEl.textContent="Erreur "+res.status+": "+txt;btn.textContent="Créer le profil";btn.disabled=false;return;}
     const result=JSON.parse(txt);
     if(result&&result[0]){document.getElementById("new-profile-name").value="";document.getElementById("new-profile-pin").value="";await enterProfile(result[0].id,result[0].name);}
-    else{errEl.textContent="Réponse inattendue: "+txt;btn.textContent="Créer le profil";btn.disabled=false;}
+    else{errEl.textContent="Réponse inattendue";btn.textContent="Créer le profil";btn.disabled=false;}
   }catch(e){errEl.textContent="Erreur réseau: "+e.message;btn.textContent="Créer le profil";btn.disabled=false;}
 });
 
 document.getElementById("new-profile-name").addEventListener("keydown",e=>{if(e.key==="Enter")document.getElementById("new-profile-btn").click();});
-document.getElementById("switch-profile-btn").addEventListener("click",()=>{currentProfile=null;SESSIONS=[];INTEGRATED.clear();checked.clear();showScreen("profile-screen");document.querySelectorAll(".legend-btn").forEach(btn=>btn.addEventListener("click",()=>{stateFilter=btn.dataset.state;document.querySelectorAll(".legend-btn").forEach(b=>b.classList.remove("active"));btn.classList.add("active");render();}));
-
-loadProfiles();});
+document.getElementById("switch-profile-btn").addEventListener("click",()=>{currentProfile=null;SESSIONS=[];INTEGRATED.clear();checked.clear();showScreen("profile-screen");loadProfiles();});
 
 function cats(){return["Tous",...new Set(DATA.map(d=>d.cat))];}
 function buildCatSelect(){const sel=document.getElementById("cat-select");sel.innerHTML=[...new Set(DATA.map(d=>d.cat))].map(c=>`<option value="${c}">${c}</option>`).join("")+`<option value="__new__">+ Nouvelle catégorie…</option>`;sel.onchange=()=>document.getElementById("new-cat-wrap").classList.toggle("show",sel.value==="__new__");}
@@ -1108,7 +1254,7 @@ function filtered(){
     const depthOk=depthFilter===0||d.depth===depthFilter;
     let stateOk=true;
     if(stateFilter==="untouched") stateOk=!checked.has(d.id)&&!wids.has(d.id)&&!INTEGRATED.has(d.id);
-    else if(stateFilter==="worked") stateOk=checked.has(d.id)||wids.has(d.id);
+    else if(stateFilter==="worked") stateOk=(checked.has(d.id)||wids.has(d.id))&&!INTEGRATED.has(d.id);
     else if(stateFilter==="integrated") stateOk=INTEGRATED.has(d.id);
     return catOk&&qOk&&depthOk&&stateOk;
   });
@@ -1116,7 +1262,9 @@ function filtered(){
 
 function render(){
   buildFilters();buildCatSelect();if(adminOpen)buildAdminList();
-  const wids=workedIds();const items=filtered();const grid=document.getElementById("grid");
+  const wids=workedIds();
+  const items=filtered();
+  const grid=document.getElementById("grid");
   document.getElementById("stats").innerHTML=items.length?`<span>${items.length}</span> identité${items.length>1?"s":""}${activeFilter!=="Tous"?" — "+activeFilter:""}${depthFilter>0?" — "+"★".repeat(depthFilter):""}`:""
   if(!items.length){grid.innerHTML=`<div class="no-results"><i class="ti ti-search" style="font-size:26px;display:block;margin-bottom:10px;opacity:0.2"></i>Aucun résultat</div>`;renderSession();renderIntegrated();return;}
   grid.innerHTML=items.map(d=>{
@@ -1132,37 +1280,26 @@ function render(){
       <div class="card-footer">
         <span class="cat-badge">${d.cat}</span>
         <div class="card-actions">
-          <button class="integrate-btn${isActive?" show":""}" data-id="${d.id}" title="Marquer comme intégrée"><i class="ti ti-sparkles" style="font-size:11px"></i> Intégrée</button>
+          <button class="integrate-btn${isActive?" show":""}" data-id="${d.id}"><i class="ti ti-sparkles" style="font-size:11px"></i> Intégrée</button>
           <span class="depth-stars">${stars}</span>
         </div>
       </div>
     </div>`;
   }).join("");
 
-  // Cartes non intégrées — toggle checked / non touchée (sauf si validée en session)
   grid.querySelectorAll(".card:not(.integrated)").forEach(card=>{
     card.addEventListener("click",e=>{
       if(e.target.closest(".integrate-btn"))return;
       const id=+card.dataset.id;
-      if(wids.has(id))return; // validée en session, ne peut pas être décochée
+      if(wids.has(id))return;
       if(checked.has(id))checked.delete(id);else checked.add(id);
       render();
     });
-    card.addEventListener("keydown",e=>{
-      if(e.key===" "||e.key==="Enter"){
-        e.preventDefault();
-        const id=+card.dataset.id;
-        if(wids.has(id))return;
-        if(checked.has(id))checked.delete(id);else checked.add(id);
-        render();
-      }
-    });
+    card.addEventListener("keydown",e=>{if((e.key===" "||e.key==="Enter")&&!e.target.closest(".integrate-btn")){e.preventDefault();const id=+card.dataset.id;if(wids.has(id))return;if(checked.has(id))checked.delete(id);else checked.add(id);render();}});
   });
 
-  // Cartes intégrées — clic pour revenir en non touchée
   grid.querySelectorAll(".card.integrated").forEach(card=>{
-    card.addEventListener("click",async e=>{
-      if(e.target.closest(".integrate-btn"))return;
+    card.addEventListener("click",async()=>{
       const id=+card.dataset.id;
       INTEGRATED.delete(id);
       await saveIntegrated();
@@ -1191,8 +1328,7 @@ function renderSession(){
   const sel=DATA.filter(d=>checked.has(d.id)&&!INTEGRATED.has(d.id)&&!wids.has(d.id));
   const count=sel.length;
   document.getElementById("session-count").textContent=`${count} identité${count>1?"s":""} sélectionnée${count>1?"s":""}`;
-  const list=document.getElementById("current-sel");
-  list.innerHTML=sel.length?sel.map(d=>`<span class="sel-tag">${d.text}</span>`).join(""):`<span class="empty-sel">Aucune identité cochée</span>`;
+  document.getElementById("current-sel").innerHTML=sel.length?sel.map(d=>`<span class="sel-tag">${d.text}</span>`).join(""):`<span class="empty-sel">Aucune identité cochée</span>`;
   document.getElementById("validate-btn").disabled=sel.length===0;
 }
 
@@ -1216,7 +1352,6 @@ document.getElementById("validate-btn").addEventListener("click",async()=>{
   try{
     const result=await sb("sessions",{method:"POST",body:{profile_id:currentProfile.id,date,ids:newIds},prefer:"return=representation"});
     if(result&&result[0])SESSIONS.push({id:result[0].id,date,ids:newIds});
-    // Clear only the newly validated ones from checked — keep others
     newIds.forEach(id=>checked.delete(id));
     render();
     showToast(`✓ ${newIds.length} identité${newIds.length>1?"s":""} marquée${newIds.length>1?"s":""} comme travaillée${newIds.length>1?"s":""}`);
@@ -1226,7 +1361,10 @@ document.getElementById("validate-btn").addEventListener("click",async()=>{
 function showConfirm(title,sub,onYes){document.getElementById("confirm-title").textContent=title;document.getElementById("confirm-sub-text").textContent=sub;pendingConfirm=onYes;document.getElementById("confirm-modal").classList.add("show");}
 document.getElementById("confirm-yes").addEventListener("click",async()=>{document.getElementById("confirm-modal").classList.remove("show");if(pendingConfirm){await pendingConfirm();pendingConfirm=null;}});
 document.getElementById("confirm-no").addEventListener("click",()=>{pendingConfirm=null;document.getElementById("confirm-modal").classList.remove("show");});
+
 document.querySelectorAll(".depth-btn").forEach(btn=>btn.addEventListener("click",()=>{depthFilter=+btn.dataset.depth;document.querySelectorAll(".depth-btn").forEach(b=>b.classList.remove("active"));btn.classList.add("active");render();}));
+
+document.querySelectorAll(".legend-btn").forEach(btn=>btn.addEventListener("click",()=>{stateFilter=btn.dataset.state;document.querySelectorAll(".legend-btn").forEach(b=>b.classList.remove("active"));btn.classList.add("active");render();}));
 
 function renderProgress(){
   document.getElementById("progress-sub").textContent=currentProfile?"Profil — "+currentProfile.name:"";
