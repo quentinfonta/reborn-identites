@@ -14,7 +14,6 @@
       --border:rgba(255,255,255,0.07);--border-md:rgba(255,255,255,0.13);--border-strong:rgba(255,255,255,0.22);
       --text:#f0ede8;--text-muted:#888880;--text-faint:#555550;
       --green-bg:rgba(99,153,34,0.12);--green-border:rgba(99,153,34,0.5);--green-text:#8dc94a;
-      --gold-bg:rgba(186,117,23,0.12);--gold-border:rgba(186,117,23,0.45);--gold-text:#d4933a;
       --red-bg:rgba(163,45,45,0.12);--red-border:rgba(163,45,45,0.4);--red-text:#e06060;
       --blue-bg:rgba(55,138,221,0.12);--blue-border:rgba(55,138,221,0.4);--blue-text:#5aaaf0;
       --purple-bg:rgba(139,92,246,0.12);--purple-border:rgba(139,92,246,0.5);--purple-text:#a78bfa;
@@ -37,7 +36,7 @@
     .profile-list{display:flex;flex-direction:column;gap:6px;margin-bottom:1.25rem;max-height:260px;overflow-y:auto;}
     .profile-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface2);cursor:pointer;transition:all 0.15s;}
     .profile-item:hover{border-color:var(--border-md);background:var(--surface3);}
-    .profile-avatar{width:32px;height:32px;border-radius:50%;background:var(--gold-bg);border:1px solid var(--gold-border);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--gold-text);flex-shrink:0;}
+    .profile-avatar{width:32px;height:32px;border-radius:50%;background:rgba(186,117,23,0.12);border:1px solid rgba(186,117,23,0.45);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#d4933a;flex-shrink:0;}
     .profile-name{font-size:14px;font-weight:500;flex:1;}
     .profile-meta{font-size:11px;color:var(--text-faint);}
     .divider{display:flex;align-items:center;gap:10px;margin:1rem 0;color:var(--text-faint);font-size:12px;}
@@ -51,7 +50,7 @@
     .green-btn{padding:9px 16px;border-radius:var(--radius);border:1px solid var(--green-border);background:var(--green-bg);color:var(--green-text);font-size:13px;font-weight:500;font-family:inherit;cursor:pointer;white-space:nowrap;}
     .green-btn:hover{opacity:0.8;}
     .pin-box{background:var(--surface);border:1px solid var(--border-md);border-radius:var(--radius-lg);padding:2rem;width:100%;max-width:360px;display:flex;flex-direction:column;align-items:center;gap:1.25rem;}
-    .pin-avatar{width:52px;height:52px;border-radius:50%;background:var(--gold-bg);border:1px solid var(--gold-border);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:600;color:var(--gold-text);}
+    .pin-avatar{width:52px;height:52px;border-radius:50%;background:rgba(186,117,23,0.12);border:1px solid rgba(186,117,23,0.45);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:600;color:#d4933a;}
     .pin-name{font-size:18px;font-weight:600;}
     .pin-label{font-size:13px;color:var(--text-muted);}
     .pin-dots{display:flex;gap:10px;margin:0.25rem 0;}
@@ -64,14 +63,14 @@
     .pin-error{font-size:13px;color:var(--red-text);min-height:18px;text-align:center;}
     .back-link{font-size:13px;color:var(--text-faint);cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
     .back-link:hover{color:var(--text-muted);}
-    .app-container{max-width:920px;margin:0 auto;}
+    .app-container{max-width:960px;margin:0 auto;}
     .header{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border);}
     .logo{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:6px;}
     .title{font-size:26px;font-weight:600;letter-spacing:-0.3px;}
     .subtitle{font-size:14px;color:var(--text-muted);margin-top:5px;font-style:italic;}
     .header-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
-    .profile-badge{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;border:1px solid var(--gold-border);background:var(--gold-bg);color:var(--gold-text);font-size:13px;font-weight:500;}
-    .icon-btn{background:none;border:none;cursor:pointer;color:var(--gold-text);opacity:0.6;padding:0;display:flex;align-items:center;transition:opacity 0.15s;}
+    .profile-badge{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;border:1px solid rgba(186,117,23,0.45);background:rgba(186,117,23,0.12);color:#d4933a;font-size:13px;font-weight:500;}
+    .icon-btn{background:none;border:none;cursor:pointer;color:#d4933a;opacity:0.6;padding:0;display:flex;align-items:center;transition:opacity 0.15s;}
     .icon-btn:hover{opacity:1;}
     .header-btn{display:flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface2);color:var(--text-muted);font-size:13px;font-family:inherit;cursor:pointer;transition:all 0.15s;}
     .header-btn:hover{border-color:var(--border-strong);color:var(--text);}
@@ -93,15 +92,8 @@
     .admin-item{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:7px;font-size:13px;}
     .admin-item:hover{background:var(--surface2);}
     .admin-item-text{flex:1;color:var(--text);}
-    .admin-item-cat{font-size:11px;color:var(--text-faint);}
     .del-btn{background:none;border:none;cursor:pointer;color:var(--text-faint);padding:3px 5px;border-radius:6px;display:flex;align-items:center;transition:all 0.15s;}
     .del-btn:hover{color:var(--red-text);background:var(--red-bg);}
-    .depth-filter{display:flex;align-items:center;gap:8px;margin:0 0 0.75rem;flex-wrap:wrap;}
-    .depth-label{font-size:12px;color:var(--text-faint);}
-    .depth-btn{display:flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--text-muted);font-size:12px;font-family:inherit;cursor:pointer;transition:all 0.15s;}
-    .depth-btn:hover{border-color:var(--border-md);color:var(--text);}
-    .depth-btn.active{background:var(--surface2);border-color:var(--border-strong);color:var(--text);}
-    .depth-btn .stars{color:var(--star-on);letter-spacing:-1px;}
     .controls{margin-bottom:0.75rem;}
     .search-wrap{position:relative;}
     .search-wrap i{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:16px;color:var(--text-faint);pointer-events:none;}
@@ -116,13 +108,23 @@
     .legend-dot.untouched{border:1.5px solid var(--border-md);background:transparent;}
     .legend-dot.worked{background:var(--green-bg);border:1.5px solid var(--green-border);}
     .legend-dot.integrated{background:var(--purple-bg);border:1.5px solid var(--purple-border);}
-    .filters{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 1rem;}
-    .filter-btn{padding:5px 13px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--text-muted);font-size:12px;font-family:inherit;cursor:pointer;transition:all 0.15s;}
-    .filter-btn:hover{color:var(--text);border-color:var(--border-md);}
-    .filter-btn.active{background:var(--accent);color:#0a0a0a;border-color:var(--accent);font-weight:600;}
-    .stats{font-size:13px;color:var(--text-faint);margin-bottom:0.875rem;}
-    .stats span{font-weight:500;color:var(--text-muted);}
-    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:7px;}
+    /* GROUPS */
+    .group-block{margin-bottom:2.5rem;}
+    .group-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;flex-wrap:wrap;gap:8px;}
+    .group-info{display:flex;flex-direction:column;gap:2px;}
+    .group-label{font-size:13px;font-weight:600;color:var(--accent);letter-spacing:0.5px;}
+    .group-subtitle{font-size:11px;color:var(--text-faint);}
+    .group-progress{display:flex;align-items:center;gap:8px;}
+    .group-progress-track{width:120px;height:6px;background:var(--surface3);border-radius:3px;overflow:hidden;}
+    .group-progress-fill{height:100%;border-radius:3px;background:var(--green-border);transition:width 0.3s;}
+    .group-progress-fill.complete{background:var(--purple-border);}
+    .group-progress-text{font-size:11px;color:var(--text-faint);white-space:nowrap;}
+    .group-cats{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1rem;}
+    .cat-pill{padding:4px 12px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--text-muted);font-size:12px;font-family:inherit;cursor:pointer;transition:all 0.15s;}
+    .cat-pill:hover{border-color:var(--border-md);color:var(--text);}
+    .cat-pill.active{background:var(--accent);color:#0a0a0a;border-color:var(--accent);font-weight:600;}
+    .group-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:6px;}
+    /* CARDS */
     .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:0.875rem 1rem;cursor:pointer;transition:all 0.15s;user-select:none;}
     .card:hover{border-color:var(--border-md);background:var(--surface2);}
     .card.checked{border-color:var(--green-border);background:var(--green-bg);}
@@ -137,7 +139,7 @@
     .check-icon{width:18px;height:18px;border-radius:50%;border:1px solid var(--border-md);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:all 0.15s;}
     .card.checked .check-icon{background:var(--green-bg);border-color:var(--green-border);}
     .card.integrated .check-icon{background:var(--purple-bg);border-color:var(--purple-border);}
-    .check-icon i{font-size:11px;opacity:0;transition:opacity 0.15s;}
+    .check-icon i{font-size:11px;opacity:0;}
     .card.checked .check-icon i,.card.integrated .check-icon i{opacity:1;}
     .card.checked .check-icon i{color:var(--green-text);}
     .card.integrated .check-icon i{color:var(--purple-text);}
@@ -150,7 +152,13 @@
     .integrate-btn{display:none;background:none;border:1px solid transparent;cursor:pointer;color:var(--text-faint);padding:3px 8px;border-radius:6px;font-size:11px;transition:all 0.15s;white-space:nowrap;font-family:inherit;align-items:center;gap:3px;}
     .integrate-btn.show{display:flex;}
     .integrate-btn:hover{background:var(--purple-bg);border-color:var(--purple-border);color:var(--purple-text);}
-    .no-results{padding:3rem;text-align:center;color:var(--text-faint);font-size:14px;grid-column:1/-1;}
+    .no-results{padding:2rem;text-align:center;color:var(--text-faint);font-size:14px;grid-column:1/-1;}
+    .depth-filter{display:flex;align-items:center;gap:8px;margin:0 0 0.75rem;flex-wrap:wrap;}
+    .depth-label{font-size:12px;color:var(--text-faint);}
+    .depth-btn{display:flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--text-muted);font-size:12px;font-family:inherit;cursor:pointer;transition:all 0.15s;}
+    .depth-btn:hover{border-color:var(--border-md);color:var(--text);}
+    .depth-btn.active{background:var(--surface2);border-color:var(--border-strong);color:var(--text);}
+    .depth-btn .stars{color:var(--star-on);letter-spacing:-1px;}
     .session-bar{margin-top:2rem;background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border-md);overflow:hidden;}
     .session-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.5rem;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:8px;}
     .session-title{font-size:13px;font-weight:500;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;}
@@ -163,7 +171,7 @@
     .validate-btn:hover{opacity:0.8;}
     .validate-btn:disabled{opacity:0.3;cursor:default;}
     .integrated-section{margin-top:1.5rem;background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border);overflow:hidden;}
-    .integrated-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.5rem;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:8px;}
+    .integrated-header{padding:1rem 1.5rem;border-bottom:1px solid var(--border);}
     .integrated-title{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--purple-text);text-transform:uppercase;letter-spacing:1px;}
     .integrated-count-badge{font-size:11px;padding:2px 8px;border-radius:20px;background:var(--purple-bg);border:1px solid var(--purple-border);color:var(--purple-text);}
     .integrated-body{padding:1rem 1.5rem;display:flex;flex-wrap:wrap;gap:6px;}
@@ -209,7 +217,7 @@
     @keyframes spin{to{transform:rotate(360deg);}}
     .shake{animation:shake 0.35s ease;}
     @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
-    @media(max-width:500px){.screen{padding:1.25rem 1rem 3rem;}.grid{grid-template-columns:1fr 1fr;}.bar-label,.cat-label{width:80px;font-size:11px;}}
+    @media(max-width:500px){.screen{padding:1.25rem 1rem 3rem;}.group-grid{grid-template-columns:1fr 1fr;}.bar-label,.cat-label{width:80px;font-size:11px;}}
   </style>
 </head>
 <body>
@@ -280,7 +288,7 @@
     <div class="admin-list" id="admin-list"></div>
   </div>
 
-  <div class="controls"><div class="search-wrap"><i class="ti ti-search"></i><input type="text" id="search" placeholder="Rechercher…" /></div></div>
+  <div class="controls"><div class="search-wrap"><i class="ti ti-search"></i><input type="text" id="search" placeholder="Rechercher dans toutes les catégories…" /></div></div>
 
   <div class="depth-filter">
     <span class="depth-label">Profondeur :</span>
@@ -299,9 +307,7 @@
     <button class="legend-btn" data-state="integrated"><div class="legend-dot integrated"></div> Intégrées</button>
   </div>
 
-  <div class="filters" id="filters"></div>
-  <div class="stats" id="stats"></div>
-  <div class="grid" id="grid"></div>
+  <div id="groups-container"></div>
 
   <div class="session-bar">
     <div class="session-header"><span class="session-title">Session en cours</span><span class="session-count" id="session-count">0 identité sélectionnée</span></div>
@@ -1155,13 +1161,32 @@ const DEFAULT_DATA = [
   {id:4013,text:'Je suis esquivé',cat:'Abandon',depth:3},
   {id:4014,text:'Je suis refoulé',cat:'Isolement',depth:4},
   {id:4015,text:'Je suis tu',cat:'Isolement',depth:4}
+,
+  {id:4020,text:'Je suis désinvesti',cat:'Abandon',depth:4},
+  {id:4021,text:'Je suis déserté',cat:'Abandon',depth:4},
+  {id:4022,text:'Je suis désaffecté',cat:'Abandon',depth:4},
+  {id:4023,text:'Je suis inhibé',cat:'Contrôle',depth:3},
+  {id:4024,text:'Je suis tétanisé',cat:'Contrôle',depth:3},
+  {id:4025,text:'Je suis dompté',cat:'Contrôle',depth:4}
+,
+  {id:4030,text:'Je suis applaudi',cat:'Reconnaissance',depth:3},
+  {id:4031,text:'Je suis acclamé',cat:'Reconnaissance',depth:3},
+  {id:4032,text:'Je suis épié',cat:'Contrôle',depth:3},
+  {id:4033,text:'Je suis scruté',cat:'Contrôle',depth:3},
+  {id:4034,text:'Je suis jaugé',cat:'Contrôle',depth:3},
+  {id:4035,text:'Je suis inspecté',cat:'Contrôle',depth:3},
+  {id:4036,text:'Je suis observé',cat:'Contrôle',depth:2},
+  {id:4037,text:'Je suis lu',cat:'Violation',depth:3},
+  {id:4038,text:'Je suis deviné',cat:'Violation',depth:3}
 ];
+const GROUPS = [{"id": "corps", "label": "① CORPS", "subtitle": "Reconnexion au ressenti physique", "cats": ["Rigidité", "Épuisement", "Confusion"]}, {"id": "blocages", "label": "② BLOCAGES", "subtitle": "Ce qui empêche d"avancer", "cats": ["Contrôle", "Isolement", "Envahissement", "Masque", "Résignation"]}, {"id": "blessures", "label": "③ BLESSURES", "subtitle": "Ce qui a été fait à l"identité", "cats": ["Trahison", "Abandon", "Violation", "Blessure", "Perte", "Usure"]}, {"id": "verdicts", "label": "④ VERDICTS", "subtitle": "Les conclusions que l"identité a tirées sur elle-même", "cats": ["Dévaluation", "Contamination", "Culpabilité", "Honte", "Vide", "Destruction"]}, {"id": "sortie", "label": "⑤ SORTIE", "subtitle": "Le chemin de reconstruction", "cats": ["Transition", "Déverrouillage", "Libération", "Émergence", "Transformation", "Engagement", "Paix", "Connexion", "Reconnaissance", "Puissance", "Accomplissement", "Éveil"]}];
 
 function starsHtml(d,max=5){let s="";for(let i=1;i<=max;i++)s+=`<span class="${i<=d?"s-on":"s-off"}">★</span>`;return s;}
 
 let DATA=[...DEFAULT_DATA];
 let currentProfile=null,SESSIONS=[],INTEGRATED=new Set();
-let activeFilter="Tous",query="",depthFilter=0,stateFilter="all";
+let query="",depthFilter=0,stateFilter="all";
+let activeCats=new Set(); // empty = all
 let checked=new Set(),adminOpen=false,pendingConfirm=null,pinTarget=null,pinValue="";
 
 function workedIds(){return new Set(SESSIONS.flatMap(s=>s.ids));}
@@ -1201,8 +1226,7 @@ async function enterProfile(id,name){
   currentProfile={id,name};
   document.getElementById("current-profile-name").textContent=name;
   checked.clear();INTEGRATED.clear();
-  await loadData();
-  showScreen("app");render();
+  await loadData();showScreen("app");render();
 }
 
 async function loadData(){
@@ -1216,8 +1240,7 @@ async function loadData(){
 }
 
 async function saveIntegrated(){
-  try{await sb(`profiles?id=eq.${currentProfile.id}`,{method:"PATCH",body:{integrated_ids:[...INTEGRATED]},prefer:"return=minimal"});}
-  catch(e){console.warn("save integrated failed",e);}
+  try{await sb(`profiles?id=eq.${currentProfile.id}`,{method:"PATCH",body:{integrated_ids:[...INTEGRATED]},prefer:"return=minimal"});}catch(e){}
 }
 
 document.getElementById("new-profile-btn").addEventListener("click",async()=>{
@@ -1241,53 +1264,67 @@ document.getElementById("new-profile-btn").addEventListener("click",async()=>{
 document.getElementById("new-profile-name").addEventListener("keydown",e=>{if(e.key==="Enter")document.getElementById("new-profile-btn").click();});
 document.getElementById("switch-profile-btn").addEventListener("click",()=>{currentProfile=null;SESSIONS=[];INTEGRATED.clear();checked.clear();showScreen("profile-screen");loadProfiles();});
 
-function cats(){return["Tous",...new Set(DATA.map(d=>d.cat))];}
-function buildCatSelect(){const sel=document.getElementById("cat-select");sel.innerHTML=[...new Set(DATA.map(d=>d.cat))].map(c=>`<option value="${c}">${c}</option>`).join("")+`<option value="__new__">+ Nouvelle catégorie…</option>`;sel.onchange=()=>document.getElementById("new-cat-wrap").classList.toggle("show",sel.value==="__new__");}
-function buildFilters(){const el=document.getElementById("filters");el.innerHTML=cats().map(c=>`<button class="filter-btn${c===activeFilter?" active":""}" data-cat="${c}">${c}</button>`).join("");el.querySelectorAll(".filter-btn").forEach(btn=>btn.addEventListener("click",()=>{activeFilter=btn.dataset.cat;render();}));}
-function buildAdminList(){const list=document.getElementById("admin-list");const custom=DATA.filter(d=>!DEFAULT_DATA.find(dd=>dd.id===d.id));if(!custom.length){list.innerHTML=`<div style="font-size:13px;color:var(--text-faint);padding:4px 0">Tes ajouts apparaîtront ici</div>`;return;}list.innerHTML=custom.map(d=>`<div class="admin-item" data-id="${d.id}"><span class="admin-item-text">${d.text}</span><span class="admin-item-cat">${d.cat}</span><button class="del-btn"><i class="ti ti-trash" style="font-size:14px"></i></button></div>`).join("");list.querySelectorAll(".del-btn").forEach(btn=>btn.addEventListener("click",()=>{const id=+btn.closest(".admin-item").dataset.id;DATA=DATA.filter(d=>d.id!==id);checked.delete(id);render();showToast("Supprimé");}));}
+function buildCatSelect(){
+  const allCats=[...new Set(DATA.map(d=>d.cat))];
+  const sel=document.getElementById("cat-select");
+  sel.innerHTML=allCats.map(c=>`<option value="${c}">${c}</option>`).join("")+`<option value="__new__">+ Nouvelle catégorie…</option>`;
+  sel.onchange=()=>document.getElementById("new-cat-wrap").classList.toggle("show",sel.value==="__new__");
+}
 
-function filtered(){
+function buildAdminList(){
+  const list=document.getElementById("admin-list");
+  const custom=DATA.filter(d=>!DEFAULT_DATA.find(dd=>dd.id===d.id));
+  if(!custom.length){list.innerHTML=`<div style="font-size:13px;color:var(--text-faint);padding:4px 0">Tes ajouts apparaîtront ici</div>`;return;}
+  list.innerHTML=custom.map(d=>`<div class="admin-item" data-id="${d.id}"><span class="admin-item-text">${d.text}</span><span style="font-size:11px;color:var(--text-faint);margin-right:4px">${d.cat}</span><button class="del-btn"><i class="ti ti-trash" style="font-size:14px"></i></button></div>`).join("");
+  list.querySelectorAll(".del-btn").forEach(btn=>btn.addEventListener("click",()=>{const id=+btn.closest(".admin-item").dataset.id;DATA=DATA.filter(d=>d.id!==id);checked.delete(id);render();showToast("Supprimé");}));
+}
+
+function getGroupProgress(group){
   const wids=workedIds();
-  return DATA.filter(d=>{
-    const catOk=activeFilter==="Tous"||d.cat===activeFilter;
-    const qOk=!query||d.text.toLowerCase().includes(query.toLowerCase())||d.cat.toLowerCase().includes(query.toLowerCase());
+  const cats=group.cats;
+  const worked=cats.filter(cat=>{
+    const catItems=DATA.filter(d=>d.cat===cat);
+    const workedInCat=catItems.filter(d=>wids.has(d.id)||INTEGRATED.has(d.id));
+    return workedInCat.length>0&&workedInCat.length>=catItems.length*0.5;
+  });
+  return{done:worked.length,total:cats.length};
+}
+
+function filterItems(items){
+  const wids=workedIds();
+  return items.filter(d=>{
+    const qOk=!query||d.text.toLowerCase().includes(query.toLowerCase());
     const depthOk=depthFilter===0||d.depth===depthFilter;
     let stateOk=true;
     if(stateFilter==="untouched") stateOk=!checked.has(d.id)&&!wids.has(d.id)&&!INTEGRATED.has(d.id);
     else if(stateFilter==="worked") stateOk=(checked.has(d.id)||wids.has(d.id))&&!INTEGRATED.has(d.id);
     else if(stateFilter==="integrated") stateOk=INTEGRATED.has(d.id);
-    return catOk&&qOk&&depthOk&&stateOk;
+    return qOk&&depthOk&&stateOk;
   });
 }
 
-function render(){
-  buildFilters();buildCatSelect();if(adminOpen)buildAdminList();
-  const wids=workedIds();
-  const items=filtered();
-  const grid=document.getElementById("grid");
-  document.getElementById("stats").innerHTML=items.length?`<span>${items.length}</span> identité${items.length>1?"s":""}${activeFilter!=="Tous"?" — "+activeFilter:""}${depthFilter>0?" — "+"★".repeat(depthFilter):""}`:""
-  if(!items.length){grid.innerHTML=`<div class="no-results"><i class="ti ti-search" style="font-size:26px;display:block;margin-bottom:10px;opacity:0.2"></i>Aucun résultat</div>`;renderSession();renderIntegrated();return;}
-  grid.innerHTML=items.map(d=>{
-    const isIntegrated=INTEGRATED.has(d.id);
-    const isWorked=!isIntegrated&&wids.has(d.id);
-    const isChecked=!isIntegrated&&!isWorked&&checked.has(d.id);
-    const isActive=isChecked||isWorked;
-    const cls=isIntegrated?"integrated":isActive?"checked":"";
-    const icon=isIntegrated?"ti-sparkles":"ti-check";
-    const stars=starsHtml(d.depth||1);
-    return `<div class="card${cls?" "+cls:""}" data-id="${d.id}" tabindex="0">
-      <div class="card-top"><span class="identity">${d.text}</span><div class="check-icon"><i class="ti ${icon}"></i></div></div>
-      <div class="card-footer">
-        <span class="cat-badge">${d.cat}</span>
-        <div class="card-actions">
-          <button class="integrate-btn${isActive?" show":""}" data-id="${d.id}"><i class="ti ti-sparkles" style="font-size:11px"></i> Intégrée</button>
-          <span class="depth-stars">${stars}</span>
-        </div>
+function renderCard(d,wids){
+  const isIntegrated=INTEGRATED.has(d.id);
+  const isWorked=!isIntegrated&&wids.has(d.id);
+  const isChecked=!isIntegrated&&!isWorked&&checked.has(d.id);
+  const isActive=isChecked||isWorked;
+  const cls=isIntegrated?"integrated":isActive?"checked":"";
+  const icon=isIntegrated?"ti-sparkles":"ti-check";
+  const stars=starsHtml(d.depth||1);
+  return `<div class="card${cls?" "+cls:""}" data-id="${d.id}" tabindex="0">
+    <div class="card-top"><span class="identity">${d.text}</span><div class="check-icon"><i class="ti ${icon}"></i></div></div>
+    <div class="card-footer">
+      <span class="cat-badge">${d.cat}</span>
+      <div class="card-actions">
+        <button class="integrate-btn${isActive?" show":""}" data-id="${d.id}"><i class="ti ti-sparkles" style="font-size:11px"></i> Intégrée</button>
+        <span class="depth-stars">${stars}</span>
       </div>
-    </div>`;
-  }).join("");
+    </div>
+  </div>`;
+}
 
-  grid.querySelectorAll(".card:not(.integrated)").forEach(card=>{
+function attachCardEvents(container,wids){
+  container.querySelectorAll(".card:not(.integrated)").forEach(card=>{
     card.addEventListener("click",e=>{
       if(e.target.closest(".integrate-btn"))return;
       const id=+card.dataset.id;
@@ -1295,28 +1332,81 @@ function render(){
       if(checked.has(id))checked.delete(id);else checked.add(id);
       render();
     });
-    card.addEventListener("keydown",e=>{if((e.key===" "||e.key==="Enter")&&!e.target.closest(".integrate-btn")){e.preventDefault();const id=+card.dataset.id;if(wids.has(id))return;if(checked.has(id))checked.delete(id);else checked.add(id);render();}});
   });
-
-  grid.querySelectorAll(".card.integrated").forEach(card=>{
+  container.querySelectorAll(".card.integrated").forEach(card=>{
     card.addEventListener("click",async()=>{
       const id=+card.dataset.id;
       INTEGRATED.delete(id);
-      await saveIntegrated();
-      render();
-      showToast("Identité remise en non touchée");
+      await saveIntegrated();render();showToast("Identité remise en non touchée");
     });
   });
-
-  grid.querySelectorAll(".integrate-btn").forEach(btn=>{
+  container.querySelectorAll(".integrate-btn").forEach(btn=>{
     btn.addEventListener("click",async e=>{
       e.stopPropagation();
       const id=+btn.dataset.id;
-      INTEGRATED.add(id);
-      checked.delete(id);
-      await saveIntegrated();
+      INTEGRATED.add(id);checked.delete(id);
+      await saveIntegrated();render();showToast("✨ Identité intégrée");
+    });
+  });
+}
+
+function render(){
+  buildCatSelect();if(adminOpen)buildAdminList();
+  const wids=workedIds();
+  const container=document.getElementById("groups-container");
+  let totalShown=0;
+
+  container.innerHTML=GROUPS.map(group=>{
+    // Get items for this group, filtered by active cats within group
+    const groupItems=DATA.filter(d=>group.cats.includes(d.cat));
+    const filtered=filterItems(groupItems);
+    if(filtered.length===0&&(query||stateFilter!=="all"))return"";
+
+    const prog=getGroupProgress(group);
+    const progPct=prog.total>0?Math.round((prog.done/prog.total)*100):0;
+    const isComplete=prog.done===prog.total;
+
+    // Cat pills for this group
+    const catPills=group.cats.map(cat=>{
+      const isActive=activeCats.has(cat);
+      const catCount=filterItems(DATA.filter(d=>d.cat===cat)).length;
+      if(catCount===0&&(query||stateFilter!=="all"))return"";
+      return`<button class="cat-pill${isActive?" active":""}" data-cat="${cat}">${cat} <span style="opacity:0.5;font-size:11px">${catCount}</span></button>`;
+    }).join("");
+
+    // Filter by active cats
+    const displayItems=activeCats.size>0?filtered.filter(d=>activeCats.has(d.cat)):filtered;
+    totalShown+=displayItems.length;
+
+    const cardsHtml=displayItems.length>0
+      ?displayItems.map(d=>renderCard(d,wids)).join("")
+      :`<div class="no-results" style="grid-column:1/-1">Aucune identité pour ce filtre</div>`;
+
+    return`<div class="group-block" data-group="${group.id}">
+      <div class="group-header">
+        <div class="group-info">
+          <div class="group-label">${group.label}</div>
+          <div class="group-subtitle">${group.subtitle}</div>
+        </div>
+        <div class="group-progress">
+          <div class="group-progress-track"><div class="group-progress-fill${isComplete?" complete":""}" style="width:${progPct}%"></div></div>
+          <span class="group-progress-text">${prog.done}/${prog.total} catégories</span>
+        </div>
+      </div>
+      <div class="group-cats">${catPills}</div>
+      <div class="group-grid">${cardsHtml}</div>
+    </div>`;
+  }).join("");
+
+  // Attach events
+  container.querySelectorAll(".group-grid").forEach(grid=>attachCardEvents(grid,wids));
+
+  // Cat pill events
+  container.querySelectorAll(".cat-pill").forEach(pill=>{
+    pill.addEventListener("click",()=>{
+      const cat=pill.dataset.cat;
+      if(activeCats.has(cat))activeCats.delete(cat);else activeCats.add(cat);
       render();
-      showToast("✨ Identité intégrée");
     });
   });
 
@@ -1334,12 +1424,11 @@ function renderSession(){
 
 function renderIntegrated(){
   const section=document.getElementById("integrated-section");
-  const body=document.getElementById("integrated-body");
   const count=INTEGRATED.size;
   document.getElementById("integrated-count-badge").textContent=count;
   if(!count){section.style.display="none";return;}
   section.style.display="block";
-  body.innerHTML=[...INTEGRATED].map(id=>{const d=DATA.find(x=>x.id===id);return d?`<span class="integrated-tag">${d.text}</span>`:""}).filter(Boolean).join("");
+  document.getElementById("integrated-body").innerHTML=[...INTEGRATED].map(id=>{const d=DATA.find(x=>x.id===id);return d?`<span class="integrated-tag">${d.text}</span>`:""}).filter(Boolean).join("");
 }
 
 document.getElementById("validate-btn").addEventListener("click",async()=>{
@@ -1353,8 +1442,7 @@ document.getElementById("validate-btn").addEventListener("click",async()=>{
     const result=await sb("sessions",{method:"POST",body:{profile_id:currentProfile.id,date,ids:newIds},prefer:"return=representation"});
     if(result&&result[0])SESSIONS.push({id:result[0].id,date,ids:newIds});
     newIds.forEach(id=>checked.delete(id));
-    render();
-    showToast(`✓ ${newIds.length} identité${newIds.length>1?"s":""} marquée${newIds.length>1?"s":""} comme travaillée${newIds.length>1?"s":""}`);
+    render();showToast(`✓ ${newIds.length} identité${newIds.length>1?"s":""} marquée${newIds.length>1?"s":""} comme travaillée${newIds.length>1?"s":""}`);
   }catch(e){showToast("Erreur lors de la sauvegarde");btn.disabled=false;}
 });
 
@@ -1365,6 +1453,8 @@ document.getElementById("confirm-no").addEventListener("click",()=>{pendingConfi
 document.querySelectorAll(".depth-btn").forEach(btn=>btn.addEventListener("click",()=>{depthFilter=+btn.dataset.depth;document.querySelectorAll(".depth-btn").forEach(b=>b.classList.remove("active"));btn.classList.add("active");render();}));
 
 document.querySelectorAll(".legend-btn").forEach(btn=>btn.addEventListener("click",()=>{stateFilter=btn.dataset.state;document.querySelectorAll(".legend-btn").forEach(b=>b.classList.remove("active"));btn.classList.add("active");render();}));
+
+document.getElementById("search").addEventListener("input",e=>{query=e.target.value;render();});
 
 function renderProgress(){
   document.getElementById("progress-sub").textContent=currentProfile?"Profil — "+currentProfile.name:"";
@@ -1396,7 +1486,6 @@ document.getElementById("add-btn").addEventListener("click",()=>{
   DATA.push({id:Date.now(),text,cat,depth:depthVal});textEl.value="";newCatEl.value="";catSel.value=catSel.options[0].value;document.getElementById("new-cat-wrap").classList.remove("show");render();showToast("✓ Ajouté — "+text);
 });
 document.getElementById("new-text").addEventListener("keydown",e=>{if(e.key==="Enter")document.getElementById("add-btn").click();});
-document.getElementById("search").addEventListener("input",e=>{query=e.target.value;render();});
 
 loadProfiles();
 </script>
