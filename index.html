@@ -1179,7 +1179,13 @@ const DEFAULT_DATA = [
   {id:4037,text:'Je suis lu',cat:'Violation',depth:3},
   {id:4038,text:'Je suis deviné',cat:'Violation',depth:3}
 ];
-const GROUPS = [{"id": "corps", "label": "① CORPS", "subtitle": "Reconnexion au ressenti physique", "cats": ["Rigidité", "Épuisement", "Confusion"]}, {"id": "blocages", "label": "② BLOCAGES", "subtitle": "Ce qui empêche d"avancer", "cats": ["Contrôle", "Isolement", "Envahissement", "Masque", "Résignation"]}, {"id": "blessures", "label": "③ BLESSURES", "subtitle": "Ce qui a été fait à l"identité", "cats": ["Trahison", "Abandon", "Violation", "Blessure", "Perte", "Usure"]}, {"id": "verdicts", "label": "④ VERDICTS", "subtitle": "Les conclusions que l"identité a tirées sur elle-même", "cats": ["Dévaluation", "Contamination", "Culpabilité", "Honte", "Vide", "Destruction"]}, {"id": "sortie", "label": "⑤ SORTIE", "subtitle": "Le chemin de reconstruction", "cats": ["Transition", "Déverrouillage", "Libération", "Émergence", "Transformation", "Engagement", "Paix", "Connexion", "Reconnaissance", "Puissance", "Accomplissement", "Éveil"]}];
+const GROUPS = [
+  {id:"corps",label:"① CORPS",subtitle:"Reconnexion au ressenti physique",cats:["Rigidité","Épuisement","Confusion"]},
+  {id:"blocages",label:"② BLOCAGES",subtitle:"Ce qui empêche d avancer",cats:["Contrôle","Isolement","Envahissement","Masque","Résignation"]},
+  {id:"blessures",label:"③ BLESSURES",subtitle:"Ce qui a été fait à l identité",cats:["Trahison","Abandon","Violation","Blessure","Perte","Usure"]},
+  {id:"verdicts",label:"④ VERDICTS",subtitle:"Les conclusions tirées sur soi-même",cats:["Dévaluation","Contamination","Culpabilité","Honte","Vide","Destruction"]},
+  {id:"sortie",label:"⑤ SORTIE",subtitle:"Le chemin de reconstruction",cats:["Transition","Déverrouillage","Libération","Émergence","Transformation","Engagement","Paix","Connexion","Reconnaissance","Puissance","Accomplissement","Éveil"]}
+];
 
 function starsHtml(d,max=5){let s="";for(let i=1;i<=max;i++)s+=`<span class="${i<=d?"s-on":"s-off"}">★</span>`;return s;}
 
