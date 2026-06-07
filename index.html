@@ -1500,13 +1500,17 @@ async function enterProfile(id,name){
 async function loadData(){
   try{
     const sessions=await sb(`sessions?profile_id=eq.${currentProfile.id}&select=*&order=created_at.asc`);
-    SESSIONS=(sessions||[]).map(s=>({id:s.id,date:s.date,ids:s.ids}));
+    SESSIONS=(sessions||[]).map(s=>({id:s.id,date:s.date,ids:(s.ids||[]).map(Number)}));
+    console.log("Sessions loaded:",SESSIONS.length);
+  }catch(e){console.error('sessions error:',e);SESSIONS=[];}
+  try{
     const prof=await sb(`profiles?id=eq.${currentProfile.id}&select=integrated_ids,unlocked_groups`);
     if(prof&&prof[0]){
-      if(prof[0].integrated_ids)INTEGRATED=new Set(prof[0].integrated_ids);
+      if(prof[0].integrated_ids)INTEGRATED=new Set((prof[0].integrated_ids||[]).map(Number));
       if(prof[0].unlocked_groups){prof[0].unlocked_groups.forEach(g=>UNLOCKED.add(g));}
     }
-  }catch(e){console.error('loadData error:',e);SESSIONS=[];INTEGRATED=new Set();}
+    console.log("Profile loaded: integrated=",INTEGRATED.size,"unlocked=",UNLOCKED.size);
+  }catch(e){console.error('profile error:',e);}
 }
 
 async function saveIntegrated(){
