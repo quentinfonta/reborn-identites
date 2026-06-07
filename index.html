@@ -393,17 +393,39 @@
     </div>
     <div class="stat-cards" id="stat-cards"></div>
     <div class="chart-section"><div class="chart-title">Sessions</div><div class="bar-chart" id="bar-chart"></div></div>
-    <div class="chart-section"><div class=<script>
+    <div class="chart-section"><div class=<div class="confirm-overlay" id="confirm-modal">
+  <div class="confirm-box">
+    <div class="confirm-title" id="confirm-title"></div>
+    <div class="confirm-sub" id="confirm-sub-text"></div>
+    <div class="confirm-actions">
+      <button class="confirm-no" id="confirm-no">Annuler</button>
+      <button class="confirm-yes" id="confirm-yes">Confirmer</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
 const SUPABASE_URL="https://bxtsgyrgqdfeawpwuqqq.supabase.co";
-const SUPABASE_KEY="sb_publishable_ch7sWjHrxpkztmy5ACkYKg_WC68M_-3";
+const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ4dHNneXJncWRmZWF3cHd1cXFxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2MDY2MDgsImV4cCI6MjA5NTE4MjYwOH0.7iPDWlV6CXfDgQkQgIQvSvA7tx-LbdhNXXOHfTq0M3I";
 async function sb(path,opts={}){
-  const res=await fetch(SUPABASE_URL+"/rest/v1/"+path,{
-    headers:{"apikey":SUPABASE_KEY,"Authorization":"Bearer "+SUPABASE_KEY,"Content-Type":"application/json","Prefer":opts.prefer||"return=representation",...(opts.headers||{})},
-    method:opts.method||"GET",
-    body:opts.body?JSON.stringify(opts.body):undefined
-  });
-  const txt=await res.text();
-  return txt?JSON.parse(txt):null;
+  const controller=new AbortController();
+  const timeout=setTimeout(()=>controller.abort(),8000);
+  try{
+    const res=await fetch(SUPABASE_URL+"/rest/v1/"+path,{
+      signal:controller.signal,
+      headers:{"apikey":SUPABASE_KEY,"Authorization":"Bearer "+SUPABASE_KEY,"Content-Type":"application/json","Prefer":opts.prefer||"return=representation",...(opts.headers||{})},
+      method:opts.method||"GET",
+      body:opts.body?JSON.stringify(opts.body):undefined
+    });
+    clearTimeout(timeout);
+    const txt=await res.text();
+    if(!res.ok)throw new Error("HTTP "+res.status+": "+txt);
+    return txt?JSON.parse(txt):null;
+  }catch(e){
+    clearTimeout(timeout);
+    throw e;
+  }
 }
 async function hashPin(pin){
   const buf=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(pin+"REBORN_SALT"));
@@ -1431,7 +1453,7 @@ async function loadProfiles(){
       return`<div class="profile-item" data-id="${p.id}" data-name="${p.name}" data-hash="${p.pin_hash}"><div class="profile-avatar">${ini}</div><div class="profile-name">${p.name}</div><div class="profile-meta">depuis le ${d}</div><i class="ti ti-chevron-right" style="font-size:14px;color:var(--text-faint)"></i></div>`;
     }).join("");
     list.querySelectorAll(".profile-item").forEach(item=>item.addEventListener("click",()=>openPinScreen(item.dataset.id,item.dataset.name,item.dataset.hash)));
-  }catch(e){list.innerHTML=`<div style="font-size:13px;color:var(--red-text)">Erreur de connexion</div>`;}
+  }catch(e){list.innerHTML=`<div style="font-size:13px;color:var(--red-text)">Erreur: ${e.message}</div>`;console.error('loadProfiles error:',e);}
 }
 
 function openPinScreen(id,name,hash){
@@ -1505,7 +1527,7 @@ document.getElementById("new-profile-btn").addEventListener("click",async()=>{
     const pin_hash=await hashPin(pin);
     const res=await fetch("https://bxtsgyrgqdfeawpwuqqq.supabase.co/rest/v1/profiles",{
       method:"POST",
-      headers:{"apikey":"sb_publishable_ch7sWjHrxpkztmy5ACkYKg_WC68M_-3","Authorization":"Bearer sb_publishable_ch7sWjHrxpkztmy5ACkYKg_WC68M_-3","Content-Type":"application/json","Prefer":"return=representation"},
+      headers:{"apikey":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ4dHNneXJncWRmZWF3cHd1cXFxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2MDY2MDgsImV4cCI6MjA5NTE4MjYwOH0.7iPDWlV6CXfDgQkQgIQvSvA7tx-LbdhNXXOHfTq0M3I","Authorization":"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ4dHNneXJncWRmZWF3cHd1cXFxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2MDY2MDgsImV4cCI6MjA5NTE4MjYwOH0.7iPDWlV6CXfDgQkQgIQvSvA7tx-LbdhNXXOHfTq0M3I","Content-Type":"application/json","Prefer":"return=representation"},
       body:JSON.stringify({name,pin_hash})
     });
     const txt=await res.text();
@@ -1810,13 +1832,6 @@ function renderProgress(){
   const catEl=document.getElementById("cat-chart");
   if(!SESSIONS.length){catEl.innerHTML=`<div class="no-data">Aucune donnée.</div>`;}
   else{const allIds=SESSIONS.flatMap(s=>s.ids);const catCounts={};allIds.forEach(id=>{const item=DATA.find(d=>d.id===id);if(item)catCounts[item.cat]=(catCounts[item.cat]||0)+1;});const sorted=Object.entries(catCounts).sort((a,b)=>b[1]-a[1]);const maxCat=sorted.length?sorted[0][1]:1;catEl.innerHTML=sorted.map(([cat,count])=>{const pct=Math.round((count/maxCat)*100);return`<div class="cat-row"><span class="cat-label">${cat}</span><div class="cat-track"><div class="cat-fill" style="width:${Math.max(pct,4)}%"><span class="cat-count">${count}</span></div></div></div>`;}).join("");}
-}
-
-document.getElementById("progress-btn").addEventListener("click",()=>{renderProgress();document.getElementById("progress-overlay").classList.add("show");});
-document.getElementById("close-progress").addEventListener("click",()=>document.getElementById("progress-overlay").classList.remove("show"));
-
-loadProfiles();
-</script>ass="cat-label">${cat}</span><div class="cat-track"><div class="cat-fill" style="width:${Math.max(pct,4)}%"><span class="cat-count">${count}</span></div></div></div>`;}).join("");}
 }
 
 document.getElementById("progress-btn").addEventListener("click",()=>{renderProgress();document.getElementById("progress-overlay").classList.add("show");});
