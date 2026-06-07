@@ -248,6 +248,10 @@
     .spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--border-md);border-top-color:var(--accent);border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;}
     @keyframes spin{to{transform:rotate(360deg);}}
     .shake{animation:shake 0.35s ease;}
+    .unlock-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface2);color:var(--text-muted);font-size:12px;font-family:inherit;cursor:pointer;transition:all 0.15s;margin-top:0.5rem;}
+    .unlock-btn:hover{border-color:var(--accent);color:var(--accent);}
+    .group-card.locked{opacity:0.7;cursor:default;}
+    .group-card.locked:hover{transform:none;border-color:var(--border-md);background:var(--surface);}
     @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
     @media(max-width:600px){.screen{padding:1.25rem 1rem 3rem;}.grid{grid-template-columns:1fr 1fr;}.bar-label,.cat-label{width:80px;font-size:11px;}}
   </style>
@@ -389,20 +393,7 @@
     </div>
     <div class="stat-cards" id="stat-cards"></div>
     <div class="chart-section"><div class="chart-title">Sessions</div><div class="bar-chart" id="bar-chart"></div></div>
-    <div class="chart-section"><div class="chart-title">Par catégorie</div><div class="cat-chart" id="cat-chart"></div></div>
-  </div>
-</div>
-
-<div class="confirm-overlay" id="confirm-modal">
-  <div class="confirm-box">
-    <div class="confirm-title" id="confirm-title"></div>
-    <div class="confirm-sub" id="confirm-sub-text"></div>
-    <div class="confirm-actions"><button class="confirm-no" id="confirm-no">Annuler</button><button class="confirm-yes" id="confirm-yes">Confirmer</button></div>
-  </div>
-</div>
-<div class="toast" id="toast"></div>
-
-<script>
+    <div class="chart-section"><div class=<script>
 const SUPABASE_URL="https://bxtsgyrgqdfeawpwuqqq.supabase.co";
 const SUPABASE_KEY="sb_publishable_ch7sWjHrxpkztmy5ACkYKg_WC68M_-3";
 async function sb(path,opts={}){
@@ -1363,20 +1354,35 @@ const DEFAULT_DATA = [
   {id:6303,text:'Je suis pressurisé',cat:'Envahissement',depth:3}
 ,
   {id:6310,text:'Je suis fâché',cat:'Résignation',depth:2}
+,
+  {id:6320,text:'Je suis prohibé',cat:'Isolement',depth:3},
+  {id:6321,text:'Je suis proscrit',cat:'Isolement',depth:3},
+  {id:6322,text:'Je suis autocensuré',cat:'Masque',depth:3},
+  {id:6330,text:'Je suis épaulé',cat:'Connexion',depth:3},
+  {id:6331,text:'Je suis secondé',cat:'Connexion',depth:3},
+  {id:6332,text:'Je suis appuyé',cat:'Connexion',depth:3},
+  {id:6333,text:'Je suis étayé',cat:'Connexion',depth:3},
+  {id:6334,text:'Je suis sécurisé',cat:'Paix',depth:3},
+  {id:6335,text:'Je suis rassuré',cat:'Paix',depth:2},
+  {id:6336,text:'Je suis encadré',cat:'Reconnaissance',depth:3},
+  {id:6337,text:'Je suis mentoré',cat:'Reconnaissance',depth:3},
+  {id:6338,text:'Je suis parrainé',cat:'Reconnaissance',depth:3}
 ];
 
 const GROUPS=[
-  {id:"corps",label:"① Corps",subtitle:"Reconnexion au ressenti physique",cats:["Rigidité","Épuisement","Confusion"]},
-  {id:"blocages",label:"② Blocages",subtitle:"Ce qui empêche d avancer",cats:["Contrôle","Isolement","Envahissement","Masque","Résignation"]},
-  {id:"blessures",label:"③ Blessures",subtitle:"Ce qui a été fait à l identité",cats:["Trahison","Abandon","Violation","Blessure","Perte","Usure"]},
-  {id:"verdicts",label:"④ Verdicts",subtitle:"Les conclusions tirées sur soi-même",cats:["Dévaluation","Contamination","Culpabilité","Honte","Vide","Destruction"]},
-  {id:"sortie",label:"⑤ Sortie",subtitle:"Le chemin de reconstruction",cats:["Transition","Déverrouillage","Libération","Émergence","Transformation","Engagement","Paix","Connexion","Reconnaissance","Puissance","Accomplissement","Éveil"]}
+  {id:"corps",label:"① Corps",subtitle:"Reconnexion au ressenti physique",cats:["Rigidité","Épuisement","Confusion"],unlocked:true},
+  {id:"blocages",label:"② Blocages",subtitle:"Ce qui empêche d avancer",cats:["Contrôle","Isolement","Envahissement","Masque","Résignation"],unlocked:false},
+  {id:"blessures",label:"③ Blessures",subtitle:"Ce qui a été fait à l identité",cats:["Trahison","Abandon","Violation","Blessure","Perte","Usure"],unlocked:false},
+  {id:"verdicts",label:"④ Verdicts",subtitle:"Les conclusions tirées sur soi-même",cats:["Dévaluation","Contamination","Culpabilité","Honte","Vide","Destruction"],unlocked:false},
+  {id:"sortie",label:"⑤ Sortie",subtitle:"Le chemin de reconstruction",cats:["Transition","Déverrouillage","Libération","Émergence","Transformation","Engagement","Paix","Connexion","Reconnaissance","Puissance","Accomplissement","Éveil"],unlocked:false}
 ];
+
+const UNLOCK_THRESHOLD=0.70;
 
 function starsHtml(d,max=5){let s="";for(let i=1;i<=max;i++)s+=`<span class="${i<=d?"s-on":"s-off"}">★</span>`;return s;}
 
 let DATA=[...DEFAULT_DATA];
-let currentProfile=null,SESSIONS=[],INTEGRATED=new Set();
+let currentProfile=null,SESSIONS=[],INTEGRATED=new Set(),UNLOCKED=new Set(["corps"]);
 let currentGroup=null;
 let query="",depthFilter=0,stateFilter="all",activeCats=new Set();
 let checked=new Set(),adminOpen=false,pendingConfirm=null,pinTarget=null,pinValue="";
@@ -1393,7 +1399,27 @@ function showScreen(id){
   else if(id==="group"){document.getElementById("group-screen").classList.add("show");}
 }
 
-// PROFILE LOADING
+function getGroupProgress(group){
+  const wids=workedIds();
+  const items=DATA.filter(d=>group.cats.includes(d.cat));
+  const total=items.length;
+  const done=items.filter(d=>wids.has(d.id)||INTEGRATED.has(d.id)).length;
+  const pct=total>0?done/total:0;
+  return{done,total,pct};
+}
+
+function computeUnlocks(){
+  // Always unlock corps
+  UNLOCKED.add("corps");
+  for(let i=1;i<GROUPS.length;i++){
+    const prev=GROUPS[i-1];
+    const prog=getGroupProgress(prev);
+    if(prog.pct>=UNLOCK_THRESHOLD){
+      UNLOCKED.add(GROUPS[i].id);
+    }
+  }
+}
+
 async function loadProfiles(){
   const list=document.getElementById("profile-list");list.innerHTML=`<span class="spinner"></span>`;
   try{
@@ -1440,8 +1466,10 @@ document.getElementById("pin-back").addEventListener("click",()=>{pinTarget=null
 async function enterProfile(id,name){
   currentProfile={id,name};
   document.getElementById("home-profile-name").textContent=name;
-  checked.clear();INTEGRATED.clear();
+  checked.clear();INTEGRATED.clear();UNLOCKED=new Set(["corps"]);
   await loadData();
+  computeUnlocks();
+  // Also load manual unlocks from profile
   showScreen("home");
   renderHome();
 }
@@ -1450,14 +1478,20 @@ async function loadData(){
   try{
     const sessions=await sb(`sessions?profile_id=eq.${currentProfile.id}&select=*&order=created_at.asc`);
     SESSIONS=(sessions||[]).map(s=>({id:s.id,date:s.date,ids:s.ids}));
-    const prof=await sb(`profiles?id=eq.${currentProfile.id}&select=integrated_ids`);
-    if(prof&&prof[0]&&prof[0].integrated_ids){INTEGRATED=new Set(prof[0].integrated_ids);}
-    else{INTEGRATED=new Set();}
+    const prof=await sb(`profiles?id=eq.${currentProfile.id}&select=integrated_ids,unlocked_groups`);
+    if(prof&&prof[0]){
+      if(prof[0].integrated_ids)INTEGRATED=new Set(prof[0].integrated_ids);
+      if(prof[0].unlocked_groups){prof[0].unlocked_groups.forEach(g=>UNLOCKED.add(g));}
+    }
   }catch(e){SESSIONS=[];INTEGRATED=new Set();}
 }
 
 async function saveIntegrated(){
   try{await sb(`profiles?id=eq.${currentProfile.id}`,{method:"PATCH",body:{integrated_ids:[...INTEGRATED]},prefer:"return=minimal"});}catch(e){}
+}
+
+async function saveUnlocked(){
+  try{await sb(`profiles?id=eq.${currentProfile.id}`,{method:"PATCH",body:{unlocked_groups:[...UNLOCKED]},prefer:"return=minimal"});}catch(e){}
 }
 
 document.getElementById("new-profile-btn").addEventListener("click",async()=>{
@@ -1483,30 +1517,49 @@ document.getElementById("new-profile-btn").addEventListener("click",async()=>{
 });
 
 document.getElementById("new-profile-name").addEventListener("keydown",e=>{if(e.key==="Enter")document.getElementById("new-profile-btn").click();});
-document.getElementById("switch-profile-btn").addEventListener("click",()=>{currentProfile=null;SESSIONS=[];INTEGRATED.clear();checked.clear();showScreen("profile");loadProfiles();});
-
-// HOME
-function getGroupProgress(group){
-  const wids=workedIds();
-  const done=group.cats.filter(cat=>{
-    const items=DATA.filter(d=>d.cat===cat);
-    const worked=items.filter(d=>wids.has(d.id)||INTEGRATED.has(d.id));
-    return worked.length>0&&worked.length>=items.length*0.5;
-  }).length;
-  return{done,total:group.cats.length};
-}
+document.getElementById("switch-profile-btn").addEventListener("click",()=>{currentProfile=null;SESSIONS=[];INTEGRATED.clear();checked.clear();UNLOCKED=new Set(["corps"]);showScreen("profile");loadProfiles();});
 
 function renderHome(){
+  computeUnlocks();
   const grid=document.getElementById("groups-grid");
-  grid.innerHTML=GROUPS.map(g=>{
+  grid.innerHTML=GROUPS.map((g,idx)=>{
     const prog=getGroupProgress(g);
-    const pct=prog.total>0?Math.round((prog.done/prog.total)*100):0;
-    const isComplete=prog.done===prog.total&&prog.total>0;
-    const totalIds=DATA.filter(d=>g.cats.includes(d.cat)).length;
-    const wids=workedIds();
-    const workedCount=DATA.filter(d=>g.cats.includes(d.cat)&&(wids.has(d.id)||INTEGRATED.has(d.id))).length;
-    const intCount=DATA.filter(d=>g.cats.includes(d.cat)&&INTEGRATED.has(d.id)).length;
+    const pct=Math.round(prog.pct*100);
+    const isUnlocked=UNLOCKED.has(g.id);
+    const isComplete=prog.pct>=UNLOCK_THRESHOLD;
+    const nextGroup=GROUPS[idx+1];
+    const unlocksPct=Math.round(prog.pct*100);
+
     const catTags=g.cats.map(c=>`<span class="group-cat-tag">${c}</span>`).join("");
+
+    if(!isUnlocked){
+      // Locked group
+      const prevGroup=GROUPS[idx-1];
+      const prevProg=getGroupProgress(prevGroup);
+      const needed=Math.round(UNLOCK_THRESHOLD*100);
+      const current=Math.round(prevProg.pct*100);
+      return`<div class="group-card locked" data-gid="${g.id}">
+        <div class="group-card-top">
+          <div class="group-card-info">
+            <div class="group-card-label" style="color:var(--text-faint)">${g.label}</div>
+            <div class="group-card-subtitle">${g.subtitle}</div>
+          </div>
+          <i class="ti ti-lock" style="font-size:20px;color:var(--text-faint);flex-shrink:0;margin-top:2px"></i>
+        </div>
+        <div style="font-size:12px;color:var(--text-faint);margin-bottom:0.75rem">
+          Déverrouille quand ${prevGroup.label} atteint 70% — actuellement ${current}%
+        </div>
+        <div class="group-card-stats">
+          <div class="group-progress-track" style="background:var(--surface3)"><div class="group-progress-fill" style="width:${current}%;background:rgba(200,184,154,0.3)"></div></div>
+          <span class="group-card-stat">${current}% / 70% requis</span>
+        </div>
+        <div style="margin-top:0.75rem">
+          <button class="unlock-btn" data-gid="${g.id}"><i class="ti ti-lock-open" style="font-size:12px"></i> Débloquer manuellement</button>
+        </div>
+        <div class="group-cats-preview" style="opacity:0.4">${catTags}</div>
+      </div>`;
+    }
+
     return`<div class="group-card" data-gid="${g.id}">
       <div class="group-card-top">
         <div class="group-card-info">
@@ -1517,16 +1570,32 @@ function renderHome(){
       </div>
       <div class="group-card-stats">
         <div class="group-progress-track"><div class="group-progress-fill${isComplete?" complete":""}" style="width:${pct}%"></div></div>
-        <span class="group-card-stat"><span>${workedCount}</span>/${totalIds} travaillées</span>
-        ${intCount>0?`<span class="group-card-stat" style="color:var(--purple-text)"><span>${intCount}</span> intégrées</span>`:""}
+        <span class="group-card-stat"><span>${prog.done}</span>/${prog.total} travaillées</span>
+        <span class="group-card-stat">${pct}%</span>
+        ${INTEGRATED.size>0?`<span class="group-card-stat" style="color:var(--purple-text)">${[...INTEGRATED].filter(id=>DATA.find(d=>d.id===id&&g.cats.includes(d.cat))).length} intégrées</span>`:""}
       </div>
+      ${isComplete&&nextGroup&&!UNLOCKED.has(nextGroup.id)?`<div style="font-size:12px;color:var(--green-text);margin-top:6px"><i class="ti ti-lock-open" style="font-size:11px"></i> ${nextGroup.label} déverrouillé !</div>`:""}
       <div class="group-cats-preview">${catTags}</div>
     </div>`;
   }).join("");
-  grid.querySelectorAll(".group-card").forEach(card=>{
+
+  // Clickable unlocked groups
+  grid.querySelectorAll(".group-card:not(.locked)").forEach(card=>{
     card.addEventListener("click",()=>{
       const g=GROUPS.find(x=>x.id===card.dataset.gid);
       if(g)openGroup(g);
+    });
+  });
+
+  // Manual unlock buttons
+  grid.querySelectorAll(".unlock-btn").forEach(btn=>{
+    btn.addEventListener("click",async e=>{
+      e.stopPropagation();
+      const gid=btn.dataset.gid;
+      UNLOCKED.add(gid);
+      await saveUnlocked();
+      renderHome();
+      showToast("Groupe déverrouillé manuellement");
     });
   });
 }
@@ -1536,8 +1605,8 @@ function openGroup(group){
   query="";depthFilter=0;stateFilter="all";activeCats=new Set();
   document.getElementById("group-nav-title").textContent=group.label;
   document.getElementById("group-nav-sub").textContent=group.subtitle;
-  document.querySelectorAll(".depth-btn").forEach(b=>{b.classList.toggle("active",b.dataset.depth==="0");});
-  document.querySelectorAll(".legend-btn").forEach(b=>{b.classList.toggle("active",b.dataset.state==="all");});
+  document.querySelectorAll(".depth-btn").forEach(b=>b.classList.toggle("active",b.dataset.depth==="0"));
+  document.querySelectorAll(".legend-btn").forEach(b=>b.classList.toggle("active",b.dataset.state==="all"));
   document.getElementById("search").value="";
   buildCatPills(group);
   renderGroup();
@@ -1545,9 +1614,7 @@ function openGroup(group){
 }
 
 document.getElementById("back-btn").addEventListener("click",()=>{
-  currentGroup=null;
-  renderHome();
-  showScreen("home");
+  currentGroup=null;computeUnlocks();renderHome();showScreen("home");
 });
 
 function buildCatPills(group){
@@ -1599,7 +1666,8 @@ function renderGroup(){
   buildCatSelect();if(adminOpen)buildAdminList();
   const wids=workedIds();
   const items=getFilteredItems();
-  document.getElementById("stats").innerHTML=items.length?`<span>${items.length}</span> identité${items.length>1?"s":""}${depthFilter>0?" — "+"★".repeat(depthFilter):""}`:""
+  const prog=getGroupProgress(currentGroup);
+  document.getElementById("stats").innerHTML=`<span>${items.length}</span> identité${items.length>1?"s":""}${depthFilter>0?" — "+"★".repeat(depthFilter):""} · ${Math.round(prog.pct*100)}% du groupe travaillé`;
   const grid=document.getElementById("grid");
   if(!items.length){grid.innerHTML=`<div class="no-results"><i class="ti ti-search" style="font-size:24px;display:block;margin-bottom:8px;opacity:0.2"></i>Aucun résultat</div>`;renderSessionBar();renderIntegrated();return;}
   grid.innerHTML=items.map(d=>{
@@ -1645,7 +1713,10 @@ function renderGroup(){
       e.stopPropagation();
       const id=+btn.dataset.id;
       INTEGRATED.add(id);checked.delete(id);
-      await saveIntegrated();renderGroup();renderHome();showToast("✨ Identité intégrée");
+      await saveIntegrated();
+      computeUnlocks();
+      renderGroup();
+      showToast("✨ Identité intégrée");
     });
   });
 
@@ -1664,11 +1735,12 @@ function renderSessionBar(){
 
 function renderIntegrated(){
   const section=document.getElementById("integrated-section");
-  const count=INTEGRATED.size;
-  document.getElementById("integrated-count-badge").textContent=count;
-  if(!count){section.style.display="none";return;}
+  if(!currentGroup){section.style.display="none";return;}
+  const groupIntegrated=[...INTEGRATED].filter(id=>DATA.find(d=>d.id===id&&currentGroup.cats.includes(d.cat)));
+  document.getElementById("integrated-count-badge").textContent=groupIntegrated.length;
+  if(!groupIntegrated.length){section.style.display="none";return;}
   section.style.display="block";
-  document.getElementById("integrated-body").innerHTML=[...INTEGRATED].map(id=>{const d=DATA.find(x=>x.id===id);return d?`<span class="integrated-tag">${d.text}</span>`:""}).filter(Boolean).join("");
+  document.getElementById("integrated-body").innerHTML=groupIntegrated.map(id=>{const d=DATA.find(x=>x.id===id);return d?`<span class="integrated-tag">${d.text}</span>`:""}).filter(Boolean).join("");
 }
 
 document.getElementById("validate-btn").addEventListener("click",async()=>{
@@ -1682,7 +1754,8 @@ document.getElementById("validate-btn").addEventListener("click",async()=>{
     const result=await sb("sessions",{method:"POST",body:{profile_id:currentProfile.id,date,ids:newIds},prefer:"return=representation"});
     if(result&&result[0])SESSIONS.push({id:result[0].id,date,ids:newIds});
     newIds.forEach(id=>checked.delete(id));
-    renderGroup();renderHome();
+    computeUnlocks();
+    renderGroup();
     showToast(`✓ ${newIds.length} identité${newIds.length>1?"s":""} travaillée${newIds.length>1?"s":""}`);
   }catch(e){showToast("Erreur lors de la sauvegarde");btn.disabled=false;}
 });
@@ -1705,7 +1778,7 @@ function showConfirm(title,sub,onYes){document.getElementById("confirm-title").t
 document.getElementById("confirm-yes").addEventListener("click",async()=>{document.getElementById("confirm-modal").classList.remove("show");if(pendingConfirm){await pendingConfirm();pendingConfirm=null;}});
 document.getElementById("confirm-no").addEventListener("click",()=>{pendingConfirm=null;document.getElementById("confirm-modal").classList.remove("show");});
 
-document.getElementById("admin-toggle").addEventListener("click",()=>{adminOpen=!adminOpen;document.getElementById("admin-panel").classList.toggle("open",adminOpen);if(adminOpen)buildAdminList();});
+document.getElementById("admin-toggle").addEventListener("click",()=>{adminOpen=!adminOpen;document.getElementById("admin-panel").classList.toggle("open",adminOpen);if(adminOpen){buildCatSelect();buildAdminList();}});
 document.getElementById("add-btn").addEventListener("click",()=>{
   const textEl=document.getElementById("new-text");const catSel=document.getElementById("cat-select");const newCatEl=document.getElementById("new-cat");const depthVal=+document.getElementById("depth-select").value;
   let text=textEl.value.trim();let cat=catSel.value==="__new__"?newCatEl.value.trim():catSel.value;
@@ -1737,6 +1810,13 @@ function renderProgress(){
   const catEl=document.getElementById("cat-chart");
   if(!SESSIONS.length){catEl.innerHTML=`<div class="no-data">Aucune donnée.</div>`;}
   else{const allIds=SESSIONS.flatMap(s=>s.ids);const catCounts={};allIds.forEach(id=>{const item=DATA.find(d=>d.id===id);if(item)catCounts[item.cat]=(catCounts[item.cat]||0)+1;});const sorted=Object.entries(catCounts).sort((a,b)=>b[1]-a[1]);const maxCat=sorted.length?sorted[0][1]:1;catEl.innerHTML=sorted.map(([cat,count])=>{const pct=Math.round((count/maxCat)*100);return`<div class="cat-row"><span class="cat-label">${cat}</span><div class="cat-track"><div class="cat-fill" style="width:${Math.max(pct,4)}%"><span class="cat-count">${count}</span></div></div></div>`;}).join("");}
+}
+
+document.getElementById("progress-btn").addEventListener("click",()=>{renderProgress();document.getElementById("progress-overlay").classList.add("show");});
+document.getElementById("close-progress").addEventListener("click",()=>document.getElementById("progress-overlay").classList.remove("show"));
+
+loadProfiles();
+</script>ass="cat-label">${cat}</span><div class="cat-track"><div class="cat-fill" style="width:${Math.max(pct,4)}%"><span class="cat-count">${count}</span></div></div></div>`;}).join("");}
 }
 
 document.getElementById("progress-btn").addEventListener("click",()=>{renderProgress();document.getElementById("progress-overlay").classList.add("show");});
