@@ -304,7 +304,7 @@
 <div class="home-container">
   <div class="home-header">
     <div>
-      <div class="brand" style="margin-bottom:6px">REBORN</div>
+      <div class="brand" style="margin-bottom:6px;cursor:pointer" id="brand-logo">REBORN</div>
       <div class="home-title">Dictionnaire des identités</div>
       <div class="home-sub">Choisis un groupe pour commencer</div>
     </div>
@@ -1544,7 +1544,24 @@ document.getElementById("new-profile-btn").addEventListener("click",async()=>{
 });
 
 document.getElementById("new-profile-name").addEventListener("keydown",e=>{if(e.key==="Enter")document.getElementById("new-profile-btn").click();});
-document.getElementById("switch-profile-btn").addEventListener("click",()=>{currentProfile=null;SESSIONS=[];INTEGRATED.clear();checked.clear();UNLOCKED=new Set(["corps"]);showScreen("profile");loadProfiles();});
+document.getElementById("switch-profile-btn").addEventListener("click",()=>{currentProfile=null;SESSIONS=[];INTEGRATED.clear();checked.clear();UNLOCKED=new Set(["corps"]);showScreen("profile");// Cheat code: triple click on REBORN logo unlocks all groups
+let brandClicks=0,brandTimer=null;
+document.addEventListener("click",e=>{
+  if(e.target.id==="brand-logo"){
+    brandClicks++;
+    clearTimeout(brandTimer);
+    brandTimer=setTimeout(()=>{brandClicks=0;},600);
+    if(brandClicks>=3){
+      brandClicks=0;
+      GROUPS.forEach(g=>UNLOCKED.add(g.id));
+      if(currentProfile)saveUnlocked();
+      renderHome();
+      showToast("🔓 Tous les groupes déverrouillés");
+    }
+  }
+});
+
+loadProfiles();});
 
 function renderHome(){
   computeUnlocks();
