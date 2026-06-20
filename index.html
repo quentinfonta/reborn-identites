@@ -248,6 +248,27 @@
     .spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--border-md);border-top-color:var(--accent);border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;}
     @keyframes spin{to{transform:rotate(360deg);}}
     .shake{animation:shake 0.35s ease;}
+    /* CHEMIN MODAL */
+    .chemin-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:500;align-items:center;justify-content:center;padding:1rem;}
+    .chemin-overlay.show{display:flex;}
+    .chemin-box{background:var(--surface);border:1px solid var(--border-strong);border-radius:var(--radius-lg);padding:1.5rem;max-width:560px;width:100%;max-height:85vh;overflow-y:auto;}
+    .chemin-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.5rem;gap:12px;}
+    .chemin-identity{font-size:18px;font-weight:600;color:var(--text);}
+    .chemin-close{background:none;border:none;cursor:pointer;color:var(--text-faint);font-size:20px;padding:0;flex-shrink:0;}
+    .chemin-loading{display:flex;align-items:center;gap:10px;color:var(--text-muted);font-size:14px;padding:1rem 0;}
+    .chemin-layer{margin-bottom:1.25rem;}
+    .chemin-layer-title{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-faint);margin-bottom:0.75rem;}
+    .chemin-layer-title span{font-size:16px;}
+    .chemin-tags{display:flex;flex-wrap:wrap;gap:6px;}
+    .chemin-tag{font-size:13px;padding:6px 12px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface2);color:var(--text);cursor:pointer;transition:all 0.15s;}
+    .chemin-tag:hover{border-color:var(--accent);color:var(--accent);}
+    .chemin-tag.already-checked{border-color:var(--green-border);background:var(--green-bg);color:var(--green-text);cursor:default;}
+    .chemin-tag.already-integrated{border-color:var(--purple-border);background:var(--purple-bg);color:var(--purple-text);cursor:default;}
+    .chemin-error{font-size:13px;color:var(--red-text);padding:0.5rem 0;}
+    .chemin-btn{display:flex;align-items:center;gap:6px;padding:5px 10px;border-radius:7px;border:1px solid var(--border);background:none;color:var(--text-faint);font-size:11px;font-family:inherit;cursor:pointer;transition:all 0.15s;white-space:nowrap;}
+    .chemin-btn:hover{border-color:var(--border-md);color:var(--text);}
+    .card .chemin-btn{display:none;}
+    .card.checked .chemin-btn,.card.integrated .chemin-btn{display:flex;}
     .unlock-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface2);color:var(--text-muted);font-size:12px;font-family:inherit;cursor:pointer;transition:all 0.15s;margin-top:0.5rem;}
     .unlock-btn:hover{border-color:var(--accent);color:var(--accent);}
     .group-card.locked{opacity:0.7;cursor:default;}
@@ -394,7 +415,17 @@
     <div class="stat-cards" id="stat-cards"></div>
     <div class="chart-section"><div class="chart-title">Sessions</div><div class="bar-chart" id="bar-chart"></div></div>
     <div class="chart-section"><div class="chart-title">Par catégorie</div><div class="cat-chart" id="cat-chart"></div></div>
-    <div class="chart-section"><div class=<div class="confirm-overlay" id="confirm-modal">
+    <div class="chart-section"><div class=<div class="chemin-overlay" id="chemin-overlay">
+  <div class="chemin-box">
+    <div class="chemin-header">
+      <div class="chemin-identity" id="chemin-identity"></div>
+      <button class="chemin-close" id="chemin-close"><i class="ti ti-x"></i></button>
+    </div>
+    <div id="chemin-content"></div>
+  </div>
+</div>
+
+<div class="confirm-overlay" id="confirm-modal">
   <div class="confirm-box">
     <div class="confirm-title" id="confirm-title"></div>
     <div class="confirm-sub" id="confirm-sub-text"></div>
@@ -1585,7 +1616,112 @@ document.getElementById("new-profile-btn").addEventListener("click",async()=>{
 });
 
 document.getElementById("new-profile-name").addEventListener("keydown",e=>{if(e.key==="Enter")document.getElementById("new-profile-btn").click();});
-document.getElementById("switch-profile-btn").addEventListener("click",()=>{currentProfile=null;SESSIONS=[];INTEGRATED.clear();checked.clear();UNLOCKED=new Set(["corps"]);showScreen("profile");// Cheat code: triple click on REBORN logo unlocks all groups
+document.getElementById("switch-profile-btn").addEventListener("click",()=>{currentProfile=null;SESSIONS=[];INTEGRATED.clear();checked.clear();UNLOCKED=new Set(["corps"]);showScreen("profile");
+// CHEMIN DES IDENTITÉS
+const LAYERS=[
+  {key:"source",icon:"🔍",label:"Ce qui l\'a créée"},
+  {key:"protects",icon:"🛡️",label:"Ce qu\'elle protège"},
+  {key:"verdict",icon:"⚖️",label:"Le verdict produit"},
+  {key:"coping",icon:"🎭",label:"Ce qu\'on a fait avec"},
+];
+
+async function openChemin(id,text){
+  const overlay=document.getElementById("chemin-overlay");
+  const identity=document.getElementById("chemin-identity");
+  const cheminContent=document.getElementById("chemin-content");
+  identity.textContent=text;
+  cheminContent.innerHTML=`<div class="chemin-loading"><span class="spinner"></span> L\'IA analyse le chemin identitaire…</div>`;
+  overlay.classList.add("show");
+  try{
+    const allTexts=DATA.map(d=>d.text).join(", ");
+    const prompt=`Tu es un expert en psychologie identitaire et en coaching de transformation. 
+    
+Une personne a coché l'identité: "${text}"
+
+Voici la liste complète des identités disponibles dans le dictionnaire:
+${allTexts}
+
+Pour cette identité, identifie UNIQUEMENT des identités issues de cette liste exacte pour chacune des 4 couches suivantes. Retourne EXACTEMENT ce format JSON, rien d'autre:
+
+{
+  "source": ["identité exacte 1", "identité exacte 2", "identité exacte 3"],
+  "protects": ["identité exacte 1", "identité exacte 2", "identité exacte 3"],
+  "verdict": ["identité exacte 1", "identité exacte 2", "identité exacte 3"],
+  "coping": ["identité exacte 1", "identité exacte 2", "identité exacte 3"]
+}
+
+- "source": les 3-5 identités qui ont probablement créé ou précédé "${text}"
+- "protects": les 2-3 blessures plus profondes que "${text}" protège ou cache
+- "verdict": les 2-3 conclusions sur soi-même que "${text}" a produites
+- "coping": les 2-4 mécanismes de protection ou adaptations que "${text}" a générés
+
+Utilise UNIQUEMENT des textes qui existent exactement dans la liste fournie. Retourne uniquement le JSON.`;
+
+    const res=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        model:"claude-sonnet-4-6",
+        max_tokens:1000,
+        messages:[{role:"user",content:prompt}]
+      })
+    });
+    const data=await res.json();
+    const rawText=data.content[0].text.trim();
+    const clean=rawText.replace(/```json|```/g,"").trim();
+    const chemin=JSON.parse(clean);
+    renderChemin(chemin,id);
+  }catch(e){
+    cheminContent.innerHTML=`<div class="chemin-error">Erreur lors de l\'analyse. Réessaie.</div>`;
+    console.error(e);
+  }
+}
+
+function renderChemin(chemin,sourceId){
+  const wids=workedIds();
+  const cheminContent=document.getElementById("chemin-content");
+  cheminContent.innerHTML=LAYERS.map(layer=>{
+    const items=chemin[layer.key]||[];
+    const tags=items.map(text=>{
+      const found=DATA.find(d=>d.text===text);
+      const id=found?found.id:null;
+      const isIntegrated=id&&INTEGRATED.has(id);
+      const isWorked=id&&(wids.has(id)||checked.has(id));
+      const cls=isIntegrated?"already-integrated":isWorked?"already-checked":"";
+      return`<span class="chemin-tag ${cls}" data-id="${id||""}" data-text="${text}">${text}</span>`;
+    }).join("");
+    return`<div class="chemin-layer">
+      <div class="chemin-layer-title"><span>${layer.icon}</span>${layer.label}</div>
+      <div class="chemin-tags">${tags||"<span style=\"color:var(--text-faint);font-size:13px\">Aucune identité trouvée</span>"}</div>
+    </div>`;
+  }).join("");
+
+  // Click on chemin tags to add to session
+  cheminContent.querySelectorAll(".chemin-tag:not(.already-checked):not(.already-integrated)").forEach(tag=>{
+    tag.addEventListener("click",()=>{
+      const id=+tag.dataset.id;
+      if(!id)return;
+      if(!checked.has(id)){
+        checked.add(id);
+        tag.classList.add("already-checked");
+        renderGroup();
+        showToast("Ajouté à la session");
+      }
+    });
+  });
+}
+
+document.getElementById("chemin-close").addEventListener("click",()=>{
+  document.getElementById("chemin-overlay").classList.remove("show");
+});
+document.getElementById("chemin-overlay").addEventListener("click",e=>{
+  if(e.target===document.getElementById("chemin-overlay")){
+    document.getElementById("chemin-overlay").classList.remove("show");
+  }
+});
+
+
+// Cheat code: triple click on REBORN logo unlocks all groups
 let brandClicks=0,brandTimer=null;
 document.addEventListener("click",e=>{
   if(e.target.id==="brand-logo"){
@@ -1769,6 +1905,7 @@ function renderGroup(){
         <span class="cat-badge">${d.cat}</span>
         <div class="card-actions">
           <button class="integrate-btn${isActive?" show":""}" data-id="${d.id}"><i class="ti ti-sparkles" style="font-size:11px"></i> Intégrée</button>
+          <button class="chemin-btn" data-id="${d.id}" data-text="${d.text}"><i class="ti ti-route" style="font-size:11px"></i> Chemin</button>
           <span class="depth-stars">${stars}</span>
         </div>
       </div>
@@ -1802,6 +1939,15 @@ function renderGroup(){
       computeUnlocks();
       renderGroup();
       showToast("✨ Identité intégrée");
+    });
+  });
+
+  grid.querySelectorAll(".chemin-btn").forEach(btn=>{
+    btn.addEventListener("click",async e=>{
+      e.stopPropagation();
+      const id=+btn.dataset.id;
+      const text=btn.dataset.text;
+      openChemin(id,text);
     });
   });
 
