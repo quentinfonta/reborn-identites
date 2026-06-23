@@ -1370,11 +1370,12 @@ const DEFAULT_DATA = [
 ];
 
 const GROUPS=[
-  {id:"culpabilite",label:"① Culpabilité & Auto-punition",subtitle:"Ce qui génère la faute et la honte",cats:["Culpabilité","Honte","Contamination","Résignation"]},
-  {id:"blessures",label:"② Relations & Blessures",subtitle:"Ce qui s est passé dans les relations",cats:["Trahison","Abandon","Violation","Blessure","Perte","Usure"]},
-  {id:"corps",label:"③ Corps & Blocages",subtitle:"Le corps et ses mécanismes de protection",cats:["Rigidité","Épuisement","Confusion","Contrôle","Isolement","Envahissement","Masque"]},
-  {id:"verdicts",label:"④ Identité effondrée",subtitle:"Les conclusions tirées sur soi-même",cats:["Vide","Destruction","Dévaluation"]},
-  {id:"sortie",label:"⑤ Reconstruction",subtitle:"Le chemin de reconstruction",cats:["Transition","Déverrouillage","Libération","Émergence","Transformation","Engagement","Paix","Connexion","Reconnaissance","Puissance","Accomplissement","Éveil"]}
+  {id:"corps",label:"① Sidération & Corps",subtitle:"Ce que le corps a vécu — l identité figée",cats:["Rigidité","Épuisement","Confusion"]},
+  {id:"blessures",label:"② Blessures relationnelles",subtitle:"Ce qui s est passé dans les relations",cats:["Trahison","Abandon","Violation","Blessure","Perte","Usure"]},
+  {id:"culpabilite",label:"③ Culpabilité & Honte",subtitle:"L explication qu on s est donnée",cats:["Culpabilité","Honte","Contamination","Résignation"]},
+  {id:"blocages",label:"④ Blocages & Protection",subtitle:"Comment on s est protégé",cats:["Contrôle","Isolement","Envahissement","Masque"]},
+  {id:"verdicts",label:"⑤ Verdicts & Effondrement",subtitle:"Les conclusions tirées sur soi-même",cats:["Vide","Destruction","Dévaluation"]},
+  {id:"sortie",label:"⑥ Reconstruction",subtitle:"Le chemin de reconstruction",cats:["Transition","Déverrouillage","Libération","Émergence","Transformation","Engagement","Paix","Connexion","Reconnaissance","Puissance","Accomplissement","Éveil"]}
 ];
 
 function roleIcon(r){return{self:"🪞",source:"🔍",protection:"🛡️",verdict:"⚖️",coping:"🎭"}[r]||"🔍";}
