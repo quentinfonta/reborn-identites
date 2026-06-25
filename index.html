@@ -1370,12 +1370,17 @@ const DEFAULT_DATA = [
 ];
 
 const GROUPS=[
-  {id:"corps",label:"① Sidération & Corps",subtitle:"Ce que le corps a vécu — l identité figée",cats:["Rigidité","Épuisement","Confusion"]},
-  {id:"blessures",label:"② Blessures relationnelles",subtitle:"Ce qui s est passé dans les relations",cats:["Trahison","Abandon","Violation","Blessure","Perte","Usure"]},
-  {id:"culpabilite",label:"③ Culpabilité & Honte",subtitle:"L explication qu on s est donnée",cats:["Culpabilité","Honte","Contamination","Résignation"]},
-  {id:"blocages",label:"④ Blocages & Protection",subtitle:"Comment on s est protégé",cats:["Contrôle","Isolement","Envahissement","Masque"]},
-  {id:"verdicts",label:"⑤ Verdicts & Effondrement",subtitle:"Les conclusions tirées sur soi-même",cats:["Vide","Destruction","Dévaluation"]},
-  {id:"sortie",label:"⑥ Reconstruction",subtitle:"Le chemin de reconstruction",cats:["Transition","Déverrouillage","Libération","Émergence","Transformation","Engagement","Paix","Connexion","Reconnaissance","Puissance","Accomplissement","Éveil"]}
+  {id:"corps",label:"① Sidération & Corps",subtitle:"Ce que le corps a vécu",cats:["Rigidité","Épuisement","Confusion"]},
+  {id:"usure",label:"② Usure",subtitle:"L épuisement par répétition",cats:["Usure"]},
+  {id:"perte",label:"③ Perte",subtitle:"Ce qui a disparu",cats:["Perte"]},
+  {id:"abandon",label:"④ Abandon",subtitle:"Quelqu un est parti",cats:["Abandon"]},
+  {id:"trahison",label:"⑤ Trahison",subtitle:"Une confiance violée",cats:["Trahison"]},
+  {id:"blessure",label:"⑥ Blessure directe",subtitle:"L atteinte physique ou émotionnelle",cats:["Blessure"]},
+  {id:"violation",label:"⑦ Violation",subtitle:"Les limites franchies",cats:["Violation"]},
+  {id:"culpabilite",label:"⑧ Culpabilité & Honte",subtitle:"L explication qu on s est donnée",cats:["Culpabilité","Honte","Contamination","Résignation"]},
+  {id:"blocages",label:"⑨ Blocages & Protection",subtitle:"Comment on s est protégé",cats:["Contrôle","Isolement","Envahissement","Masque"]},
+  {id:"verdicts",label:"⑩ Verdicts & Effondrement",subtitle:"Les conclusions tirées sur soi-même",cats:["Vide","Destruction","Dévaluation"]},
+  {id:"sortie",label:"⑪ Reconstruction",subtitle:"Le chemin de reconstruction",cats:["Transition","Déverrouillage","Libération","Émergence","Transformation","Engagement","Paix","Connexion","Reconnaissance","Puissance","Accomplissement","Éveil"]}
 ];
 
 function roleIcon(r){return{self:"🪞",source:"🔍",protection:"🛡️",verdict:"⚖️",coping:"🎭"}[r]||"🔍";}
