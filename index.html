@@ -156,9 +156,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .card-exit-later{animation:cardOutUp 0.25s ease forwards;}
 .card-exit-skip{animation:cardOutLeft 0.25s ease forwards;}
 @keyframes cardIn{from{opacity:0;transform:translateY(20px) scale(0.97);}to{opacity:1;transform:translateY(0) scale(1);}}
-@keyframes cardOutRight{from{opacity:1;transform:translateX(0) rotate(0deg);}to{opacity:0;transform:translateX(80px) rotate(5deg);}}
-@keyframes cardOutLeft{from{opacity:1;transform:translateX(0) rotate(0deg);}to{opacity:0;transform:translateX(-80px) rotate(-5deg);}}
-@keyframes cardOutUp{from{opacity:1;transform:translateY(0);}to{opacity:0;transform:translateY(-40px);}}
+@keyframes cardOutRight{from{opacity:1;transform:translateX(0) rotate(0deg);}to{opacity:0;transform:translateX(120px) rotate(8deg);}}
+@keyframes cardOutLeft{from{opacity:1;transform:translateX(0) rotate(0deg);}to{opacity:0;transform:translateX(-120px) rotate(-8deg);}}
+@keyframes cardOutUp{from{opacity:1;transform:translateY(0);}to{opacity:0;transform:translateY(-60px);}}
+/* Confetti */
+.confetti-piece{position:fixed;width:8px;height:8px;border-radius:2px;pointer-events:none;z-index:999;animation:confettiFall 0.8s ease-out forwards;}
+@keyframes confettiFall{0%{opacity:1;transform:translateY(0) rotate(0deg) scale(1);}100%{opacity:0;transform:translateY(120px) rotate(720deg) scale(0.3);}}
+.flash-green{animation:flashGreen 0.3s ease-out;}
+@keyframes flashGreen{0%{background:rgba(99,153,34,0.0);}30%{background:rgba(99,153,34,0.15);}100%{background:transparent;}}
 .game-result-wrap{max-width:500px;width:100%;text-align:center;}
 .game-result-title{font-size:24px;font-weight:600;margin-bottom:0.5rem;}
 .game-result-sub{font-size:14px;color:var(--text-muted);margin-bottom:2rem;}
@@ -1656,6 +1661,24 @@ function startGame(){
   showGameCard();
 }
 
+function launchConfetti(){
+  const colors=["#8dc94a","#c8b89a","#5aaaf0","#a78bfa","#d4933a"];
+  const overlay=document.getElementById("game-overlay");
+  for(let i=0;i<18;i++){
+    const el=document.createElement("div");
+    el.className="confetti-piece";
+    el.style.background=colors[Math.floor(Math.random()*colors.length)];
+    el.style.left=Math.random()*100+"vw";
+    el.style.top=(30+Math.random()*20)+"vh";
+    el.style.animationDelay=Math.random()*0.3+"s";
+    el.style.animationDuration=(0.6+Math.random()*0.4)+"s";
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),1200);
+  }
+  document.getElementById("game-overlay").classList.add("flash-green");
+  setTimeout(()=>document.getElementById("game-overlay").classList.remove("flash-green"),300);
+}
+
 function showGameCard(exitClass){
   if(gameIdx>=gameQueue.length){endGame();return;}
   const wrap=document.getElementById("game-card-wrap");
@@ -1700,6 +1723,7 @@ function endGame(){
 
 document.getElementById("g-yes").addEventListener("click",()=>{
   const d=gameQueue[gameIdx];gameWorked.push(d.id);checked.add(d.id);
+  launchConfetti();
   gameIdx++;showGameCard("card-exit-yes");
 });
 document.getElementById("g-later").addEventListener("click",()=>{
