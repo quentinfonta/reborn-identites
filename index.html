@@ -221,6 +221,30 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 @keyframes spin{to{transform:rotate(360deg);}}
 .shake{animation:shake 0.35s ease;}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+/* CHEMIN */
+.chemin-search-bar{margin-bottom:1.5rem;position:relative;}
+.chemin-search-input{width:100%;padding:14px 20px;border:1px solid var(--border-md);border-radius:var(--radius-lg);background:var(--surface);color:var(--text);font-size:15px;font-family:inherit;transition:all 0.2s;}
+.chemin-search-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(200,184,154,0.1);}
+.chemin-search-input::placeholder{color:var(--text-faint);}
+.chemin-suggestions{position:absolute;top:100%;left:0;right:0;background:var(--surface2);border:1px solid var(--border-md);border-radius:var(--radius-lg);margin-top:4px;max-height:200px;overflow-y:auto;z-index:100;display:none;}
+.chemin-suggestions.show{display:block;}
+.chemin-suggestion-item{padding:10px 16px;cursor:pointer;font-size:14px;transition:background 0.1s;}
+.chemin-suggestion-item:hover{background:var(--surface3);}
+.chemin-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:500;align-items:center;justify-content:center;padding:1rem;}
+.chemin-modal.show{display:flex;}
+.chemin-box{background:var(--surface);border:1px solid var(--border-strong);border-radius:var(--radius-lg);padding:1.5rem;max-width:580px;width:100%;max-height:85vh;overflow-y:auto;}
+.chemin-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.5rem;gap:12px;}
+.chemin-pivot{font-size:20px;font-weight:600;color:var(--accent);}
+.chemin-close-btn{background:none;border:none;cursor:pointer;color:var(--text-faint);font-size:20px;padding:0;}
+.chemin-loading{display:flex;align-items:center;gap:10px;color:var(--text-muted);font-size:14px;padding:1rem 0;}
+.chemin-layer{margin-bottom:1.25rem;}
+.chemin-layer-title{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-faint);margin-bottom:0.75rem;}
+.chemin-tags{display:flex;flex-wrap:wrap;gap:6px;}
+.chemin-tag{font-size:13px;padding:6px 14px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface2);color:var(--text);cursor:pointer;transition:all 0.15s;}
+.chemin-tag:hover{border-color:var(--accent);color:var(--accent);}
+.chemin-tag.added{border-color:var(--green-border);background:var(--green-bg);color:var(--green-text);}
+.chemin-add-all{width:100%;margin-top:1rem;padding:10px;border-radius:var(--radius);border:1px solid var(--green-border);background:var(--green-bg);color:var(--green-text);font-size:13px;font-weight:500;font-family:inherit;cursor:pointer;}
+.chemin-search-label{font-size:13px;color:var(--text-muted);margin-bottom:0.5rem;}
 </style>
 </head>
 <body>
@@ -277,7 +301,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
       <button class="header-btn blue" id="progress-btn"><i class="ti ti-chart-bar"></i> Progression</button>
     </div>
   </div>
-  <div class="groups-grid" id="groups-grid"></div>
+  <div class="chemin-search-bar">
+  <div class="chemin-search-label">Entre le ressenti du client pour trouver son chemin identitaire</div>
+  <input type="text" class="chemin-search-input" id="chemin-search" placeholder="Ex: Je suis gelé, abandonné, submergé…" autocomplete="off"/>
+  <div class="chemin-suggestions" id="chemin-suggestions"></div>
+</div>
+<div class="groups-grid" id="groups-grid"></div>
 </div>
 </div>
 
@@ -347,6 +376,15 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     <div class="confirm-title" id="confirm-title"></div>
     <div class="confirm-sub" id="confirm-sub-text"></div>
     <div class="confirm-actions"><button class="confirm-no" id="confirm-no">Annuler</button><button class="confirm-yes" id="confirm-yes">Confirmer</button></div>
+  </div>
+</div>
+<div class="chemin-modal" id="chemin-modal">
+  <div class="chemin-box">
+    <div class="chemin-header">
+      <div class="chemin-pivot" id="chemin-pivot"></div>
+      <button class="chemin-close-btn" id="chemin-close-btn"><i class="ti ti-x"></i></button>
+    </div>
+    <div id="chemin-body"></div>
   </div>
 </div>
 <div class="toast" id="toast"></div>
@@ -1564,7 +1602,143 @@ document.getElementById("new-profile-name").addEventListener("keydown",e=>{if(e.
 
 document.getElementById("switch-profile-btn").addEventListener("click",()=>{
   currentProfile=null;SESSIONS=[];INTEGRATED.clear();checked.clear();
-  showScreen("profile");loadProfiles();
+  showScreen("profile");
+// CHEMIN FEATURE
+const CHEMIN_LAYERS=[
+  {key:"source",icon:"🔍",label:"Ce qui l a créée"},
+  {key:"verdict",icon:"⚖️",label:"Ce que j en ai conclu"},
+  {key:"coping",icon:"🎭",label:"Comment j ai vécu avec"},
+];
+
+const cheminSearch=document.getElementById("chemin-search");
+const cheminSuggestions=document.getElementById("chemin-suggestions");
+
+cheminSearch.addEventListener("input",()=>{
+  const q=cheminSearch.value.toLowerCase().trim();
+  if(q.length<2){cheminSuggestions.classList.remove("show");return;}
+  const matches=DATA.filter(d=>d.text.toLowerCase().includes(q)).slice(0,8);
+  if(!matches.length){cheminSuggestions.classList.remove("show");return;}
+  cheminSuggestions.innerHTML=matches.map(d=>`<div class="chemin-suggestion-item" data-id="${d.id}" data-text="${d.text}">${d.text}</div>`).join("");
+  cheminSuggestions.classList.add("show");
+  cheminSuggestions.querySelectorAll(".chemin-suggestion-item").forEach(item=>{
+    item.addEventListener("click",()=>{
+      cheminSearch.value=item.dataset.text;
+      cheminSuggestions.classList.remove("show");
+      openCheminModal(+item.dataset.id, item.dataset.text);
+    });
+  });
+});
+
+document.addEventListener("click",e=>{
+  if(!cheminSearch.contains(e.target)&&!cheminSuggestions.contains(e.target)){
+    cheminSuggestions.classList.remove("show");
+  }
+});
+
+cheminSearch.addEventListener("keydown",e=>{
+  if(e.key==="Enter"){
+    const q=cheminSearch.value.toLowerCase().trim();
+    const match=DATA.find(d=>d.text.toLowerCase()===q||d.text.toLowerCase().includes(q));
+    if(match){openCheminModal(match.id,match.text);}
+  }
+});
+
+async function openCheminModal(id, text){
+  document.getElementById("chemin-pivot").textContent=text;
+  document.getElementById("chemin-body").innerHTML='<div class="chemin-loading"><span class="spinner"></span> Analyse du chemin identitaire…</div>';
+  document.getElementById("chemin-modal").classList.add("show");
+
+  try{
+    const allTexts=DATA.map(d=>d.text).join(", ");
+    const prompt=`Tu es expert en psychologie identitaire et coaching de transformation REBORN.
+
+L identité pivot est: "${text}"
+
+Liste complète des identités disponibles:
+${allTexts}
+
+Pour cette identité, identifie UNIQUEMENT des identités issues de cette liste exacte pour chacune des 3 couches. Retourne UNIQUEMENT ce JSON:
+
+{
+  "source": ["identité exacte 1", "identité exacte 2", "identité exacte 3", "identité exacte 4", "identité exacte 5"],
+  "verdict": ["identité exacte 1", "identité exacte 2", "identité exacte 3"],
+  "coping": ["identité exacte 1", "identité exacte 2", "identité exacte 3", "identité exacte 4"]
+}
+
+- source: 4-6 identités qui ont créé ou précédé "${text}" (ressentis corporels et relationnels)
+- verdict: 2-4 conclusions tirées sur soi à cause de "${text}"  
+- coping: 3-5 identités de sortie positive ou de mécanisme d adaptation
+
+Utilise UNIQUEMENT des textes qui existent exactement dans la liste. JSON uniquement, rien d autre.`;
+
+    const res=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:800,messages:[{role:"user",content:prompt}]})
+    });
+    const data=await res.json();
+    const raw=data.content[0].text.replace(/```json|```/g,"").trim();
+    const chemin=JSON.parse(raw);
+    renderCheminBody(chemin, id);
+  }catch(e){
+    document.getElementById("chemin-body").innerHTML='<div style="color:var(--red-text);font-size:13px">Erreur — réessaie</div>';
+    console.error(e);
+  }
+}
+
+function renderCheminBody(chemin, pivotId){
+  const wids=workedIds();
+  const body=document.getElementById("chemin-body");
+  
+  const allSuggested=[];
+  
+  body.innerHTML=CHEMIN_LAYERS.map(layer=>{
+    const items=chemin[layer.key]||[];
+    const tags=items.map(text=>{
+      const found=DATA.find(d=>d.text===text);
+      const id=found?found.id:null;
+      const isChecked=id&&(checked.has(id)||wids.has(id)||INTEGRATED.has(id));
+      if(id)allSuggested.push({id,text});
+      return`<span class="chemin-tag${isChecked?" added":""}" data-id="${id||""}" data-text="${text}">${text}</span>`;
+    }).join("");
+    return`<div class="chemin-layer">
+      <div class="chemin-layer-title"><span>${layer.icon}</span>${layer.label}</div>
+      <div class="chemin-tags">${tags||'<span style="color:var(--text-faint);font-size:13px">—</span>'}</div>
+    </div>`;
+  }).join("")+`<button class="chemin-add-all" id="chemin-add-all"><i class="ti ti-plus"></i> Ajouter tout à la session</button>`;
+
+  body.querySelectorAll(".chemin-tag:not(.added)").forEach(tag=>{
+    tag.addEventListener("click",()=>{
+      const id=+tag.dataset.id;
+      if(!id)return;
+      checked.add(id);
+      tag.classList.add("added");
+      renderGroup();
+      showToast("Ajouté à la session");
+    });
+  });
+
+  document.getElementById("chemin-add-all").addEventListener("click",()=>{
+    allSuggested.forEach(({id})=>{
+      if(!workedIds().has(id)&&!INTEGRATED.has(id))checked.add(id);
+    });
+    renderGroup();
+    document.getElementById("chemin-modal").classList.remove("show");
+    showToast(`✓ ${allSuggested.length} identités ajoutées`);
+  });
+}
+
+document.getElementById("chemin-close-btn").addEventListener("click",()=>{
+  document.getElementById("chemin-modal").classList.remove("show");
+});
+document.getElementById("chemin-modal").addEventListener("click",e=>{
+  if(e.target===document.getElementById("chemin-modal")){
+    document.getElementById("chemin-modal").classList.remove("show");
+  }
+});
+
+
+loadProfiles();
 });
 
 function getGroupProgress(group){
