@@ -221,6 +221,39 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 @keyframes spin{to{transform:rotate(360deg);}}
 .shake{animation:shake 0.35s ease;}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+/* GAME MODE */
+.game-overlay{display:none;position:fixed;inset:0;background:var(--bg);z-index:600;flex-direction:column;align-items:center;justify-content:center;padding:2rem;}
+.game-overlay.show{display:flex;}
+.game-header{position:fixed;top:0;left:0;right:0;padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);}
+.game-progress{font-size:13px;color:var(--text-faint);}
+.game-progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--accent);transition:width 0.3s;}
+.game-close{background:none;border:none;cursor:pointer;color:var(--text-faint);font-size:14px;font-family:inherit;padding:6px 12px;border-radius:var(--radius);border:1px solid var(--border);}
+.game-close:hover{color:var(--text);border-color:var(--border-md);}
+.game-card{max-width:480px;width:100%;text-align:center;}
+.game-group-badge{font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:1rem;}
+.game-role{font-size:13px;color:var(--text-muted);margin-bottom:0.5rem;}
+.game-identity{font-size:28px;font-weight:600;color:var(--text);margin-bottom:2.5rem;line-height:1.3;}
+.game-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.game-btn{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 24px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text-muted);font-size:13px;font-family:inherit;cursor:pointer;transition:all 0.2s;min-width:110px;}
+.game-btn:hover{transform:translateY(-2px);}
+.game-btn.yes{border-color:var(--green-border);background:var(--green-bg);color:var(--green-text);}
+.game-btn.yes:hover{background:rgba(99,153,34,0.2);}
+.game-btn.later{border-color:rgba(186,117,23,0.45);background:rgba(186,117,23,0.12);color:#d4933a;}
+.game-btn.later:hover{background:rgba(186,117,23,0.2);}
+.game-btn.skip{border-color:var(--border);background:var(--surface2);}
+.game-btn .game-btn-icon{font-size:22px;}
+.game-btn .game-btn-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;font-weight:500;}
+.game-results{max-width:560px;width:100%;text-align:center;}
+.game-results-title{font-size:22px;font-weight:600;margin-bottom:0.5rem;}
+.game-results-sub{font-size:14px;color:var(--text-muted);margin-bottom:2rem;}
+.game-results-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:2rem;}
+.game-stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem;}
+.game-stat-value{font-size:28px;font-weight:600;}
+.game-stat-label{font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-top:4px;}
+.game-results-btn{padding:12px 28px;border-radius:var(--radius);border:1px solid var(--green-border);background:var(--green-bg);color:var(--green-text);font-size:14px;font-weight:500;font-family:inherit;cursor:pointer;margin:0 6px;}
+.game-btn-start{display:flex;align-items:center;gap:8px;padding:10px 20px;border-radius:var(--radius);border:1px solid var(--purple-border);background:var(--purple-bg);color:var(--purple-text);font-size:13px;font-weight:500;font-family:inherit;cursor:pointer;transition:all 0.15s;}
+.game-btn-start:hover{opacity:0.8;}
+.todo-badge{font-size:11px;padding:2px 8px;border-radius:20px;background:rgba(186,117,23,0.12);border:1px solid rgba(186,117,23,0.45);color:#d4933a;}
 /* CHEMIN */
 .chemin-search-bar{margin-bottom:1.5rem;position:relative;}
 .chemin-search-input{width:100%;padding:14px 20px;border:1px solid var(--border-md);border-radius:var(--radius-lg);background:var(--surface);color:var(--text);font-size:15px;font-family:inherit;transition:all 0.2s;}
@@ -299,14 +332,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     <div class="home-actions">
       <div class="profile-badge"><i class="ti ti-user"></i><span id="home-profile-name">—</span><button class="icon-btn" id="switch-profile-btn"><i class="ti ti-switch-horizontal" style="font-size:14px"></i></button></div>
       <button class="header-btn blue" id="progress-btn"><i class="ti ti-chart-bar"></i> Progression</button>
+      <button class="game-btn-start" id="game-start-btn"><i class="ti ti-cards"></i> Mode Découverte</button>
     </div>
   </div>
-  <div class="chemin-search-bar">
-  <div class="chemin-search-label">Entre le ressenti du client pour trouver son chemin identitaire</div>
-  <input type="text" class="chemin-search-input" id="chemin-search" placeholder="Ex: Je suis gelé, abandonné, submergé…" autocomplete="off"/>
-  <div class="chemin-suggestions" id="chemin-suggestions"></div>
-</div>
-<div class="groups-grid" id="groups-grid"></div>
+  <div class="groups-grid" id="groups-grid"></div>
 </div>
 </div>
 
@@ -326,6 +355,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
       <button class="add-btn" id="add-btn"><i class="ti ti-plus"></i> Ajouter</button>
     </div>
     <div class="admin-list" id="admin-list"></div>
+  </div>
+  <div class="chemin-search-bar" style="margin-bottom:1rem;">
+    <div class="chemin-search-label">Ressenti du client → chemin identitaire IA</div>
+    <input type="text" class="chemin-search-input" id="chemin-search" placeholder="Ex: gelé, abandonné, submergé…" autocomplete="off"/>
+    <div class="chemin-suggestions" id="chemin-suggestions"></div>
   </div>
   <div class="controls-row">
     <div class="search-wrap"><i class="ti ti-search"></i><input type="text" class="search-input" id="search" placeholder="Rechercher…"/></div>
@@ -378,6 +412,42 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     <div class="confirm-actions"><button class="confirm-no" id="confirm-no">Annuler</button><button class="confirm-yes" id="confirm-yes">Confirmer</button></div>
   </div>
 </div>
+<div class="game-overlay" id="game-overlay">
+  <div class="game-progress-bar" id="game-progress-bar" style="width:0%"></div>
+  <div class="game-header">
+    <span class="game-progress" id="game-progress-text"></span>
+    <button class="game-close" id="game-close-btn"><i class="ti ti-x"></i> Quitter</button>
+  </div>
+  <div class="game-card" id="game-card" style="display:none">
+    <div class="game-group-badge" id="game-group-badge"></div>
+    <div class="game-role" id="game-role"></div>
+    <div class="game-identity" id="game-identity"></div>
+    <div class="game-actions">
+      <button class="game-btn yes" id="game-yes">
+        <span class="game-btn-icon">✅</span>
+        <span class="game-btn-label">Travaillée</span>
+      </button>
+      <button class="game-btn later" id="game-later">
+        <span class="game-btn-icon">🔖</span>
+        <span class="game-btn-label">À faire</span>
+      </button>
+      <button class="game-btn skip" id="game-skip">
+        <span class="game-btn-icon">➡️</span>
+        <span class="game-btn-label">Passer</span>
+      </button>
+    </div>
+  </div>
+  <div class="game-results" id="game-results" style="display:none">
+    <div class="game-results-title">Session terminée 🎉</div>
+    <div class="game-results-sub" id="game-results-sub"></div>
+    <div class="game-results-stats" id="game-results-stats"></div>
+    <div>
+      <button class="game-results-btn" id="game-validate-btn"><i class="ti ti-check"></i> Valider les travaillées</button>
+      <button class="game-results-btn" style="border-color:var(--border);background:var(--surface2);color:var(--text-muted);" id="game-restart-btn">Recommencer</button>
+    </div>
+  </div>
+</div>
+
 <div class="chemin-modal" id="chemin-modal">
   <div class="chemin-box">
     <div class="chemin-header">
@@ -1603,6 +1673,105 @@ document.getElementById("new-profile-name").addEventListener("keydown",e=>{if(e.
 document.getElementById("switch-profile-btn").addEventListener("click",()=>{
   currentProfile=null;SESSIONS=[];INTEGRATED.clear();checked.clear();
   showScreen("profile");
+
+// GAME MODE
+let gameQueue=[], gameIndex=0, gameWorked=[], gameLater=[], gameSkipped=[];
+
+function startGame(){
+  const wids=workedIds();
+  // Get untouched identities ordered by role: source first, then verdict, then coping
+  const roleOrder={"source":0,"verdict":1,"coping":2};
+  gameQueue=DATA
+    .filter(d=>!wids.has(d.id)&&!INTEGRATED.has(d.id)&&!checked.has(d.id))
+    .sort((a,b)=>roleOrder[a.role||"source"]-roleOrder[b.role||"source"]);
+  
+  gameIndex=0;gameWorked=[];gameLater=[];gameSkipped=[];
+  document.getElementById("game-overlay").classList.add("show");
+  document.getElementById("game-card").style.display="block";
+  document.getElementById("game-results").style.display="none";
+  showGameCard();
+}
+
+function showGameCard(){
+  if(gameIndex>=gameQueue.length){endGame();return;}
+  const d=gameQueue[gameIndex];
+  const group=GROUPS.find(g=>g.cats.includes(d.cat));
+  const roleLabels={"source":"🔍 Ce qui s est passé","verdict":"⚖️ Ce que j en ai conclu","coping":"🎭 Comment j ai vécu avec"};
+  document.getElementById("game-identity").textContent=d.text;
+  document.getElementById("game-group-badge").textContent=group?group.label:"";
+  document.getElementById("game-role").textContent=roleLabels[d.role||"source"]||"";
+  const pct=Math.round((gameIndex/gameQueue.length)*100);
+  document.getElementById("game-progress-bar").style.width=pct+"%";
+  document.getElementById("game-progress-text").textContent=`${gameIndex+1} / ${gameQueue.length}`;
+}
+
+function endGame(){
+  document.getElementById("game-card").style.display="none";
+  document.getElementById("game-results").style.display="block";
+  document.getElementById("game-progress-bar").style.width="100%";
+  document.getElementById("game-results-sub").textContent=`${gameWorked.length} travaillées · ${gameLater.length} à faire · ${gameSkipped.length} passées`;
+  document.getElementById("game-results-stats").innerHTML=[
+    {label:"Travaillées",value:gameWorked.length,color:"var(--green-text)"},
+    {label:"À faire",value:gameLater.length,color:"#d4933a"},
+    {label:"Passées",value:gameSkipped.length,color:"var(--text-faint)"},
+  ].map(s=>`<div class="game-stat"><div class="game-stat-value" style="color:${s.color}">${s.value}</div><div class="game-stat-label">${s.label}</div></div>`).join("");
+}
+
+document.getElementById("game-yes").addEventListener("click",()=>{
+  const d=gameQueue[gameIndex];
+  gameWorked.push(d.id);
+  checked.add(d.id);
+  gameIndex++;showGameCard();
+});
+
+document.getElementById("game-later").addEventListener("click",()=>{
+  const d=gameQueue[gameIndex];
+  gameLater.push(d.id);
+  gameIndex++;showGameCard();
+});
+
+document.getElementById("game-skip").addEventListener("click",()=>{
+  const d=gameQueue[gameIndex];
+  gameSkipped.push(d.id);
+  gameIndex++;showGameCard();
+});
+
+document.getElementById("game-close-btn").addEventListener("click",()=>{
+  document.getElementById("game-overlay").classList.remove("show");
+  renderHome();
+});
+
+document.getElementById("game-validate-btn").addEventListener("click",async()=>{
+  document.getElementById("game-overlay").classList.remove("show");
+  if(gameWorked.length>0){
+    const btn=document.getElementById("validate-btn");
+    if(btn)btn.click();
+    else{
+      const wids=workedIds();
+      const newIds=gameWorked.filter(id=>!wids.has(id)&&!INTEGRATED.has(id));
+      if(newIds.length&&currentProfile){
+        const date=new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
+        try{
+          const result=await sb("sessions",{method:"POST",body:{profile_id:currentProfile.id,date,ids:newIds},prefer:"return=representation"});
+          if(result&&result[0])SESSIONS.push({id:result[0].id,date,ids:newIds});
+          newIds.forEach(id=>checked.delete(id));
+          showToast(`✓ ${newIds.length} identités validées`);
+        }catch(e){showToast("Erreur sauvegarde");}
+      }
+    }
+  }
+  renderHome();
+});
+
+document.getElementById("game-restart-btn").addEventListener("click",()=>{
+  startGame();
+});
+
+document.getElementById("game-start-btn").addEventListener("click",()=>{
+  startGame();
+});
+
+
 // CHEMIN FEATURE
 const CHEMIN_LAYERS=[
   {key:"source",icon:"🔍",label:"Ce qui l a créée"},
