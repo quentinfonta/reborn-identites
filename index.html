@@ -102,6 +102,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:0.875rem 1rem;cursor:pointer;transition:all 0.15s;user-select:none;}
 .card:hover{border-color:var(--border-md);background:var(--surface2);}
 .card.worked{border-color:var(--green-border);background:var(--green-bg);}
+.card.todo{border-color:var(--gold-border);background:var(--gold-bg);}
+.card.todo .identity{color:var(--gold-text);}
+.card.todo .group-badge{border-color:var(--gold-border);color:var(--gold-text);}
 .card.worked .identity{color:var(--green-text);}
 .card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
 .identity{font-size:13px;font-weight:500;line-height:1.45;flex:1;color:var(--text);}
@@ -147,6 +150,15 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .game-action-btn.g-skip{}
 .game-action-icon{font-size:24px;}
 .game-action-label{text-transform:uppercase;letter-spacing:1px;font-weight:500;font-size:11px;}
+.game-identity-text{animation:none;}
+.card-enter{animation:cardIn 0.3s ease forwards;}
+.card-exit-yes{animation:cardOutRight 0.25s ease forwards;}
+.card-exit-later{animation:cardOutUp 0.25s ease forwards;}
+.card-exit-skip{animation:cardOutLeft 0.25s ease forwards;}
+@keyframes cardIn{from{opacity:0;transform:translateY(20px) scale(0.97);}to{opacity:1;transform:translateY(0) scale(1);}}
+@keyframes cardOutRight{from{opacity:1;transform:translateX(0) rotate(0deg);}to{opacity:0;transform:translateX(80px) rotate(5deg);}}
+@keyframes cardOutLeft{from{opacity:1;transform:translateX(0) rotate(0deg);}to{opacity:0;transform:translateX(-80px) rotate(-5deg);}}
+@keyframes cardOutUp{from{opacity:1;transform:translateY(0);}to{opacity:0;transform:translateY(-40px);}}
 .game-result-wrap{max-width:500px;width:100%;text-align:center;}
 .game-result-title{font-size:24px;font-weight:600;margin-bottom:0.5rem;}
 .game-result-sub{font-size:14px;color:var(--text-muted);margin-bottom:2rem;}
@@ -251,13 +263,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 
   <div class="filters-bar">
     <span class="filter-label">Rôle :</span>
-    <button class="filter-btn active" data-role="all">Toutes</button>
-    <button class="filter-btn" data-role="source">🔍 Ce qui s est passé</button>
+    <button class="filter-btn" data-role="all">Toutes</button>
+    <button class="filter-btn active" data-role="source">🔍 Ce qui s est passé</button>
     <button class="filter-btn" data-role="verdict">⚖️ Ce que j en ai conclu</button>
     <button class="filter-btn" data-role="coping">🎭 Comment j ai vécu avec</button>
     <span class="filter-label" style="margin-left:8px">État :</span>
     <button class="filter-btn active" data-state="all">Toutes</button>
     <button class="filter-btn" data-state="untouched">Non touchées</button>
+    <button class="filter-btn" data-state="todo">🔖 À faire</button>
     <button class="filter-btn" data-state="worked">Travaillées</button>
   </div>
 
@@ -1397,8 +1410,8 @@ function roleLabel(r){
 
 let DATA=[...DEFAULT_DATA];
 let currentProfile=null,SESSIONS=[],INTEGRATED=new Set();
-let checked=new Set(),pinTarget=null,pinValue="";
-let roleFilter="all",stateFilter="all",query="";
+let checked=new Set(),todoIds=new Set(),pinTarget=null,pinValue="";
+let roleFilter="source",stateFilter="all",query="";
 
 function workedIds(){return new Set(SESSIONS.flatMap(s=>s.ids));}
 function showToast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2500);}
@@ -1478,9 +1491,13 @@ async function loadData(){
     SESSIONS=(sessions||[]).map(s=>({id:s.id,date:s.date,ids:(s.ids||[]).map(Number)}));
   }catch(e){SESSIONS=[];}
   try{
-    const stored=localStorage.getItem("worked_"+currentProfile.id);
-    if(stored){const ids=JSON.parse(stored).map(Number);ids.forEach(id=>INTEGRATED.add(id));}
+    const stored=localStorage.getItem("todo_"+currentProfile.id);
+    if(stored)JSON.parse(stored).map(Number).forEach(id=>todoIds.add(id));
   }catch(e){}
+}
+
+function saveTodo(){
+  try{localStorage.setItem("todo_"+currentProfile.id,JSON.stringify([...todoIds]));}catch(e){}
 }
 
 document.getElementById("new-profile-btn").addEventListener("click",async()=>{
@@ -1507,7 +1524,7 @@ document.getElementById("new-profile-btn").addEventListener("click",async()=>{
 document.getElementById("new-profile-name").addEventListener("keydown",e=>{if(e.key==="Enter")document.getElementById("new-profile-btn").click();});
 
 document.getElementById("switch-btn").addEventListener("click",()=>{
-  currentProfile=null;SESSIONS=[];INTEGRATED.clear();checked.clear();
+  currentProfile=null;SESSIONS=[];INTEGRATED.clear();checked.clear();todoIds.clear();
   showScreen("profile");loadProfiles();
 });
 
@@ -1530,15 +1547,26 @@ document.getElementById("search").addEventListener("input",e=>{query=e.target.va
 
 function getFiltered(){
   const wids=workedIds();
-  return DATA.filter(d=>{
+  const filtered=DATA.filter(d=>{
     const qOk=!query||d.text.toLowerCase().includes(query.toLowerCase())||d.cat.toLowerCase().includes(query.toLowerCase());
     const roleOk=roleFilter==="all"||(d.role||"source")===roleFilter;
     const isWorked=checked.has(d.id)||wids.has(d.id);
+    const isTodo=todoIds.has(d.id);
     let stateOk=true;
-    if(stateFilter==="untouched") stateOk=!isWorked;
+    if(stateFilter==="untouched") stateOk=!isWorked&&!isTodo;
     else if(stateFilter==="worked") stateOk=isWorked;
+    else if(stateFilter==="todo") stateOk=isTodo&&!isWorked;
     return qOk&&roleOk&&stateOk;
   });
+  // Sort by group order then by original order within group
+  const groupOrder={};
+  GROUPS.forEach((g,i)=>g.cats.forEach(cat=>groupOrder[cat]=i));
+  filtered.sort((a,b)=>{
+    const ga=groupOrder[a.cat]??99;
+    const gb=groupOrder[b.cat]??99;
+    return ga-gb;
+  });
+  return filtered;
 }
 
 function render(){
@@ -1550,9 +1578,10 @@ function render(){
   
   grid.innerHTML=items.map(d=>{
     const isWorked=checked.has(d.id)||wids.has(d.id);
+    const isTodo=todoIds.has(d.id)&&!isWorked;
     const group=getGroupForCat(d.cat);
     const groupName=group?group.label.replace(/^[①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭]\s*/,""):"";
-    return`<div class="card${isWorked?" worked":""}" data-id="${d.id}" tabindex="0">
+    return`<div class="card${isWorked?" worked":isTodo?" todo":""}" data-id="${d.id}" tabindex="0">
       <div class="card-top">
         <span class="identity">${d.text}</span>
         <div class="check-circle"><i class="ti ti-check"></i></div>
@@ -1567,8 +1596,10 @@ function render(){
   grid.querySelectorAll(".card").forEach(card=>{
     card.addEventListener("click",()=>{
       const id=+card.dataset.id;
-      if(wids.has(id)){return;}
-      if(checked.has(id))checked.delete(id);else checked.add(id);
+      if(wids.has(id))return;
+      if(checked.has(id)){checked.delete(id);}
+      else if(todoIds.has(id)){todoIds.delete(id);saveTodo();}
+      else{checked.add(id);}
       render();
     });
   });
@@ -1625,14 +1656,32 @@ function startGame(){
   showGameCard();
 }
 
-function showGameCard(){
+function showGameCard(exitClass){
   if(gameIdx>=gameQueue.length){endGame();return;}
+  const wrap=document.getElementById("game-card-wrap");
+  
+  if(exitClass){
+    wrap.classList.add(exitClass);
+    setTimeout(()=>{
+      wrap.classList.remove(exitClass);
+      wrap.classList.add("card-enter");
+      _updateGameCard();
+      setTimeout(()=>wrap.classList.remove("card-enter"),300);
+    },220);
+  } else {
+    wrap.classList.add("card-enter");
+    _updateGameCard();
+    setTimeout(()=>wrap.classList.remove("card-enter"),300);
+  }
+}
+
+function _updateGameCard(){
   const d=gameQueue[gameIdx];
   const group=getGroupForCat(d.cat);
   const pct=Math.round((gameIdx/gameQueue.length)*100);
   document.getElementById("game-progress-fill").style.width=pct+"%";
   document.getElementById("game-counter").textContent=`${gameIdx+1} / ${gameQueue.length}`;
-  document.getElementById("game-group-label").textContent=group?group.label:"";
+  document.getElementById("game-group-label").textContent=group?group.label.replace(/^[①-⑭]\s*/,""):"";
   document.getElementById("game-role-label").textContent=roleLabel(d.role||"source");
   document.getElementById("game-identity-text").textContent=d.text;
 }
@@ -1651,13 +1700,22 @@ function endGame(){
 
 document.getElementById("g-yes").addEventListener("click",()=>{
   const d=gameQueue[gameIdx];gameWorked.push(d.id);checked.add(d.id);
-  gameIdx++;showGameCard();
+  gameIdx++;showGameCard("card-exit-yes");
 });
 document.getElementById("g-later").addEventListener("click",()=>{
-  gameLater.push(gameQueue[gameIdx].id);gameIdx++;showGameCard();
+  const id=gameQueue[gameIdx].id;
+  gameLater.push(id);todoIds.add(id);saveTodo();
+  gameIdx++;showGameCard("card-exit-later");
 });
 document.getElementById("g-skip").addEventListener("click",()=>{
-  gameSkipped.push(gameQueue[gameIdx].id);gameIdx++;showGameCard();
+  gameSkipped.push(gameQueue[gameIdx].id);gameIdx++;showGameCard("card-exit-skip");
+});
+document.addEventListener("keydown",e=>{
+  if(!document.getElementById("game-overlay").classList.contains("show"))return;
+  if(e.key==="ArrowRight"||e.key===" ")document.getElementById("g-yes").click();
+  else if(e.key==="ArrowDown")document.getElementById("g-later").click();
+  else if(e.key==="ArrowLeft")document.getElementById("g-skip").click();
+  else if(e.key==="Escape")document.getElementById("game-quit").click();
 });
 document.getElementById("game-quit").addEventListener("click",()=>{
   document.getElementById("game-overlay").classList.remove("show");
