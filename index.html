@@ -105,6 +105,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .card.todo{border-color:var(--gold-border);background:var(--gold-bg);}
 .card.todo .identity{color:var(--gold-text);}
 .card.todo .group-badge{border-color:var(--gold-border);color:var(--gold-text);}
+.card.due{border-color:var(--blue-border);background:var(--blue-bg);}
+.card.due .identity{color:var(--blue-text);}
+.card.due .group-badge{border-color:var(--blue-border);color:var(--blue-text);}
 .card.worked .identity{color:var(--green-text);}
 .card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
 .identity{font-size:13px;font-weight:500;line-height:1.45;flex:1;color:var(--text);}
@@ -276,6 +279,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     <button class="filter-btn active" data-state="all">Toutes</button>
     <button class="filter-btn" data-state="untouched">Non touchées</button>
     <button class="filter-btn" data-state="todo">🔖 À faire</button>
+    <button class="filter-btn" data-state="due">🔵 À réviser</button>
     <button class="filter-btn" data-state="worked">Travaillées</button>
   </div>
 
@@ -1415,7 +1419,7 @@ function roleLabel(r){
 
 let DATA=[...DEFAULT_DATA];
 let currentProfile=null,SESSIONS=[],INTEGRATED=new Set();
-let checked=new Set(),todoIds=new Set(),pinTarget=null,pinValue="";
+let checked=new Set(),todoIds=new Set(),reviewDates={},pinTarget=null,pinValue="";
 let roleFilter="source",stateFilter="all",query="";
 
 function workedIds(){return new Set(SESSIONS.flatMap(s=>s.ids));}
@@ -1499,10 +1503,36 @@ async function loadData(){
     const stored=localStorage.getItem("todo_"+currentProfile.id);
     if(stored)JSON.parse(stored).map(Number).forEach(id=>todoIds.add(id));
   }catch(e){}
+  try{
+    const stored=localStorage.getItem("reviews_"+currentProfile.id);
+    if(stored)reviewDates=JSON.parse(stored);
+  }catch(e){reviewDates={};}
 }
 
 function saveTodo(){
   try{localStorage.setItem("todo_"+currentProfile.id,JSON.stringify([...todoIds]));}catch(e){}
+}
+
+function saveReviews(){
+  try{localStorage.setItem("reviews_"+currentProfile.id,JSON.stringify(reviewDates));}catch(e){}
+}
+
+function scheduleReview(id,reviewCount){
+  const days=reviewCount===0?3:7;
+  const nextReview=Date.now()+(days*24*60*60*1000);
+  reviewDates[id]={nextReview,reviewCount};
+  saveReviews();
+}
+
+function isDueForReview(id){
+  const r=reviewDates[id];
+  if(!r)return false;
+  return Date.now()>=r.nextReview;
+}
+
+function markIntegrated(id){
+  delete reviewDates[id];
+  saveReviews();
 }
 
 document.getElementById("new-profile-btn").addEventListener("click",async()=>{
@@ -1529,7 +1559,7 @@ document.getElementById("new-profile-btn").addEventListener("click",async()=>{
 document.getElementById("new-profile-name").addEventListener("keydown",e=>{if(e.key==="Enter")document.getElementById("new-profile-btn").click();});
 
 document.getElementById("switch-btn").addEventListener("click",()=>{
-  currentProfile=null;SESSIONS=[];INTEGRATED.clear();checked.clear();todoIds.clear();
+  currentProfile=null;SESSIONS=[];INTEGRATED.clear();checked.clear();todoIds.clear();reviewDates={};
   showScreen("profile");loadProfiles();
 });
 
@@ -1558,9 +1588,10 @@ function getFiltered(){
     const isWorked=checked.has(d.id)||wids.has(d.id);
     const isTodo=todoIds.has(d.id);
     let stateOk=true;
-    if(stateFilter==="untouched") stateOk=!isWorked&&!isTodo;
+    if(stateFilter==="untouched") stateOk=!isWorked&&!isTodo&&!isDueForReview(d.id);
     else if(stateFilter==="worked") stateOk=isWorked;
     else if(stateFilter==="todo") stateOk=isTodo&&!isWorked;
+    else if(stateFilter==="due") stateOk=isDueForReview(d.id)&&!isWorked;
     return qOk&&roleOk&&stateOk;
   });
   // Sort by group order then by original order within group
@@ -1584,9 +1615,10 @@ function render(){
   grid.innerHTML=items.map(d=>{
     const isWorked=checked.has(d.id)||wids.has(d.id);
     const isTodo=todoIds.has(d.id)&&!isWorked;
+    const isDue=isDueForReview(d.id)&&!isWorked;
     const group=getGroupForCat(d.cat);
     const groupName=group?group.label.replace(/^[①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭]\s*/,""):"";
-    return`<div class="card${isWorked?" worked":isTodo?" todo":""}" data-id="${d.id}" tabindex="0">
+    return`<div class="card${isWorked?" worked":isTodo?" todo":isDue?" due":""}" data-id="${d.id}" tabindex="0">
       <div class="card-top">
         <span class="identity">${d.text}</span>
         <div class="check-circle"><i class="ti ti-check"></i></div>
@@ -1640,8 +1672,13 @@ document.getElementById("validate-btn").addEventListener("click",async()=>{
   try{
     const result=await sb("sessions",{method:"POST",body:{profile_id:currentProfile.id,date,ids:newIds},prefer:"return=representation"});
     if(result&&result[0])SESSIONS.push({id:result[0].id,date,ids:newIds});
-    newIds.forEach(id=>checked.delete(id));
-    render();showToast(`✓ ${newIds.length} identité${newIds.length>1?"s":""} validée${newIds.length>1?"s":""}`);
+    newIds.forEach(id=>{
+      checked.delete(id);
+      // Schedule review in 3 days
+      const currentReview=reviewDates[id];
+      scheduleReview(id, currentReview?currentReview.reviewCount+1:0);
+    });
+    render();showToast(`✓ ${newIds.length} identité${newIds.length>1?"s":""} validée${newIds.length>1?"s":""} — révision dans 3 jours`);
   }catch(e){showToast("Erreur sauvegarde");btn.disabled=false;}
 });
 
@@ -1721,9 +1758,20 @@ function endGame(){
   ].map(s=>`<div class="game-result-stat"><div class="game-result-val" style="color:${s.color}">${s.val}</div><div class="game-result-lbl">${s.lbl}</div></div>`).join("");
 }
 
-document.getElementById("g-yes").addEventListener("click",()=>{
-  const d=gameQueue[gameIdx];gameWorked.push(d.id);checked.add(d.id);
+document.getElementById("g-yes").addEventListener("click",async()=>{
+  const d=gameQueue[gameIdx];
+  gameWorked.push(d.id);
   launchConfetti();
+  // Auto-validate immediately
+  if(currentProfile&&!workedIds().has(d.id)){
+    const date=new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
+    try{
+      const result=await sb("sessions",{method:"POST",body:{profile_id:currentProfile.id,date,ids:[d.id]},prefer:"return=representation"});
+      if(result&&result[0])SESSIONS.push({id:result[0].id,date,ids:[d.id]});
+      const currentReview=reviewDates[d.id];
+      scheduleReview(d.id,currentReview?currentReview.reviewCount+1:0);
+    }catch(e){console.warn("Auto-save failed",e);}
+  }
   gameIdx++;showGameCard("card-exit-yes");
 });
 document.getElementById("g-later").addEventListener("click",()=>{
@@ -1732,7 +1780,14 @@ document.getElementById("g-later").addEventListener("click",()=>{
   gameIdx++;showGameCard("card-exit-later");
 });
 document.getElementById("g-skip").addEventListener("click",()=>{
-  gameSkipped.push(gameQueue[gameIdx].id);gameIdx++;showGameCard("card-exit-skip");
+  const d=gameQueue[gameIdx];
+  gameSkipped.push(d.id);
+  // If it was due for review and user skips = integrated
+  if(isDueForReview(d.id)){
+    markIntegrated(d.id);
+    showToast("✨ Intégrée automatiquement");
+  }
+  gameIdx++;showGameCard("card-exit-skip");
 });
 document.addEventListener("keydown",e=>{
   if(!document.getElementById("game-overlay").classList.contains("show"))return;
