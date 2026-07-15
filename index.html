@@ -22,15 +22,11 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
-
-/* SCREENS */
 .screen{display:none;min-height:100vh;padding:2rem 1.5rem 5rem;}
 .screen.show{display:flex;flex-direction:column;}
 #profile-screen,#pin-screen{align-items:center;justify-content:center;gap:2rem;}
 #main-screen{display:none;padding:2rem 1.5rem 5rem;}
 #main-screen.show{display:block;}
-
-/* PROFILE */
 .brand{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);}
 .screen-title{font-size:26px;font-weight:600;text-align:center;}
 .screen-sub{font-size:14px;color:var(--text-muted);text-align:center;}
@@ -51,9 +47,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .txt-input::placeholder{color:var(--text-faint);}
 .pin-hint{font-size:12px;color:var(--text-faint);}
 .green-btn{padding:9px 16px;border-radius:var(--radius);border:1px solid var(--green-border);background:var(--green-bg);color:var(--green-text);font-size:13px;font-weight:500;font-family:inherit;cursor:pointer;}
-.green-btn:hover{opacity:0.8;}
-
-/* PIN */
 .pin-box{background:var(--surface);border:1px solid var(--border-md);border-radius:var(--radius-lg);padding:2rem;width:100%;max-width:360px;display:flex;flex-direction:column;align-items:center;gap:1.25rem;}
 .pin-avatar{width:52px;height:52px;border-radius:50%;background:var(--gold-bg);border:1px solid var(--gold-border);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:600;color:var(--gold-text);}
 .pin-name{font-size:18px;font-weight:600;}
@@ -67,13 +60,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .pin-key.del{font-size:14px;color:var(--text-muted);}
 .pin-error{font-size:13px;color:var(--red-text);min-height:18px;text-align:center;}
 .back-link{font-size:13px;color:var(--text-faint);cursor:pointer;text-decoration:underline;}
-
-/* MAIN SCREEN */
 .main-container{max-width:960px;margin:0 auto;}
 .main-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:12px;}
-.main-header-left{}
 .brand-title{font-size:22px;font-weight:600;}
-.brand-sub{font-size:13px;color:var(--text-muted);margin-top:3px;}
 .main-header-right{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
 .profile-badge{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;border:1px solid var(--gold-border);background:var(--gold-bg);color:var(--gold-text);font-size:13px;font-weight:500;}
 .icon-btn{background:none;border:none;cursor:pointer;color:var(--gold-text);opacity:0.6;padding:0;display:flex;align-items:center;}
@@ -82,8 +71,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .header-btn:hover{border-color:var(--border-strong);color:var(--text);}
 .header-btn.blue{border-color:var(--blue-border);color:var(--blue-text);background:var(--blue-bg);}
 .header-btn.purple{border-color:var(--purple-border);color:var(--purple-text);background:var(--purple-bg);}
-
-/* FILTERS */
 .filters-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem;align-items:center;}
 .filter-label{font-size:12px;color:var(--text-faint);}
 .filter-btn{padding:5px 14px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--text-muted);font-size:12px;font-family:inherit;cursor:pointer;transition:all 0.15s;}
@@ -96,19 +83,19 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .search-input::placeholder{color:var(--text-faint);}
 .stats-bar{font-size:13px;color:var(--text-faint);margin-bottom:0.875rem;}
 .stats-bar span{color:var(--text-muted);font-weight:500;}
-
-/* CARDS */
+.group-separator{grid-column:1/-1;margin:1.5rem 0 0.5rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);}
+.group-separator:first-child{margin-top:0;}
+.group-sep-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--text-faint);}
+.group-sep-sub{font-size:12px;color:var(--text-faint);margin-top:2px;opacity:0.6;}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:7px;}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:0.875rem 1rem;cursor:pointer;transition:all 0.15s;user-select:none;}
 .card:hover{border-color:var(--border-md);background:var(--surface2);}
 .card.worked{border-color:var(--green-border);background:var(--green-bg);}
+.card.worked .identity{color:var(--green-text);}
 .card.todo{border-color:var(--gold-border);background:var(--gold-bg);}
 .card.todo .identity{color:var(--gold-text);}
-.card.todo .group-badge{border-color:var(--gold-border);color:var(--gold-text);}
 .card.due{border-color:var(--blue-border);background:var(--blue-bg);}
 .card.due .identity{color:var(--blue-text);}
-.card.due .group-badge{border-color:var(--blue-border);color:var(--blue-text);}
-.card.worked .identity{color:var(--green-text);}
 .card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
 .identity{font-size:13px;font-weight:500;line-height:1.45;flex:1;color:var(--text);}
 .check-circle{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--border-md);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:all 0.15s;}
@@ -119,40 +106,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .group-badge{font-size:10px;padding:2px 7px;border-radius:8px;border:1px solid var(--border);color:var(--text-faint);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .role-icon{font-size:13px;}
 .no-results{padding:3rem;text-align:center;color:var(--text-faint);font-size:14px;grid-column:1/-1;}
-.group-separator{grid-column:1/-1;margin:1.5rem 0 0.5rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);}
-.group-separator:first-child{margin-top:0;}
-.group-sep-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--text-faint);}
-.group-sep-sub{font-size:12px;color:var(--text-faint);margin-top:2px;opacity:0.6;}
-/* Group selection */
-.group-select-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:550;align-items:center;justify-content:center;padding:1.5rem;}
-.group-select-overlay.show{display:flex;}
-.group-select-box{background:var(--surface);border:1px solid var(--border-strong);border-radius:var(--radius-lg);padding:1.5rem;max-width:540px;width:100%;max-height:85vh;overflow-y:auto;}
-.group-select-title{font-size:18px;font-weight:600;margin-bottom:0.25rem;}
-.group-select-sub{font-size:13px;color:var(--text-muted);margin-bottom:1.25rem;}
-.group-select-list{display:flex;flex-direction:column;gap:8px;margin-bottom:1.5rem;}
-.group-select-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface2);cursor:pointer;transition:all 0.15s;}
-.group-select-item:hover{border-color:var(--border-md);}
-.group-select-item.selected{border-color:var(--accent);background:rgba(200,184,154,0.08);}
-.group-select-check{width:18px;height:18px;border-radius:4px;border:1.5px solid var(--border-md);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.15s;}
-.group-select-item.selected .group-select-check{background:var(--accent);border-color:var(--accent);}
-.group-select-check i{font-size:11px;color:#0a0a0a;opacity:0;}
-.group-select-item.selected .group-select-check i{opacity:1;}
-.group-select-name{font-size:14px;font-weight:500;flex:1;}
-.group-select-count{font-size:12px;color:var(--text-faint);}
-.group-select-actions{display:flex;gap:8px;justify-content:flex-end;}
-.group-select-cancel{padding:9px 18px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface2);color:var(--text-muted);font-size:13px;font-family:inherit;cursor:pointer;}
-.group-select-start{padding:9px 22px;border-radius:var(--radius);border:1px solid var(--green-border);background:var(--green-bg);color:var(--green-text);font-size:13px;font-weight:500;font-family:inherit;cursor:pointer;}
-
-/* Game transition card */
-.game-transition{display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;max-width:480px;width:100%;}
-.game-transition.show{display:flex;}
-.game-trans-num{font-size:48px;margin-bottom:0.5rem;}
-.game-trans-label{font-size:22px;font-weight:600;margin-bottom:0.5rem;}
-.game-trans-sub{font-size:14px;color:var(--text-muted);margin-bottom:2rem;}
-.game-trans-btn{padding:12px 32px;border-radius:var(--radius-lg);border:1px solid var(--accent);background:transparent;color:var(--accent);font-size:14px;font-weight:500;font-family:inherit;cursor:pointer;transition:all 0.2s;}
-.game-trans-btn:hover{background:rgba(200,184,154,0.1);}
-
-/* SESSION BAR */
 .session-bar{position:sticky;bottom:0;background:var(--bg);border-top:1px solid var(--border-md);padding:1rem 0;margin-top:2rem;}
 .session-inner{max-width:960px;margin:0 auto;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
 .session-tags{display:flex;flex-wrap:wrap;gap:6px;flex:1;min-height:28px;}
@@ -163,54 +116,76 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .validate-btn:hover{opacity:0.8;}
 .validate-btn:disabled{opacity:0.3;cursor:default;}
 .session-count{font-size:12px;color:var(--text-faint);white-space:nowrap;}
-
-/* GAME MODE */
+/* GROUP SELECT */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:400;align-items:center;justify-content:center;padding:1.5rem;}
+.modal-overlay.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border-strong);border-radius:var(--radius-lg);padding:1.5rem;max-width:540px;width:100%;max-height:85vh;overflow-y:auto;}
+.modal-title{font-size:18px;font-weight:600;margin-bottom:0.25rem;}
+.modal-sub{font-size:13px;color:var(--text-muted);margin-bottom:1.25rem;}
+.group-select-list{display:flex;flex-direction:column;gap:8px;margin-bottom:1.5rem;}
+.gs-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface2);cursor:pointer;transition:all 0.15s;user-select:none;}
+.gs-item:hover{border-color:var(--border-md);}
+.gs-item.sel{border-color:var(--accent);background:rgba(200,184,154,0.12);}
+.gs-item.sel .gs-name{color:var(--accent);}
+.gs-name{font-size:14px;font-weight:500;flex:1;}
+.gs-count{font-size:12px;color:var(--text-faint);}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;}
+.btn-cancel{padding:9px 18px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface2);color:var(--text-muted);font-size:13px;font-family:inherit;cursor:pointer;}
+.btn-launch{padding:9px 22px;border-radius:var(--radius);border:1px solid var(--green-border);background:var(--green-bg);color:var(--green-text);font-size:13px;font-weight:500;font-family:inherit;cursor:pointer;}
+/* GAME */
 .game-overlay{display:none;position:fixed;inset:0;background:var(--bg);z-index:600;flex-direction:column;align-items:center;justify-content:center;padding:2rem;}
 .game-overlay.show{display:flex;}
-.game-top-bar{position:fixed;top:0;left:0;right:0;height:3px;background:var(--surface3);}
+.game-topbar{position:fixed;top:0;left:0;right:0;}
+.game-progress-track{height:3px;background:var(--surface3);}
 .game-progress-fill{height:100%;background:var(--accent);transition:width 0.3s;}
-.game-header{position:fixed;top:4px;left:0;right:0;padding:0.75rem 1.5rem;display:flex;align-items:center;justify-content:space-between;}
+.game-header-row{display:flex;align-items:center;justify-content:space-between;padding:0.75rem 1.5rem;}
 .game-counter{font-size:13px;color:var(--text-faint);}
-.game-quit{background:none;border:1px solid var(--border);cursor:pointer;color:var(--text-faint);font-size:13px;font-family:inherit;padding:6px 12px;border-radius:var(--radius);}
-.game-quit:hover{border-color:var(--border-md);color:var(--text);}
-.game-card-wrap{max-width:480px;width:100%;text-align:center;margin-top:3rem;}
-.game-group-label{font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:0.5rem;}
-.game-role-label{font-size:13px;color:var(--text-muted);margin-bottom:1rem;}
-.game-identity-text{font-size:32px;font-weight:600;color:var(--text);margin-bottom:2.5rem;line-height:1.3;}
-.game-actions{display:flex;gap:10px;justify-content:center;}
-.game-action-btn{display:flex;flex-direction:column;align-items:center;gap:5px;padding:16px 20px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text-muted);font-size:12px;font-family:inherit;cursor:pointer;transition:all 0.15s;min-width:100px;}
-.game-action-btn:hover{transform:translateY(-2px);}
-.game-action-btn.g-yes{border-color:var(--green-border);background:var(--green-bg);color:var(--green-text);}
-.game-action-btn.g-later{border-color:var(--gold-border);background:var(--gold-bg);color:var(--gold-text);}
-.game-action-btn.g-skip{}
-.game-action-icon{font-size:24px;}
-.game-action-label{text-transform:uppercase;letter-spacing:1px;font-weight:500;font-size:11px;}
-.game-identity-text{animation:none;}
-.card-enter{animation:cardIn 0.3s ease forwards;}
-.card-exit-yes{animation:cardOutRight 0.25s ease forwards;}
-.card-exit-later{animation:cardOutUp 0.25s ease forwards;}
-.card-exit-skip{animation:cardOutLeft 0.25s ease forwards;}
-@keyframes cardIn{from{opacity:0;transform:translateY(20px) scale(0.97);}to{opacity:1;transform:translateY(0) scale(1);}}
-@keyframes cardOutRight{from{opacity:1;transform:translateX(0) rotate(0deg);}to{opacity:0;transform:translateX(120px) rotate(8deg);}}
-@keyframes cardOutLeft{from{opacity:1;transform:translateX(0) rotate(0deg);}to{opacity:0;transform:translateX(-120px) rotate(-8deg);}}
+.game-quit-btn{background:none;border:1px solid var(--border);cursor:pointer;color:var(--text-faint);font-size:13px;font-family:inherit;padding:6px 12px;border-radius:var(--radius);}
+/* Transition screen */
+.game-trans{display:none;flex-direction:column;align-items:center;text-align:center;max-width:480px;width:100%;margin-top:3rem;}
+.game-trans.show{display:flex;}
+.game-trans-emoji{font-size:56px;margin-bottom:1rem;}
+.game-trans-title{font-size:24px;font-weight:600;margin-bottom:0.5rem;}
+.game-trans-sub{font-size:14px;color:var(--text-muted);margin-bottom:2rem;}
+.game-trans-start{padding:12px 36px;border-radius:var(--radius-lg);border:1px solid var(--accent);background:transparent;color:var(--accent);font-size:15px;font-weight:500;font-family:inherit;cursor:pointer;}
+.game-trans-start:hover{background:rgba(200,184,154,0.1);}
+/* Card */
+.game-card{display:none;flex-direction:column;align-items:center;text-align:center;max-width:480px;width:100%;margin-top:3rem;}
+.game-card.show{display:flex;}
+.game-card-group{font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:0.4rem;}
+.game-card-role{font-size:13px;color:var(--text-muted);margin-bottom:1.25rem;}
+.game-card-text{font-size:34px;font-weight:600;color:var(--text);margin-bottom:2.5rem;line-height:1.3;}
+.game-btns{display:flex;gap:10px;justify-content:center;}
+.game-btn-action{display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 22px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text-muted);font-size:12px;font-family:inherit;cursor:pointer;transition:all 0.15s;min-width:110px;}
+.game-btn-action:hover{transform:translateY(-2px);}
+.game-btn-action.yes{border-color:var(--green-border);background:var(--green-bg);color:var(--green-text);}
+.game-btn-action.later{border-color:var(--gold-border);background:var(--gold-bg);color:var(--gold-text);}
+.game-btn-icon{font-size:26px;}
+.game-btn-label{text-transform:uppercase;letter-spacing:1px;font-weight:600;font-size:10px;}
+/* Results */
+.game-results{display:none;flex-direction:column;align-items:center;text-align:center;max-width:480px;width:100%;}
+.game-results.show{display:flex;}
+.game-res-title{font-size:24px;font-weight:600;margin-bottom:0.5rem;}
+.game-res-sub{font-size:14px;color:var(--text-muted);margin-bottom:2rem;}
+.game-res-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:2rem;width:100%;}
+.game-res-stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem;}
+.game-res-val{font-size:30px;font-weight:600;}
+.game-res-lbl{font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-top:4px;}
+.game-res-btns{display:flex;gap:10px;}
+.game-res-btn{padding:11px 22px;border-radius:var(--radius);font-size:13px;font-weight:500;font-family:inherit;cursor:pointer;border:1px solid var(--border-md);background:var(--surface2);color:var(--text-muted);}
+.game-res-btn.primary{border-color:var(--green-border);background:var(--green-bg);color:var(--green-text);}
+/* Animations */
+@keyframes cardIn{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+@keyframes cardOutRight{from{opacity:1;transform:translateX(0) rotate(0);}to{opacity:0;transform:translateX(130px) rotate(8deg);}}
+@keyframes cardOutLeft{from{opacity:1;transform:translateX(0) rotate(0);}to{opacity:0;transform:translateX(-130px) rotate(-8deg);}}
 @keyframes cardOutUp{from{opacity:1;transform:translateY(0);}to{opacity:0;transform:translateY(-60px);}}
-/* Confetti */
-.confetti-piece{position:fixed;width:8px;height:8px;border-radius:2px;pointer-events:none;z-index:999;animation:confettiFall 0.8s ease-out forwards;}
-@keyframes confettiFall{0%{opacity:1;transform:translateY(0) rotate(0deg) scale(1);}100%{opacity:0;transform:translateY(120px) rotate(720deg) scale(0.3);}}
-.flash-green{animation:flashGreen 0.3s ease-out;}
-@keyframes flashGreen{0%{background:rgba(99,153,34,0.0);}30%{background:rgba(99,153,34,0.15);}100%{background:transparent;}}
-.game-result-wrap{max-width:500px;width:100%;text-align:center;}
-.game-result-title{font-size:24px;font-weight:600;margin-bottom:0.5rem;}
-.game-result-sub{font-size:14px;color:var(--text-muted);margin-bottom:2rem;}
-.game-result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:2rem;}
-.game-result-stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem;}
-.game-result-val{font-size:30px;font-weight:600;}
-.game-result-lbl{font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-top:4px;}
-.game-result-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
-.game-result-btn{padding:11px 22px;border-radius:var(--radius);font-size:13px;font-weight:500;font-family:inherit;cursor:pointer;border:1px solid var(--border-md);background:var(--surface2);color:var(--text-muted);}
-.game-result-btn.primary{border-color:var(--green-border);background:var(--green-bg);color:var(--green-text);}
-
-/* OVERLAYS */
+.anim-in{animation:cardIn 0.3s ease forwards;}
+.anim-right{animation:cardOutRight 0.22s ease forwards;}
+.anim-left{animation:cardOutLeft 0.22s ease forwards;}
+.anim-up{animation:cardOutUp 0.22s ease forwards;}
+.confetti-dot{position:fixed;width:8px;height:8px;border-radius:2px;pointer-events:none;z-index:700;}
+@keyframes confettiDrop{0%{opacity:1;transform:translateY(0) rotate(0) scale(1);}100%{opacity:0;transform:translateY(110px) rotate(600deg) scale(0.3);}}
+/* Overlay */
 .overlay{display:none;position:fixed;inset:0;background:var(--bg);z-index:200;overflow-y:auto;padding:2rem 1.5rem 4rem;}
 .overlay.show{display:block;}
 .overlay-inner{max-width:780px;margin:0 auto;}
@@ -234,18 +209,17 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .cat-fill{height:100%;border-radius:5px;background:rgba(200,184,154,0.2);border-right:2px solid var(--accent);display:flex;align-items:center;justify-content:flex-end;padding-right:8px;min-width:24px;}
 .cat-count{font-size:11px;font-weight:600;color:var(--accent);}
 .no-data{font-size:14px;color:var(--text-faint);font-style:italic;}
-.toast{position:fixed;bottom:5rem;left:50%;transform:translateX(-50%);background:var(--surface3);color:var(--text);border:1px solid var(--border-strong);border-radius:var(--radius);padding:9px 18px;font-size:13px;font-weight:500;opacity:0;transition:opacity 0.2s;pointer-events:none;z-index:700;white-space:nowrap;}
+.toast{position:fixed;bottom:5rem;left:50%;transform:translateX(-50%);background:var(--surface3);color:var(--text);border:1px solid var(--border-strong);border-radius:var(--radius);padding:9px 18px;font-size:13px;font-weight:500;opacity:0;transition:opacity 0.2s;pointer-events:none;z-index:800;white-space:nowrap;}
 .toast.show{opacity:1;}
 .spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--border-md);border-top-color:var(--accent);border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;}
 @keyframes spin{to{transform:rotate(360deg);}}
 .shake{animation:shake 0.35s ease;}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
-@media(max-width:600px){.screen{padding:1.25rem 1rem 3rem;}.grid{grid-template-columns:1fr 1fr;}}
 </style>
 </head>
 <body>
 
-<!-- PROFILE SCREEN -->
+<!-- PROFILE -->
 <div class="screen show" id="profile-screen">
   <div class="brand">REBORN</div>
   <div><div class="screen-title">Dictionnaire des identités</div><div class="screen-sub" style="margin-top:8px">Choisis ton profil</div></div>
@@ -256,17 +230,17 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     <div class="new-profile-form">
       <div class="box-label" style="margin-bottom:0.5rem">Créer un profil</div>
       <div class="input-row">
-        <input type="text" class="txt-input" id="new-profile-name" placeholder="Prénom…"/>
-        <input type="text" class="txt-input" id="new-profile-pin" placeholder="PIN (4 chiffres)" maxlength="4" style="width:140px;flex:none;"/>
+        <input type="text" class="txt-input" id="new-name" placeholder="Prénom…"/>
+        <input type="text" class="txt-input" id="new-pin" placeholder="PIN (4 chiffres)" maxlength="4" style="width:140px;flex:none;"/>
       </div>
       <div class="pin-hint">Le code PIN protège l'accès.</div>
-      <div id="create-error" style="font-size:13px;color:var(--red-text);min-height:16px;"></div>
-      <button class="green-btn" id="new-profile-btn" style="align-self:flex-end">Créer</button>
+      <div id="create-err" style="font-size:13px;color:var(--red-text);min-height:16px;"></div>
+      <button class="green-btn" id="create-btn" style="align-self:flex-end">Créer</button>
     </div>
   </div>
 </div>
 
-<!-- PIN SCREEN -->
+<!-- PIN -->
 <div class="screen" id="pin-screen">
   <div class="pin-box">
     <div class="pin-avatar" id="pin-avatar"></div>
@@ -286,21 +260,20 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   </div>
 </div>
 
-<!-- MAIN SCREEN -->
+<!-- MAIN -->
 <div id="main-screen">
 <div class="main-container">
   <div class="main-header">
-    <div class="main-header-left">
+    <div>
       <div class="brand" style="margin-bottom:4px">REBORN</div>
       <div class="brand-title">Dictionnaire des identités</div>
     </div>
     <div class="main-header-right">
-      <div class="profile-badge"><i class="ti ti-user"></i><span id="main-profile-name">—</span><button class="icon-btn" id="switch-btn" style="margin-left:4px"><i class="ti ti-switch-horizontal" style="font-size:14px"></i></button></div>
+      <div class="profile-badge"><i class="ti ti-user"></i><span id="profile-name-badge">—</span><button class="icon-btn" id="switch-btn" style="margin-left:4px"><i class="ti ti-switch-horizontal" style="font-size:14px"></i></button></div>
       <button class="header-btn purple" id="game-btn"><i class="ti ti-cards"></i> Découverte</button>
       <button class="header-btn blue" id="progress-btn"><i class="ti ti-chart-bar"></i> Progression</button>
     </div>
   </div>
-
   <div class="filters-bar">
     <span class="filter-label">Rôle :</span>
     <button class="filter-btn" data-role="all">Toutes</button>
@@ -314,11 +287,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     <button class="filter-btn" data-state="due">🔵 À réviser</button>
     <button class="filter-btn" data-state="worked">Travaillées</button>
   </div>
-
-  <div class="search-bar"><i class="ti ti-search"></i><input type="text" class="search-input" id="search" placeholder="Rechercher une identité…"/></div>
+  <div class="search-bar"><i class="ti ti-search"></i><input type="text" class="search-input" id="search" placeholder="Rechercher…"/></div>
   <div class="stats-bar" id="stats-bar"></div>
   <div class="grid" id="grid"></div>
-
   <div class="session-bar">
     <div class="session-inner">
       <div class="session-tags" id="session-tags"><span class="empty-sel">Aucune identité cochée</span></div>
@@ -329,53 +300,62 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 </div>
 </div>
 
+<!-- GROUP SELECT MODAL -->
+<div class="modal-overlay" id="gs-modal">
+  <div class="modal-box">
+    <div class="modal-title">Mode Découverte</div>
+    <div class="modal-sub">Choisis un groupe parmi ces propositions</div>
+    <div class="group-select-list" id="gs-list"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" id="gs-cancel">Annuler</button>
+      <button class="btn-launch" id="gs-launch"><i class="ti ti-play"></i> Lancer</button>
+    </div>
+  </div>
+</div>
+
 <!-- GAME OVERLAY -->
-<div class="group-select-overlay" id="group-select-overlay">
-  <div class="group-select-box">
-    <div class="group-select-title">Mode Découverte</div>
-    <div class="group-select-sub">Choisis les groupes à explorer (3-4 recommandés)</div>
-    <div class="group-select-list" id="group-select-list"></div>
-    <div class="group-select-actions">
-      <button class="group-select-cancel" id="group-select-cancel">Annuler</button>
-      <button class="group-select-start" id="group-select-start"><i class="ti ti-play"></i> Lancer</button>
-    </div>
-  </div>
-</div>
-
 <div class="game-overlay" id="game-overlay">
-  <div class="game-top-bar"><div class="game-progress-fill" id="game-progress-fill" style="width:0%"></div></div>
-  <div class="game-header">
-    <span class="game-counter" id="game-counter"></span>
-    <button class="game-quit" id="game-quit">Quitter</button>
-  </div>
-  <div class="game-transition" id="game-transition">
-    <div class="game-trans-num" id="game-trans-num"></div>
-    <div class="game-trans-label" id="game-trans-label"></div>
-    <div class="game-trans-sub" id="game-trans-sub"></div>
-    <button class="game-trans-btn" id="game-trans-btn">Commencer →</button>
-  </div>
-  <div class="game-card-wrap" id="game-card-wrap">
-    <div class="game-group-label" id="game-group-label"></div>
-    <div class="game-role-label" id="game-role-label"></div>
-    <div class="game-identity-text" id="game-identity-text"></div>
-    <div class="game-actions">
-      <button class="game-action-btn g-yes" id="g-yes"><span class="game-action-icon">✅</span><span class="game-action-label">Travaillée</span></button>
-      <button class="game-action-btn g-later" id="g-later"><span class="game-action-icon">🔖</span><span class="game-action-label">À faire</span></button>
-      <button class="game-action-btn g-skip" id="g-skip"><span class="game-action-icon">➡️</span><span class="game-action-label">Passer</span></button>
+  <div class="game-topbar">
+    <div class="game-progress-track"><div class="game-progress-fill" id="gp-fill" style="width:0%"></div></div>
+    <div class="game-header-row">
+      <span class="game-counter" id="g-counter">0 / 0</span>
+      <button class="game-quit-btn" id="g-quit">Quitter</button>
     </div>
   </div>
-  <div class="game-result-wrap" id="game-result-wrap" style="display:none">
-    <div class="game-result-title">Session terminée 🎉</div>
-    <div class="game-result-sub" id="game-result-sub"></div>
-    <div class="game-result-grid" id="game-result-grid"></div>
-    <div class="game-result-btns">
-      <button class="game-result-btn primary" id="game-validate-btn"><i class="ti ti-check"></i> Valider les travaillées</button>
-      <button class="game-result-btn" id="game-restart-btn">Recommencer</button>
+
+  <!-- Transition -->
+  <div class="game-trans" id="g-trans">
+    <div class="game-trans-emoji" id="g-trans-emoji"></div>
+    <div class="game-trans-title" id="g-trans-title"></div>
+    <div class="game-trans-sub" id="g-trans-sub"></div>
+    <button class="game-trans-start" id="g-trans-start">Commencer →</button>
+  </div>
+
+  <!-- Card -->
+  <div class="game-card" id="g-card">
+    <div class="game-card-group" id="g-card-group"></div>
+    <div class="game-card-role" id="g-card-role"></div>
+    <div class="game-card-text" id="g-card-text"></div>
+    <div class="game-btns">
+      <button class="game-btn-action yes" id="g-yes"><span class="game-btn-icon">✅</span><span class="game-btn-label">Travaillée</span></button>
+      <button class="game-btn-action later" id="g-later"><span class="game-btn-icon">🔖</span><span class="game-btn-label">À faire</span></button>
+      <button class="game-btn-action" id="g-skip"><span class="game-btn-icon">➡️</span><span class="game-btn-label">Passer</span></button>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="game-results" id="g-results">
+    <div class="game-res-title">Session terminée 🎉</div>
+    <div class="game-res-sub" id="g-res-sub"></div>
+    <div class="game-res-grid" id="g-res-grid"></div>
+    <div class="game-res-btns">
+      <button class="game-res-btn primary" id="g-validate">Valider les travaillées</button>
+      <button class="game-res-btn" id="g-restart">Rejouer</button>
     </div>
   </div>
 </div>
 
-<!-- PROGRESSION OVERLAY -->
+<!-- PROGRESS OVERLAY -->
 <div class="overlay" id="progress-overlay">
   <div class="overlay-inner">
     <div class="overlay-top">
@@ -391,6 +371,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 <div class="toast" id="toast"></div>
 
 <script>
+
 const SB_URL="https://bxtsgyrgqdfeawpwuqqq.supabase.co";
 const SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ4dHNneXJncWRmZWF3cHd1cXFxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2MDY2MDgsImV4cCI6MjA5NTE4MjYwOH0.7iPDWlV6CXfDgQkQgIQvSvA7tx-LbdhNXXOHfTq0M3I";
 
@@ -1442,7 +1423,6 @@ const DEFAULT_DATA = [
   {id:9604,text:'Je suis alarmé',cat:'Culpabilité',depth:2,role:'source'},
   {id:9606,text:'Je suis plombé',cat:'Rigidité',depth:3,role:'source'}
 ];
-
 const GROUPS=[
   {id:"dissociation",label:"① Déconnexion & Reconnexion au corps",subtitle:"La relation au corps, négative et positive",cats:["Dissociation"]},
   {id:"conditionnement",label:"② Conditionnement & Déconditionnement",subtitle:"Ce qui a été installé, et ce qui s en libère",cats:["Conditionnement"]},
@@ -1459,31 +1439,43 @@ const GROUPS=[
   {id:"sortie",label:"⑬ Engagement & Élan vital",subtitle:"La force motrice de la transformation",cats:["Engagement"]}
 ];
 
-function getGroupForCat(cat){
-  return GROUPS.find(g=>g.cats.includes(cat));
-}
-
-function roleLabel(r){
-  return{source:"🔍 Ce qui s est passé",verdict:"⚖️ Ce que j en ai conclu",coping:"🎭 Comment j ai vécu avec"}[r]||"";
+function getGroupForCat(cat){return GROUPS.find(g=>g.cats.includes(cat));}
+function roleLabel(r){return{source:"🔍 Ce qui s est passé",verdict:"⚖️ Ce que j en ai conclu",coping:"🎭 Comment j ai vécu avec"}[r]||"";}
+function rand(){return crypto.getRandomValues(new Uint32Array(1))[0]/0xFFFFFFFF;}
+function shuffle(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(rand()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
 }
 
 let DATA=[...DEFAULT_DATA];
-let currentProfile=null,SESSIONS=[],INTEGRATED=new Set();
-let checked=new Set(),todoIds=new Set(),reviewDates={},pinTarget=null,pinValue="";
+let currentProfile=null,SESSIONS=[],checked=new Set(),todoIds=new Set(),reviewDates={};
 let roleFilter="source",stateFilter="all",query="";
+let pinTarget=null,pinVal="";
 
 function workedIds(){return new Set(SESSIONS.flatMap(s=>s.ids));}
+function isDueForReview(id){const r=reviewDates[id];return r&&Date.now()>=r.nextReview;}
+function scheduleReview(id,count){
+  const days=count===0?3:7;
+  reviewDates[id]={nextReview:Date.now()+(days*86400000),reviewCount:count};
+  saveReviews();
+}
+function markIntegrated(id){delete reviewDates[id];saveReviews();}
+function saveTodo(){try{localStorage.setItem("todo_"+currentProfile.id,JSON.stringify([...todoIds]));}catch(e){}}
+function saveReviews(){try{localStorage.setItem("reviews_"+currentProfile.id,JSON.stringify(reviewDates));}catch(e){}}
+
 function showToast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2500);}
 
 function showScreen(id){
-  document.getElementById("profile-screen").classList.remove("show");
-  document.getElementById("pin-screen").classList.remove("show");
-  document.getElementById("main-screen").classList.remove("show");
-  if(id==="profile") document.getElementById("profile-screen").classList.add("show");
-  else if(id==="pin") document.getElementById("pin-screen").classList.add("show");
-  else if(id==="main") document.getElementById("main-screen").classList.add("show");
+  ["profile-screen","pin-screen","main-screen"].forEach(s=>{
+    const el=document.getElementById(s);
+    if(el){el.classList.remove("show");}
+  });
+  const target=document.getElementById(id+"-screen")||document.getElementById(id);
+  if(target)target.classList.add("show");
 }
 
+// PROFILE
 async function loadProfiles(){
   const list=document.getElementById("profile-list");
   list.innerHTML='<span class="spinner"></span>';
@@ -1507,91 +1499,41 @@ async function loadProfiles(){
 }
 
 function openPin(id,name,hash){
-  pinTarget={id,name,hash};pinValue="";
+  pinTarget={id,name,hash};pinVal="";
   document.getElementById("pin-avatar").textContent=name.slice(0,2).toUpperCase();
   document.getElementById("pin-name").textContent=name;
   document.getElementById("pin-error").textContent="";
   updateDots();showScreen("pin");
 }
-function updateDots(){document.querySelectorAll(".pin-dot").forEach((d,i)=>d.classList.toggle("filled",i<pinValue.length));}
+function updateDots(){document.querySelectorAll(".pin-dot").forEach((d,i)=>d.classList.toggle("filled",i<pinVal.length));}
 
 document.querySelectorAll(".pin-key").forEach(key=>{
   key.addEventListener("click",async()=>{
     const v=key.dataset.v;
-    if(v==="del"){pinValue=pinValue.slice(0,-1);updateDots();return;}
-    if(pinValue.length>=4)return;
-    pinValue+=v;updateDots();
-    if(pinValue.length===4){
-      const hash=await hashPin(pinValue);
+    if(v==="del"){pinVal=pinVal.slice(0,-1);updateDots();return;}
+    if(pinVal.length>=4)return;
+    pinVal+=v;updateDots();
+    if(pinVal.length===4){
+      const hash=await hashPin(pinVal);
       if(hash===pinTarget.hash){await enterProfile(pinTarget.id,pinTarget.name);}
       else{
         document.getElementById("pin-error").textContent="Code incorrect";
         document.getElementById("pin-dots").classList.add("shake");
-        setTimeout(()=>{document.getElementById("pin-dots").classList.remove("shake");pinValue="";updateDots();document.getElementById("pin-error").textContent="";},500);
+        setTimeout(()=>{document.getElementById("pin-dots").classList.remove("shake");pinVal="";updateDots();document.getElementById("pin-error").textContent="";  },500);
       }
     }
   });
 });
 
-document.getElementById("pin-back").addEventListener("click",()=>{pinTarget=null;pinValue="";showScreen("profile");});
+document.getElementById("pin-back").addEventListener("click",()=>{pinTarget=null;pinVal="";showScreen("profile");  });
 
-async function enterProfile(id,name){
-  currentProfile={id,name};
-  document.getElementById("main-profile-name").textContent=name;
-  checked.clear();INTEGRATED.clear();
-  await loadData();
-  showScreen("main");
-  render();
-}
-
-async function loadData(){
-  try{
-    const sessions=await sb(`sessions?profile_id=eq.${currentProfile.id}&select=*&order=created_at.asc`);
-    SESSIONS=(sessions||[]).map(s=>({id:s.id,date:s.date,ids:(s.ids||[]).map(Number)}));
-  }catch(e){SESSIONS=[];}
-  try{
-    const stored=localStorage.getItem("todo_"+currentProfile.id);
-    if(stored)JSON.parse(stored).map(Number).forEach(id=>todoIds.add(id));
-  }catch(e){}
-  try{
-    const stored=localStorage.getItem("reviews_"+currentProfile.id);
-    if(stored)reviewDates=JSON.parse(stored);
-  }catch(e){reviewDates={};}
-}
-
-function saveTodo(){
-  try{localStorage.setItem("todo_"+currentProfile.id,JSON.stringify([...todoIds]));}catch(e){}
-}
-
-function saveReviews(){
-  try{localStorage.setItem("reviews_"+currentProfile.id,JSON.stringify(reviewDates));}catch(e){}
-}
-
-function scheduleReview(id,reviewCount){
-  const days=reviewCount===0?3:7;
-  const nextReview=Date.now()+(days*24*60*60*1000);
-  reviewDates[id]={nextReview,reviewCount};
-  saveReviews();
-}
-
-function isDueForReview(id){
-  const r=reviewDates[id];
-  if(!r)return false;
-  return Date.now()>=r.nextReview;
-}
-
-function markIntegrated(id){
-  delete reviewDates[id];
-  saveReviews();
-}
-
-document.getElementById("new-profile-btn").addEventListener("click",async()=>{
-  const name=document.getElementById("new-profile-name").value.trim();
-  const pin=document.getElementById("new-profile-pin").value.trim();
-  const errEl=document.getElementById("create-error");errEl.textContent="";
+document.getElementById("create-btn").addEventListener("click",async()=>{
+  const name=document.getElementById("new-name").value.trim();
+  const pin=document.getElementById("new-pin").value.trim();
+  const errEl=document.getElementById("create-err");errEl.textContent="";
   if(!name){errEl.textContent="Entre un prénom.";return;}
   if(!/^\d{4}$/.test(pin)){errEl.textContent="PIN: 4 chiffres.";return;}
-  const btn=document.getElementById("new-profile-btn");btn.textContent="…";btn.disabled=true;
+  const btn=document.getElementById("create-btn");btn.textContent="…";btn.disabled=true;
   try{
     const pin_hash=await hashPin(pin);
     const res=await fetch(SB_URL+"/rest/v1/profiles",{
@@ -1602,57 +1544,71 @@ document.getElementById("new-profile-btn").addEventListener("click",async()=>{
     const txt=await res.text();
     if(!res.ok){errEl.textContent="Erreur: "+txt;btn.textContent="Créer";btn.disabled=false;return;}
     const result=JSON.parse(txt);
-    if(result&&result[0]){document.getElementById("new-profile-name").value="";document.getElementById("new-profile-pin").value="";await enterProfile(result[0].id,result[0].name);}
+    if(result&&result[0]){document.getElementById("new-name").value="";document.getElementById("new-pin").value="";await enterProfile(result[0].id,result[0].name);}
   }catch(e){errEl.textContent="Erreur: "+e.message;btn.textContent="Créer";btn.disabled=false;}
 });
 
-document.getElementById("new-profile-name").addEventListener("keydown",e=>{if(e.key==="Enter")document.getElementById("new-profile-btn").click();});
+document.getElementById("new-name").addEventListener("keydown",e=>{if(e.key==="Enter")document.getElementById("create-btn").click();});
 
 document.getElementById("switch-btn").addEventListener("click",()=>{
-  currentProfile=null;SESSIONS=[];INTEGRATED.clear();checked.clear();todoIds.clear();reviewDates={};
+  currentProfile=null;SESSIONS=[];checked.clear();todoIds.clear();reviewDates={};
   showScreen("profile");loadProfiles();
 });
+
+async function enterProfile(id,name){
+  currentProfile={id,name};
+  document.getElementById("profile-name-badge").textContent=name;
+  checked.clear();todoIds.clear();reviewDates={};
+  await loadData();
+  showScreen("main-screen");
+  render();
+}
+
+async function loadData(){
+  try{
+    const sessions=await sb(`sessions?profile_id=eq.${currentProfile.id}&select=*&order=created_at.asc`);
+    SESSIONS=(sessions||[]).map(s=>{return{id:s.id,date:s.date,ids:(s.ids||[]).map(Number)}});
+  }catch(e){SESSIONS=[];}
+  try{
+    const stored=localStorage.getItem("todo_"+currentProfile.id);
+    if(stored)JSON.parse(stored).map(Number).forEach(id=>todoIds.add(id));
+  }catch(e){}
+  try{
+    const stored=localStorage.getItem("reviews_"+currentProfile.id);
+    if(stored)reviewDates=JSON.parse(stored)||{};
+  }catch(e){reviewDates={};}
+}
 
 // FILTERS
 document.querySelectorAll("[data-role]").forEach(btn=>btn.addEventListener("click",()=>{
   roleFilter=btn.dataset.role;
   document.querySelectorAll("[data-role]").forEach(b=>b.classList.remove("active"));
-  btn.classList.add("active");
-  render();
+  btn.classList.add("active");render();
 }));
-
 document.querySelectorAll("[data-state]").forEach(btn=>btn.addEventListener("click",()=>{
   stateFilter=btn.dataset.state;
   document.querySelectorAll("[data-state]").forEach(b=>b.classList.remove("active"));
-  btn.classList.add("active");
-  render();
+  btn.classList.add("active");render();
 }));
-
 document.getElementById("search").addEventListener("input",e=>{query=e.target.value;render();});
 
 function getFiltered(){
   const wids=workedIds();
-  const filtered=DATA.filter(d=>{
+  const groupOrder={};
+  GROUPS.forEach((g,i)=>g.cats.forEach(cat=>groupOrder[cat]=i));
+  return DATA.filter(d=>{
     const qOk=!query||d.text.toLowerCase().includes(query.toLowerCase())||d.cat.toLowerCase().includes(query.toLowerCase());
     const roleOk=roleFilter==="all"||(d.role||"source")===roleFilter;
     const isWorked=checked.has(d.id)||wids.has(d.id);
-    const isTodo=todoIds.has(d.id);
+    const isTodo=todoIds.has(d.id)&&!isWorked;
+    const isDue=isDueForReview(d.id)&&!isWorked;
     let stateOk=true;
-    if(stateFilter==="untouched") stateOk=!isWorked&&!isTodo&&!isDueForReview(d.id);
-    else if(stateFilter==="worked") stateOk=isWorked;
-    else if(stateFilter==="todo") stateOk=isTodo&&!isWorked;
-    else if(stateFilter==="due") stateOk=isDueForReview(d.id)&&!isWorked;
+    if(stateFilter==="untouched")stateOk=!isWorked&&!isTodo&&!isDue;
+    else if(stateFilter==="worked")stateOk=isWorked;
+    else if(stateFilter==="todo")stateOk=isTodo;
+    else if(stateFilter==="due")stateOk=isDue;
     return qOk&&roleOk&&stateOk;
-  });
-  // Sort by group order then by original order within group
-  const groupOrder={};
-  GROUPS.forEach((g,i)=>g.cats.forEach(cat=>groupOrder[cat]=i));
-  filtered.sort((a,b)=>{
-    const ga=groupOrder[a.cat]??99;
-    const gb=groupOrder[b.cat]??99;
-    return ga-gb;
-  });
-  return filtered;
+  }).sort((a,b)=>(groupOrder[a.cat]??99)-(groupOrder[b.cat]??99));
 }
 
 function render(){
@@ -1662,39 +1618,33 @@ function render(){
   const grid=document.getElementById("grid");
   if(!items.length){grid.innerHTML='<div class="no-results"><i class="ti ti-search" style="font-size:24px;display:block;margin-bottom:8px;opacity:0.2"></i>Aucun résultat</div>';renderSession();return;}
   
-  // Group items by group for separators
-  let lastGroupId=null;
+  let lastGid=null;
   grid.innerHTML=items.map(d=>{
     const isWorked=checked.has(d.id)||wids.has(d.id);
     const isTodo=todoIds.has(d.id)&&!isWorked;
     const isDue=isDueForReview(d.id)&&!isWorked;
+    const cls=isWorked?"worked":isTodo?"todo":isDue?"due":"";
     const group=getGroupForCat(d.cat);
-    const groupName=group?group.label.replace(/^[①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭]\s*/,""):"";
-    const groupId=group?group.id:"other";
-    let separator="";
-    if(groupId!==lastGroupId&&group){
-      lastGroupId=groupId;
-      separator=`<div class="group-separator"><div class="group-sep-label">${group.label}</div><div class="group-sep-sub">${group.subtitle}</div></div>`;
+    const gid=group?group.id:"";
+    const gname=group?group.label.replace(/^.\s*/,""):"";
+    let sep="";
+    if(gid!==lastGid&&group){
+      lastGid=gid;
+      sep=`<div class="group-separator"><div class="group-sep-label">${group.label}</div><div class="group-sep-sub">${group.subtitle}</div></div>`;
     }
-    return separator+`<div class="card${isWorked?" worked":isTodo?" todo":isDue?" due":""}" data-id="${d.id}" tabindex="0">
-      <div class="card-top">
-        <span class="identity">${d.text}</span>
-        <div class="check-circle"><i class="ti ti-check"></i></div>
-      </div>
-      <div class="card-footer">
-        <span class="group-badge" title="${groupName}">${groupName}</span>
-        <span class="role-icon" title="${roleLabel(d.role||"source")}">${{source:"🔍",verdict:"⚖️",coping:"🎭"}[d.role||"source"]}</span>
-      </div>
+    return sep+`<div class="card${cls?" "+cls:""}" data-id="${d.id}">
+      <div class="card-top"><span class="identity">${d.text}</span><div class="check-circle"><i class="ti ti-check"></i></div></div>
+      <div class="card-footer"><span class="group-badge">${gname}</span><span class="role-icon">${{"source":"🔍","verdict":"⚖️","coping":"🎭"}[d.role||"source"]}</span></div>
     </div>`;
   }).join("");
 
   grid.querySelectorAll(".card").forEach(card=>{
     card.addEventListener("click",()=>{
       const id=+card.dataset.id;
-      if(wids.has(id))return;
-      if(checked.has(id)){checked.delete(id);}
+      if(workedIds().has(id))return;
+      if(checked.has(id))checked.delete(id);
       else if(todoIds.has(id)){todoIds.delete(id);saveTodo();}
-      else{checked.add(id);}
+      else checked.add(id);
       render();
     });
   });
@@ -1704,20 +1654,12 @@ function render(){
 function renderSession(){
   const wids=workedIds();
   const sel=DATA.filter(d=>checked.has(d.id)&&!wids.has(d.id));
-  const count=sel.length;
-  document.getElementById("session-count").textContent=count>0?`${count} cochée${count>1?"s":""}` :"";
+  document.getElementById("session-count").textContent=sel.length?`${sel.length} cochée${sel.length>1?"s":""}`:"";
   document.getElementById("session-tags").innerHTML=sel.length
     ?sel.map(d=>`<span class="sel-tag" data-id="${d.id}">${d.text}</span>`).join("")
     :'<span class="empty-sel">Aucune identité cochée</span>';
-  document.getElementById("validate-btn").disabled=sel.length===0;
-  
-  document.querySelectorAll(".sel-tag").forEach(tag=>{
-    tag.addEventListener("click",()=>{
-      const id=+tag.dataset.id;
-      checked.delete(id);
-      render();
-    });
-  });
+  document.getElementById("validate-btn").disabled=!sel.length;
+  document.querySelectorAll(".sel-tag").forEach(tag=>tag.addEventListener("click",()=>{checked.delete(+tag.dataset.id);render();}));
 }
 
 document.getElementById("validate-btn").addEventListener("click",async()=>{
@@ -1730,274 +1672,257 @@ document.getElementById("validate-btn").addEventListener("click",async()=>{
   try{
     const result=await sb("sessions",{method:"POST",body:{profile_id:currentProfile.id,date,ids:newIds},prefer:"return=representation"});
     if(result&&result[0])SESSIONS.push({id:result[0].id,date,ids:newIds});
-    newIds.forEach(id=>{
-      checked.delete(id);
-      // Schedule review in 3 days
-      const currentReview=reviewDates[id];
-      scheduleReview(id, currentReview?currentReview.reviewCount+1:0);
-    });
-    render();showToast(`✓ ${newIds.length} identité${newIds.length>1?"s":""} validée${newIds.length>1?"s":""} — révision dans 3 jours`);
+    newIds.forEach(id=>{checked.delete(id);scheduleReview(id,reviewDates[id]?reviewDates[id].reviewCount+1:0);});
+    render();showToast(`✓ ${newIds.length} validée${newIds.length>1?"s":""}`);
   }catch(e){showToast("Erreur sauvegarde");btn.disabled=false;}
 });
 
 // GAME MODE
-let gameQueue=[],gameIdx=0,gameWorked=[],gameLater=[],gameSkipped=[];
-
-let gameCurrentGroupIdx=-1;
-
-function showGroupTransition(groupIdx,onContinue){
-  const group=GROUPS[groupIdx];
-  if(!group)return onContinue();
-  document.getElementById("game-card-wrap").style.display="none";
-  const trans=document.getElementById("game-transition");
-  trans.classList.add("show");
-  // Extract number emoji from label
-  const numMatch=group.label.match(/^([①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭])/);
-  document.getElementById("game-trans-num").textContent=numMatch?numMatch[1]:"";
-  document.getElementById("game-trans-label").textContent=group.label.replace(/^[①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭]\s*/,"");
-  document.getElementById("game-trans-sub").textContent=group.subtitle;
-  const btn=document.getElementById("game-trans-btn");
-  btn.onclick=()=>{
-    trans.classList.remove("show");
-    document.getElementById("game-card-wrap").style.display="block";
-    onContinue();
-  };
-  // Also show card immediately if first card
-  document.getElementById("game-card-wrap").style.display="none";
-}
-
-function startGame(){
-  gameCurrentGroupIdx=-1;
-  const wids=workedIds();
-  const roleOrder={source:0,verdict:1,coping:2};
-  gameQueue=[...DATA]
-    .filter(d=>!wids.has(d.id)&&!checked.has(d.id))
-    .sort((a,b)=>roleOrder[a.role||"source"]-roleOrder[b.role||"source"]);
-  gameIdx=0;gameWorked=[];gameLater=[];gameSkipped=[];
-  document.getElementById("game-card-wrap").style.display="block";
-  document.getElementById("game-result-wrap").style.display="none";
-  document.getElementById("game-overlay").classList.add("show");
-  showGameCard();
-}
-
-function launchConfetti(){
-  const colors=["#8dc94a","#c8b89a","#5aaaf0","#a78bfa","#d4933a"];
-  const overlay=document.getElementById("game-overlay");
-  for(let i=0;i<18;i++){
-    const el=document.createElement("div");
-    el.className="confetti-piece";
-    el.style.background=colors[Math.floor(Math.random()*colors.length)];
-    el.style.left=Math.random()*100+"vw";
-    el.style.top=(30+Math.random()*20)+"vh";
-    el.style.animationDelay=Math.random()*0.3+"s";
-    el.style.animationDuration=(0.6+Math.random()*0.4)+"s";
-    document.body.appendChild(el);
-    setTimeout(()=>el.remove(),1200);
-  }
-  document.getElementById("game-overlay").classList.add("flash-green");
-  setTimeout(()=>document.getElementById("game-overlay").classList.remove("flash-green"),300);
-}
-
-function showGameCard(exitClass){
-  if(gameIdx>=gameQueue.length){endGame();return;}
-  
-  // Check if we're entering a new group
-  const d=gameQueue[gameIdx];
-  const group=getGroupForCat(d.cat);
-  const newGroupIdx=group?GROUPS.indexOf(group):-1;
-  
-  if(newGroupIdx!==gameCurrentGroupIdx&&newGroupIdx>=0&&gameIdx>0){
-    gameCurrentGroupIdx=newGroupIdx;
-    showGroupTransition(newGroupIdx,()=>_animateCard(exitClass));
-    return;
-  }
-  if(gameCurrentGroupIdx===-1&&newGroupIdx>=0){
-    gameCurrentGroupIdx=newGroupIdx;
-    showGroupTransition(newGroupIdx,()=>_animateCard(null));
-    return;
-  }
-  
-  _animateCard(exitClass);
-}
-
-function _animateCard(exitClass){
-  if(exitClass){
-    wrap.classList.add(exitClass);
-    setTimeout(()=>{
-      wrap.classList.remove(exitClass);
-      wrap.classList.add("card-enter");
-      _updateGameCard();
-      setTimeout(()=>wrap.classList.remove("card-enter"),300);
-    },220);
-  } else {
-    wrap.classList.add("card-enter");
-    _updateGameCard();
-    setTimeout(()=>wrap.classList.remove("card-enter"),300);
-  }
-}
-
-function _updateGameCard(){
-  const d=gameQueue[gameIdx];
-  const group=getGroupForCat(d.cat);
-  const pct=Math.round((gameIdx/gameQueue.length)*100);
-  document.getElementById("game-progress-fill").style.width=pct+"%";
-  document.getElementById("game-counter").textContent=`${gameIdx+1} / ${gameQueue.length}`;
-  document.getElementById("game-group-label").textContent=group?group.label.replace(/^[①-⑭]\s*/,""):"";
-  document.getElementById("game-role-label").textContent=roleLabel(d.role||"source");
-  document.getElementById("game-identity-text").textContent=d.text;
-}
-
-function endGame(){
-  document.getElementById("game-progress-fill").style.width="100%";
-  document.getElementById("game-card-wrap").style.display="none";
-  document.getElementById("game-result-wrap").style.display="block";
-  document.getElementById("game-result-sub").textContent=`${gameWorked.length} travaillées · ${gameLater.length} à faire · ${gameSkipped.length} passées`;
-  document.getElementById("game-result-grid").innerHTML=[
-    {lbl:"Travaillées",val:gameWorked.length,color:"var(--green-text)"},
-    {lbl:"À faire",val:gameLater.length,color:"var(--gold-text)"},
-    {lbl:"Passées",val:gameSkipped.length,color:"var(--text-faint)"},
-  ].map(s=>`<div class="game-result-stat"><div class="game-result-val" style="color:${s.color}">${s.val}</div><div class="game-result-lbl">${s.lbl}</div></div>`).join("");
-}
-
-document.getElementById("g-yes").addEventListener("click",async()=>{
-  const d=gameQueue[gameIdx];
-  gameWorked.push(d.id);
-  launchConfetti();
-  // Auto-validate immediately
-  if(currentProfile&&!workedIds().has(d.id)){
-    const date=new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
-    try{
-      const result=await sb("sessions",{method:"POST",body:{profile_id:currentProfile.id,date,ids:[d.id]},prefer:"return=representation"});
-      if(result&&result[0])SESSIONS.push({id:result[0].id,date,ids:[d.id]});
-      const currentReview=reviewDates[d.id];
-      scheduleReview(d.id,currentReview?currentReview.reviewCount+1:0);
-    }catch(e){console.warn("Auto-save failed",e);}
-  }
-  gameIdx++;showGameCard("card-exit-yes");
-});
-document.getElementById("g-later").addEventListener("click",()=>{
-  const id=gameQueue[gameIdx].id;
-  gameLater.push(id);todoIds.add(id);saveTodo();
-  gameIdx++;showGameCard("card-exit-later");
-});
-document.getElementById("g-skip").addEventListener("click",()=>{
-  const d=gameQueue[gameIdx];
-  gameSkipped.push(d.id);
-  // If it was due for review and user skips = integrated
-  if(isDueForReview(d.id)){
-    markIntegrated(d.id);
-    showToast("✨ Intégrée automatiquement");
-  }
-  gameIdx++;showGameCard("card-exit-skip");
-});
-document.addEventListener("keydown",e=>{
-  if(!document.getElementById("game-overlay").classList.contains("show"))return;
-  if(e.key==="ArrowRight"||e.key===" ")document.getElementById("g-yes").click();
-  else if(e.key==="ArrowDown")document.getElementById("g-later").click();
-  else if(e.key==="ArrowLeft")document.getElementById("g-skip").click();
-  else if(e.key==="Escape")document.getElementById("game-quit").click();
-});
-document.getElementById("game-quit").addEventListener("click",()=>{
-  document.getElementById("game-overlay").classList.remove("show");
-  render();
-});
-document.getElementById("game-validate-btn").addEventListener("click",async()=>{
-  document.getElementById("game-overlay").classList.remove("show");
-  if(gameWorked.length&&currentProfile){
-    const wids=workedIds();
-    const newIds=gameWorked.filter(id=>!wids.has(id));
-    if(newIds.length){
-      const date=new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
-      try{
-        const result=await sb("sessions",{method:"POST",body:{profile_id:currentProfile.id,date,ids:newIds},prefer:"return=representation"});
-        if(result&&result[0])SESSIONS.push({id:result[0].id,date,ids:newIds});
-        newIds.forEach(id=>checked.delete(id));
-        showToast(`✓ ${newIds.length} identités validées`);
-      }catch(e){showToast("Erreur sauvegarde");}
-    }
-  }
-  render();
-});
-document.getElementById("game-restart-btn").addEventListener("click",()=>{startGame();});
-let selectedGroups=new Set();
+let gameQueue=[],gameIdx=0,gameWorked=[],gameLater=[],gameSkipped=[],selectedGroups=new Set();
 
 function openGroupSelect(){
   if(!currentProfile){showToast("Connecte-toi d abord");return;}
   const wids=workedIds();
-  const list=document.getElementById("group-select-list");
-  // Default: select first 4 groups
-  if(selectedGroups.size===0)GROUPS.slice(0,4).forEach(g=>selectedGroups.add(g.id));
+  // Pick 4-5 random groups that still have untouched identities
+  const available=GROUPS.filter(g=>{
+    const total=DATA.filter(d=>g.cats.includes(d.cat)).length;
+    const done=DATA.filter(d=>g.cats.includes(d.cat)&&(wids.has(d.id)||todoIds.has(d.id))).length;
+    return done/total<1; // not fully done
+  });
+  const n=Math.min(5,Math.max(4,available.length));
+  const proposals=shuffle([...available]).slice(0,n);
   
-  list.innerHTML=GROUPS.map(g=>{
-    const count=DATA.filter(d=>g.cats.includes(d.cat)&&!wids.has(d.id)&&!todoIds.has(d.id)).length;
-    const isSelected=selectedGroups.has(g.id);
-    return`<div class="group-select-item${isSelected?" selected":""}" data-gid="${g.id}">
-      <div class="group-select-check"><i class="ti ti-check"></i></div>
-      <div class="group-select-name">${g.label}</div>
-      <div class="group-select-count">${count} identités</div>
+  const list=document.getElementById("gs-list");
+  list.innerHTML=proposals.map(g=>{
+    const total=DATA.filter(d=>g.cats.includes(d.cat)).length;
+    const done=DATA.filter(d=>g.cats.includes(d.cat)&&wids.has(d.id)).length;
+    const pct=Math.round((done/total)*100);
+    return`<div class="gs-item" data-gid="${g.id}">
+      <div class="gs-name">${g.label}</div>
+      <div class="gs-count">${pct}% travaillé · ${total-done} restantes</div>
     </div>`;
   }).join("");
 
-  list.querySelectorAll(".group-select-item").forEach(item=>{
+  list.querySelectorAll(".gs-item").forEach(item=>{
     item.addEventListener("click",()=>{
-      const gid=item.dataset.gid;
-      if(selectedGroups.has(gid))selectedGroups.delete(gid);
-      else selectedGroups.add(gid);
-      item.classList.toggle("selected",selectedGroups.has(gid));
-      const checkIcon=item.querySelector(".group-select-check i");
-      if(checkIcon)checkIcon.style.opacity=selectedGroups.has(gid)?"1":"0";
+      list.querySelectorAll(".gs-item").forEach(i=>i.classList.remove("sel"));
+      item.classList.add("sel");
+      selectedGroups=new Set([item.dataset.gid]);
+      document.getElementById("gs-launch").disabled=false;
     });
   });
 
-  document.getElementById("group-select-overlay").classList.add("show");
+  document.getElementById("gs-launch").disabled=true;
+  document.getElementById("gs-modal").classList.add("show");
 }
 
-document.getElementById("group-select-cancel").addEventListener("click",()=>{
-  document.getElementById("group-select-overlay").classList.remove("show");
-});
-
-document.getElementById("group-select-start").addEventListener("click",()=>{
-  if(selectedGroups.size===0){showToast("Choisis au moins un groupe");return;}
-  document.getElementById("group-select-overlay").classList.remove("show");
+document.getElementById("gs-cancel").addEventListener("click",()=>document.getElementById("gs-modal").classList.remove("show"));
+document.getElementById("gs-launch").addEventListener("click",()=>{
+  if(!selectedGroups.size){showToast("Choisis un groupe");return;}
+  document.getElementById("gs-modal").classList.remove("show");
   startGame();
 });
-
 document.getElementById("game-btn").addEventListener("click",openGroupSelect);
 
-// PROGRESSION
+function startGame(){
+  const wids=workedIds();
+  const activeCats=new Set(GROUPS.filter(g=>selectedGroups.has(g.id)).flatMap(g=>g.cats));
+  const pool=DATA.filter(d=>activeCats.has(d.cat)&&!wids.has(d.id)&&!todoIds.has(d.id));
+  const dueReviews=shuffle(DATA.filter(d=>activeCats.has(d.cat)&&isDueForReview(d.id)));
+  const sourcesByGroup=[];
+  GROUPS.filter(g=>selectedGroups.has(g.id)).forEach(g=>{
+    sourcesByGroup.push(...shuffle(pool.filter(d=>g.cats.includes(d.cat)&&(d.role||"source")==="source")));
+  });
+  const verdicts=shuffle(pool.filter(d=>d.role==="verdict"));
+  const copings=shuffle(pool.filter(d=>d.role==="coping"));
+  gameQueue=[...dueReviews,...sourcesByGroup,...verdicts,...copings];
+  gameIdx=0;gameWorked=[];gameLater=[];gameSkipped=[];
+  if(dueReviews.length)showToast(`${dueReviews.length} identité${dueReviews.length>1?"s":""} à réviser`);
+  document.getElementById("game-overlay").classList.add("show");
+  // Show first group transition
+  showGameState();
+}
+
+let lastGameGroup=null;
+
+function showGameState(){
+  if(gameIdx>=gameQueue.length){endGame();return;}
+  const d=gameQueue[gameIdx];
+  const group=getGroupForCat(d.cat);
+  const groupId=group?group.id:null;
+  if(groupId!==lastGameGroup){
+    lastGameGroup=groupId;
+    showGroupTrans(group,()=>showCard());
+  }else{
+    showCard();
+  }
+}
+
+function showGroupTrans(group,onDone){
+  const trans=document.getElementById("g-trans");
+  const card=document.getElementById("g-card");
+  card.classList.remove("show");
+  trans.classList.add("show");
+  const label=group?group.label:"";
+  const emoji=label.match(/^([①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬])/);
+  document.getElementById("g-trans-emoji").textContent=emoji?emoji[1]:"";
+  document.getElementById("g-trans-title").textContent=label.replace(/^.\s*/,"");
+  document.getElementById("g-trans-sub").textContent=group?group.subtitle:"";
+  const btn=document.getElementById("g-trans-start");
+  const newBtn=btn.cloneNode(true);
+  btn.parentNode.replaceChild(newBtn,btn);
+  newBtn.addEventListener("click",()=>{trans.classList.remove("show");onDone();});
+}
+
+function showCard(){
+  const d=gameQueue[gameIdx];
+  const group=getGroupForCat(d.cat);
+  const gname=group?group.label.replace(/^.\s*/,""):"";
+  document.getElementById("g-card-group").textContent=gname;
+  document.getElementById("g-card-role").textContent=roleLabel(d.role||"source");
+  document.getElementById("g-card-text").textContent=d.text;
+  const pct=Math.round((gameIdx/gameQueue.length)*100);
+  document.getElementById("gp-fill").style.width=pct+"%";
+  document.getElementById("g-counter").textContent=`${gameIdx+1} / ${gameQueue.length}`;
+  const card=document.getElementById("g-card");
+  card.classList.add("show","anim-in");
+  setTimeout(()=>card.classList.remove("anim-in"),300);
+}
+
+function animateCard(animClass,cb){
+  const card=document.getElementById("g-card");
+  card.classList.add(animClass);
+  setTimeout(()=>{card.classList.remove("show",animClass);cb();},220);
+}
+
+function confetti(){
+  const colors=["#8dc94a","#c8b89a","#5aaaf0","#a78bfa","#d4933a","#e06060"];
+  for(let i=0;i<20;i++){
+    const el=document.createElement("div");
+    el.className="confetti-dot";
+    el.style.cssText=`background:${colors[Math.floor(rand()*colors.length)]};left:${20+rand()*60}vw;top:${20+rand()*30}vh;animation:confettiDrop ${0.5+rand()*0.5}s ${rand()*0.3}s ease-out forwards;`;
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),1200);
+  }
+}
+
+document.getElementById("g-yes").addEventListener("click",async()=>{
+  const d=gameQueue[gameIdx];
+  animateCard("anim-right",async()=>{
+    gameWorked.push(d.id);
+    confetti();
+    if(currentProfile&&!workedIds().has(d.id)){
+      const date=new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
+      try{
+        const result=await sb("sessions",{method:"POST",body:{profile_id:currentProfile.id,date,ids:[d.id]},prefer:"return=representation"});
+        if(result&&result[0])SESSIONS.push({id:result[0].id,date,ids:[d.id]});
+        scheduleReview(d.id,reviewDates[d.id]?reviewDates[d.id].reviewCount+1:0);
+      }catch(e){}
+    }
+    gameIdx++;showGameState();
+  });
+});
+
+document.getElementById("g-later").addEventListener("click",()=>{
+  const d=gameQueue[gameIdx];
+  animateCard("anim-up",()=>{
+    gameLater.push(d.id);todoIds.add(d.id);saveTodo();
+    gameIdx++;showGameState();
+  });
+});
+
+document.getElementById("g-skip").addEventListener("click",()=>{
+  const d=gameQueue[gameIdx];
+  animateCard("anim-left",()=>{
+    gameSkipped.push(d.id);
+    if(isDueForReview(d.id))markIntegrated(d.id);
+    gameIdx++;showGameState();
+  });
+});
+
+document.addEventListener("keydown",e=>{
+  if(!document.getElementById("game-overlay").classList.contains("show"))return;
+  if(document.getElementById("g-trans").classList.contains("show")){
+    if(e.key==="Enter"||e.key===" ")document.getElementById("g-trans-start").click();
+    return;
+  }
+  if(e.key==="ArrowRight"||e.key===" ")document.getElementById("g-yes").click();
+  else if(e.key==="ArrowDown")document.getElementById("g-later").click();
+  else if(e.key==="ArrowLeft")document.getElementById("g-skip").click();
+  else if(e.key==="Escape")document.getElementById("g-quit").click();
+});
+
+document.getElementById("g-quit").addEventListener("click",()=>{
+  document.getElementById("game-overlay").classList.remove("show");
+  document.getElementById("g-trans").classList.remove("show");
+  document.getElementById("g-card").classList.remove("show");
+  document.getElementById("g-results").classList.remove("show");
+  lastGameGroup=null;
+  render();
+});
+
+function endGame(){
+  document.getElementById("g-card").classList.remove("show");
+  document.getElementById("g-trans").classList.remove("show");
+  const res=document.getElementById("g-results");
+  res.classList.add("show");
+  document.getElementById("gp-fill").style.width="100%";
+  // Check if current group is complete
+  const wids=workedIds();
+  const currentGid=[...selectedGroups][0];
+  const currentG=GROUPS.find(g=>g.id===currentGid);
+  let completionMsg="";
+  if(currentG){
+    const total=DATA.filter(d=>currentG.cats.includes(d.cat)).length;
+    const done=DATA.filter(d=>currentG.cats.includes(d.cat)&&wids.has(d.id)).length;
+    const pct=Math.round((done/total)*100);
+    if(pct>=70)completionMsg=`<div style="margin-top:1rem;font-size:13px;color:var(--green-text);border:1px solid var(--green-border);background:var(--green-bg);border-radius:var(--radius);padding:8px 14px;">✓ Groupe complété à ${pct}% — un nouveau groupe sera proposé</div>`;
+  }
+  document.getElementById("g-res-sub").textContent=`${gameWorked.length} travaillées · ${gameLater.length} à faire · ${gameSkipped.length} passées`;
+  document.getElementById("g-res-grid").innerHTML=[
+    {lbl:"Travaillées",val:gameWorked.length,color:"var(--green-text)"},
+    {lbl:"À faire",val:gameLater.length,color:"var(--gold-text)"},
+    {lbl:"Passées",val:gameSkipped.length,color:"var(--text-faint)"},
+  ].map(s=>`<div class="game-res-stat"><div class="game-res-val" style="color:${s.color}">${s.val}</div><div class="game-res-lbl">${s.lbl}</div></div>`).join("")+completionMsg;
+}
+
+document.getElementById("g-validate").addEventListener("click",()=>{
+  document.getElementById("game-overlay").classList.remove("show");
+  document.getElementById("g-results").classList.remove("show");
+  lastGameGroup=null;render();
+});
+document.getElementById("g-restart").addEventListener("click",()=>{
+  document.getElementById("g-results").classList.remove("show");
+  document.getElementById("game-overlay").classList.remove("show");
+  lastGameGroup=null;openGroupSelect();
+});
+
+// PROGRESS
 function renderProgress(){
   document.getElementById("progress-sub").textContent=currentProfile?"Profil — "+currentProfile.name:"";
-  const total=SESSIONS.reduce((acc,s)=>acc+s.ids.length,0);
-  const sessions=SESSIONS.length;
-  const avg=sessions?Math.round(total/sessions):0;
+  const total=SESSIONS.reduce((a,s)=>a+s.ids.length,0);
+  const avg=SESSIONS.length?Math.round(total/SESSIONS.length):0;
   document.getElementById("stat-cards").innerHTML=[
-    {label:"Sessions",value:sessions,unit:"au total"},
+    {label:"Sessions",value:SESSIONS.length,unit:"au total"},
     {label:"Travaillées",value:total,unit:"identités"},
     {label:"Par session",value:avg,unit:"en moyenne"},
   ].map(s=>`<div class="stat-card"><div class="stat-label">${s.label}</div><div class="stat-value">${s.value}</div><div class="stat-unit">${s.unit}</div></div>`).join("");
   const barEl=document.getElementById("bar-chart");
   if(!SESSIONS.length){barEl.innerHTML='<div class="no-data">Aucune session.</div>';}
-  else{const max=Math.max(...SESSIONS.map(s=>s.ids.length));barEl.innerHTML=SESSIONS.map(s=>{const pct=max>0?Math.round((s.ids.length/max)*100):0;return`<div class="bar-row"><span class="bar-label">${s.date}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.max(pct,4)}%"><span class="bar-count">${s.ids.length}</span></div></div></div>`;}).join("");}
-  // By group
+  else{const max=Math.max(...SESSIONS.map(s=>s.ids.length));barEl.innerHTML=SESSIONS.map(s=>{const pct=max?Math.round((s.ids.length/max)*100):0;return`<div class="bar-row"><span class="bar-label">${s.date}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.max(pct,4)}%"><span class="bar-count">${s.ids.length}</span></div></div></div>`;  }).join("");}
   const catEl=document.getElementById("cat-chart");
   const allIds=SESSIONS.flatMap(s=>s.ids);
-  const groupCounts={};
-  allIds.forEach(id=>{
-    const item=DATA.find(d=>d.id===id);
-    if(item){
-      const g=getGroupForCat(item.cat);
-      const key=g?g.label:"Autre";
-      groupCounts[key]=(groupCounts[key]||0)+1;
-    }
-  });
-  const sorted=Object.entries(groupCounts).sort((a,b)=>b[1]-a[1]);
+  const gc={};
+  allIds.forEach(id=>{const item=DATA.find(d=>d.id===id);if(item){const g=getGroupForCat(item.cat);const k=g?g.label:"Autre";gc[k]=(gc[k]||0)+1;  }});
+  const sorted=Object.entries(gc).sort((a,b)=>b[1]-a[1]);
   if(!sorted.length){catEl.innerHTML='<div class="no-data">Aucune donnée.</div>';}
-  else{const maxG=sorted[0][1];catEl.innerHTML=sorted.map(([g,count])=>{const pct=Math.round((count/maxG)*100);return`<div class="cat-row"><span class="cat-label">${g.replace(/^[①-⑭]\s*/,"")}</span><div class="cat-track"><div class="cat-fill" style="width:${Math.max(pct,4)}%"><span class="cat-count">${count}</span></div></div></div>`;}).join("");}
+  else{const maxG=sorted[0][1];catEl.innerHTML=sorted.map(([g,c])=>{const pct=Math.round((c/maxG)*100);return`<div class="cat-row"><span class="cat-label">${g.replace(/^.\s*/,"")}</span><div class="cat-track"><div class="cat-fill" style="width:${Math.max(pct,4)}%"><span class="cat-count">${c}</span></div></div></div>`;  }).join("");}
 }
 document.getElementById("progress-btn").addEventListener("click",()=>{renderProgress();document.getElementById("progress-overlay").classList.add("show");});
 document.getElementById("close-progress").addEventListener("click",()=>document.getElementById("progress-overlay").classList.remove("show"));
 
 loadProfiles();
+
 </script>
 </body>
 </html>
