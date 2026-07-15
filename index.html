@@ -119,6 +119,18 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .group-badge{font-size:10px;padding:2px 7px;border-radius:8px;border:1px solid var(--border);color:var(--text-faint);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .role-icon{font-size:13px;}
 .no-results{padding:3rem;text-align:center;color:var(--text-faint);font-size:14px;grid-column:1/-1;}
+.group-separator{grid-column:1/-1;margin:1.5rem 0 0.5rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);}
+.group-separator:first-child{margin-top:0;}
+.group-sep-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--text-faint);}
+.group-sep-sub{font-size:12px;color:var(--text-faint);margin-top:2px;opacity:0.6;}
+/* Game transition card */
+.game-transition{display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;max-width:480px;width:100%;}
+.game-transition.show{display:flex;}
+.game-trans-num{font-size:48px;margin-bottom:0.5rem;}
+.game-trans-label{font-size:22px;font-weight:600;margin-bottom:0.5rem;}
+.game-trans-sub{font-size:14px;color:var(--text-muted);margin-bottom:2rem;}
+.game-trans-btn{padding:12px 32px;border-radius:var(--radius-lg);border:1px solid var(--accent);background:transparent;color:var(--accent);font-size:14px;font-weight:500;font-family:inherit;cursor:pointer;transition:all 0.2s;}
+.game-trans-btn:hover{background:rgba(200,184,154,0.1);}
 
 /* SESSION BAR */
 .session-bar{position:sticky;bottom:0;background:var(--bg);border-top:1px solid var(--border-md);padding:1rem 0;margin-top:2rem;}
@@ -303,6 +315,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   <div class="game-header">
     <span class="game-counter" id="game-counter"></span>
     <button class="game-quit" id="game-quit">Quitter</button>
+  </div>
+  <div class="game-transition" id="game-transition">
+    <div class="game-trans-num" id="game-trans-num"></div>
+    <div class="game-trans-label" id="game-trans-label"></div>
+    <div class="game-trans-sub" id="game-trans-sub"></div>
+    <button class="game-trans-btn" id="game-trans-btn">Commencer →</button>
   </div>
   <div class="game-card-wrap" id="game-card-wrap">
     <div class="game-group-label" id="game-group-label"></div>
@@ -1612,13 +1630,21 @@ function render(){
   const grid=document.getElementById("grid");
   if(!items.length){grid.innerHTML='<div class="no-results"><i class="ti ti-search" style="font-size:24px;display:block;margin-bottom:8px;opacity:0.2"></i>Aucun résultat</div>';renderSession();return;}
   
+  // Group items by group for separators
+  let lastGroupId=null;
   grid.innerHTML=items.map(d=>{
     const isWorked=checked.has(d.id)||wids.has(d.id);
     const isTodo=todoIds.has(d.id)&&!isWorked;
     const isDue=isDueForReview(d.id)&&!isWorked;
     const group=getGroupForCat(d.cat);
     const groupName=group?group.label.replace(/^[①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭]\s*/,""):"";
-    return`<div class="card${isWorked?" worked":isTodo?" todo":isDue?" due":""}" data-id="${d.id}" tabindex="0">
+    const groupId=group?group.id:"other";
+    let separator="";
+    if(groupId!==lastGroupId&&group){
+      lastGroupId=groupId;
+      separator=`<div class="group-separator"><div class="group-sep-label">${group.label}</div><div class="group-sep-sub">${group.subtitle}</div></div>`;
+    }
+    return separator+`<div class="card${isWorked?" worked":isTodo?" todo":isDue?" due":""}" data-id="${d.id}" tabindex="0">
       <div class="card-top">
         <span class="identity">${d.text}</span>
         <div class="check-circle"><i class="ti ti-check"></i></div>
@@ -1685,7 +1711,29 @@ document.getElementById("validate-btn").addEventListener("click",async()=>{
 // GAME MODE
 let gameQueue=[],gameIdx=0,gameWorked=[],gameLater=[],gameSkipped=[];
 
+let gameCurrentGroupIdx=-1;
+
+function showGroupTransition(groupIdx,onContinue){
+  const group=GROUPS[groupIdx];
+  if(!group)return onContinue();
+  document.getElementById("game-card-wrap").style.display="none";
+  const trans=document.getElementById("game-transition");
+  trans.classList.add("show");
+  // Extract number emoji from label
+  const numMatch=group.label.match(/^([①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭])/);
+  document.getElementById("game-trans-num").textContent=numMatch?numMatch[1]:"";
+  document.getElementById("game-trans-label").textContent=group.label.replace(/^[①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭]\s*/,"");
+  document.getElementById("game-trans-sub").textContent=group.subtitle;
+  const btn=document.getElementById("game-trans-btn");
+  btn.onclick=()=>{
+    trans.classList.remove("show");
+    document.getElementById("game-card-wrap").style.display="block";
+    onContinue();
+  };
+}
+
 function startGame(){
+  gameCurrentGroupIdx=-1;
   const wids=workedIds();
   const roleOrder={source:0,verdict:1,coping:2};
   gameQueue=[...DATA]
@@ -1718,8 +1766,27 @@ function launchConfetti(){
 
 function showGameCard(exitClass){
   if(gameIdx>=gameQueue.length){endGame();return;}
-  const wrap=document.getElementById("game-card-wrap");
   
+  // Check if we're entering a new group
+  const d=gameQueue[gameIdx];
+  const group=getGroupForCat(d.cat);
+  const newGroupIdx=group?GROUPS.indexOf(group):-1;
+  
+  if(newGroupIdx!==gameCurrentGroupIdx&&newGroupIdx>=0&&gameIdx>0){
+    gameCurrentGroupIdx=newGroupIdx;
+    showGroupTransition(newGroupIdx,()=>_animateCard(exitClass));
+    return;
+  }
+  if(gameCurrentGroupIdx===-1&&newGroupIdx>=0){
+    gameCurrentGroupIdx=newGroupIdx;
+    showGroupTransition(newGroupIdx,()=>_animateCard(null));
+    return;
+  }
+  
+  _animateCard(exitClass);
+}
+
+function _animateCard(exitClass){
   if(exitClass){
     wrap.classList.add(exitClass);
     setTimeout(()=>{
