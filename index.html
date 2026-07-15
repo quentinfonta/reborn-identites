@@ -123,6 +123,26 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .group-separator:first-child{margin-top:0;}
 .group-sep-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--text-faint);}
 .group-sep-sub{font-size:12px;color:var(--text-faint);margin-top:2px;opacity:0.6;}
+/* Group selection */
+.group-select-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:550;align-items:center;justify-content:center;padding:1.5rem;}
+.group-select-overlay.show{display:flex;}
+.group-select-box{background:var(--surface);border:1px solid var(--border-strong);border-radius:var(--radius-lg);padding:1.5rem;max-width:540px;width:100%;max-height:85vh;overflow-y:auto;}
+.group-select-title{font-size:18px;font-weight:600;margin-bottom:0.25rem;}
+.group-select-sub{font-size:13px;color:var(--text-muted);margin-bottom:1.25rem;}
+.group-select-list{display:flex;flex-direction:column;gap:8px;margin-bottom:1.5rem;}
+.group-select-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface2);cursor:pointer;transition:all 0.15s;}
+.group-select-item:hover{border-color:var(--border-md);}
+.group-select-item.selected{border-color:var(--accent);background:rgba(200,184,154,0.08);}
+.group-select-check{width:18px;height:18px;border-radius:4px;border:1.5px solid var(--border-md);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.15s;}
+.group-select-item.selected .group-select-check{background:var(--accent);border-color:var(--accent);}
+.group-select-check i{font-size:11px;color:#0a0a0a;opacity:0;}
+.group-select-item.selected .group-select-check i{opacity:1;}
+.group-select-name{font-size:14px;font-weight:500;flex:1;}
+.group-select-count{font-size:12px;color:var(--text-faint);}
+.group-select-actions{display:flex;gap:8px;justify-content:flex-end;}
+.group-select-cancel{padding:9px 18px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface2);color:var(--text-muted);font-size:13px;font-family:inherit;cursor:pointer;}
+.group-select-start{padding:9px 22px;border-radius:var(--radius);border:1px solid var(--green-border);background:var(--green-bg);color:var(--green-text);font-size:13px;font-weight:500;font-family:inherit;cursor:pointer;}
+
 /* Game transition card */
 .game-transition{display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;max-width:480px;width:100%;}
 .game-transition.show{display:flex;}
@@ -310,6 +330,18 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 </div>
 
 <!-- GAME OVERLAY -->
+<div class="group-select-overlay" id="group-select-overlay">
+  <div class="group-select-box">
+    <div class="group-select-title">Mode Découverte</div>
+    <div class="group-select-sub">Choisis les groupes à explorer (3-4 recommandés)</div>
+    <div class="group-select-list" id="group-select-list"></div>
+    <div class="group-select-actions">
+      <button class="group-select-cancel" id="group-select-cancel">Annuler</button>
+      <button class="group-select-start" id="group-select-start"><i class="ti ti-play"></i> Lancer</button>
+    </div>
+  </div>
+</div>
+
 <div class="game-overlay" id="game-overlay">
   <div class="game-top-bar"><div class="game-progress-fill" id="game-progress-fill" style="width:0%"></div></div>
   <div class="game-header">
@@ -1730,6 +1762,8 @@ function showGroupTransition(groupIdx,onContinue){
     document.getElementById("game-card-wrap").style.display="block";
     onContinue();
   };
+  // Also show card immediately if first card
+  document.getElementById("game-card-wrap").style.display="none";
 }
 
 function startGame(){
@@ -1885,10 +1919,50 @@ document.getElementById("game-validate-btn").addEventListener("click",async()=>{
   render();
 });
 document.getElementById("game-restart-btn").addEventListener("click",()=>{startGame();});
-document.getElementById("game-btn").addEventListener("click",()=>{
+let selectedGroups=new Set();
+
+function openGroupSelect(){
   if(!currentProfile){showToast("Connecte-toi d abord");return;}
+  const wids=workedIds();
+  const list=document.getElementById("group-select-list");
+  // Default: select first 4 groups
+  if(selectedGroups.size===0)GROUPS.slice(0,4).forEach(g=>selectedGroups.add(g.id));
+  
+  list.innerHTML=GROUPS.map(g=>{
+    const count=DATA.filter(d=>g.cats.includes(d.cat)&&!wids.has(d.id)&&!todoIds.has(d.id)).length;
+    const isSelected=selectedGroups.has(g.id);
+    return`<div class="group-select-item${isSelected?" selected":""}" data-gid="${g.id}">
+      <div class="group-select-check"><i class="ti ti-check"></i></div>
+      <div class="group-select-name">${g.label}</div>
+      <div class="group-select-count">${count} identités</div>
+    </div>`;
+  }).join("");
+
+  list.querySelectorAll(".group-select-item").forEach(item=>{
+    item.addEventListener("click",()=>{
+      const gid=item.dataset.gid;
+      if(selectedGroups.has(gid))selectedGroups.delete(gid);
+      else selectedGroups.add(gid);
+      item.classList.toggle("selected",selectedGroups.has(gid));
+      const checkIcon=item.querySelector(".group-select-check i");
+      if(checkIcon)checkIcon.style.opacity=selectedGroups.has(gid)?"1":"0";
+    });
+  });
+
+  document.getElementById("group-select-overlay").classList.add("show");
+}
+
+document.getElementById("group-select-cancel").addEventListener("click",()=>{
+  document.getElementById("group-select-overlay").classList.remove("show");
+});
+
+document.getElementById("group-select-start").addEventListener("click",()=>{
+  if(selectedGroups.size===0){showToast("Choisis au moins un groupe");return;}
+  document.getElementById("group-select-overlay").classList.remove("show");
   startGame();
 });
+
+document.getElementById("game-btn").addEventListener("click",openGroupSelect);
 
 // PROGRESSION
 function renderProgress(){
