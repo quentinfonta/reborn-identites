@@ -60,6 +60,23 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .pin-key.del{font-size:14px;color:var(--text-muted);}
 .pin-error{font-size:13px;color:var(--red-text);min-height:18px;text-align:center;}
 .back-link{font-size:13px;color:var(--text-faint);cursor:pointer;text-decoration:underline;}
+.home-screen{display:none;min-height:100vh;align-items:center;justify-content:center;flex-direction:column;gap:2rem;padding:2rem;}
+.home-screen.show{display:flex;}
+.home-welcome{text-align:center;}
+.home-welcome-name{font-size:28px;font-weight:600;margin-bottom:4px;}
+.home-welcome-sub{font-size:14px;color:var(--text-muted);}
+.home-cards{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;}
+.home-card{display:flex;flex-direction:column;align-items:center;gap:1rem;padding:2rem 2.5rem;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);cursor:pointer;transition:all 0.2s;min-width:200px;text-align:center;}
+.home-card:hover{border-color:var(--border-strong);background:var(--surface2);transform:translateY(-2px);}
+.home-card.dict{border-color:var(--border-md);}
+.home-card.game{border-color:var(--purple-border);background:var(--purple-bg);}
+.home-card.game:hover{background:rgba(139,92,246,0.18);}
+.home-card-icon{font-size:40px;}
+.home-card-title{font-size:17px;font-weight:600;}
+.home-card-sub{font-size:13px;color:var(--text-muted);line-height:1.4;}
+.home-footer{display:flex;gap:12px;align-items:center;}
+.home-footer-btn{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--radius);border:1px solid var(--border);background:none;color:var(--text-faint);font-size:12px;font-family:inherit;cursor:pointer;transition:all 0.15s;}
+.home-footer-btn:hover{border-color:var(--border-md);color:var(--text-muted);}
 .main-container{max-width:960px;margin:0 auto;}
 .main-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:12px;}
 .brand-title{font-size:22px;font-weight:600;}
@@ -116,6 +133,25 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .validate-btn:hover{opacity:0.8;}
 .validate-btn:disabled{opacity:0.3;cursor:default;}
 .session-count{font-size:12px;color:var(--text-faint);white-space:nowrap;}
+/* SESSION FORMAT */
+.session-format-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:400;align-items:center;justify-content:center;padding:1.5rem;}
+.session-format-overlay.show{display:flex;}
+.session-format-box{background:var(--surface);border:1px solid var(--border-strong);border-radius:var(--radius-lg);padding:2rem;max-width:480px;width:100%;}
+.session-format-title{font-size:18px;font-weight:600;margin-bottom:0.25rem;}
+.session-format-sub{font-size:13px;color:var(--text-muted);margin-bottom:1.5rem;}
+.session-format-cards{display:flex;flex-direction:column;gap:10px;margin-bottom:1.5rem;}
+.sf-card{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface2);cursor:pointer;transition:all 0.15s;}
+.sf-card:hover{border-color:var(--border-strong);background:var(--surface3);}
+.sf-card.sel{border-color:var(--accent);background:rgba(200,184,154,0.08);}
+.sf-icon{font-size:28px;flex-shrink:0;}
+.sf-info{flex:1;}
+.sf-name{font-size:15px;font-weight:600;margin-bottom:2px;}
+.sf-desc{font-size:12px;color:var(--text-muted);}
+.sf-count{font-size:20px;font-weight:700;color:var(--accent);flex-shrink:0;}
+.session-format-actions{display:flex;gap:8px;justify-content:flex-end;}
+.sf-cancel{padding:9px 18px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface2);color:var(--text-muted);font-size:13px;font-family:inherit;cursor:pointer;}
+.sf-start{padding:9px 22px;border-radius:var(--radius);border:1px solid var(--purple-border);background:var(--purple-bg);color:var(--purple-text);font-size:13px;font-weight:500;font-family:inherit;cursor:pointer;}
+
 /* GROUP SELECT */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:400;align-items:center;justify-content:center;padding:1.5rem;}
 .modal-overlay.show{display:flex;}
@@ -269,7 +305,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
       <div class="brand-title">Dictionnaire des identités</div>
     </div>
     <div class="main-header-right">
-      <div class="profile-badge"><i class="ti ti-user"></i><span id="profile-name-badge">—</span><button class="icon-btn" id="switch-btn" style="margin-left:4px"><i class="ti ti-switch-horizontal" style="font-size:14px"></i></button></div>
+      <div class="profile-badge"><i class="ti ti-user"></i><span id="profile-name-badge">—</span><button class="icon-btn" id="switch-btn" style="margin-left:4px"><i class="ti ti-home" style="font-size:14px"></i></button></div>
       <button class="header-btn purple" id="game-btn"><i class="ti ti-cards"></i> Découverte</button>
       <button class="header-btn blue" id="progress-btn"><i class="ti ti-chart-bar"></i> Progression</button>
     </div>
@@ -298,6 +334,68 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     </div>
   </div>
 </div>
+</div>
+
+<!-- HOME SCREEN -->
+<div class="home-screen" id="home-screen">
+  <div class="home-welcome">
+    <div class="home-welcome-name">Bonjour, <span id="home-name"></span> 👋</div>
+    <div class="home-welcome-sub">Que veux-tu faire aujourd'hui ?</div>
+  </div>
+  <div class="home-cards">
+    <div class="home-card dict" id="home-dict-btn">
+      <div class="home-card-icon">🗂</div>
+      <div class="home-card-title">Dictionnaire</div>
+      <div class="home-card-sub">Explorer, chercher et cocher les identités librement</div>
+    </div>
+    <div class="home-card game" id="home-game-btn">
+      <div class="home-card-icon">🃏</div>
+      <div class="home-card-title">Mode Découverte</div>
+      <div class="home-card-sub">Séance guidée dans l'ordre clinique</div>
+    </div>
+  </div>
+  <div class="home-footer">
+    <button class="home-footer-btn" id="home-progress-btn"><i class="ti ti-chart-bar"></i> Progression</button>
+    <button class="home-footer-btn" id="home-switch-btn"><i class="ti ti-switch-horizontal"></i> Changer de profil</button>
+  </div>
+</div>
+
+<!-- SESSION FORMAT MODAL -->
+<div class="session-format-overlay" id="sf-modal">
+  <div class="session-format-box">
+    <div class="session-format-title">Mode Découverte</div>
+    <div class="session-format-sub">Choisis la durée de ta séance</div>
+    <div class="session-format-cards">
+      <div class="sf-card" data-size="5">
+        <div class="sf-icon">⚡</div>
+        <div class="sf-info">
+          <div class="sf-name">Micro-séance</div>
+          <div class="sf-desc">Rapide et ciblée — idéale pour commencer ou finir une session</div>
+        </div>
+        <div class="sf-count">5</div>
+      </div>
+      <div class="sf-card" data-size="10">
+        <div class="sf-icon">🎯</div>
+        <div class="sf-info">
+          <div class="sf-name">Séance</div>
+          <div class="sf-desc">Format standard — un bon équilibre entre profondeur et durée</div>
+        </div>
+        <div class="sf-count">10</div>
+      </div>
+      <div class="sf-card" data-size="20">
+        <div class="sf-icon">🔥</div>
+        <div class="sf-info">
+          <div class="sf-name">Séance longue</div>
+          <div class="sf-desc">Pour aller plus loin — quand l'énergie et le temps le permettent</div>
+        </div>
+        <div class="sf-count">20</div>
+      </div>
+    </div>
+    <div class="session-format-actions">
+      <button class="sf-cancel" id="sf-cancel">Annuler</button>
+      <button class="sf-start" id="sf-start" disabled><i class="ti ti-play"></i> Lancer</button>
+    </div>
+  </div>
 </div>
 
 <!-- GROUP SELECT MODAL -->
@@ -392,26 +490,26 @@ async function hashPin(pin){
 }
 
 const DEFAULT_DATA = [
-  {id:372,text:'Je suis anesthésié',cat:'Rigidité',depth:1,role:'coping'},
-  {id:374,text:'Je suis assoupi',cat:'Rigidité',depth:1,role:'coping'},
-  {id:373,text:'Je suis endormi',cat:'Rigidité',depth:1,role:'coping'},
-  {id:375,text:'Je suis engourdi',cat:'Rigidité',depth:1,role:'coping'},
-  {id:362,text:'Je suis gelé',cat:'Rigidité',depth:2,role:'coping'},
-  {id:361,text:'Je suis congelé',cat:'Rigidité',depth:2,role:'coping'},
-  {id:363,text:'Je suis glacé',cat:'Rigidité',depth:2,role:'coping'},
-  {id:376,text:'Je suis figé',cat:'Rigidité',depth:2,role:'coping'},
-  {id:6001,text:'Je suis crispé',cat:'Rigidité',depth:2,role:'coping'},
-  {id:6002,text:'Je suis contracté',cat:'Rigidité',depth:2,role:'coping'},
-  {id:6003,text:'Je suis noué',cat:'Rigidité',depth:2,role:'coping'},
-  {id:6004,text:'Je suis raidi',cat:'Rigidité',depth:2,role:'coping'},
-  {id:369,text:'Je suis rigidifié',cat:'Rigidité',depth:3,role:'coping'},
-  {id:368,text:'Je suis solidifié',cat:'Rigidité',depth:3,role:'coping'},
-  {id:367,text:'Je suis cristallisé',cat:'Rigidité',depth:3,role:'coping'},
-  {id:364,text:'Je suis calcifié',cat:'Rigidité',depth:4,role:'coping'},
-  {id:365,text:'Je suis fossilisé',cat:'Rigidité',depth:4,role:'coping'},
-  {id:366,text:'Je suis momifié',cat:'Rigidité',depth:4,role:'coping'},
-  {id:371,text:'Je suis enkysté',cat:'Rigidité',depth:5,role:'coping'},
-  {id:360,text:'Je suis pétrifié',cat:'Rigidité',depth:5,role:'coping'},
+  {id:372,text:'Je suis anesthésié',cat:'Rigidité',depth:1,role:'source'},
+  {id:374,text:'Je suis assoupi',cat:'Rigidité',depth:1,role:'source'},
+  {id:373,text:'Je suis endormi',cat:'Rigidité',depth:1,role:'source'},
+  {id:375,text:'Je suis engourdi',cat:'Rigidité',depth:1,role:'source'},
+  {id:362,text:'Je suis gelé',cat:'Rigidité',depth:2,role:'source'},
+  {id:361,text:'Je suis congelé',cat:'Rigidité',depth:2,role:'source'},
+  {id:363,text:'Je suis glacé',cat:'Rigidité',depth:2,role:'source'},
+  {id:376,text:'Je suis figé',cat:'Rigidité',depth:2,role:'source'},
+  {id:6001,text:'Je suis crispé',cat:'Rigidité',depth:2,role:'source'},
+  {id:6002,text:'Je suis contracté',cat:'Rigidité',depth:2,role:'source'},
+  {id:6003,text:'Je suis noué',cat:'Rigidité',depth:2,role:'source'},
+  {id:6004,text:'Je suis raidi',cat:'Rigidité',depth:2,role:'source'},
+  {id:369,text:'Je suis rigidifié',cat:'Rigidité',depth:3,role:'source'},
+  {id:368,text:'Je suis solidifié',cat:'Rigidité',depth:3,role:'source'},
+  {id:367,text:'Je suis cristallisé',cat:'Rigidité',depth:3,role:'source'},
+  {id:364,text:'Je suis calcifié',cat:'Rigidité',depth:4,role:'source'},
+  {id:365,text:'Je suis fossilisé',cat:'Rigidité',depth:4,role:'source'},
+  {id:366,text:'Je suis momifié',cat:'Rigidité',depth:4,role:'source'},
+  {id:371,text:'Je suis enkysté',cat:'Rigidité',depth:5,role:'source'},
+  {id:360,text:'Je suis pétrifié',cat:'Rigidité',depth:5,role:'source'},
   {id:292,text:'Je suis drainé',cat:'Épuisement',depth:1,role:'source'},
   {id:293,text:'Je suis lessivé',cat:'Épuisement',depth:1,role:'source'},
   {id:2910,text:'Je suis épuisé',cat:'Épuisement',depth:1,role:'source'},
@@ -452,15 +550,15 @@ const DEFAULT_DATA = [
   {id:10010,text:'Je suis désynchronisé',cat:'Confusion',depth:4,role:'source'},
   {id:1003,text:'Je suis déséquilibré',cat:'Confusion',depth:4,role:'source'},
   {id:337,text:'Je suis déstructuré',cat:'Confusion',depth:5,role:'source'},
-  {id:158,text:'Je suis freiné',cat:'Contrôle',depth:1,role:'coping'},
-  {id:156,text:'Je suis stoppé',cat:'Contrôle',depth:1,role:'coping'},
+  {id:158,text:'Je suis freiné',cat:'Contrôle',depth:1,role:'source'},
+  {id:156,text:'Je suis stoppé',cat:'Contrôle',depth:1,role:'source'},
   {id:157,text:'Je suis arrêté',cat:'Contrôle',depth:1,role:'coping'},
-  {id:159,text:'Je suis bridé',cat:'Contrôle',depth:1,role:'coping'},
-  {id:143,text:'Je suis retenu',cat:'Contrôle',depth:2,role:'coping'},
-  {id:161,text:'Je suis contraint',cat:'Contrôle',depth:2,role:'coping'},
-  {id:160,text:'Je suis entravé',cat:'Contrôle',depth:2,role:'coping'},
-  {id:151,text:'Je suis coincé',cat:'Contrôle',depth:2,role:'coping'},
-  {id:152,text:'Je suis bloqué',cat:'Contrôle',depth:2,role:'coping'},
+  {id:159,text:'Je suis bridé',cat:'Contrôle',depth:1,role:'source'},
+  {id:143,text:'Je suis retenu',cat:'Contrôle',depth:2,role:'source'},
+  {id:161,text:'Je suis contraint',cat:'Contrôle',depth:2,role:'source'},
+  {id:160,text:'Je suis entravé',cat:'Contrôle',depth:2,role:'source'},
+  {id:151,text:'Je suis coincé',cat:'Contrôle',depth:2,role:'source'},
+  {id:152,text:'Je suis bloqué',cat:'Contrôle',depth:2,role:'source'},
   {id:3011,text:'Je suis prévenu',cat:'Contrôle',depth:2,role:'coping'},
   {id:4036,text:'Je suis observé',cat:'Contrôle',depth:2,role:'coping'},
   {id:6035,text:'Je suis recadré',cat:'Conditionnement',depth:2,role:'coping'},
@@ -468,11 +566,10 @@ const DEFAULT_DATA = [
   {id:7009,text:'Je suis retardé',cat:'Contrôle',depth:2,role:'coping'},
   {id:7010,text:'Je suis différé',cat:'Contrôle',depth:2,role:'coping'},
   {id:7011,text:'Je suis ajourné',cat:'Contrôle',depth:2,role:'coping'},
-  {id:153,text:'Je suis figé',cat:'Contrôle',depth:3,role:'coping'},
-  {id:154,text:'Je suis paralysé',cat:'Contrôle',depth:3,role:'coping'},
-  {id:155,text:'Je suis immobilisé',cat:'Contrôle',depth:3,role:'coping'},
+  {id:154,text:'Je suis paralysé',cat:'Contrôle',depth:3,role:'source'},
+  {id:155,text:'Je suis immobilisé',cat:'Contrôle',depth:3,role:'source'},
   {id:142,text:'Je suis attaché',cat:'Contrôle',depth:3,role:'coping'},
-  {id:141,text:'Je suis ligoté',cat:'Contrôle',depth:3,role:'coping'},
+  {id:141,text:'Je suis ligoté',cat:'Contrôle',depth:3,role:'source'},
   {id:3006,text:'Je suis intimidé',cat:'Contrôle',depth:3,role:'coping'},
   {id:3037,text:'Je suis menacé',cat:'Contrôle',depth:3,role:'coping'},
   {id:3054,text:'Je suis surveillé',cat:'Contrôle',depth:3,role:'coping'},
@@ -492,40 +589,39 @@ const DEFAULT_DATA = [
   {id:6291,text:'Je suis espionné',cat:'Contrôle',depth:3,role:'coping'},
   {id:6292,text:'Je suis pisté',cat:'Contrôle',depth:3,role:'coping'},
   {id:7012,text:'Je suis chronométré',cat:'Contrôle',depth:3,role:'coping'},
-  {id:140,text:'Je suis enchaîné',cat:'Contrôle',depth:4,role:'coping'},
+  {id:140,text:'Je suis enchaîné',cat:'Contrôle',depth:4,role:'source'},
   {id:150,text:'Je suis piégé',cat:'Contrôle',depth:4,role:'coping'},
-  {id:144,text:'Je suis cadenassé',cat:'Contrôle',depth:4,role:'coping'},
-  {id:145,text:'Je suis verrouillé',cat:'Contrôle',depth:4,role:'coping'},
-  {id:146,text:'Je suis barricadé',cat:'Contrôle',depth:4,role:'coping'},
-  {id:147,text:'Je suis cloisonné',cat:'Contrôle',depth:4,role:'coping'},
-  {id:148,text:'Je suis muré',cat:'Contrôle',depth:4,role:'coping'},
+  {id:144,text:'Je suis cadenassé',cat:'Contrôle',depth:4,role:'source'},
+  {id:145,text:'Je suis verrouillé',cat:'Contrôle',depth:4,role:'source'},
+  {id:146,text:'Je suis barricadé',cat:'Contrôle',depth:4,role:'source'},
+  {id:147,text:'Je suis cloisonné',cat:'Contrôle',depth:4,role:'source'},
+  {id:148,text:'Je suis muré',cat:'Contrôle',depth:4,role:'source'},
   {id:149,text:'Je suis cloué',cat:'Contrôle',depth:4,role:'coping'},
   {id:3017,text:'Je suis capturé',cat:'Contrôle',depth:4,role:'coping'},
   {id:3020,text:'Je suis neutralisé',cat:'Contrôle',depth:4,role:'coping'},
   {id:3068,text:'Je suis forcé',cat:'Contrôle',depth:4,role:'coping'},
   {id:3136,text:'Je suis réprimé',cat:'Contrôle',depth:4,role:'coping'},
   {id:4025,text:'Je suis dompté',cat:'Contrôle',depth:4,role:'coping'},
-  {id:6030,text:'Je suis encagé',cat:'Contrôle',depth:4,role:'coping'},
+  {id:6030,text:'Je suis encagé',cat:'Contrôle',depth:4,role:'source'},
   {id:6033,text:'Je suis embrigadé',cat:'Conditionnement',depth:4,role:'coping'},
   {id:6034,text:'Je suis endoctriné',cat:'Conditionnement',depth:4,role:'coping'},
   {id:6290,text:'Je suis traqué',cat:'Contrôle',depth:4,role:'coping'},
   {id:7047,text:'Je suis surresponsabilisé',cat:'Contrôle',depth:4,role:'coping'},
-  {id:139,text:'Je suis enfermé',cat:'Contrôle',depth:5,role:'coping'},
-  {id:138,text:'Je suis emprisonné',cat:'Contrôle',depth:5,role:'coping'},
-  {id:132,text:'Je suis dominé',cat:'Contrôle',depth:5,role:'coping'},
+  {id:139,text:'Je suis enfermé',cat:'Contrôle',depth:5,role:'source'},
+  {id:138,text:'Je suis emprisonné',cat:'Contrôle',depth:5,role:'source'},
+  {id:132,text:'Je suis dominé',cat:'Contrôle',depth:5,role:'source'},
   {id:133,text:'Je suis soumis',cat:'Contrôle',depth:5,role:'coping'},
   {id:134,text:'Je suis domestiqué',cat:'Conditionnement',depth:5,role:'coping'},
   {id:135,text:'Je suis colonisé',cat:'Contrôle',depth:5,role:'coping'},
   {id:136,text:'Je suis instrumentalisé',cat:'Contrôle',depth:5,role:'coping'},
   {id:137,text:'Je suis possédé',cat:'Contrôle',depth:5,role:'coping'},
-  {id:131,text:'Je suis manipulé',cat:'Contrôle',depth:5,role:'coping'},
-  {id:130,text:'Je suis contrôlé',cat:'Contrôle',depth:5,role:'coping'},
+  {id:131,text:'Je suis manipulé',cat:'Contrôle',depth:5,role:'source'},
+  {id:130,text:'Je suis contrôlé',cat:'Contrôle',depth:5,role:'source'},
   {id:2021,text:'Je suis asservi',cat:'Contrôle',depth:5,role:'coping'},
   {id:2022,text:'Je suis subjugué',cat:'Contrôle',depth:5,role:'coping'},
   {id:2023,text:'Je suis assujetti',cat:'Contrôle',depth:5,role:'coping'},
-  {id:1010,text:'Je suis isolé',cat:'Isolement',depth:1,role:'source'},
-  {id:1011,text:'Je suis séparé',cat:'Isolement',depth:1,role:'source'},
-  {id:1012,text:'Je suis coupé',cat:'Isolement',depth:2,role:'source'},
+  {id:1010,text:'Je suis isolé',cat:'Isolement',depth:1,role:'verdict'},
+  {id:1011,text:'Je suis séparé',cat:'Isolement',depth:1,role:'verdict'},
   {id:1013,text:'Je suis fermé',cat:'Isolement',depth:2,role:'source'},
   {id:1014,text:'Je suis confiné',cat:'Isolement',depth:2,role:'source'},
   {id:1015,text:'Je suis limité',cat:'Isolement',depth:2,role:'source'},
@@ -703,14 +799,14 @@ const DEFAULT_DATA = [
   {id:7003,text:'Je suis détrôné',cat:'Abandon',depth:4,role:'source'},
   {id:7032,text:'Je suis blacklisté',cat:'Abandon',depth:4,role:'source'},
   {id:30,text:'Je suis abandonné',cat:'Abandon',depth:5,role:'source'},
-  {id:481,text:'Je suis touché',cat:'Blessure',depth:1,role:'source'},
+  {id:481,text:'Je suis touché',cat:'Blessure',depth:1,role:'verdict'},
   {id:484,text:'Je suis heurté',cat:'Blessure',depth:1,role:'source'},
   {id:6103,text:'Je suis griffé',cat:'Blessure',depth:1,role:'source'},
   {id:6105,text:'Je suis égratigné',cat:'Blessure',depth:1,role:'source'},
-  {id:483,text:'Je suis frappé',cat:'Blessure',depth:2,role:'source'},
+  {id:483,text:'Je suis frappé',cat:'Blessure',depth:2,role:'verdict'},
   {id:485,text:'Je suis choqué',cat:'Blessure',depth:2,role:'source'},
-  {id:482,text:'Je suis atteint',cat:'Blessure',depth:2,role:'source'},
-  {id:480,text:'Je suis blessé',cat:'Blessure',depth:2,role:'source'},
+  {id:482,text:'Je suis atteint',cat:'Blessure',depth:2,role:'verdict'},
+  {id:480,text:'Je suis blessé',cat:'Blessure',depth:2,role:'verdict'},
   {id:3016,text:'Je suis brusqué',cat:'Blessure',depth:2,role:'source'},
   {id:3028,text:'Je suis inquiété',cat:'Blessure',depth:2,role:'source'},
   {id:3049,text:'Je suis impacté',cat:'Blessure',depth:2,role:'source'},
@@ -722,10 +818,6 @@ const DEFAULT_DATA = [
   {id:5025,text:'Je suis désappointé',cat:'Blessure',depth:2,role:'source'},
   {id:6100,text:'Je suis contusionné',cat:'Blessure',depth:2,role:'source'},
   {id:6104,text:'Je suis écorché',cat:'Blessure',depth:2,role:'source'},
-  {id:6106,text:'Je suis vexé',cat:'Blessure',depth:2,role:'source'},
-  {id:6107,text:'Je suis froissé',cat:'Blessure',depth:2,role:'source'},
-  {id:6110,text:'Je suis déçu',cat:'Blessure',depth:2,role:'source'},
-  {id:6111,text:'Je suis désappointé',cat:'Blessure',depth:2,role:'source'},
   {id:6270,text:'Je suis attristé',cat:'Blessure',depth:2,role:'source'},
   {id:6271,text:'Je suis peiné',cat:'Blessure',depth:2,role:'source'},
   {id:7021,text:'Je suis poussé',cat:'Blessure',depth:2,role:'source'},
@@ -734,24 +826,22 @@ const DEFAULT_DATA = [
   {id:491,text:'Je suis courbé',cat:'Blessure',depth:3,role:'source'},
   {id:492,text:'Je suis plié',cat:'Blessure',depth:3,role:'source'},
   {id:490,text:'Je suis tordu',cat:'Blessure',depth:3,role:'source'},
-  {id:1092,text:'Je suis meurtri',cat:'Blessure',depth:3,role:'source'},
+  {id:1092,text:'Je suis meurtri',cat:'Blessure',depth:3,role:'verdict'},
   {id:1093,text:'Je suis marqué',cat:'Blessure',depth:3,role:'source'},
   {id:3033,text:'Je suis paniqué',cat:'Blessure',depth:3,role:'source'},
   {id:3034,text:'Je suis affolé',cat:'Blessure',depth:3,role:'source'},
   {id:3050,text:'Je suis attaqué',cat:'Blessure',depth:3,role:'source'},
   {id:3065,text:'Je suis engueulé',cat:'Blessure',depth:3,role:'source'},
   {id:5022,text:'Je suis offensé',cat:'Blessure',depth:3,role:'source'},
-  {id:5028,text:'Je suis écorché',cat:'Blessure',depth:3,role:'source'},
   {id:6101,text:'Je suis tailladé',cat:'Blessure',depth:3,role:'source'},
   {id:6102,text:'Je suis entaillé',cat:'Blessure',depth:3,role:'source'},
-  {id:6108,text:'Je suis offensé',cat:'Blessure',depth:3,role:'source'},
   {id:6250,text:'Je suis effrayé',cat:'Blessure',depth:3,role:'source'},
   {id:6272,text:'Je suis affligé',cat:'Blessure',depth:3,role:'source'},
   {id:6273,text:'Je suis éploré',cat:'Blessure',depth:3,role:'source'},
   {id:6301,text:'Je suis malmené',cat:'Blessure',depth:3,role:'source'},
   {id:7004,text:'Je suis vulnérabilisé',cat:'Blessure',depth:3,role:'source'},
   {id:7005,text:'Je suis fragilisé',cat:'Blessure',depth:3,role:'source'},
-  {id:7020,text:'Je suis giflé',cat:'Blessure',depth:3,role:'source'},
+  {id:7020,text:'Je suis giflé',cat:'Blessure',depth:3,role:'verdict'},
   {id:7023,text:'Je suis percuté',cat:'Blessure',depth:3,role:'source'},
   {id:494,text:'Je suis terrassé',cat:'Blessure',depth:4,role:'source'},
   {id:489,text:'Je suis torturé',cat:'Blessure',depth:4,role:'source'},
@@ -764,10 +854,9 @@ const DEFAULT_DATA = [
   {id:3101,text:'Je suis tourmenté',cat:'Blessure',depth:4,role:'source'},
   {id:3108,text:'Je suis agressé',cat:'Blessure',depth:4,role:'source'},
   {id:5023,text:'Je suis ulcéré',cat:'Blessure',depth:4,role:'source'},
-  {id:6109,text:'Je suis ulcéré',cat:'Blessure',depth:4,role:'source'},
   {id:6251,text:'Je suis terrorisé',cat:'Blessure',depth:4,role:'source'},
   {id:6302,text:'Je suis maltraité',cat:'Blessure',depth:4,role:'source'},
-  {id:7040,text:'Je suis battu',cat:'Blessure',depth:4,role:'source'},
+  {id:7040,text:'Je suis battu',cat:'Blessure',depth:4,role:'verdict'},
   {id:7041,text:'Je suis roué',cat:'Blessure',depth:4,role:'source'},
   {id:7042,text:'Je suis rossé',cat:'Blessure',depth:4,role:'source'},
   {id:7043,text:'Je suis molesté',cat:'Blessure',depth:4,role:'source'},
@@ -829,7 +918,6 @@ const DEFAULT_DATA = [
   {id:5002,text:'Je suis disqualifié',cat:'Effondrement',depth:4,role:'verdict'},
   {id:5007,text:'Je suis invalidé',cat:'Effondrement',depth:4,role:'verdict'},
   {id:5027,text:'Je suis mortifié',cat:'Effondrement',depth:4,role:'verdict'},
-  {id:6121,text:'Je suis mortifié',cat:'Effondrement',depth:4,role:'verdict'},
   {id:1110,text:'Je suis privé',cat:'Perte',depth:1,role:'source'},
   {id:1111,text:'Je suis démuni',cat:'Perte',depth:2,role:'source'},
   {id:3027,text:'Je suis fauché',cat:'Perte',depth:2,role:'source'},
@@ -841,12 +929,10 @@ const DEFAULT_DATA = [
   {id:1115,text:'Je suis dépourvu',cat:'Perte',depth:3,role:'source'},
   {id:5026,text:'Je suis lésé',cat:'Perte',depth:3,role:'source'},
   {id:6132,text:'Je suis pillé',cat:'Perte',depth:3,role:'source'},
-  {id:6134,text:'Je suis lésé',cat:'Perte',depth:3,role:'source'},
   {id:6135,text:'Je suis endetté',cat:'Perte',depth:3,role:'source'},
   {id:1116,text:'Je suis amputé',cat:'Perte',depth:4,role:'source'},
   {id:1117,text:'Je suis castré',cat:'Perte',depth:4,role:'source'},
   {id:1118,text:'Je suis atrophié',cat:'Perte',depth:4,role:'source'},
-  {id:1119,text:'Je suis mutilé',cat:'Perte',depth:4,role:'source'},
   {id:1121,text:'Je suis spolié',cat:'Perte',depth:4,role:'source'},
   {id:3079,text:'Je suis handicapé',cat:'Perte',depth:4,role:'source'},
   {id:6133,text:'Je suis liquidé',cat:'Perte',depth:4,role:'source'},
@@ -855,11 +941,9 @@ const DEFAULT_DATA = [
   {id:1131,text:'Je suis terni',cat:'Usure',depth:2,role:'source'},
   {id:1132,text:'Je suis flétri',cat:'Usure',depth:2,role:'source'},
   {id:6141,text:'Je suis amoché',cat:'Usure',depth:2,role:'source'},
-  {id:1133,text:'Je suis dégradé',cat:'Usure',depth:3,role:'source'},
   {id:1134,text:'Je suis lézardé',cat:'Usure',depth:3,role:'source'},
   {id:1135,text:'Je suis ramolli',cat:'Usure',depth:3,role:'source'},
   {id:1137,text:'Je suis érodé',cat:'Usure',depth:3,role:'source'},
-  {id:1138,text:'Je suis décroché',cat:'Usure',depth:3,role:'source'},
   {id:6140,text:'Je suis grignoté',cat:'Usure',depth:3,role:'source'},
   {id:6142,text:'Je suis craquelé',cat:'Usure',depth:3,role:'source'},
   {id:6143,text:'Je suis effrité',cat:'Usure',depth:3,role:'source'},
@@ -891,7 +975,6 @@ const DEFAULT_DATA = [
   {id:6274,text:'Je suis abattu',cat:'Culpabilité',depth:3,role:'source'},
   {id:6275,text:'Je suis déprimé',cat:'Culpabilité',depth:3,role:'source'},
   {id:1153,text:'Je suis défait',cat:'Culpabilité',depth:4,role:'source'},
-  {id:1154,text:'Je suis rompu',cat:'Culpabilité',depth:4,role:'source'},
   {id:3010,text:'Je suis désespéré',cat:'Culpabilité',depth:4,role:'source'},
   {id:3113,text:'Je suis enragé',cat:'Culpabilité',depth:4,role:'source'},
   {id:6151,text:'Je suis laminé',cat:'Culpabilité',depth:4,role:'source'},
@@ -933,7 +1016,6 @@ const DEFAULT_DATA = [
   {id:107,text:'Je suis châtié',cat:'Culpabilité',depth:3,role:'verdict'},
   {id:113,text:'Je suis sacrifié',cat:'Culpabilité',depth:3,role:'verdict'},
   {id:102,text:'Je suis condamné',cat:'Culpabilité',depth:3,role:'verdict'},
-  {id:116,text:'Je suis supplicié',cat:'Culpabilité',depth:4,role:'verdict'},
   {id:114,text:'Je suis crucifié',cat:'Culpabilité',depth:4,role:'verdict'},
   {id:115,text:'Je suis immolé',cat:'Culpabilité',depth:4,role:'verdict'},
   {id:6160,text:'Je suis lynché',cat:'Culpabilité',depth:4,role:'verdict'},
@@ -949,7 +1031,6 @@ const DEFAULT_DATA = [
   {id:2053,text:'Je suis néantisé',cat:'Effondrement',depth:5,role:'source'},
   {id:262,text:'Je suis dispersé',cat:'Effondrement',depth:1,role:'source'},
   {id:263,text:'Je suis éparpillé',cat:'Effondrement',depth:1,role:'source'},
-  {id:264,text:'Je suis dissocié',cat:'Effondrement',depth:2,role:'verdict'},
   {id:259,text:'Je suis dilué',cat:'Effondrement',depth:2,role:'source'},
   {id:260,text:'Je suis dissous',cat:'Effondrement',depth:2,role:'verdict'},
   {id:261,text:'Je suis fondu',cat:'Effondrement',depth:2,role:'verdict'},
@@ -971,7 +1052,6 @@ const DEFAULT_DATA = [
   {id:20,text:'Je suis esquinté',cat:'Effondrement',depth:1,role:'source'},
   {id:22,text:'Je suis abîmé',cat:'Effondrement',depth:1,role:'source'},
   {id:24,text:'Je suis endommagé',cat:'Effondrement',depth:1,role:'source'},
-  {id:23,text:'Je suis détérioré',cat:'Effondrement',depth:2,role:'source'},
   {id:21,text:'Je suis délabré',cat:'Effondrement',depth:2,role:'source'},
   {id:11,text:'Je suis fissuré',cat:'Effondrement',depth:2,role:'source'},
   {id:12,text:'Je suis fracturé',cat:'Effondrement',depth:3,role:'source'},
@@ -1010,7 +1090,6 @@ const DEFAULT_DATA = [
   {id:3052,text:'Je suis alerté',cat:'Conditionnement',depth:2,role:'source'},
   {id:3093,text:'Je suis interpellé',cat:'Conditionnement',depth:2,role:'source'},
   {id:3104,text:'Je suis intrigué',cat:'Conditionnement',depth:2,role:'source'},
-  {id:525,text:'Je suis appelé',cat:'Trahison',depth:4,role:'verdict'},
   {id:528,text:'Je suis propulsé',cat:'Effondrement',depth:4,role:'coping'},
   {id:529,text:'Je suis projeté',cat:'Dissociation',depth:4,role:'source'},
   {id:2042,text:'Je suis médusé',cat:'Confusion',depth:4,role:'verdict'},
@@ -1025,10 +1104,10 @@ const DEFAULT_DATA = [
   {id:2037,text:'Je suis bouleversé',cat:'Confusion',depth:3,role:'coping'},
   {id:2039,text:'Je suis désarçonné',cat:'Confusion',depth:3,role:'coping'},
   {id:2040,text:'Je suis décontenancé',cat:'Confusion',depth:3,role:'coping'},
-  {id:2041,text:'Je suis sidéré',cat:'Rigidité',depth:3,role:'coping'},
-  {id:2043,text:'Je suis abasourdi',cat:'Rigidité',depth:3,role:'coping'},
-  {id:2044,text:'Je suis stupéfait',cat:'Rigidité',depth:3,role:'coping'},
-  {id:3076,text:'Je suis consterné',cat:'Rigidité',depth:3,role:'coping'},
+  {id:2041,text:'Je suis sidéré',cat:'Rigidité',depth:3,role:'source'},
+  {id:2043,text:'Je suis abasourdi',cat:'Rigidité',depth:3,role:'source'},
+  {id:2044,text:'Je suis stupéfait',cat:'Rigidité',depth:3,role:'source'},
+  {id:3076,text:'Je suis consterné',cat:'Rigidité',depth:3,role:'source'},
   {id:3082,text:'Je suis ébranlé',cat:'Confusion',depth:3,role:'coping'},
   {id:3083,text:'Je suis secoué',cat:'Confusion',depth:3,role:'coping'},
   {id:3092,text:'Je suis renversé',cat:'Confusion',depth:3,role:'coping'},
@@ -1045,7 +1124,6 @@ const DEFAULT_DATA = [
   {id:1234,text:'Je suis dénoué',cat:'Contrôle',depth:2,role:'coping'},
   {id:1235,text:'Je suis délié',cat:'Rigidité',depth:2,role:'coping'},
   {id:1236,text:'Je suis décloué',cat:'Rigidité',depth:2,role:'coping'},
-  {id:1249,text:'Je suis déconnecté',cat:'Isolement',depth:2,role:'source'},
   {id:1256,text:'Je suis déployé',cat:'Rigidité',depth:2,role:'coping'},
   {id:1244,text:'Je suis descellé',cat:'Contrôle',depth:4,role:'verdict'},
   {id:1247,text:'Je suis décontaminé',cat:'Conditionnement',depth:4,role:'verdict'},
@@ -1146,7 +1224,7 @@ const DEFAULT_DATA = [
   {id:632,text:'Je suis réunifié',cat:'Effondrement',depth:3,role:'coping'},
   {id:1304,text:'Je suis assimilé',cat:'Effondrement',depth:3,role:'coping'},
   {id:2017,text:'Je suis taillé',cat:'Effondrement',depth:3,role:'coping'},
-  {id:6210,text:'Je suis durci',cat:'Rigidité',depth:3,role:'coping'},
+  {id:6210,text:'Je suis durci',cat:'Rigidité',depth:3,role:'source'},
   {id:1310,text:'Je suis engagé',cat:'Isolement',depth:2,role:'source'},
   {id:1311,text:'Je suis embarqué',cat:'Trahison',depth:2,role:'source'},
   {id:1329,text:'Je suis invité',cat:'Abandon',depth:2,role:'source'},
@@ -1155,7 +1233,6 @@ const DEFAULT_DATA = [
   {id:1323,text:'Je suis hissé',cat:'Effondrement',depth:4,role:'coping'},
   {id:1324,text:'Je suis élevé',cat:'Honte',depth:4,role:'verdict'},
   {id:1321,text:'Je suis enflammé',cat:'Engagement',depth:4,role:'coping'},
-  {id:1327,text:'Je suis propulsé',cat:'Engagement',depth:4,role:'coping'},
   {id:1332,text:'Je suis destiné',cat:'Conditionnement',depth:4,role:'verdict'},
   {id:6224,text:'Je suis exalté',cat:'Engagement',depth:4,role:'coping'},
   {id:6225,text:'Je suis transporté',cat:'Engagement',depth:4,role:'coping'},
@@ -1172,7 +1249,6 @@ const DEFAULT_DATA = [
   {id:1331,text:'Je suis appelé',cat:'Abandon',depth:3,role:'coping'},
   {id:3067,text:'Je suis décidé',cat:'Engagement',depth:3,role:'verdict'},
   {id:3132,text:'Je suis acharné',cat:'Engagement',depth:3,role:'verdict'},
-  {id:3138,text:'Je suis décidé',cat:'Engagement',depth:3,role:'verdict'},
   {id:6221,text:'Je suis galvanisé',cat:'Épuisement',depth:3,role:'coping'},
   {id:6222,text:'Je suis électrisé',cat:'Épuisement',depth:3,role:'coping'},
   {id:6223,text:'Je suis survolté',cat:'Épuisement',depth:3,role:'coping'},
@@ -1233,7 +1309,6 @@ const DEFAULT_DATA = [
   {id:800,text:'Je suis aimé',cat:'Abandon',depth:5,role:'verdict'},
   {id:1370,text:'Je suis chéri',cat:'Abandon',depth:5,role:'verdict'},
   {id:810,text:'Je suis relié',cat:'Abandon',depth:3,role:'coping'},
-  {id:811,text:'Je suis connecté',cat:'Abandon',depth:3,role:'coping'},
   {id:812,text:'Je suis réuni',cat:'Isolement',depth:3,role:'coping'},
   {id:813,text:'Je suis réconcilié',cat:'Trahison',depth:3,role:'coping'},
   {id:1362,text:'Je suis rassemblé',cat:'Abandon',depth:3,role:'coping'},
@@ -1367,8 +1442,6 @@ const DEFAULT_DATA = [
   {id:3086,text:'Je suis différencié',cat:'Confusion',depth:3,role:'coping'},
   {id:900,text:'Je suis éveillé',cat:'Dissociation',depth:2,role:'coping'},
   {id:901,text:'Je suis éclairé',cat:'Conditionnement',depth:2,role:'source'},
-  {id:902,text:'Je suis révélé',cat:'Confusion',depth:4,role:'verdict'},
-  {id:906,text:'Je suis revendiqué',cat:'Honte',depth:4,role:'verdict'},
   {id:1460,text:'Je suis illuminé',cat:'Conditionnement',depth:4,role:'verdict'},
   {id:1466,text:'Je suis expansé',cat:'Dissociation',depth:4,role:'coping'},
   {id:1468,text:'Je suis contemplé',cat:'Dissociation',depth:4,role:'coping'},
@@ -1466,11 +1539,11 @@ function saveReviews(){try{localStorage.setItem("reviews_"+currentProfile.id,JSO
 function showToast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2500);}
 
 function showScreen(id){
-  ["profile-screen","pin-screen","main-screen"].forEach(s=>{
+  ["profile-screen","pin-screen","main-screen","home-screen"].forEach(s=>{
     const el=document.getElementById(s);
-    if(el){el.classList.remove("show");}
+    if(el)el.classList.remove("show");
   });
-  const target=document.getElementById(id+"-screen")||document.getElementById(id);
+  const target=document.getElementById(id)||document.getElementById(id+"-screen");
   if(target)target.classList.add("show");
 }
 
@@ -1549,18 +1622,15 @@ document.getElementById("create-btn").addEventListener("click",async()=>{
 
 document.getElementById("new-name").addEventListener("keydown",e=>{if(e.key==="Enter")document.getElementById("create-btn").click();});
 
-document.getElementById("switch-btn").addEventListener("click",()=>{
-  currentProfile=null;SESSIONS=[];checked.clear();todoIds.clear();reviewDates={};
-  showScreen("profile");loadProfiles();
-});
+
 
 async function enterProfile(id,name){
   currentProfile={id,name};
   document.getElementById("profile-name-badge").textContent=name;
   checked.clear();todoIds.clear();reviewDates={};
   await loadData();
-  showScreen("main-screen");
-  render();
+  showScreen("home-screen");
+  document.getElementById("home-name").textContent=name;
 }
 
 async function loadData(){
@@ -1686,55 +1756,62 @@ document.getElementById("gs-launch").addEventListener("click",()=>{
 });
 document.getElementById("game-btn").addEventListener("click",()=>{
   if(!currentProfile){showToast("Connecte-toi d abord");return;}
-  startGame();
+  showScreen("home-screen");
+  document.getElementById("home-name").textContent=currentProfile.name;
 });
 
-function buildGamePool(){
-  // Build a pool of 100 identities following the logic:
-  // For each group in order: all sources first, then verdicts, then copings
-  // Always keep ~100 in the pool
+const CORP_CATS=["Rigidité","Épuisement","Confusion","Dissociation"];
+let sessionSize=5;
+
+function buildGamePool(size){
   const wids=workedIds();
   const pool=[];
-  const POOL_SIZE=100;
 
-  for(const g of GROUPS){
-    if(pool.length>=POOL_SIZE)break;
-    const groupItems=DATA.filter(d=>g.cats.includes(d.cat)&&!wids.has(d.id)&&!todoIds.has(d.id));
-    
-    // Check if all sources of this group are done
+  // Step 1: Always start with corporeal sources
+  const corpSources=shuffle(DATA.filter(d=>
+    CORP_CATS.includes(d.cat)&&
+    (d.role||"source")==="source"&&
+    !wids.has(d.id)&&!todoIds.has(d.id)
+  ));
+  const corpCount=Math.max(1,Math.floor(size*0.3)); // 30% corporeal
+  pool.push(...corpSources.slice(0,Math.min(corpCount,corpSources.length)));
+
+  // Step 2: Fill remaining slots with clinical order
+  const remaining=size-pool.length;
+  const nonCorpGroups=GROUPS.filter(g=>!g.cats.every(c=>CORP_CATS.includes(c)));
+  
+  for(const g of nonCorpGroups){
+    if(pool.length>=size)break;
+    const groupItems=DATA.filter(d=>
+      g.cats.includes(d.cat)&&
+      !wids.has(d.id)&&!todoIds.has(d.id)&&
+      !pool.find(p=>p.id===d.id)
+    );
     const sources=groupItems.filter(d=>(d.role||"source")==="source");
     const verdicts=groupItems.filter(d=>d.role==="verdict");
     const copings=groupItems.filter(d=>d.role==="coping");
-    
     const allSourcesDone=DATA.filter(d=>g.cats.includes(d.cat)&&(d.role||"source")==="source")
       .every(d=>wids.has(d.id)||todoIds.has(d.id));
     const allVerdictsDone=DATA.filter(d=>g.cats.includes(d.cat)&&d.role==="verdict")
       .every(d=>wids.has(d.id)||todoIds.has(d.id));
-
-    if(!allSourcesDone){
-      // Add sources of this group
-      pool.push(...shuffle(sources).slice(0,POOL_SIZE-pool.length));
-    } else if(!allVerdictsDone){
-      // Sources done -> add verdicts
-      pool.push(...shuffle(verdicts).slice(0,POOL_SIZE-pool.length));
-    } else {
-      // Verdicts done -> add copings
-      pool.push(...shuffle(copings).slice(0,POOL_SIZE-pool.length));
-    }
+    let toAdd=[];
+    if(!allSourcesDone)toAdd=shuffle(sources);
+    else if(!allVerdictsDone)toAdd=shuffle(verdicts);
+    else toAdd=shuffle(copings);
+    pool.push(...toAdd.slice(0,size-pool.length));
   }
 
-  // Add due reviews first
+  // Add due reviews at the very start
   const dueReviews=shuffle(DATA.filter(d=>isDueForReview(d.id)&&!wids.has(d.id)));
-  return [...dueReviews,...pool].slice(0,POOL_SIZE);
+  return [...dueReviews,...pool].slice(0,size+dueReviews.length);
 }
 
 function startGame(){
-  gameQueue=buildGamePool();
+  gameQueue=buildGamePool(sessionSize);
   gameIdx=0;gameWorked=[];gameLater=[];gameSkipped=[];
-  selectedGroups=new Set(GROUPS.map(g=>g.id)); // all groups available
+  selectedGroups=new Set(GROUPS.map(g=>g.id));
   const dueCount=gameQueue.filter(d=>isDueForReview(d.id)).length;
-  if(dueCount)showToast(`${dueCount} identité${dueCount>1?"s":""} à réviser`);
-  showToast(`${gameQueue.length} identités dans ce parcours`);
+  if(dueCount)showToast(`${dueCount} à réviser · ${gameQueue.length} au total`);
   document.getElementById("game-overlay").classList.add("show");
   showGameState();
 }
@@ -1916,6 +1993,31 @@ function renderProgress(){
 }
 document.getElementById("progress-btn").addEventListener("click",()=>{renderProgress();document.getElementById("progress-overlay").classList.add("show");});
 document.getElementById("close-progress").addEventListener("click",()=>document.getElementById("progress-overlay").classList.remove("show"));
+
+// HOME SCREEN
+document.getElementById("home-dict-btn").addEventListener("click",()=>{
+  showScreen("main-screen");
+  render();
+});
+
+document.getElementById("home-game-btn").addEventListener("click",()=>{
+  openSessionFormat();
+});
+
+document.getElementById("home-progress-btn").addEventListener("click",()=>{
+  renderProgress();
+  document.getElementById("progress-overlay").classList.add("show");
+});
+
+document.getElementById("home-switch-btn").addEventListener("click",()=>{
+  currentProfile=null;SESSIONS=[];checked.clear();todoIds.clear();reviewDates={};
+  showScreen("profile-screen");loadProfiles();
+});
+
+// Add back button to main screen header
+document.getElementById("switch-btn").addEventListener("click",()=>{
+  showScreen("home-screen");
+});
 
 loadProfiles();
 
