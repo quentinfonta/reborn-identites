@@ -305,7 +305,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
       <div class="brand-title">Dictionnaire des identités</div>
     </div>
     <div class="main-header-right">
-      <div class="profile-badge"><i class="ti ti-user"></i><span id="profile-name-badge">—</span><button class="icon-btn" id="switch-btn" style="margin-left:4px"><i class="ti ti-home" style="font-size:14px"></i></button></div>
+      <div class="profile-badge"><i class="ti ti-user"></i><span id="profile-name-badge">—</span></div>
+      <button class="header-btn" id="switch-btn"><i class="ti ti-arrow-left"></i> Accueil</button>
       <button class="header-btn purple" id="game-btn"><i class="ti ti-cards"></i> Découverte</button>
       <button class="header-btn blue" id="progress-btn"><i class="ti ti-chart-bar"></i> Progression</button>
     </div>
@@ -2000,6 +2001,31 @@ document.getElementById("home-dict-btn").addEventListener("click",()=>{
   render();
 });
 
+// Session format
+function openSessionFormat(){
+  document.querySelectorAll(".sf-card").forEach(c=>c.classList.remove("sel"));
+  document.getElementById("sf-start").disabled=true;
+  document.getElementById("sf-modal").classList.add("show");
+}
+
+document.querySelectorAll(".sf-card").forEach(card=>{
+  card.addEventListener("click",()=>{
+    document.querySelectorAll(".sf-card").forEach(c=>c.classList.remove("sel"));
+    card.classList.add("sel");
+    sessionSize=+card.dataset.size;
+    document.getElementById("sf-start").disabled=false;
+  });
+});
+
+document.getElementById("sf-cancel").addEventListener("click",()=>{
+  document.getElementById("sf-modal").classList.remove("show");
+});
+
+document.getElementById("sf-start").addEventListener("click",()=>{
+  document.getElementById("sf-modal").classList.remove("show");
+  startGame();
+});
+
 document.getElementById("home-game-btn").addEventListener("click",()=>{
   openSessionFormat();
 });
@@ -2017,6 +2043,7 @@ document.getElementById("home-switch-btn").addEventListener("click",()=>{
 // Add back button to main screen header
 document.getElementById("switch-btn").addEventListener("click",()=>{
   showScreen("home-screen");
+  document.getElementById("home-name").textContent=currentProfile?currentProfile.name:"";
 });
 
 loadProfiles();
