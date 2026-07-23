@@ -122,6 +122,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:8px;}
 .group-badge{font-size:10px;padding:2px 7px;border-radius:8px;border:1px solid var(--border);color:var(--text-faint);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .role-icon{font-size:13px;}
+.todo-btn{background:none;border:none;cursor:pointer;font-size:13px;padding:0;opacity:0.3;transition:opacity 0.15s;line-height:1;}
+.todo-btn:hover{opacity:1;}
+.card.todo .todo-btn{opacity:1;}
 .no-results{padding:3rem;text-align:center;color:var(--text-faint);font-size:14px;grid-column:1/-1;}
 .session-bar{position:sticky;bottom:0;background:var(--bg);border-top:1px solid var(--border-md);padding:1rem 0;margin-top:2rem;}
 .session-inner{max-width:960px;margin:0 auto;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
@@ -1716,17 +1719,30 @@ function render(){
     }
     return sep+`<div class="card${cls?" "+cls:""}" data-id="${d.id}">
       <div class="card-top"><span class="identity">${d.text}</span><div class="check-circle"><i class="ti ti-check"></i></div></div>
-      <div class="card-footer"><span class="group-badge">${gname}</span><span class="role-icon">${{"source":"🔍","verdict":"⚖️","coping":"🎭"}[d.role||"source"]}</span></div>
+      <div class="card-footer"><span class="group-badge">${gname}</span><div style="display:flex;align-items:center;gap:6px;"><button class="todo-btn" data-id="${d.id}" title="À faire">🔖</button><span class="role-icon">${{"source":"🔍","verdict":"⚖️","coping":"🎭"}[d.role||"source"]}</span></div></div>
     </div>`;
   }).join("");
 
   grid.querySelectorAll(".card").forEach(card=>{
-    card.addEventListener("click",()=>{
+    card.addEventListener("click",e=>{
+      if(e.target.closest(".todo-btn"))return;
       const id=+card.dataset.id;
       if(workedIds().has(id))return;
       if(checked.has(id))checked.delete(id);
       else if(todoIds.has(id)){todoIds.delete(id);saveTodo();}
       else checked.add(id);
+      render();
+    });
+  });
+
+  grid.querySelectorAll(".todo-btn").forEach(btn=>{
+    btn.addEventListener("click",e=>{
+      e.stopPropagation();
+      const id=+btn.dataset.id;
+      if(workedIds().has(id))return;
+      if(todoIds.has(id)){todoIds.delete(id);showToast("Retiré des À faire");}
+      else{todoIds.add(id);checked.delete(id);showToast("🔖 Ajouté aux À faire");}
+      saveTodo();
       render();
     });
   });
