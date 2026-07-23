@@ -90,6 +90,18 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .header-btn.purple{border-color:var(--purple-border);color:var(--purple-text);background:var(--purple-bg);}
 .filters-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem;align-items:center;}
 .filter-label{font-size:12px;color:var(--text-faint);}
+.level-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.level-1{background:#ff4d2e;}
+.level-2{background:#ff8c42;}
+.level-3{background:#f5c842;}
+.level-4{background:#7ab8d4;}
+.level-5{background:#555560;}
+.card-level{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:2px;}
+.card-level.level-1{background:#ff4d2e;}
+.card-level.level-2{background:#ff8c42;}
+.card-level.level-3{background:#f5c842;}
+.card-level.level-4{background:#7ab8d4;}
+.card-level.level-5{background:#555560;}
 .filter-btn{padding:5px 14px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--text-muted);font-size:12px;font-family:inherit;cursor:pointer;transition:all 0.15s;}
 .filter-btn:hover{border-color:var(--border-md);color:var(--text);}
 .filter-btn.active{background:var(--surface2);border-color:var(--border-strong);color:var(--text);font-weight:500;}
@@ -320,6 +332,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     <button class="filter-btn active" data-role="source">🔍 Ce qui s est passé</button>
     <button class="filter-btn" data-role="verdict">⚖️ Ce que j en ai conclu</button>
     <button class="filter-btn" data-role="coping">🎭 Comment j ai vécu avec</button>
+    <span class="filter-label" style="margin-left:8px">Niveau :</span>
+    <button class="filter-btn active" data-level="0">Tous</button>
+    <button class="filter-btn" data-level="1"><span class="level-dot level-1"></span> Corps</button>
+    <button class="filter-btn" data-level="2"><span class="level-dot level-2"></span> Ressenti</button>
+    <button class="filter-btn" data-level="3"><span class="level-dot level-3"></span> Émotion</button>
+    <button class="filter-btn" data-level="4"><span class="level-dot level-4"></span> Relation</button>
+    <button class="filter-btn" data-level="5"><span class="level-dot level-5"></span> Abstrait</button>
     <span class="filter-label" style="margin-left:8px">État :</span>
     <button class="filter-btn active" data-state="all">Toutes</button>
     <button class="filter-btn" data-state="untouched">Non touchées</button>
@@ -1538,7 +1557,7 @@ function shuffle(arr){
 
 let DATA=[...DEFAULT_DATA];
 let currentProfile=null,SESSIONS=[],checked=new Set(),todoIds=new Set(),reviewDates={};
-let roleFilter="source",stateFilter="all",query="";
+let roleFilter="source",stateFilter="all",levelFilter=0,query="";
 let pinTarget=null,pinVal="";
 
 function workedIds(){return new Set(SESSIONS.flatMap(s=>s.ids));}
@@ -1670,6 +1689,12 @@ document.querySelectorAll("[data-role]").forEach(btn=>btn.addEventListener("clic
   document.querySelectorAll("[data-role]").forEach(b=>b.classList.remove("active"));
   btn.classList.add("active");render();
 }));
+document.querySelectorAll("[data-level]").forEach(btn=>btn.addEventListener("click",()=>{
+  levelFilter=+btn.dataset.level;
+  document.querySelectorAll("[data-level]").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");render();
+}));
+
 document.querySelectorAll("[data-state]").forEach(btn=>btn.addEventListener("click",()=>{
   stateFilter=btn.dataset.state;
   document.querySelectorAll("[data-state]").forEach(b=>b.classList.remove("active"));
@@ -1692,7 +1717,8 @@ function getFiltered(){
     else if(stateFilter==="worked")stateOk=isWorked;
     else if(stateFilter==="todo")stateOk=isTodo;
     else if(stateFilter==="due")stateOk=isDue;
-    return qOk&&roleOk&&stateOk;
+    const levelOk=levelFilter===0||d.depth===levelFilter;
+    return qOk&&roleOk&&stateOk&&levelOk;
   }).sort((a,b)=>(groupOrder[a.cat]??99)-(groupOrder[b.cat]??99));
 }
 
@@ -1719,7 +1745,7 @@ function render(){
     }
     return sep+`<div class="card${cls?" "+cls:""}" data-id="${d.id}">
       <div class="card-top"><span class="identity">${d.text}</span><div class="check-circle"><i class="ti ti-check"></i></div></div>
-      <div class="card-footer"><span class="group-badge">${gname}</span><div style="display:flex;align-items:center;gap:6px;"><button class="todo-btn" data-id="${d.id}" title="À faire">🔖</button><span class="role-icon">${{"source":"🔍","verdict":"⚖️","coping":"🎭"}[d.role||"source"]}</span></div></div>
+      <div class="card-footer"><span class="group-badge">${gname}</span><div style="display:flex;align-items:center;gap:6px;"><button class="todo-btn" data-id="${d.id}" title="À faire">🔖</button><span class="role-icon">${{"source":"🔍","verdict":"⚖️","coping":"🎭"}[d.role||"source"]}</span><span class="card-level level-${d.depth||1}" title="Niveau ${d.depth||1}"></span></div></div>
     </div>`;
   }).join("");
 
@@ -1797,15 +1823,17 @@ function buildGamePool(size){
   const pool=[];
 
   // Step 1: Always start with corporeal sources
-  const corpSources=shuffle(DATA.filter(d=>
+  // Sort corporeal by level (most physical first), shuffle within same level
+  const corpAll=DATA.filter(d=>
     CORP_CATS.includes(d.cat)&&
     (d.role||"source")==="source"&&
     !wids.has(d.id)&&!todoIds.has(d.id)
-  ));
+  ).sort((a,b)=>(a.depth||3)-(b.depth||3));
+  const corpSources=corpAll;
   const corpCount=Math.max(1,Math.floor(size*0.3)); // 30% corporeal
   pool.push(...corpSources.slice(0,Math.min(corpCount,corpSources.length)));
 
-  // Step 2: Fill remaining slots with clinical order
+  // Step 2: Fill remaining slots with clinical order + level sorting
   const remaining=size-pool.length;
   const nonCorpGroups=GROUPS.filter(g=>!g.cats.every(c=>CORP_CATS.includes(c)));
   
@@ -1824,9 +1852,11 @@ function buildGamePool(size){
     const allVerdictsDone=DATA.filter(d=>g.cats.includes(d.cat)&&d.role==="verdict")
       .every(d=>wids.has(d.id)||todoIds.has(d.id));
     let toAdd=[];
-    if(!allSourcesDone)toAdd=shuffle(sources);
-    else if(!allVerdictsDone)toAdd=shuffle(verdicts);
-    else toAdd=shuffle(copings);
+    if(!allSourcesDone)toAdd=sources;
+    else if(!allVerdictsDone)toAdd=verdicts;
+    else toAdd=copings;
+    // Sort by level (corporeal first) then shuffle within same level
+    toAdd=toAdd.sort((a,b)=>(a.depth||3)-(b.depth||3));
     pool.push(...toAdd.slice(0,size-pool.length));
   }
 
