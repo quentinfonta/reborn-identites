@@ -104,6 +104,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .card-level.level-5{background:#555560;}
 .filter-btn{padding:5px 14px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--text-muted);font-size:12px;font-family:inherit;cursor:pointer;transition:all 0.15s;}
 .filter-btn:hover{border-color:var(--border-md);color:var(--text);}
+.level-nav{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border-md);border-radius:20px;padding:4px 10px;}
+.level-nav-btn{background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:15px;padding:0 2px;line-height:1;transition:color 0.15s;}
+.level-nav-btn:hover{color:var(--text);}
+.level-nav-display{display:flex;align-items:center;gap:6px;min-width:80px;justify-content:center;}
+.level-nav-name{font-size:12px;font-weight:500;color:var(--text);}
 .filter-btn.active{background:var(--surface2);border-color:var(--border-strong);color:var(--text);font-weight:500;}
 .search-bar{position:relative;margin-bottom:1rem;}
 .search-bar i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text-faint);font-size:16px;pointer-events:none;}
@@ -327,24 +332,25 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     </div>
   </div>
   <div class="filters-bar">
-    <span class="filter-label">Rôle :</span>
     <button class="filter-btn" data-role="all">Toutes</button>
-    <button class="filter-btn active" data-role="source">🔍 Ce qui s est passé</button>
-    <button class="filter-btn" data-role="verdict">⚖️ Ce que j en ai conclu</button>
-    <button class="filter-btn" data-role="coping">🎭 Comment j ai vécu avec</button>
-    <span class="filter-label" style="margin-left:8px">Niveau :</span>
-    <button class="filter-btn active" data-level="0">Tous</button>
-    <button class="filter-btn" data-level="1"><span class="level-dot level-1"></span> Corps</button>
-    <button class="filter-btn" data-level="2"><span class="level-dot level-2"></span> Ressenti</button>
-    <button class="filter-btn" data-level="3"><span class="level-dot level-3"></span> Émotion</button>
-    <button class="filter-btn" data-level="4"><span class="level-dot level-4"></span> Relation</button>
-    <button class="filter-btn" data-level="5"><span class="level-dot level-5"></span> Abstrait</button>
-    <span class="filter-label" style="margin-left:8px">État :</span>
+    <button class="filter-btn active" data-role="source">🔍 Source</button>
+    <button class="filter-btn" data-role="verdict">⚖️ Verdict</button>
+    <button class="filter-btn" data-role="coping">🎭 Coping</button>
+    <div style="width:1px;height:20px;background:var(--border);margin:0 4px;"></div>
     <button class="filter-btn active" data-state="all">Toutes</button>
     <button class="filter-btn" data-state="untouched">Non touchées</button>
-    <button class="filter-btn" data-state="todo">🔖 À faire</button>
-    <button class="filter-btn" data-state="due">🔵 À réviser</button>
-    <button class="filter-btn" data-state="worked">Travaillées</button>
+    <button class="filter-btn" data-state="todo" title="À faire">🔖</button>
+    <button class="filter-btn" data-state="due" title="À réviser">🔵</button>
+    <button class="filter-btn" data-state="worked" title="Travaillées">✅</button>
+    <div style="flex:1;"></div>
+    <div class="level-nav">
+      <button class="level-nav-btn" id="level-prev">←</button>
+      <div class="level-nav-display" id="level-nav-display">
+        <span id="level-dot-display" class="level-dot level-1" style="width:10px;height:10px;"></span>
+        <span class="level-nav-name" id="level-nav-name">Corps</span>
+      </div>
+      <button class="level-nav-btn" id="level-next">→</button>
+    </div>
   </div>
   <div class="search-bar"><i class="ti ti-search"></i><input type="text" class="search-input" id="search" placeholder="Rechercher…"/></div>
   <div class="stats-bar" id="stats-bar"></div>
@@ -1557,7 +1563,7 @@ function shuffle(arr){
 
 let DATA=[...DEFAULT_DATA];
 let currentProfile=null,SESSIONS=[],checked=new Set(),todoIds=new Set(),reviewDates={};
-let roleFilter="source",stateFilter="all",levelFilter=0,query="";
+let roleFilter="source",stateFilter="all",levelFilter=1,query="";
 let pinTarget=null,pinVal="";
 
 function workedIds(){return new Set(SESSIONS.flatMap(s=>s.ids));}
@@ -1689,11 +1695,30 @@ document.querySelectorAll("[data-role]").forEach(btn=>btn.addEventListener("clic
   document.querySelectorAll("[data-role]").forEach(b=>b.classList.remove("active"));
   btn.classList.add("active");render();
 }));
-document.querySelectorAll("[data-level]").forEach(btn=>btn.addEventListener("click",()=>{
-  levelFilter=+btn.dataset.level;
-  document.querySelectorAll("[data-level]").forEach(b=>b.classList.remove("active"));
-  btn.classList.add("active");render();
-}));
+const LEVEL_NAMES=["Tous","Corps","Ressenti","Émotion","Relation","Abstrait"];
+const LEVEL_COLORS=["","#ff4d2e","#ff8c42","#f5c842","#7ab8d4","#555560"];
+
+function updateLevelNav(){
+  const name=LEVEL_NAMES[levelFilter]||"Tous";
+  const color=LEVEL_COLORS[levelFilter]||"var(--text-faint)";
+  document.getElementById("level-nav-name").textContent=name;
+  const dot=document.querySelector("#level-nav-display .level-dot");
+  if(dot){
+    dot.style.background=levelFilter===0?"var(--border-md)":color;
+    dot.className="level-dot";
+    if(levelFilter>0)dot.classList.add("level-"+levelFilter);
+  }
+}
+
+document.getElementById("level-prev").addEventListener("click",()=>{
+  levelFilter=levelFilter<=0?5:levelFilter-1;
+  updateLevelNav();render();
+});
+document.getElementById("level-next").addEventListener("click",()=>{
+  levelFilter=levelFilter>=5?0:levelFilter+1;
+  updateLevelNav();render();
+});
+updateLevelNav();
 
 document.querySelectorAll("[data-state]").forEach(btn=>btn.addEventListener("click",()=>{
   stateFilter=btn.dataset.state;
