@@ -1845,19 +1845,15 @@ let sessionSize=5;
 
 function buildGamePool(size){
   const wids=workedIds();
-
-  // Build pool level by level (1→5), fully random within each level
   const available=DATA.filter(d=>!wids.has(d.id)&&!todoIds.has(d.id));
-  
-  const byLevel=[];
-  for(let lvl=1;lvl<=5;lvl++){
-    byLevel.push(shuffle(available.filter(d=>(d.depth||3)===lvl)));
-  }
 
-  // Fill pool: take from level 1 first, then 2, etc.
+  // Fill pool level by level:
+  // Exhaust current level before moving to next
+  // If level has fewer than needed, take all + fill from next level
   const pool=[];
-  for(const levelItems of byLevel){
+  for(let lvl=1;lvl<=5;lvl++){
     if(pool.length>=size)break;
+    const levelItems=shuffle(available.filter(d=>(d.depth||3)===lvl&&!pool.find(p=>p.id===d.id)));
     pool.push(...levelItems.slice(0,size-pool.length));
   }
 
