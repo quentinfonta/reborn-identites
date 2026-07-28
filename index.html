@@ -1770,7 +1770,7 @@ function render(){
     }
     return sep+`<div class="card${cls?" "+cls:""}" data-id="${d.id}">
       <div class="card-top"><span class="identity">${d.text}</span><div class="check-circle"><i class="ti ti-check"></i></div></div>
-      <div class="card-footer"><span class="group-badge">${gname}</span><div style="display:flex;align-items:center;gap:6px;"><button class="todo-btn" data-id="${d.id}" title="À faire">🔖</button><span class="role-icon">${{"source":"🔍","verdict":"⚖️","coping":"🎭"}[d.role||"source"]}</span><span class="card-level level-${d.depth||1}" title="Niveau ${d.depth||1}"></span></div></div>
+      <div class="card-footer"><span class="group-badge">${gname}</span><div style="display:flex;align-items:center;gap:6px;"><button class="todo-btn" data-id="${d.id}" title="À faire">🔖</button><span class="role-icon">${{"source":"🔍","verdict":"⚖️","coping":"🎭"}[d.role||"source"]}</span></div></div>
     </div>`;
   }).join("");
 
@@ -1845,47 +1845,23 @@ let sessionSize=5;
 
 function buildGamePool(size){
   const wids=workedIds();
-  const pool=[];
 
-  // Step 1: Always start with corporeal sources
-  // Sort corporeal by level (most physical first), shuffle within same level
-  const corpAll=DATA.filter(d=>
-    CORP_CATS.includes(d.cat)&&
-    (d.role||"source")==="source"&&
-    !wids.has(d.id)&&!todoIds.has(d.id)
-  ).sort((a,b)=>(a.depth||3)-(b.depth||3));
-  const corpSources=corpAll;
-  const corpCount=Math.max(1,Math.floor(size*0.3)); // 30% corporeal
-  pool.push(...corpSources.slice(0,Math.min(corpCount,corpSources.length)));
-
-  // Step 2: Fill remaining slots with clinical order + level sorting
-  const remaining=size-pool.length;
-  const nonCorpGroups=GROUPS.filter(g=>!g.cats.every(c=>CORP_CATS.includes(c)));
+  // Build pool level by level (1→5), fully random within each level
+  const available=DATA.filter(d=>!wids.has(d.id)&&!todoIds.has(d.id));
   
-  for(const g of nonCorpGroups){
-    if(pool.length>=size)break;
-    const groupItems=DATA.filter(d=>
-      g.cats.includes(d.cat)&&
-      !wids.has(d.id)&&!todoIds.has(d.id)&&
-      !pool.find(p=>p.id===d.id)
-    );
-    const sources=groupItems.filter(d=>(d.role||"source")==="source");
-    const verdicts=groupItems.filter(d=>d.role==="verdict");
-    const copings=groupItems.filter(d=>d.role==="coping");
-    const allSourcesDone=DATA.filter(d=>g.cats.includes(d.cat)&&(d.role||"source")==="source")
-      .every(d=>wids.has(d.id)||todoIds.has(d.id));
-    const allVerdictsDone=DATA.filter(d=>g.cats.includes(d.cat)&&d.role==="verdict")
-      .every(d=>wids.has(d.id)||todoIds.has(d.id));
-    let toAdd=[];
-    if(!allSourcesDone)toAdd=sources;
-    else if(!allVerdictsDone)toAdd=verdicts;
-    else toAdd=copings;
-    // Sort by level (corporeal first) then shuffle within same level
-    toAdd=toAdd.sort((a,b)=>(a.depth||3)-(b.depth||3));
-    pool.push(...toAdd.slice(0,size-pool.length));
+  const byLevel=[];
+  for(let lvl=1;lvl<=5;lvl++){
+    byLevel.push(shuffle(available.filter(d=>(d.depth||3)===lvl)));
   }
 
-  // Add due reviews at the very start
+  // Fill pool: take from level 1 first, then 2, etc.
+  const pool=[];
+  for(const levelItems of byLevel){
+    if(pool.length>=size)break;
+    pool.push(...levelItems.slice(0,size-pool.length));
+  }
+
+  // Due reviews always first
   const dueReviews=shuffle(DATA.filter(d=>isDueForReview(d.id)&&!wids.has(d.id)));
   return [...dueReviews,...pool].slice(0,size+dueReviews.length);
 }
