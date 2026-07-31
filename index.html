@@ -191,7 +191,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .game-card{display:none;flex-direction:column;align-items:center;text-align:center;max-width:480px;width:100%;margin-top:3rem;}
 .game-card.show{display:flex;}
 .game-card-level{font-size:12px;color:var(--text-faint);margin-bottom:0.4rem;display:flex;align-items:center;gap:6px;}
-.game-card-group{font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:1.25rem;}
+.game-card-group{font-size:13px;color:var(--text-muted);margin-bottom:0.5rem;}
 .game-card-text{font-size:34px;font-weight:600;color:var(--text);margin-bottom:2.5rem;line-height:1.3;}
 .game-btns{display:flex;gap:10px;justify-content:center;}
 .game-btn-action{display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 22px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text-muted);font-size:12px;font-family:inherit;cursor:pointer;transition:all 0.15s;min-width:110px;}
@@ -306,8 +306,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     </div>
     <div class="home-card game" id="home-game-btn">
       <div class="home-card-icon">🃏</div>
-      <div class="home-card-title">Mode Découverte</div>
-      <div class="home-card-sub">Séance guidée du corps vers l'abstrait</div>
+      <div class="home-card-title">Mon Parcours</div>
+      <div class="home-card-sub">Ton chemin identitaire guidé, étape par étape</div>
     </div>
   </div>
   <div class="home-progress-section">
@@ -364,7 +364,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 
 <div class="modal-overlay" id="sf-modal">
   <div class="modal-box">
-    <div class="modal-title">Mode Découverte</div>
+    <div class="modal-title">Mon Parcours 🧭</div>
     <div class="modal-sub">Choisis la durée de ta séance</div>
     <div class="sf-cards">
       <div class="sf-card" data-size="5"><div class="sf-icon">⚡</div><div class="sf-info"><div class="sf-name">Micro-séance</div><div class="sf-desc">Rapide et ciblée</div></div><div class="sf-count">5</div></div>
@@ -586,7 +586,6 @@ const DEFAULT_DATA = [
   {id:1014,text:'Je suis confiné',cat:'Isolement',depth:3,role:'source'},
   {id:1015,text:'Je suis limité',cat:'Isolement',depth:2,role:'source'},
   {id:1016,text:'Je suis restreint',cat:'Isolement',depth:3,role:'source'},
-  {id:1017,text:'Je suis interdit',cat:'Isolement',depth:3,role:'source'},
   {id:1018,text:'Je suis censuré',cat:'Isolement',depth:3,role:'source'},
   {id:3095,text:'Je suis replié',cat:'Isolement',depth:3,role:'source'},
   {id:3096,text:'Je suis refermé',cat:'Isolement',depth:3,role:'source'},
@@ -922,7 +921,6 @@ const DEFAULT_DATA = [
   {id:1161,text:'Je suis contrarié',cat:'Culpabilité',depth:3,role:'source'},
   {id:1155,text:'Je suis lâché',cat:'Culpabilité',depth:2,role:'source'},
   {id:1157,text:'Je suis exaspéré',cat:'Culpabilité',depth:3,role:'source'},
-  {id:3001,text:'Je suis navré',cat:'Culpabilité',depth:3,role:'source'},
   {id:3133,text:'Je suis attardé',cat:'Culpabilité',depth:2,role:'source'},
   {id:6310,text:'Je suis fâché',cat:'Culpabilité',depth:2,role:'source'},
   {id:1150,text:'Je suis résigné',cat:'Culpabilité',depth:3,role:'source'},
@@ -1052,7 +1050,6 @@ const DEFAULT_DATA = [
   {id:3104,text:'Je suis intrigué',cat:'Conditionnement',depth:2,role:'source'},
   {id:528,text:'Je suis propulsé',cat:'Effondrement',depth:4,role:'coping'},
   {id:529,text:'Je suis projeté',cat:'Dissociation',depth:2,role:'source'},
-  {id:2042,text:'Je suis médusé',cat:'Confusion',depth:2,role:'verdict'},
   {id:520,text:'Je suis traversé',cat:'Effondrement',depth:3,role:'coping'},
   {id:526,text:'Je suis emporté',cat:'Confusion',depth:3,role:'coping'},
   {id:527,text:'Je suis lancé',cat:'Effondrement',depth:3,role:'coping'},
@@ -1066,8 +1063,6 @@ const DEFAULT_DATA = [
   {id:2040,text:'Je suis décontenancé',cat:'Confusion',depth:2,role:'coping'},
   {id:2041,text:'Je suis sidéré',cat:'Rigidité',depth:1,role:'source'},
   {id:2043,text:'Je suis abasourdi',cat:'Rigidité',depth:1,role:'source'},
-  {id:2044,text:'Je suis stupéfait',cat:'Rigidité',depth:1,role:'source'},
-  {id:3076,text:'Je suis consterné',cat:'Rigidité',depth:1,role:'source'},
   {id:3082,text:'Je suis ébranlé',cat:'Confusion',depth:2,role:'coping'},
   {id:3083,text:'Je suis secoué',cat:'Confusion',depth:2,role:'coping'},
   {id:3092,text:'Je suis renversé',cat:'Confusion',depth:2,role:'coping'},
@@ -1465,6 +1460,9 @@ const DEFAULT_DATA = [
   {id:9910,text:'Je suis mésinterprété',cat:'Confusion',depth:3,role:'source'},
   {id:9912,text:'Je suis mal-jugé',cat:'Honte',depth:3,role:'source'},
   {id:9913,text:'Je suis surestimé',cat:'Honte',depth:4,role:'source'}
+,
+  {id:9930,text:'Je suis dévoué',cat:'Culpabilité',depth:3,role:'source'},
+  {id:9931,text:'Je suis occulté',cat:'Contrôle',depth:3,role:'source'}
 ];
 const GROUPS=[
   {id:"dissociation",label:"① Déconnexion & Reconnexion au corps",subtitle:"La relation au corps, négative et positive",cats:["Dissociation"]},
@@ -1827,11 +1825,19 @@ function showGroupTrans(group,onDone){
 function showCard(){
   const d=gameQueue[gameIdx];
   const group=getGroupForCat(d.cat);
-  const gname=group?group.label.replace(/^.\s*/,""):"";
+  const gname=group?group.label:"";
   const lvl=d.depth||3;
   const levelName=levelNames[lvl]||"";
   const levelColor=levelColors[lvl]||"var(--text-faint)";
-  document.getElementById("g-card-group").textContent=gname;
+  // Group progress within current group
+  const wids=workedIds();
+  let groupProgress="";
+  if(group){
+    const groupTotal=DATA.filter(d2=>group.cats.includes(d2.cat)).length;
+    const groupDone=DATA.filter(d2=>group.cats.includes(d2.cat)&&wids.has(d2.id)).length;
+    groupProgress=`${groupDone}/${groupTotal}`;
+  }
+  document.getElementById("g-card-group").innerHTML=`<span style="font-weight:600">${gname}</span><span style="margin-left:8px;opacity:0.5">${groupProgress}</span>`;
   document.getElementById("g-card-text").textContent=d.text;
   // Level heat bar
   const levelEl=document.getElementById("g-card-level");
@@ -1840,7 +1846,7 @@ function showCard(){
   ).join("")+`<span style="color:${levelColor};font-weight:600;">${levelName}</span>`;
   // Header badge
   const badge=document.getElementById("g-level-badge");
-  badge.textContent=levelName;
+  badge.textContent=gname.replace(/^.\s*/,"");
   badge.style.borderColor=levelColor;
   badge.style.color=levelColor;
   // Progress
