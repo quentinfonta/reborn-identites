@@ -121,6 +121,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .group-separator:first-child{margin-top:0;}
 .group-sep-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--text-faint);}
 .group-sep-sub{font-size:12px;color:var(--text-faint);margin-top:2px;opacity:0.6;}
+.polarity-sep{grid-column:1/-1;display:flex;align-items:center;gap:10px;margin:1rem 0 0.25rem;font-size:12px;font-weight:600;}
+.polarity-sep::after{content:'';flex:1;height:1px;}
+.polarity-sep.neg{color:rgba(255,77,46,0.7);}
+.polarity-sep.neg::after{background:rgba(255,77,46,0.2);}
+.polarity-sep.pos{color:rgba(141,201,74,0.7);}
+.polarity-sep.pos::after{background:rgba(141,201,74,0.2);}
 /* CARDS */
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:7px;}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:0.875rem 1rem;cursor:pointer;transition:all 0.15s;user-select:none;}
@@ -335,10 +341,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     </div>
   </div>
   <div class="filters-bar">
+    <button class="filter-btn active" data-polarity="all">Toutes</button>
+    <button class="filter-btn" data-polarity="neg">🔴 Ce que j ai vécu</button>
+    <button class="filter-btn" data-polarity="pos">🟢 Ce que je deviens</button>
+    <div style="width:1px;height:20px;background:var(--border);margin:0 4px;"></div>
     <button class="filter-btn active" data-state="all">Toutes</button>
     <button class="filter-btn" data-state="untouched">Non touchées</button>
-    <button class="filter-btn" data-state="todo" title="À faire">🔖 À faire</button>
-    <button class="filter-btn" data-state="worked" title="Travaillées">✅ Travaillées</button>
+    <button class="filter-btn" data-state="todo">🔖 À faire</button>
+    <button class="filter-btn" data-state="worked">✅ Travaillées</button>
     <div style="flex:1;"></div>
     <div class="level-nav">
       <button class="level-nav-btn" id="level-prev">←</button>
@@ -618,7 +628,7 @@ const DEFAULT_DATA = [
   {id:1039,text:'Je suis noyé',cat:'Isolement',depth:1,role:'source'},
   {id:3023,text:'Je suis poursuivi',cat:'Isolement',depth:3,role:'source'},
   {id:3035,text:'Je suis oppressé',cat:'Isolement',depth:1,role:'source'},
-  {id:3061,text:'Je suis angoissé',cat:'Isolement',depth:3,role:'source'},
+  {id:3061,text:'Je suis angoissé',cat:'Blessure',depth:3,role:'source'},
   {id:3110,text:'Je suis inondé',cat:'Isolement',depth:3,role:'source'},
   {id:3124,text:'Je suis surchargé',cat:'Isolement',depth:3,role:'source'},
   {id:3125,text:'Je suis comprimé',cat:'Isolement',depth:1,role:'source'},
@@ -1358,7 +1368,7 @@ const DEFAULT_DATA = [
   {id:686,text:'Je suis armé',cat:'Contrôle',depth:3,role:'coping'},
   {id:685,text:'Je suis habilité',cat:'Conditionnement',depth:3,role:'coping'},
   {id:684,text:'Je suis autonomisé',cat:'Conditionnement',depth:3,role:'coping'},
-  {id:691,text:'Je suis stabilisé',cat:'Confusion',depth:3,role:'coping'},
+  {id:691,text:'Je suis stabilisé',cat:'Abandon',depth:3,role:'coping'},
   {id:1410,text:'Je suis blindé',cat:'Contrôle',depth:3,role:'coping'},
   {id:1411,text:'Je suis cuirassé',cat:'Contrôle',depth:3,role:'coping'},
   {id:1417,text:'Je suis responsabilisé',cat:'Culpabilité',depth:3,role:'coping'},
@@ -1435,7 +1445,7 @@ const DEFAULT_DATA = [
   {id:9601,text:'Je suis catastrophisé',cat:'Culpabilité',depth:3,role:'source'},
   {id:9602,text:'Je suis amplifié',cat:'Culpabilité',depth:2,role:'source'},
   {id:9603,text:'Je suis grossi',cat:'Culpabilité',depth:2,role:'source'},
-  {id:9604,text:'Je suis alarmé',cat:'Culpabilité',depth:3,role:'source'},
+  {id:9604,text:'Je suis alarmé',cat:'Blessure',depth:3,role:'source'},
   {id:9606,text:'Je suis plombé',cat:'Rigidité',depth:1,role:'source'},
   {id:9700,text:'Je suis taraudé',cat:'Blessure',depth:3,role:'source'},
   {id:9701,text:'Je suis épouvanté',cat:'Blessure',depth:3,role:'source'},
@@ -1466,6 +1476,12 @@ const DEFAULT_DATA = [
 ,
   {id:9942,text:'Je suis permis',cat:'Existence',depth:3,role:'coping'},
   {id:9943,text:'Je suis fondé',cat:'Existence',depth:3,role:'coping'}
+,
+  {id:9960,text:'Je suis calmé',cat:'Abandon',depth:2,role:'coping'},
+  {id:9961,text:'Je suis insécurisé',cat:'Abandon',depth:2,role:'source'},
+  {id:9962,text:'Je suis dédaigné',cat:'Abandon',depth:3,role:'source'},
+  {id:9963,text:'Je suis sevré',cat:'Abandon',depth:2,role:'source'},
+  {id:9964,text:'Je suis adoré',cat:'Abandon',depth:3,role:'coping'}
 ];
 const GROUPS=[
   {id:"dissociation",label:"① Déconnexion & Reconnexion au corps",subtitle:"La relation au corps, négative et positive",cats:["Dissociation"]},
@@ -1497,7 +1513,7 @@ function shuffle(arr){
 
 let DATA=[...DEFAULT_DATA];
 let currentProfile=null,SESSIONS=[],checked=new Set(),todoIds=new Set(),reviewDates={};
-let stateFilter="all",levelFilter=1,query="";
+let stateFilter="all",levelFilter=1,polarityFilter="all",query="";
 let pinTarget=null,pinVal="";
 
 function workedIds(){return new Set(SESSIONS.flatMap(s=>s.ids));}
@@ -1654,6 +1670,12 @@ document.getElementById("level-next").addEventListener("click",()=>{
 updateLevelNav();
 
 // STATE FILTERS
+document.querySelectorAll("[data-polarity]").forEach(btn=>btn.addEventListener("click",()=>{
+  polarityFilter=btn.dataset.polarity;
+  document.querySelectorAll("[data-polarity]").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");render();
+}));
+
 document.querySelectorAll("[data-state]").forEach(btn=>btn.addEventListener("click",()=>{
   stateFilter=btn.dataset.state;
   document.querySelectorAll("[data-state]").forEach(b=>b.classList.remove("active"));
@@ -1677,8 +1699,19 @@ function getFiltered(){
     else if(stateFilter==="worked")stateOk=isWorked;
     else if(stateFilter==="todo")stateOk=isTodo;
     else if(stateFilter==="due")stateOk=isDue;
-    return qOk&&levelOk&&stateOk;
-  }).sort((a,b)=>(groupOrder[a.cat]??99)-(groupOrder[b.cat]??99));
+    const polarityOk=polarityFilter==="all"||
+      (polarityFilter==="neg"&&(d.role==="source"||d.role==="verdict"))||
+      (polarityFilter==="pos"&&d.role==="coping");
+    return qOk&&levelOk&&stateOk&&polarityOk;
+  }).sort((a,b)=>{
+    const ga=groupOrder[a.cat]??99;
+    const gb=groupOrder[b.cat]??99;
+    if(ga!==gb)return ga-gb;
+    // Within same group: neg before pos
+    const pa=a.role==="coping"?1:0;
+    const pb=b.role==="coping"?1:0;
+    return pa-pb;
+  });
 }
 
 function render(){
@@ -1687,8 +1720,15 @@ function render(){
   document.getElementById("stats-bar").innerHTML=`<span>${items.length}</span> identité${items.length>1?"s":""}`;
   const grid=document.getElementById("grid");
   if(!items.length){grid.innerHTML='<div class="no-results"><i class="ti ti-search" style="font-size:24px;display:block;margin-bottom:8px;opacity:0.2"></i>Aucun résultat</div>';renderSession();return;}
+  // Split by group and polarity
+  const groupOrder={};
+  GROUPS.forEach((g,i)=>g.cats.forEach(cat=>groupOrder[cat]=i));
+  
+  let html="";
   let lastGid=null;
-  grid.innerHTML=items.map(d=>{
+  let lastPolarity=null;
+
+  items.forEach(d=>{
     const isWorked=checked.has(d.id)||wids.has(d.id);
     const isTodo=todoIds.has(d.id)&&!isWorked;
     const isDue=isDueForReview(d.id)&&!isWorked;
@@ -1696,16 +1736,31 @@ function render(){
     const group=getGroupForCat(d.cat);
     const gid=group?group.id:"";
     const gname=group?group.label.replace(/^.\s*/,""):"";
-    let sep="";
-    if(gid!==lastGid&&group){lastGid=gid;sep=`<div class="group-separator"><div class="group-sep-label">${group.label}</div><div class="group-sep-sub">${group.subtitle}</div></div>`;}
-    return sep+`<div class="card${cls?" "+cls:""}" data-id="${d.id}">
+    const polarity=d.role==="coping"?"pos":"neg";
+
+    // Group separator
+    if(gid!==lastGid&&group){
+      lastGid=gid;lastPolarity=null;
+      html+=`<div class="group-separator"><div class="group-sep-label">${group.label}</div><div class="group-sep-sub">${group.subtitle}</div></div>`;
+    }
+    // Polarity separator within group
+    if(polarity!==lastPolarity&&polarityFilter==="all"){
+      lastPolarity=polarity;
+      if(polarity==="neg"){
+        html+=`<div class="polarity-sep neg"><span>🔴 Ce que j'ai vécu</span></div>`;
+      } else {
+        html+=`<div class="polarity-sep pos"><span>🟢 Ce que je deviens</span></div>`;
+      }
+    }
+    html+=`<div class="card${cls?" "+cls:""}" data-id="${d.id}">
       <div class="card-top"><span class="identity">${d.text}</span><div class="check-circle"><i class="ti ti-check"></i></div></div>
       <div class="card-footer">
         <span class="group-badge">${gname}</span>
         <button class="todo-btn" data-id="${d.id}" title="À faire">🔖</button>
       </div>
     </div>`;
-  }).join("");
+  });
+  grid.innerHTML=html;
 
   grid.querySelectorAll(".card").forEach(card=>{
     card.addEventListener("click",e=>{
@@ -1783,31 +1838,12 @@ let gameQueue=[],gameIdx=0,gameWorked=[],gameLater=[],gameSkipped=[],lastGameGro
 
 function buildGamePool(size){
   const wids=workedIds();
-  const pool=[];
 
-  // Go group by group in clinical order
-  for(const g of GROUPS){
-    if(pool.length>=size)break;
-    // Get untouched identities in this group, sorted by level (body first)
-    const groupItems=DATA.filter(d=>
-      g.cats.includes(d.cat)&&
-      !wids.has(d.id)&&
-      !todoIds.has(d.id)&&
-      !pool.find(p=>p.id===d.id)
-    ).sort((a,b)=>(a.depth||3)-(b.depth||3));
-    // Shuffle within each level
-    const byLevel={};
-    groupItems.forEach(d=>{
-      const lvl=d.depth||3;
-      if(!byLevel[lvl])byLevel[lvl]=[];
-      byLevel[lvl].push(d);
-    });
-    const sorted=[];
-    [1,2,3,4,5].forEach(lvl=>{
-      if(byLevel[lvl])sorted.push(...shuffle(byLevel[lvl]));
-    });
-    pool.push(...sorted.slice(0,size-pool.length));
-  }
+  // Negative first (source + verdict), then positive (coping) — fully random within each
+  const available=DATA.filter(d=>!wids.has(d.id)&&!todoIds.has(d.id));
+  const negatives=shuffle(available.filter(d=>d.role==="source"||d.role==="verdict"));
+  const positives=shuffle(available.filter(d=>d.role==="coping"));
+  const pool=[...negatives,...positives].slice(0,size);
 
   // Due reviews always first
   const dueReviews=shuffle(DATA.filter(d=>isDueForReview(d.id)&&!wids.has(d.id)));
