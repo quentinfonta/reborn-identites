@@ -365,8 +365,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   </div>
   <div class="filters-bar">
     <button class="filter-btn active" data-polarity="all">Toutes</button>
-    <button class="filter-btn" data-polarity="neg">🔴 Ce que j ai vécu</button>
-    <button class="filter-btn" data-polarity="pos">🟢 Ce que je deviens</button>
+    <button class="filter-btn" data-polarity="neg">🔴 Identités négatives</button>
+    <button class="filter-btn" data-polarity="pos">🟢 Identités positives</button>
     <div style="width:1px;height:20px;background:var(--border);margin:0 4px;"></div>
     <button class="filter-btn active" data-state="all">Toutes</button>
     <button class="filter-btn" data-state="untouched">Non touchées</button>
@@ -506,26 +506,26 @@ async function hashPin(pin){
 }
 
 const DEFAULT_DATA = [
-  {id:372,text:'Je suis anesthésié',cat:'Rigidité',depth:1,role:'source'},
-  {id:374,text:'Je suis assoupi',cat:'Rigidité',depth:1,role:'source'},
-  {id:373,text:'Je suis endormi',cat:'Rigidité',depth:1,role:'source'},
-  {id:375,text:'Je suis engourdi',cat:'Rigidité',depth:1,role:'source'},
-  {id:362,text:'Je suis gelé',cat:'Rigidité',depth:1,role:'source'},
-  {id:361,text:'Je suis congelé',cat:'Rigidité',depth:1,role:'source'},
-  {id:363,text:'Je suis glacé',cat:'Rigidité',depth:1,role:'source'},
-  {id:376,text:'Je suis figé',cat:'Rigidité',depth:1,role:'source'},
-  {id:6001,text:'Je suis crispé',cat:'Rigidité',depth:1,role:'source'},
-  {id:6002,text:'Je suis contracté',cat:'Rigidité',depth:1,role:'source'},
-  {id:6003,text:'Je suis noué',cat:'Rigidité',depth:1,role:'source'},
-  {id:6004,text:'Je suis raidi',cat:'Rigidité',depth:1,role:'source'},
-  {id:369,text:'Je suis rigidifié',cat:'Rigidité',depth:1,role:'source'},
-  {id:368,text:'Je suis solidifié',cat:'Rigidité',depth:1,role:'source'},
-  {id:367,text:'Je suis cristallisé',cat:'Rigidité',depth:1,role:'source'},
-  {id:364,text:'Je suis calcifié',cat:'Rigidité',depth:1,role:'source'},
-  {id:365,text:'Je suis fossilisé',cat:'Rigidité',depth:1,role:'source'},
-  {id:366,text:'Je suis momifié',cat:'Rigidité',depth:1,role:'source'},
-  {id:371,text:'Je suis enkysté',cat:'Rigidité',depth:1,role:'source'},
-  {id:360,text:'Je suis pétrifié',cat:'Rigidité',depth:1,role:'source'},
+  {id:372,text:'Je suis anesthésié',cat:'Figement',depth:1,role:'source'},
+  {id:374,text:'Je suis assoupi',cat:'Figement',depth:1,role:'source'},
+  {id:373,text:'Je suis endormi',cat:'Figement',depth:1,role:'source'},
+  {id:375,text:'Je suis engourdi',cat:'Figement',depth:1,role:'source'},
+  {id:362,text:'Je suis gelé',cat:'Figement',depth:1,role:'source'},
+  {id:361,text:'Je suis congelé',cat:'Figement',depth:1,role:'source'},
+  {id:363,text:'Je suis glacé',cat:'Figement',depth:1,role:'source'},
+  {id:376,text:'Je suis figé',cat:'Figement',depth:1,role:'source'},
+  {id:6001,text:'Je suis crispé',cat:'Figement',depth:1,role:'source'},
+  {id:6002,text:'Je suis contracté',cat:'Figement',depth:1,role:'source'},
+  {id:6003,text:'Je suis noué',cat:'Figement',depth:1,role:'source'},
+  {id:6004,text:'Je suis raidi',cat:'Figement',depth:1,role:'source'},
+  {id:369,text:'Je suis rigidifié',cat:'Figement',depth:1,role:'source'},
+  {id:368,text:'Je suis solidifié',cat:'Figement',depth:1,role:'source'},
+  {id:367,text:'Je suis cristallisé',cat:'Figement',depth:1,role:'source'},
+  {id:364,text:'Je suis calcifié',cat:'Figement',depth:1,role:'source'},
+  {id:365,text:'Je suis fossilisé',cat:'Figement',depth:1,role:'source'},
+  {id:366,text:'Je suis momifié',cat:'Figement',depth:1,role:'source'},
+  {id:371,text:'Je suis enkysté',cat:'Figement',depth:1,role:'source'},
+  {id:360,text:'Je suis pétrifié',cat:'Figement',depth:1,role:'source'},
   {id:292,text:'Je suis drainé',cat:'Épuisement',depth:1,role:'source'},
   {id:293,text:'Je suis lessivé',cat:'Épuisement',depth:1,role:'source'},
   {id:2910,text:'Je suis épuisé',cat:'Épuisement',depth:1,role:'source'},
@@ -582,8 +582,8 @@ const DEFAULT_DATA = [
   {id:7009,text:'Je suis retardé',cat:'Contrôle',depth:2,role:'coping'},
   {id:7010,text:'Je suis différé',cat:'Contrôle',depth:2,role:'coping'},
   {id:7011,text:'Je suis ajourné',cat:'Contrôle',depth:2,role:'coping'},
-  {id:154,text:'Je suis paralysé',cat:'Contrôle',depth:1,role:'source'},
-  {id:155,text:'Je suis immobilisé',cat:'Contrôle',depth:1,role:'source'},
+  {id:154,text:'Je suis paralysé',cat:'Figement',depth:1,role:'source'},
+  {id:155,text:'Je suis immobilisé',cat:'Figement',depth:1,role:'source'},
   {id:142,text:'Je suis attaché',cat:'Contrôle',depth:3,role:'coping'},
   {id:141,text:'Je suis ligoté',cat:'Contrôle',depth:2,role:'source'},
   {id:3006,text:'Je suis intimidé',cat:'Contrôle',depth:3,role:'coping'},
@@ -595,7 +595,7 @@ const DEFAULT_DATA = [
   {id:3080,text:'Je suis suspendu',cat:'Contrôle',depth:3,role:'coping'},
   {id:3126,text:'Je suis contenu',cat:'Contrôle',depth:3,role:'coping'},
   {id:4023,text:'Je suis inhibé',cat:'Contrôle',depth:3,role:'coping'},
-  {id:4024,text:'Je suis tétanisé',cat:'Contrôle',depth:1,role:'coping'},
+  {id:4024,text:'Je suis tétanisé',cat:'Figement',depth:1,role:'source'},
   {id:4032,text:'Je suis épié',cat:'Contrôle',depth:4,role:'coping'},
   {id:4033,text:'Je suis scruté',cat:'Contrôle',depth:4,role:'coping'},
   {id:4034,text:'Je suis jaugé',cat:'Contrôle',depth:3,role:'coping'},
@@ -706,7 +706,7 @@ const DEFAULT_DATA = [
   {id:6061,text:'Je suis standardisé',cat:'Conditionnement',depth:4,role:'coping'},
   {id:6062,text:'Je suis uniformisé',cat:'Conditionnement',depth:4,role:'coping'},
   {id:6063,text:'Je suis lissé',cat:'Conditionnement',depth:4,role:'coping'},
-  {id:7054,text:'Je suis contenté',cat:'Contrôle',depth:2,role:'coping'},
+  {id:7054,text:'Je suis contenté',cat:'Ouverture',depth:2,role:'coping'},
   {id:452,text:'Je suis façonné',cat:'Contrôle',depth:4,role:'coping'},
   {id:446,text:'Je suis fabriqué',cat:'Contrôle',depth:3,role:'coping'},
   {id:444,text:'Je suis simulé',cat:'Contrôle',depth:3,role:'coping'},
@@ -1117,7 +1117,7 @@ const DEFAULT_DATA = [
   {id:2037,text:'Je suis bouleversé',cat:'Confusion',depth:2,role:'coping'},
   {id:2039,text:'Je suis désarçonné',cat:'Confusion',depth:2,role:'coping'},
   {id:2040,text:'Je suis décontenancé',cat:'Confusion',depth:2,role:'coping'},
-  {id:2041,text:'Je suis sidéré',cat:'Rigidité',depth:1,role:'source'},
+  {id:2041,text:'Je suis sidéré',cat:'Figement',depth:1,role:'source'},
   {id:2043,text:'Je suis abasourdi',cat:'Rigidité',depth:1,role:'source'},
   {id:3082,text:'Je suis ébranlé',cat:'Confusion',depth:2,role:'coping'},
   {id:3083,text:'Je suis secoué',cat:'Confusion',depth:2,role:'coping'},
@@ -1128,21 +1128,21 @@ const DEFAULT_DATA = [
   {id:8001,text:'Je suis défié',cat:'Trahison',depth:3,role:'coping'},
   {id:8002,text:'Je suis challengé',cat:'Trahison',depth:3,role:'coping'},
   {id:8003,text:'Je suis testé',cat:'Trahison',depth:3,role:'coping'},
-  {id:1230,text:'Je suis dégelé',cat:'Rigidité',depth:2,role:'coping'},
+  {id:1230,text:'Je suis dégelé',cat:'Figement',depth:2,role:'coping'},
   {id:1231,text:'Je suis dégagé',cat:'Rigidité',depth:2,role:'coping'},
   {id:1232,text:'Je suis décroché',cat:'Rigidité',depth:2,role:'coping'},
   {id:1233,text:'Je suis détaché',cat:'Rigidité',depth:2,role:'coping'},
-  {id:1234,text:'Je suis dénoué',cat:'Contrôle',depth:2,role:'coping'},
+  {id:1234,text:'Je suis dénoué',cat:'Ouverture',depth:2,role:'coping'},
   {id:1235,text:'Je suis délié',cat:'Rigidité',depth:2,role:'coping'},
   {id:1236,text:'Je suis décloué',cat:'Rigidité',depth:2,role:'coping'},
-  {id:1256,text:'Je suis déployé',cat:'Rigidité',depth:2,role:'coping'},
+  {id:1256,text:'Je suis déployé',cat:'Figement',depth:2,role:'coping'},
   {id:1244,text:'Je suis descellé',cat:'Contrôle',depth:4,role:'verdict'},
   {id:1247,text:'Je suis décontaminé',cat:'Conditionnement',depth:4,role:'verdict'},
   {id:1248,text:'Je suis désinfecté',cat:'Violation',depth:4,role:'verdict'},
   {id:1250,text:'Je suis déconditionné',cat:'Conditionnement',depth:4,role:'coping'},
   {id:1251,text:'Je suis déprogrammé',cat:'Conditionnement',depth:4,role:'verdict'},
-  {id:1252,text:'Je suis déverrouillé',cat:'Contrôle',depth:4,role:'coping'},
-  {id:1253,text:'Je suis désenchaîné',cat:'Contrôle',depth:4,role:'verdict'},
+  {id:1252,text:'Je suis déverrouillé',cat:'Ouverture',depth:4,role:'coping'},
+  {id:1253,text:'Je suis désenchaîné',cat:'Ouverture',depth:4,role:'verdict'},
   {id:1254,text:'Je suis désenkyste',cat:'Honte',depth:5,role:'verdict'},
   {id:1237,text:'Je suis décompressé',cat:'Honte',depth:3,role:'coping'},
   {id:1238,text:'Je suis décomposé',cat:'Honte',depth:3,role:'coping'},
@@ -1152,14 +1152,14 @@ const DEFAULT_DATA = [
   {id:1242,text:'Je suis désarmé',cat:'Contrôle',depth:3,role:'coping'},
   {id:1245,text:'Je suis déchargé',cat:'Contrôle',depth:3,role:'coping'},
   {id:1246,text:'Je suis délesté',cat:'Contrôle',depth:3,role:'coping'},
-  {id:565,text:'Je suis débloqué',cat:'Contrôle',depth:1,role:'source'},
-  {id:562,text:'Je suis délivré',cat:'Contrôle',depth:1,role:'source'},
-  {id:1264,text:'Je suis allégé',cat:'Contrôle',depth:1,role:'source'},
-  {id:1265,text:'Je suis soulagé',cat:'Contrôle',depth:1,role:'source'},
-  {id:561,text:'Je suis affranchi',cat:'Contrôle',depth:2,role:'source'},
-  {id:563,text:'Je suis émancipé',cat:'Contrôle',depth:2,role:'source'},
-  {id:560,text:'Je suis libéré',cat:'Contrôle',depth:2,role:'source'},
-  {id:3032,text:'Je suis relâché',cat:'Contrôle',depth:2,role:'source'},
+  {id:565,text:'Je suis débloqué',cat:'Ouverture',depth:1,role:'source'},
+  {id:562,text:'Je suis délivré',cat:'Ouverture',depth:1,role:'source'},
+  {id:1264,text:'Je suis allégé',cat:'Ouverture',depth:1,role:'source'},
+  {id:1265,text:'Je suis soulagé',cat:'Ouverture',depth:1,role:'source'},
+  {id:561,text:'Je suis affranchi',cat:'Ouverture',depth:2,role:'source'},
+  {id:563,text:'Je suis émancipé',cat:'Ouverture',depth:2,role:'source'},
+  {id:560,text:'Je suis libéré',cat:'Ouverture',depth:2,role:'source'},
+  {id:3032,text:'Je suis relâché',cat:'Ouverture',depth:2,role:'source'},
   {id:3107,text:'Je suis excusé',cat:'Trahison',depth:2,role:'source'},
   {id:6200,text:'Je suis désencombré',cat:'Contrôle',depth:2,role:'source'},
   {id:572,text:'Je suis blanchi',cat:'Violation',depth:4,role:'verdict'},
@@ -1194,7 +1194,7 @@ const DEFAULT_DATA = [
   {id:1282,text:'Je suis récupéré',cat:'Épuisement',depth:2,role:'coping'},
   {id:1283,text:'Je suis réconforté',cat:'Trahison',depth:2,role:'source'},
   {id:1280,text:'Je suis revitalisé',cat:'Épuisement',depth:2,role:'coping'},
-  {id:1281,text:'Je suis réveillé',cat:'Rigidité',depth:4,role:'coping'},
+  {id:1281,text:'Je suis réveillé',cat:'Figement',depth:4,role:'coping'},
   {id:1284,text:'Je suis réhabilité',cat:'Honte',depth:4,role:'verdict'},
   {id:1285,text:'Je suis réapproprié',cat:'Isolement',depth:4,role:'verdict'},
   {id:1289,text:'Je suis reconquis',cat:'Perte',depth:4,role:'verdict'},
@@ -1235,7 +1235,7 @@ const DEFAULT_DATA = [
   {id:632,text:'Je suis réunifié',cat:'Effondrement',depth:3,role:'coping'},
   {id:1304,text:'Je suis assimilé',cat:'Effondrement',depth:5,role:'coping'},
   {id:2017,text:'Je suis taillé',cat:'Effondrement',depth:3,role:'coping'},
-  {id:6210,text:'Je suis durci',cat:'Rigidité',depth:1,role:'source'},
+  {id:6210,text:'Je suis durci',cat:'Figement',depth:1,role:'source'},
   {id:1310,text:'Je suis engagé',cat:'Isolement',depth:2,role:'source'},
   {id:1311,text:'Je suis embarqué',cat:'Trahison',depth:2,role:'source'},
   {id:1329,text:'Je suis invité',cat:'Abandon',depth:2,role:'source'},
@@ -1266,9 +1266,9 @@ const DEFAULT_DATA = [
   {id:3097,text:'Je suis amusé',cat:'Abandon',depth:1,role:'source'},
   {id:3098,text:'Je suis diverti',cat:'Abandon',depth:1,role:'source'},
   {id:850,text:'Je suis apaisé',cat:'Trahison',depth:2,role:'source'},
-  {id:1344,text:'Je suis assoupli',cat:'Rigidité',depth:2,role:'coping'},
-  {id:2061,text:'Je suis tempéré',cat:'Contrôle',depth:2,role:'source'},
-  {id:2062,text:'Je suis adouci',cat:'Contrôle',depth:2,role:'source'},
+  {id:1344,text:'Je suis assoupli',cat:'Figement',depth:2,role:'coping'},
+  {id:2061,text:'Je suis tempéré',cat:'Ouverture',depth:2,role:'source'},
+  {id:2062,text:'Je suis adouci',cat:'Ouverture',depth:2,role:'source'},
   {id:6280,text:'Je suis ravi',cat:'Abandon',depth:2,role:'source'},
   {id:6335,text:'Je suis rassuré',cat:'Trahison',depth:2,role:'coping'},
   {id:857,text:'Je suis comblé',cat:'Abandon',depth:4,role:'verdict'},
@@ -1281,7 +1281,7 @@ const DEFAULT_DATA = [
   {id:858,text:'Je suis épanoui',cat:'Effondrement',depth:5,role:'coping'},
   {id:856,text:'Je suis nourri',cat:'Épuisement',depth:3,role:'coping'},
   {id:1343,text:'Je suis ressourcé',cat:'Épuisement',depth:2,role:'coping'},
-  {id:1345,text:'Je suis fluidifié',cat:'Rigidité',depth:2,role:'coping'},
+  {id:1345,text:'Je suis fluidifié',cat:'Figement',depth:2,role:'coping'},
   {id:1354,text:'Je suis consolidé',cat:'Effondrement',depth:3,role:'coping'},
   {id:1356,text:'Je suis protégé',cat:'Abandon',depth:3,role:'coping'},
   {id:1357,text:'Je suis préservé',cat:'Abandon',depth:3,role:'coping'},
@@ -1492,7 +1492,7 @@ const DEFAULT_DATA = [
   {id:9602,text:'Je suis amplifié',cat:'Culpabilité',depth:2,role:'source'},
   {id:9603,text:'Je suis grossi',cat:'Culpabilité',depth:2,role:'source'},
   {id:9604,text:'Je suis alarmé',cat:'Blessure',depth:3,role:'source'},
-  {id:9606,text:'Je suis plombé',cat:'Rigidité',depth:1,role:'source'},
+  {id:9606,text:'Je suis plombé',cat:'Figement',depth:1,role:'source'},
   {id:9700,text:'Je suis taraudé',cat:'Blessure',depth:3,role:'source'},
   {id:9701,text:'Je suis épouvanté',cat:'Blessure',depth:3,role:'source'},
   {id:9702,text:'Je suis apeuré',cat:'Blessure',depth:3,role:'source'},
@@ -1507,12 +1507,12 @@ const DEFAULT_DATA = [
   {id:9820,text:'Je suis critiqué',cat:'Contrôle',depth:4,role:'source'},
   {id:9821,text:'Je suis analysé',cat:'Contrôle',depth:4,role:'source'},
   {id:9822,text:'Je suis décortiqué',cat:'Contrôle',depth:3,role:'source'},
-  {id:9900,text:'Je suis prostré',cat:'Rigidité',depth:1,role:'source'},
-  {id:9901,text:'Je suis hébété',cat:'Rigidité',depth:1,role:'source'},
-  {id:9903,text:'Je suis ankylosé',cat:'Rigidité',depth:1,role:'source'},
+  {id:9900,text:'Je suis prostré',cat:'Figement',depth:1,role:'source'},
+  {id:9901,text:'Je suis hébété',cat:'Figement',depth:1,role:'source'},
+  {id:9903,text:'Je suis ankylosé',cat:'Figement',depth:1,role:'source'},
   {id:9904,text:'Je suis végété',cat:'Rigidité',depth:2,role:'source'},
-  {id:9905,text:'Je suis engoncé',cat:'Rigidité',depth:2,role:'source'},
-  {id:9906,text:'Je suis embourbé',cat:'Contrôle',depth:2,role:'source'},
+  {id:9905,text:'Je suis engoncé',cat:'Figement',depth:2,role:'source'},
+  {id:9906,text:'Je suis embourbé',cat:'Figement',depth:2,role:'source'},
   {id:9910,text:'Je suis mésinterprété',cat:'Confusion',depth:3,role:'source'},
   {id:9912,text:'Je suis mal-jugé',cat:'Honte',depth:3,role:'source'},
   {id:9913,text:'Je suis surestimé',cat:'Honte',depth:4,role:'source'}
@@ -1528,22 +1528,33 @@ const DEFAULT_DATA = [
   {id:9962,text:'Je suis dédaigné',cat:'Abandon',depth:3,role:'source'},
   {id:9963,text:'Je suis sevré',cat:'Abandon',depth:2,role:'source'},
   {id:9964,text:'Je suis adoré',cat:'Abandon',depth:3,role:'coping'}
+,
+  {id:9970,text:'Je suis ciblé',cat:'Violation',depth:3,role:'source'},
+  {id:9971,text:'Je suis visé',cat:'Violation',depth:3,role:'source'},
+  {id:9972,text:'Je suis pourchassé',cat:'Contrôle',depth:3,role:'source'},
+  {id:9973,text:'Je suis persécuté',cat:'Contrôle',depth:4,role:'source'},
+  {id:9974,text:'Je suis sauvegardé',cat:'Abandon',depth:3,role:'coping'}
+,
+  {id:9980,text:'Je suis tremblé',cat:'Figement',depth:1,role:'source'},
+  {id:9981,text:'Je suis vibré',cat:'Figement',depth:1,role:'source'}
 ];
 const GROUPS=[
-  {id:"dissociation",label:"① Déconnexion & Reconnexion au corps",subtitle:"La relation au corps, négative et positive",cats:["Dissociation"]},
-  {id:"conditionnement",label:"② Conditionnement & Déconditionnement",subtitle:"Ce qui a été installé, et ce qui s en libère",cats:["Conditionnement"]},
-  {id:"existence",label:"③ Existence & Présence",subtitle:"Le droit d exister et d être là",cats:["Existence"]},
-  {id:"corps",label:"④ Sidération & Éveil du corps",subtitle:"Les états figés, et leur dégel",cats:["Rigidité","Épuisement","Confusion"]},
-  {id:"usure",label:"⑤ Usure & Régénération",subtitle:"L épuisement, et le renouveau",cats:["Usure"]},
-  {id:"perte",label:"⑥ Perte & Retrouvailles",subtitle:"Ce qui a disparu, et ce qui revient",cats:["Perte"]},
-  {id:"abandon",label:"⑦ Abandon & Accueil",subtitle:"Le départ de l autre, et l accueil retrouvé",cats:["Abandon"]},
-  {id:"trahison",label:"⑧ Trahison & Confiance",subtitle:"La confiance violée, et restaurée",cats:["Trahison"]},
-  {id:"blessure",label:"⑨ Blessure & Guérison",subtitle:"L atteinte, et la réparation",cats:["Blessure"]},
-  {id:"violation",label:"⑩ Violation & Intégrité",subtitle:"Les limites franchies, et restaurées",cats:["Violation"]},
-  {id:"culpabilite",label:"⑪ Culpabilité, Honte & Libération",subtitle:"La faute et la souillure, puis le pardon",cats:["Culpabilité","Honte"]},
-  {id:"blocages",label:"⑫ Blocages & Ouverture",subtitle:"Les mécanismes de protection, et leur lâcher-prise",cats:["Contrôle","Isolement"]},
-  {id:"verdicts",label:"⑬ Effondrement & Reconstruction",subtitle:"Les conclusions sur soi, puis leur transformation",cats:["Effondrement"]},
-  {id:"sortie",label:"⑭ Engagement & Élan vital",subtitle:"La force motrice de la transformation",cats:["Engagement"]}
+  {id:"figement",label:"① Figement & Dégel",subtitle:"Le corps bloqué et sa libération",cats:["Figement"]},
+  {id:"dissociation",label:"② Déconnexion & Reconnexion au corps",subtitle:"La relation au corps, négative et positive",cats:["Dissociation"]},
+  {id:"conditionnement",label:"③ Conditionnement & Déconditionnement",subtitle:"Ce qui a été installé, et ce qui s en libère",cats:["Conditionnement"]},
+  {id:"existence",label:"④ Existence & Présence",subtitle:"Le droit d exister et d être là",cats:["Existence"]},
+  {id:"corps",label:"⑤ Sidération & Éveil du corps",subtitle:"Les états de confusion et d épuisement",cats:["Rigidité","Épuisement","Confusion"]},
+  {id:"usure",label:"⑥ Usure & Régénération",subtitle:"L épuisement, et le renouveau",cats:["Usure"]},
+  {id:"perte",label:"⑦ Perte & Retrouvailles",subtitle:"Ce qui a disparu, et ce qui revient",cats:["Perte"]},
+  {id:"abandon",label:"⑧ Abandon & Accueil",subtitle:"Le départ de l autre, et l accueil retrouvé",cats:["Abandon"]},
+  {id:"trahison",label:"⑨ Trahison & Confiance",subtitle:"La confiance violée, et restaurée",cats:["Trahison"]},
+  {id:"blessure",label:"⑩ Blessure & Guérison",subtitle:"L atteinte, et la réparation",cats:["Blessure"]},
+  {id:"violation",label:"⑪ Violation & Intégrité",subtitle:"Les limites franchies, et restaurées",cats:["Violation"]},
+  {id:"culpabilite",label:"⑫ Culpabilité, Honte & Libération",subtitle:"La faute et la souillure, puis le pardon",cats:["Culpabilité","Honte"]},
+  {id:"blocages",label:"⑬ Mécanismes & Protection & Ouverture",subtitle:"Les mécanismes de protection, et leur lâcher-prise",cats:["Contrôle","Isolement"]},
+  {id:"ouverture",label:"⑭ Ouverture & Lâcher-prise",subtitle:"La libération des mécanismes de protection",cats:["Ouverture"]},
+  {id:"verdicts",label:"⑮ Effondrement & Reconstruction",subtitle:"Les conclusions sur soi, puis leur transformation",cats:["Effondrement"]},
+  {id:"sortie",label:"⑯ Engagement & Élan vital",subtitle:"La force motrice de la transformation",cats:["Engagement"]}
 ];
 
 const LEVEL_NAMES=["Tous", "Corps", "Ressenti", "Émotion", "Relation", "Abstrait"];
@@ -1738,6 +1749,10 @@ Identités marquées "à faire": ${todoList}`;
         messages:chatHistory
       })
     });
+    if(!res.ok){
+      const err=await res.text();
+      throw new Error(err);
+    }
     const data=await res.json();
     const reply=data.content?.[0]?.text||"Je n'ai pas pu répondre, réessaie.";
     typingEl.textContent=reply;
@@ -1746,7 +1761,8 @@ Identités marquées "à faire": ${todoList}`;
     // Keep history manageable
     if(chatHistory.length>20)chatHistory=chatHistory.slice(-20);
   }catch(e){
-    typingEl.textContent="Erreur de connexion. Réessaie.";
+    console.error("Chat error:",e);
+    typingEl.textContent="Erreur de connexion — vérifie que tu es sur localhost ou GitHub Pages.";
     typingEl.classList.remove("typing");
   }
   
@@ -1905,9 +1921,9 @@ function render(){
     if(polarity!==lastPolarity&&polarityFilter==="all"){
       lastPolarity=polarity;
       if(polarity==="neg"){
-        html+=`<div class="polarity-sep neg"><span>🔴 Ce que j'ai vécu</span></div>`;
+        html+=`<div class="polarity-sep neg"><span>🔴 Identités négatives</span></div>`;
       } else {
-        html+=`<div class="polarity-sep pos"><span>🟢 Ce que je deviens</span></div>`;
+        html+=`<div class="polarity-sep pos"><span>🟢 Identités positives</span></div>`;
       }
     }
     html+=`<div class="card${cls?" "+cls:""}" data-id="${d.id}">
@@ -1996,12 +2012,32 @@ let gameQueue=[],gameIdx=0,gameWorked=[],gameLater=[],gameSkipped=[],lastGameGro
 
 function buildGamePool(size){
   const wids=workedIds();
+  const pool=[];
 
-  // Negative first (source + verdict), then positive (coping) — fully random within each
-  const available=DATA.filter(d=>!wids.has(d.id)&&!todoIds.has(d.id));
-  const negatives=shuffle(available.filter(d=>d.role==="source"||d.role==="verdict"));
-  const positives=shuffle(available.filter(d=>d.role==="coping"));
-  const pool=[...negatives,...positives].slice(0,size);
+  // For each group in clinical order:
+  // First all negatives (source+verdict) of the group
+  // Only add positives (coping) when all negatives of that group are done
+  for(const g of GROUPS){
+    if(pool.length>=size)break;
+    const groupData=DATA.filter(d=>g.cats.includes(d.cat));
+    const available=groupData.filter(d=>!wids.has(d.id)&&!todoIds.has(d.id)&&!pool.find(p=>p.id===d.id));
+    
+    const negatives=available.filter(d=>d.role==="source"||d.role==="verdict");
+    const positives=available.filter(d=>d.role==="coping");
+    
+    // Check if all negatives of this group are already worked
+    const allNegDone=groupData
+      .filter(d=>d.role==="source"||d.role==="verdict")
+      .every(d=>wids.has(d.id)||todoIds.has(d.id));
+
+    if(!allNegDone){
+      // Still negatives to work — add negatives only
+      pool.push(...shuffle(negatives).slice(0,size-pool.length));
+    } else {
+      // All negatives done — add positives
+      pool.push(...shuffle(positives).slice(0,size-pool.length));
+    }
+  }
 
   // Due reviews always first
   const dueReviews=shuffle(DATA.filter(d=>isDueForReview(d.id)&&!wids.has(d.id)));
