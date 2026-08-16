@@ -39,6 +39,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .profile-avatar{width:32px;height:32px;border-radius:50%;background:var(--gold-bg);border:1px solid var(--gold-border);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--gold-text);flex-shrink:0;}
 .profile-name{font-size:14px;font-weight:500;flex:1;}
 .profile-meta{font-size:11px;color:var(--text-faint);}
+.profile-delete-btn{background:none;border:none;cursor:pointer;font-size:13px;padding:4px;opacity:0.3;transition:opacity 0.15s;flex-shrink:0;}
+.profile-delete-btn:hover{opacity:1;}
 .divider{display:flex;align-items:center;gap:10px;margin:1rem 0;color:var(--text-faint);font-size:12px;}
 .divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border);}
 .new-profile-form{display:flex;flex-direction:column;gap:8px;}
@@ -1569,10 +1571,29 @@ async function loadProfiles(){
       return`<div class="profile-item" data-id="${p.id}" data-name="${p.name}" data-hash="${p.pin_hash}">
         <div class="profile-avatar">${ini}</div><div class="profile-name">${p.name}</div>
         <div class="profile-meta">depuis ${d}</div>
-        <i class="ti ti-chevron-right" style="font-size:14px;color:var(--text-faint)"></i>
+        <button class="profile-delete-btn" data-id="${p.id}" data-name="${p.name}" title="Supprimer">🗑</button>
       </div>`;
     }).join("");
-    list.querySelectorAll(".profile-item").forEach(item=>item.addEventListener("click",()=>openPin(item.dataset.id,item.dataset.name,item.dataset.hash)));
+    list.querySelectorAll(".profile-item").forEach(item=>item.addEventListener("click",e=>{
+      if(e.target.closest(".profile-delete-btn"))return;
+      openPin(item.dataset.id,item.dataset.name,item.dataset.hash);
+    }));
+    list.querySelectorAll(".profile-delete-btn").forEach(btn=>btn.addEventListener("click",async e=>{
+      e.stopPropagation();
+      const id=btn.dataset.id;
+      const name=btn.dataset.name;
+      if(!confirm(`Supprimer le profil "${name}" et toutes ses données ?`))return;
+      try{
+        await sb(`sessions?profile_id=eq.${id}`,{method:"DELETE",prefer:"return=minimal"});
+        await sb(`profiles?id=eq.${id}`,{method:"DELETE",prefer:"return=minimal"});
+        // Clear localStorage
+        localStorage.removeItem("todo_"+id);
+        localStorage.removeItem("reviews_"+id);
+        localStorage.removeItem("trashed_"+id);
+        showToast(`Profil "${name}" supprimé`);
+        loadProfiles();
+      }catch(e){showToast("Erreur suppression: "+e.message);}
+    }));
   }catch(e){list.innerHTML=`<div style="font-size:13px;color:var(--red-text)">Erreur: ${e.message}</div>`;}
 }
 
