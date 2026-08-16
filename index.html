@@ -1582,11 +1582,16 @@ async function loadProfiles(){
       e.stopPropagation();
       const id=btn.dataset.id;
       const name=btn.dataset.name;
-      if(!confirm(`Supprimer le profil "${name}" et toutes ses données ?`))return;
+      const hash=btn.closest(".profile-item").dataset.hash;
+      // Ask for PIN first
+      const pin=prompt(`Entre ton code PIN pour supprimer le profil "${name}" :`);
+      if(!pin)return;
+      const enteredHash=await hashPin(pin);
+      if(enteredHash!==hash){showToast("Code PIN incorrect");return;}
+      if(!confirm(`Supprimer définitivement le profil "${name}" et toutes ses données ?`))return;
       try{
         await sb(`sessions?profile_id=eq.${id}`,{method:"DELETE",prefer:"return=minimal"});
         await sb(`profiles?id=eq.${id}`,{method:"DELETE",prefer:"return=minimal"});
-        // Clear localStorage
         localStorage.removeItem("todo_"+id);
         localStorage.removeItem("reviews_"+id);
         localStorage.removeItem("trashed_"+id);
