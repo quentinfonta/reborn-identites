@@ -148,6 +148,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .todo-btn{background:none;border:none;cursor:pointer;font-size:13px;padding:0;opacity:0.3;transition:opacity 0.15s;line-height:1;}
 .todo-btn:hover{opacity:1;}
 .card.todo .todo-btn{opacity:1;}
+.trash-btn{background:none;border:none;cursor:pointer;font-size:12px;padding:0;opacity:0;transition:opacity 0.15s;line-height:1;}
+.card:hover .trash-btn{opacity:0.3;}
+.card:hover .trash-btn:hover{opacity:1;}
+.card.trashed{border-color:var(--red-border);background:var(--red-bg);opacity:0.5;}
+.card.worked{cursor:pointer;}
 .no-results{padding:3rem;text-align:center;color:var(--text-faint);font-size:14px;grid-column:1/-1;}
 /* SESSION BAR */
 .session-bar{position:sticky;bottom:0;background:var(--bg);border-top:1px solid var(--border-md);padding:1rem 0;margin-top:2rem;}
@@ -353,6 +358,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     <button class="filter-btn" data-state="untouched">Non touchées</button>
     <button class="filter-btn" data-state="todo">🔖 À faire</button>
     <button class="filter-btn" data-state="worked">✅ Travaillées</button>
+    <button class="filter-btn" data-state="trashed">🗑 Indésirables</button>
     <div style="flex:1;"></div>
     <div class="level-nav">
       <button class="level-nav-btn" id="level-prev">←</button>
@@ -577,15 +583,15 @@ const DEFAULT_DATA = [
   {id:3136,text:'Je suis réprimé',cat:'Contrôle',depth:4,role:'coping'},
   {id:4025,text:'Je suis dompté',cat:'Contrôle',depth:4,role:'coping'},
   {id:6030,text:'Je suis encagé',cat:'Contrôle',depth:2,role:'source'},
-  {id:6033,text:'Je suis embrigadé',cat:'Conditionnement',depth:4,role:'coping'},
-  {id:6034,text:'Je suis endoctriné',cat:'Conditionnement',depth:4,role:'coping'},
+  {id:6033,text:'Je suis embrigadé',cat:'Conditionnement',depth:4,role:'source'},
+  {id:6034,text:'Je suis endoctriné',cat:'Conditionnement',depth:4,role:'source'},
   {id:6290,text:'Je suis traqué',cat:'Contrôle',depth:4,role:'coping'},
   {id:7047,text:'Je suis surresponsabilisé',cat:'Contrôle',depth:4,role:'coping'},
   {id:139,text:'Je suis enfermé',cat:'Contrôle',depth:4,role:'source'},
   {id:138,text:'Je suis emprisonné',cat:'Contrôle',depth:4,role:'source'},
   {id:132,text:'Je suis dominé',cat:'Contrôle',depth:4,role:'source'},
   {id:133,text:'Je suis soumis',cat:'Contrôle',depth:5,role:'coping'},
-  {id:134,text:'Je suis domestiqué',cat:'Conditionnement',depth:4,role:'coping'},
+  {id:134,text:'Je suis domestiqué',cat:'Conditionnement',depth:4,role:'source'},
   {id:135,text:'Je suis colonisé',cat:'Contrôle',depth:5,role:'coping'},
   {id:136,text:'Je suis instrumentalisé',cat:'Contrôle',depth:5,role:'coping'},
   {id:137,text:'Je suis possédé',cat:'Contrôle',depth:5,role:'coping'},
@@ -650,20 +656,20 @@ const DEFAULT_DATA = [
   {id:7006,text:'Je suis assiégé',cat:'Isolement',depth:4,role:'source'},
   {id:7007,text:'Je suis cerné',cat:'Isolement',depth:4,role:'source'},
   {id:1043,text:'Je suis dévoré',cat:'Isolement',depth:5,role:'source'},
-  {id:447,text:'Je suis formaté',cat:'Conditionnement',depth:4,role:'coping'},
+  {id:447,text:'Je suis formaté',cat:'Conditionnement',depth:4,role:'source'},
   {id:453,text:'Je suis calibré',cat:'Contrôle',depth:4,role:'coping'},
   {id:1051,text:'Je suis estampillé',cat:'Contrôle',depth:2,role:'coping'},
-  {id:449,text:'Je suis programmé',cat:'Conditionnement',depth:4,role:'coping'},
-  {id:448,text:'Je suis conditionné',cat:'Conditionnement',depth:4,role:'coping'},
-  {id:450,text:'Je suis moulé',cat:'Conditionnement',depth:4,role:'coping'},
+  {id:449,text:'Je suis programmé',cat:'Conditionnement',depth:4,role:'source'},
+  {id:448,text:'Je suis conditionné',cat:'Conditionnement',depth:4,role:'source'},
+  {id:450,text:'Je suis moulé',cat:'Conditionnement',depth:4,role:'source'},
   {id:451,text:'Je suis modelé',cat:'Contrôle',depth:2,role:'coping'},
   {id:3044,text:'Je suis flatté',cat:'Contrôle',depth:2,role:'coping'},
   {id:3053,text:'Je suis influencé',cat:'Contrôle',depth:2,role:'coping'},
   {id:3143,text:'Je suis exagéré',cat:'Contrôle',depth:2,role:'coping'},
-  {id:6060,text:'Je suis normalisé',cat:'Conditionnement',depth:4,role:'coping'},
-  {id:6061,text:'Je suis standardisé',cat:'Conditionnement',depth:4,role:'coping'},
-  {id:6062,text:'Je suis uniformisé',cat:'Conditionnement',depth:4,role:'coping'},
-  {id:6063,text:'Je suis lissé',cat:'Conditionnement',depth:4,role:'coping'},
+  {id:6060,text:'Je suis normalisé',cat:'Conditionnement',depth:4,role:'source'},
+  {id:6061,text:'Je suis standardisé',cat:'Conditionnement',depth:4,role:'source'},
+  {id:6062,text:'Je suis uniformisé',cat:'Conditionnement',depth:4,role:'source'},
+  {id:6063,text:'Je suis lissé',cat:'Conditionnement',depth:4,role:'source'},
   {id:7054,text:'Je suis contenté',cat:'Ouverture',depth:2,role:'coping'},
   {id:452,text:'Je suis façonné',cat:'Contrôle',depth:4,role:'coping'},
   {id:446,text:'Je suis fabriqué',cat:'Contrôle',depth:3,role:'coping'},
@@ -1054,7 +1060,7 @@ const DEFAULT_DATA = [
   {id:524,text:'Je suis déstabilisé',cat:'Confusion',depth:2,role:'source'},
   {id:1223,text:'Je suis dépassé',cat:'Confusion',depth:2,role:'source'},
   {id:2030,text:'Je suis surpris',cat:'Conditionnement',depth:2,role:'source'},
-  {id:2031,text:'Je suis saisi',cat:'Conditionnement',depth:2,role:'source'},
+  {id:2031,text:'Je suis saisi',cat:'Conditionnement',depth:2,role:'coping'},
   {id:2032,text:'Je suis soufflé',cat:'Conditionnement',depth:2,role:'source'},
   {id:2036,text:'Je suis impressionné',cat:'Conditionnement',depth:2,role:'source'},
   {id:2038,text:'Je suis déconcerté',cat:'Confusion',depth:2,role:'source'},
@@ -1253,7 +1259,7 @@ const DEFAULT_DATA = [
   {id:807,text:'Je suis entendu',cat:'Isolement',depth:1,role:'source'},
   {id:806,text:'Je suis compris',cat:'Isolement',depth:1,role:'source'},
   {id:3058,text:'Je suis regardé',cat:'Isolement',depth:1,role:'coping'},
-  {id:808,text:'Je suis reconnu',cat:'Existence',depth:5,role:'source'},
+  {id:808,text:'Je suis reconnu',cat:'Existence',depth:5,role:'coping'},
   {id:809,text:'Je suis inclus',cat:'Abandon',depth:2,role:'source'},
   {id:802,text:'Je suis accueilli',cat:'Abandon',depth:2,role:'coping'},
   {id:1364,text:'Je suis partagé',cat:'Isolement',depth:2,role:'source'},
@@ -1306,7 +1312,7 @@ const DEFAULT_DATA = [
   {id:7055,text:'Je suis abrité',cat:'Abandon',depth:3,role:'coping'},
   {id:7056,text:'Je suis couvé',cat:'Abandon',depth:3,role:'coping'},
   {id:7057,text:'Je suis coconé',cat:'Abandon',depth:3,role:'coping'},
-  {id:1380,text:'Je suis validé',cat:'Existence',depth:5,role:'source'},
+  {id:1380,text:'Je suis validé',cat:'Existence',depth:5,role:'coping'},
   {id:1381,text:'Je suis approuvé',cat:'Honte',depth:1,role:'source'},
   {id:1400,text:'Je suis encouragé',cat:'Isolement',depth:1,role:'source'},
   {id:1382,text:'Je suis apprécié',cat:'Isolement',depth:2,role:'source'},
@@ -1317,7 +1323,7 @@ const DEFAULT_DATA = [
   {id:1387,text:'Je suis remarqué',cat:'Isolement',depth:2,role:'coping'},
   {id:1389,text:'Je suis identifié',cat:'Effondrement',depth:2,role:'coping'},
   {id:1390,text:'Je suis repéré',cat:'Isolement',depth:2,role:'source'},
-  {id:3019,text:'Je suis compté',cat:'Existence',depth:2,role:'source'},
+  {id:3019,text:'Je suis compté',cat:'Existence',depth:2,role:'coping'},
   {id:3021,text:'Je suis remercié',cat:'Isolement',depth:2,role:'source'},
   {id:3022,text:'Je suis présenté',cat:'Isolement',depth:2,role:'source'},
   {id:3075,text:'Je suis complimenté',cat:'Honte',depth:2,role:'source'},
@@ -1410,7 +1416,7 @@ const DEFAULT_DATA = [
   {id:1446,text:'Je suis peaufiné',cat:'Conditionnement',depth:3,role:'coping'},
   {id:3086,text:'Je suis différencié',cat:'Confusion',depth:3,role:'coping'},
   {id:900,text:'Je suis éveillé',cat:'Dissociation',depth:2,role:'coping'},
-  {id:901,text:'Je suis éclairé',cat:'Conditionnement',depth:2,role:'source'},
+  {id:901,text:'Je suis éclairé',cat:'Conditionnement',depth:2,role:'coping'},
   {id:1460,text:'Je suis illuminé',cat:'Conditionnement',depth:4,role:'verdict'},
   {id:1466,text:'Je suis expansé',cat:'Dissociation',depth:4,role:'coping'},
   {id:1468,text:'Je suis contemplé',cat:'Dissociation',depth:4,role:'coping'},
@@ -1438,7 +1444,6 @@ const DEFAULT_DATA = [
   {id:9036,text:'Je suis inscrit',cat:'Conditionnement',depth:5,role:'source'},
   {id:9037,text:'Je suis imprimé',cat:'Conditionnement',depth:5,role:'source'},
   {id:9044,text:'Je suis dressé',cat:'Conditionnement',depth:4,role:'source'},
-  {id:9311,text:'Je suis libéré du formatage',cat:'Conditionnement',depth:4,role:'coping'},
   {id:9381,text:'Je suis réintégré',cat:'Violation',depth:3,role:'coping'},
   {id:9402,text:'Je suis réconnecté',cat:'Isolement',depth:3,role:'coping'},
   {id:9510,text:'Je suis déconnecté',cat:'Dissociation',depth:1,role:'source'},
@@ -1528,7 +1533,7 @@ function shuffle(arr){
 
 let DATA=[...DEFAULT_DATA];
 let currentProfile=null,SESSIONS=[],checked=new Set(),todoIds=new Set(),reviewDates={};
-let stateFilter="all",levelFilter=1,polarityFilter="all",query="";
+let stateFilter="all",levelFilter=1,polarityFilter="all",query="";let trashedIds=new Set();
 let pinTarget=null,pinVal="";
 
 function workedIds(){return new Set(SESSIONS.flatMap(s=>s.ids));}
@@ -1540,6 +1545,7 @@ function scheduleReview(id,count){
 }
 function markIntegrated(id){delete reviewDates[id];saveReviews();}
 function saveTodo(){try{localStorage.setItem("todo_"+currentProfile.id,JSON.stringify([...todoIds]));}catch(e){}}
+function saveTrashed(){try{localStorage.setItem("trashed_"+currentProfile.id,JSON.stringify([...trashedIds]));}catch(e){}}
 function saveReviews(){try{localStorage.setItem("reviews_"+currentProfile.id,JSON.stringify(reviewDates));}catch(e){}}
 function showToast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2500);}
 
@@ -1634,6 +1640,7 @@ async function enterProfile(id,name){
 async function loadData(){
   try{const sessions=await sb(`sessions?profile_id=eq.${currentProfile.id}&select=*&order=created_at.asc`);SESSIONS=(sessions||[]).map(s=>{return{id:s.id,date:s.date,ids:(s.ids||[]).map(Number)}});}catch(e){SESSIONS=[];}
   try{const stored=localStorage.getItem("todo_"+currentProfile.id);if(stored)JSON.parse(stored).map(Number).forEach(id=>todoIds.add(id));}catch(e){}
+  try{const stored=localStorage.getItem("trashed_"+currentProfile.id);if(stored)JSON.parse(stored).map(Number).forEach(id=>trashedIds.add(id));}catch(e){}
   try{const stored=localStorage.getItem("reviews_"+currentProfile.id);if(stored)reviewDates=JSON.parse(stored)||{};}catch(e){reviewDates={};}
 }
 
@@ -1711,10 +1718,13 @@ function getFiltered(){
     const isTodo=todoIds.has(d.id)&&!isWorked;
     const isDue=isDueForReview(d.id)&&!isWorked;
     let stateOk=true;
-    if(stateFilter==="untouched")stateOk=!isWorked&&!isTodo&&!isDue;
+    if(stateFilter==="untouched")stateOk=!isWorked&&!isTodo&&!isDue&&!trashedIds.has(d.id);
+    else if(stateFilter==="trashed")stateOk=trashedIds.has(d.id);
     else if(stateFilter==="worked")stateOk=isWorked;
     else if(stateFilter==="todo")stateOk=isTodo;
     else if(stateFilter==="due")stateOk=isDue;
+    if(stateFilter!=="trashed"&&trashedIds.has(d.id))return false;
+    if(stateFilter==="trashed"&&!trashedIds.has(d.id))return false;
     const polarityOk=polarityFilter==="all"||
       (polarityFilter==="neg"&&(d.role==="source"||d.role==="verdict"))||
       (polarityFilter==="pos"&&d.role==="coping");
@@ -1773,6 +1783,7 @@ function render(){
       <div class="card-footer">
         <span class="group-badge">${gname}</span>
         <button class="todo-btn" data-id="${d.id}" title="À faire">🔖</button>
+        <button class="trash-btn" data-id="${d.id}" title="Indésirable">🗑</button>
       </div>
     </div>`;
   });
@@ -1797,6 +1808,48 @@ function render(){
       if(todoIds.has(id)){todoIds.delete(id);showToast("Retiré des À faire");}
       else{todoIds.add(id);checked.delete(id);showToast("🔖 Ajouté aux À faire");}
       saveTodo();render();
+    });
+  });
+
+  grid.querySelectorAll(".trash-btn").forEach(btn=>{
+    btn.addEventListener("click",e=>{
+      e.stopPropagation();
+      const id=+btn.dataset.id;
+      if(trashedIds.has(id)){
+        trashedIds.delete(id);showToast("Restaurée");
+      } else {
+        trashedIds.add(id);checked.delete(id);todoIds.delete(id);
+        showToast("🗑 Mise de côté");
+      }
+      saveTrashed();render();
+    });
+  });
+
+  // Click on worked card to undo
+  grid.querySelectorAll(".card.worked").forEach(card=>{
+    card.addEventListener("dblclick",async e=>{
+      if(e.target.closest(".todo-btn")||e.target.closest(".trash-btn"))return;
+      const id=+card.dataset.id;
+      if(!workedIds().has(id))return;
+      // Find and remove from sessions
+      const session=SESSIONS.find(s=>s.ids.includes(id));
+      if(!session)return;
+      if(session.ids.length===1){
+        // Delete entire session
+        try{
+          await sb(`sessions?id=eq.${session.id}`,{method:"DELETE",prefer:"return=minimal"});
+          SESSIONS=SESSIONS.filter(s=>s.id!==session.id);
+        }catch(e){showToast("Erreur suppression");return;}
+      } else {
+        // Remove just this id from session
+        const newIds=session.ids.filter(i=>i!==id);
+        try{
+          await sb(`sessions?id=eq.${session.id}`,{method:"PATCH",body:{ids:newIds},prefer:"return=minimal"});
+          session.ids=newIds;
+        }catch(e){showToast("Erreur suppression");return;}
+      }
+      showToast("↩ Remise en non touchée");
+      render();renderHomeProgress();
     });
   });
   renderSession();
