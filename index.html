@@ -1258,8 +1258,8 @@ const DEFAULT_DATA = [
   {id:3117,text:'Je suis repu',cat:'Épuisement',depth:3,role:'coping'},
   {id:3118,text:'Je suis satisfait',cat:'Abandon',depth:3,role:'coping'},
   {id:6334,text:'Je suis sécurisé',cat:'Abandon',depth:3,role:'coping'},
-  {id:807,text:'Je suis entendu',cat:'Isolement',depth:1,role:'source'},
-  {id:806,text:'Je suis compris',cat:'Isolement',depth:1,role:'source'},
+  {id:807,text:'Je suis entendu',cat:'Isolement',depth:1,role:'coping'},
+  {id:806,text:'Je suis compris',cat:'Isolement',depth:1,role:'coping'},
   {id:3058,text:'Je suis regardé',cat:'Isolement',depth:1,role:'coping'},
   {id:808,text:'Je suis reconnu',cat:'Existence',depth:5,role:'coping'},
   {id:809,text:'Je suis inclus',cat:'Abandon',depth:2,role:'source'},
@@ -1269,7 +1269,7 @@ const DEFAULT_DATA = [
   {id:3007,text:'Je suis rappelé',cat:'Abandon',depth:2,role:'source'},
   {id:3014,text:'Je suis approché',cat:'Isolement',depth:2,role:'source'},
   {id:3026,text:'Je suis fréquenté',cat:'Isolement',depth:2,role:'source'},
-  {id:3059,text:'Je suis écouté',cat:'Isolement',depth:2,role:'source'},
+  {id:3059,text:'Je suis écouté',cat:'Isolement',depth:2,role:'coping'},
   {id:3122,text:'Je suis vu',cat:'Existence',depth:2,role:'coping'},
   {id:805,text:'Je suis attendu',cat:'Abandon',depth:4,role:'verdict'},
   {id:804,text:'Je suis désiré',cat:'Abandon',depth:4,role:'verdict'},
@@ -1390,8 +1390,8 @@ const DEFAULT_DATA = [
   {id:3094,text:'Je suis défendu',cat:'Abandon',depth:3,role:'coping'},
   {id:8004,text:'Je suis campé',cat:'Honte',depth:3,role:'coping'},
   {id:696,text:'Je suis endurci',cat:'Effondrement',depth:4,role:'coping'},
-  {id:1430,text:'Je suis verbalisé',cat:'Isolement',depth:1,role:'source'},
-  {id:750,text:'Je suis exprimé',cat:'Isolement',depth:1,role:'source'},
+  {id:1430,text:'Je suis verbalisé',cat:'Isolement',depth:1,role:'coping'},
+  {id:750,text:'Je suis exprimé',cat:'Isolement',depth:1,role:'coping'},
   {id:1432,text:'Je suis formulé',cat:'Isolement',depth:2,role:'source'},
   {id:1433,text:'Je suis articulé',cat:'Isolement',depth:2,role:'source'},
   {id:1434,text:'Je suis clarifié',cat:'Confusion',depth:2,role:'coping'},
@@ -1502,30 +1502,55 @@ const DEFAULT_DATA = [
 ,
   {id:9980,text:'Je suis tremblé',cat:'Figement',depth:1,role:'source'},
   {id:9981,text:'Je suis vibré',cat:'Figement',depth:1,role:'source'}
+,
+  {id:9991,text:'Je suis impliqué',cat:'Engagement',depth:4,role:'source'}
+,
+  {id:9992,text:'Je suis crié',cat:'Isolement',depth:1,role:'source'},
+  {id:9993,text:'Je suis osé',cat:'Isolement',depth:3,role:'coping'},
+  {id:9994,text:'Je suis déclaré',cat:'Isolement',depth:4,role:'coping'}
 ];
 const GROUPS=[
-  {id:"figement",label:"① Figement & Dégel",subtitle:"Le corps bloqué et sa libération",cats:["Figement"]},
-  {id:"dissociation",label:"② Déconnexion & Reconnexion au corps",subtitle:"La relation au corps, négative et positive",cats:["Dissociation"]},
-  {id:"conditionnement",label:"③ Conditionnement & Déconditionnement",subtitle:"Ce qui a été installé, et ce qui s en libère",cats:["Conditionnement"]},
-  {id:"existence",label:"④ Existence & Présence",subtitle:"Le droit d exister et d être là",cats:["Existence"]},
-  {id:"corps",label:"⑤ Sidération & Éveil du corps",subtitle:"Les états de confusion et d épuisement",cats:["Rigidité","Épuisement","Confusion"]},
-  {id:"usure",label:"⑥ Usure & Régénération",subtitle:"L épuisement, et le renouveau",cats:["Usure"]},
-  {id:"perte",label:"⑦ Perte & Retrouvailles",subtitle:"Ce qui a disparu, et ce qui revient",cats:["Perte"]},
-  {id:"abandon",label:"⑧ Abandon & Accueil",subtitle:"Le départ de l autre, et l accueil retrouvé",cats:["Abandon"]},
-  {id:"trahison",label:"⑨ Trahison & Confiance",subtitle:"La confiance violée, et restaurée",cats:["Trahison"]},
-  {id:"blessure",label:"⑩ Blessure & Guérison",subtitle:"L atteinte, et la réparation",cats:["Blessure"]},
-  {id:"violation",label:"⑪ Violation & Intégrité",subtitle:"Les limites franchies, et restaurées",cats:["Violation"]},
-  {id:"culpabilite",label:"⑫ Culpabilité, Honte & Libération",subtitle:"La faute et la souillure, puis le pardon",cats:["Culpabilité","Honte"]},
-  {id:"blocages",label:"⑬ Mécanismes & Protection & Ouverture",subtitle:"Les mécanismes de protection, et leur lâcher-prise",cats:["Contrôle","Isolement"]},
-  {id:"ouverture",label:"⑭ Ouverture & Lâcher-prise",subtitle:"La libération des mécanismes de protection",cats:["Ouverture"]},
-  {id:"verdicts",label:"⑮ Effondrement & Reconstruction",subtitle:"Les conclusions sur soi, puis leur transformation",cats:["Effondrement"]},
-  {id:"sortie",label:"⑯ Engagement & Élan vital",subtitle:"La force motrice de la transformation",cats:["Engagement"]}
+  {id:"figement",label:"① Figement",subtitle:"Le corps bloqué, paralysé, gelé",cats:["Figement"],polarity:"neg"},
+  {id:"degel",label:"② Dégel",subtitle:"Le corps qui se libère et se déploie",cats:["Figement"],polarity:"pos"},
+  {id:"deconnexion",label:"③ Déconnexion",subtitle:"La dissociation et la perte de soi",cats:["Dissociation"],polarity:"neg"},
+  {id:"reconnexion",label:"④ Reconnexion",subtitle:"Le retour à soi et à son corps",cats:["Dissociation"],polarity:"pos"},
+  {id:"conditionnement",label:"⑤ Conditionnement",subtitle:"Ce qui a été installé par l extérieur",cats:["Conditionnement"],polarity:"neg"},
+  {id:"deconditionnement",label:"⑥ Déconditionnement",subtitle:"La libération des programmes installés",cats:["Conditionnement"],polarity:"pos"},
+  {id:"existence-niee",label:"⑦ Existence niée",subtitle:"Ne pas avoir le droit d être là",cats:["Existence"],polarity:"neg"},
+  {id:"existence-retrouvee",label:"⑧ Existence retrouvée",subtitle:"Retrouver le droit d exister pleinement",cats:["Existence"],polarity:"pos"},
+  {id:"sideration",label:"⑨ Sidération & Épuisement",subtitle:"Les états de confusion et d épuisement",cats:["Rigidité","Épuisement","Confusion"],polarity:"neg"},
+  {id:"eveil",label:"⑩ Éveil & Régénération",subtitle:"La clarté et l énergie retrouvées",cats:["Rigidité","Épuisement","Confusion"],polarity:"pos"},
+  {id:"usure",label:"⑪ Usure",subtitle:"L usure et la dégradation intérieure",cats:["Usure"],polarity:"neg"},
+  {id:"restauration",label:"⑫ Restauration",subtitle:"La régénération et le renouveau",cats:["Usure"],polarity:"pos"},
+  {id:"perte",label:"⑬ Perte",subtitle:"Ce qui a été perdu ou retiré",cats:["Perte"],polarity:"neg"},
+  {id:"retrouvailles",label:"⑭ Retrouvailles",subtitle:"Ce qui a été retrouvé ou recréé",cats:["Perte"],polarity:"pos"},
+  {id:"abandon",label:"⑮ Abandon",subtitle:"Être laissé, ignoré, non choisi",cats:["Abandon"],polarity:"neg"},
+  {id:"accueil",label:"⑯ Accueil",subtitle:"Être reçu, choisi, protégé",cats:["Abandon"],polarity:"pos"},
+  {id:"trahison",label:"⑰ Trahison",subtitle:"Être trompé, manipulé, trahi",cats:["Trahison"],polarity:"neg"},
+  {id:"confiance",label:"⑱ Confiance",subtitle:"La confiance retrouvée et la paix",cats:["Trahison"],polarity:"pos"},
+  {id:"blessure",label:"⑲ Blessure",subtitle:"Les blessures reçues et leurs marques",cats:["Blessure"],polarity:"neg"},
+  {id:"guerison",label:"⑳ Guérison",subtitle:"La guérison et la récupération",cats:["Blessure"],polarity:"pos"},
+  {id:"violation",label:"㉑ Violation",subtitle:"L atteinte à l intégrité et aux limites",cats:["Violation"],polarity:"neg"},
+  {id:"integrite",label:"㉒ Intégrité",subtitle:"La restauration de l intégrité",cats:["Violation"],polarity:"pos"},
+  {id:"culpabilite-honte",label:"㉓ Culpabilité & Honte",subtitle:"Le poids de la faute et du regard",cats:["Culpabilité","Honte"],polarity:"neg"},
+  {id:"liberation",label:"㉔ Libération",subtitle:"L affranchissement de la culpabilité et de la honte",cats:["Culpabilité","Honte"],polarity:"pos"},
+  {id:"mecanismes",label:"㉕ Mécanismes & Blocages",subtitle:"Les défenses et fermetures intérieures",cats:["Contrôle","Isolement","Ouverture"],polarity:"neg"},
+  {id:"ouverture",label:"㉖ Ouverture",subtitle:"Le lâcher-prise et l ouverture",cats:["Contrôle","Isolement","Ouverture"],polarity:"pos"},
+  {id:"effondrement",label:"㉗ Effondrement",subtitle:"L effondrement et la chute",cats:["Effondrement"],polarity:"neg"},
+  {id:"reconstruction",label:"㉘ Reconstruction",subtitle:"La reconstruction et le relèvement",cats:["Effondrement"],polarity:"pos"},
+  {id:"engagement",label:"㉙ Engagement",subtitle:"L élan vital et l engagement",cats:["Engagement"],polarity:"neg"},
 ];
 
 const LEVEL_NAMES=["Tous", "Corps", "Ressenti", "Émotion", "Relation", "Abstrait"];
 const LEVEL_COLORS=["", "#ff4d2e", "#ff8c42", "#f5c842", "#7ab8d4", "#555560"];
 
-function getGroupForCat(cat){return GROUPS.find(g=>g.cats.includes(cat));}
+function getGroupForCat(cat,role){
+  if(role){
+    const isPos=role==="coping";
+    return GROUPS.find(g=>g.cats.includes(cat)&&(isPos?g.polarity==="pos":g.polarity==="neg"))||GROUPS.find(g=>g.cats.includes(cat));
+  }
+  return GROUPS.find(g=>g.cats.includes(cat));
+}
 function rand(){return crypto.getRandomValues(new Uint32Array(1))[0]/0xFFFFFFFF;}
 function shuffle(arr){
   const a=[...arr];
@@ -1735,8 +1760,7 @@ document.getElementById("search").addEventListener("input",e=>{query=e.target.va
 
 function getFiltered(){
   const wids=workedIds();
-  const groupOrder={};
-  GROUPS.forEach((g,i)=>g.cats.forEach(cat=>groupOrder[cat]=i));
+  // groupOrder not needed with new sort
   return DATA.filter(d=>{
     const qOk=!query||d.text.toLowerCase().includes(query.toLowerCase())||d.cat.toLowerCase().includes(query.toLowerCase());
     const levelOk=levelFilter===0||d.depth===levelFilter;
@@ -1756,13 +1780,13 @@ function getFiltered(){
       (polarityFilter==="pos"&&d.role==="coping");
     return qOk&&levelOk&&stateOk&&polarityOk;
   }).sort((a,b)=>{
-    const ga=groupOrder[a.cat]??99;
-    const gb=groupOrder[b.cat]??99;
-    if(ga!==gb)return ga-gb;
-    // Within same group: neg before pos
-    const pa=a.role==="coping"?1:0;
-    const pb=b.role==="coping"?1:0;
-    return pa-pb;
+    // Find group index for each identity considering polarity
+    const findIdx=(d)=>{
+      const isPos=d.role==="coping";
+      const g=GROUPS.findIndex(g=>g.cats.includes(d.cat)&&(isPos?g.polarity==="pos":g.polarity==="neg"));
+      return g===-1?GROUPS.findIndex(g=>g.cats.includes(d.cat)):g;
+    };
+    return findIdx(a)-findIdx(b);
   });
 }
 
@@ -1773,8 +1797,7 @@ function render(){
   const grid=document.getElementById("grid");
   if(!items.length){grid.innerHTML='<div class="no-results"><i class="ti ti-search" style="font-size:24px;display:block;margin-bottom:8px;opacity:0.2"></i>Aucun résultat</div>';renderSession();return;}
   // Split by group and polarity
-  const groupOrder={};
-  GROUPS.forEach((g,i)=>g.cats.forEach(cat=>groupOrder[cat]=i));
+  // groupOrder not needed with new sort
   
   let html="";
   let lastGid=null;
@@ -1795,15 +1818,7 @@ function render(){
       lastGid=gid;lastPolarity=null;
       html+=`<div class="group-separator"><div class="group-sep-label">${group.label}</div><div class="group-sep-sub">${group.subtitle}</div></div>`;
     }
-    // Polarity separator within group
-    if(polarity!==lastPolarity&&polarityFilter==="all"){
-      lastPolarity=polarity;
-      if(polarity==="neg"){
-        html+=`<div class="polarity-sep neg"><span>🔴 Identités négatives</span></div>`;
-      } else {
-        html+=`<div class="polarity-sep pos"><span>🟢 Identités positives</span></div>`;
-      }
-    }
+
     html+=`<div class="card${cls?" "+cls:""}" data-id="${d.id}">
       <div class="card-top"><span class="identity">${d.text}</span><div class="check-circle"><i class="ti ti-check"></i></div></div>
       <div class="card-footer">
