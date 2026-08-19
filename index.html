@@ -422,7 +422,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     <div class="game-btns">
       <button class="game-btn-action yes" id="g-yes"><span class="game-btn-icon">✅</span><span class="game-btn-label">Travaillée</span></button>
       <button class="game-btn-action later" id="g-later"><span class="game-btn-icon">🔖</span><span class="game-btn-label">À faire</span></button>
-      <button class="game-btn-action" id="g-skip"><span class="game-btn-icon">➡️</span><span class="game-btn-label">Passer</span></button>
+      <button class="game-btn-action" id="g-skip"><span class="game-btn-icon">🚫</span><span class="game-btn-label">Exclure</span></button>
     </div>
   </div>
   <div class="game-results" id="g-results">
@@ -2092,6 +2092,8 @@ document.getElementById("g-skip").addEventListener("click",()=>{
   const d=gameQueue[gameIdx];
   animateCard("anim-left",()=>{
     gameSkipped.push(d.id);
+    trashedIds.add(d.id);
+    saveTrashed();
     if(isDueForReview(d.id))markIntegrated(d.id);
     gameIdx++;showGameState();
   });
