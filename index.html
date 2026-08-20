@@ -78,14 +78,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .home-card-title{font-size:17px;font-weight:600;}
 .home-card-sub{font-size:13px;color:var(--text-muted);line-height:1.4;}
 /* Progress bars on home */
-.home-progress-section{width:100%;max-width:560px;}
-.home-progress-title{font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:0.75rem;}
-.group-progress-list{display:flex;flex-direction:column;gap:6px;}
-.group-progress-row{display:flex;align-items:center;gap:10px;}
-.group-progress-label{font-size:12px;color:var(--text-muted);width:160px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.group-progress-track{flex:1;height:4px;background:var(--surface3);border-radius:2px;overflow:hidden;}
-.group-progress-fill{height:100%;border-radius:2px;transition:width 0.4s;}
-.group-progress-pct{font-size:11px;color:var(--text-faint);width:32px;text-align:right;flex-shrink:0;}
+.home-progress-section{width:100%;max-width:400px;text-align:center;}
+.home-global-progress{display:flex;flex-direction:column;align-items:center;gap:12px;}
+.home-global-number{font-size:48px;font-weight:600;color:var(--accent);line-height:1;}
+.home-global-label{font-size:13px;color:var(--text-muted);}
+.home-global-track{width:100%;height:4px;background:var(--surface3);border-radius:2px;overflow:hidden;}
+.home-global-fill{height:100%;border-radius:2px;background:var(--accent);transition:width 0.6s ease;}
+.home-global-pct{font-size:12px;color:var(--text-faint);}
 .home-footer{display:flex;gap:12px;align-items:center;}
 .home-footer-btn{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--radius);border:1px solid var(--border);background:none;color:var(--text-faint);font-size:12px;font-family:inherit;cursor:pointer;transition:all 0.15s;}
 .home-footer-btn:hover{border-color:var(--border-md);color:var(--text-muted);}
@@ -328,8 +327,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     </div>
   </div>
   <div class="home-progress-section">
-    <div class="home-progress-title">Progression par groupe</div>
-    <div class="group-progress-list" id="home-group-progress"></div>
+    <div class="home-global-progress" id="home-global-progress"></div>
   </div>
   <div class="home-footer">
     <button class="home-footer-btn" id="home-progress-btn"><i class="ti ti-chart-bar"></i> Stats</button>
@@ -1700,20 +1698,16 @@ async function loadData(){
 
 function renderHomeProgress(){
   const wids=workedIds();
-  const el=document.getElementById("home-group-progress");
-  el.innerHTML=GROUPS.map(g=>{
-    const total=DATA.filter(d=>g.cats.includes(d.cat)).length;
-    const done=DATA.filter(d=>g.cats.includes(d.cat)&&wids.has(d.id)).length;
-    const pct=total?Math.round((done/total)*100):0;
-    const label=g.label.replace(/^.\s*/,"");
-    // Color based on progress
-    const color=pct>=70?"var(--green-border)":pct>=30?"var(--accent)":"var(--border-strong)";
-    return`<div class="group-progress-row">
-      <span class="group-progress-label" title="${g.label}">${label}</span>
-      <div class="group-progress-track"><div class="group-progress-fill" style="width:${pct}%;background:${color};"></div></div>
-      <span class="group-progress-pct">${pct}%</span>
-    </div>`;
-  }).join("");
+  const total=DATA.length;
+  const done=DATA.filter(d=>wids.has(d.id)).length;
+  const pct=total?Math.round((done/total)*100):0;
+  const el=document.getElementById("home-global-progress");
+  el.innerHTML=`
+    <div class="home-global-number">${done}</div>
+    <div class="home-global-label">identités travaillées sur ${total}</div>
+    <div class="home-global-track"><div class="home-global-fill" style="width:${pct}%"></div></div>
+    <div class="home-global-pct">${pct}%</div>
+  `;
 }
 
 // HOME BUTTONS
