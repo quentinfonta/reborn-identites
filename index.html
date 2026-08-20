@@ -85,6 +85,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .home-global-track{width:100%;height:4px;background:var(--surface3);border-radius:2px;overflow:hidden;}
 .home-global-fill{height:100%;border-radius:2px;background:var(--accent);transition:width 0.6s ease;}
 .home-global-pct{font-size:12px;color:var(--text-faint);}
+.path-selector{display:flex;gap:10px;margin-top:0.5rem;}
+.path-btn{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 20px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text-muted);font-size:13px;font-weight:500;font-family:inherit;cursor:pointer;transition:all 0.15s;min-width:160px;}
+.path-btn span{font-size:11px;color:var(--text-faint);font-weight:400;}
+.path-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(200,184,154,0.08);}
+.path-btn.active span{color:rgba(200,184,154,0.6);}
 .home-footer{display:flex;gap:12px;align-items:center;}
 .home-footer-btn{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--radius);border:1px solid var(--border);background:none;color:var(--text-faint);font-size:12px;font-family:inherit;cursor:pointer;transition:all 0.15s;}
 .home-footer-btn:hover{border-color:var(--border-md);color:var(--text-muted);}
@@ -1507,37 +1512,84 @@ const DEFAULT_DATA = [
   {id:9993,text:'Je suis osé',cat:'Isolement',depth:3,role:'coping'},
   {id:9994,text:'Je suis déclaré',cat:'Isolement',depth:4,role:'coping'}
 ];
-const GROUPS=[
+const GROUPS_A=[
   {id:"figement",label:"① Figement",subtitle:"Le corps bloqué, paralysé, gelé",cats:["Figement"],polarity:"neg"},
   {id:"degel",label:"② Dégel",subtitle:"Le corps qui se libère et se déploie",cats:["Figement"],polarity:"pos"},
-  {id:"deconnexion",label:"③ Déconnexion",subtitle:"La dissociation et la perte de soi",cats:["Dissociation"],polarity:"neg"},
-  {id:"reconnexion",label:"④ Reconnexion",subtitle:"Le retour à soi et à son corps",cats:["Dissociation"],polarity:"pos"},
-  {id:"conditionnement",label:"⑤ Conditionnement",subtitle:"Ce qui a été installé par l extérieur",cats:["Conditionnement"],polarity:"neg"},
-  {id:"deconditionnement",label:"⑥ Déconditionnement",subtitle:"La libération des programmes installés",cats:["Conditionnement"],polarity:"pos"},
-  {id:"existence-niee",label:"⑦ Existence niée",subtitle:"Ne pas avoir le droit d être là",cats:["Existence"],polarity:"neg"},
-  {id:"existence-retrouvee",label:"⑧ Existence retrouvée",subtitle:"Retrouver le droit d exister pleinement",cats:["Existence"],polarity:"pos"},
-  {id:"sideration",label:"⑨ Sidération & Épuisement",subtitle:"Les états de confusion et d épuisement",cats:["Rigidité","Épuisement","Confusion"],polarity:"neg"},
-  {id:"eveil",label:"⑩ Éveil & Régénération",subtitle:"La clarté et l énergie retrouvées",cats:["Rigidité","Épuisement","Confusion"],polarity:"pos"},
-  {id:"usure",label:"⑪ Usure",subtitle:"L usure et la dégradation intérieure",cats:["Usure"],polarity:"neg"},
-  {id:"restauration",label:"⑫ Restauration",subtitle:"La régénération et le renouveau",cats:["Usure"],polarity:"pos"},
-  {id:"perte",label:"⑬ Perte",subtitle:"Ce qui a été perdu ou retiré",cats:["Perte"],polarity:"neg"},
-  {id:"retrouvailles",label:"⑭ Retrouvailles",subtitle:"Ce qui a été retrouvé ou recréé",cats:["Perte"],polarity:"pos"},
-  {id:"abandon",label:"⑮ Abandon",subtitle:"Être laissé, ignoré, non choisi",cats:["Abandon"],polarity:"neg"},
-  {id:"accueil",label:"⑯ Accueil",subtitle:"Être reçu, choisi, protégé",cats:["Abandon"],polarity:"pos"},
-  {id:"trahison",label:"⑰ Trahison",subtitle:"Être trompé, manipulé, trahi",cats:["Trahison"],polarity:"neg"},
-  {id:"confiance",label:"⑱ Confiance",subtitle:"La confiance retrouvée et la paix",cats:["Trahison"],polarity:"pos"},
-  {id:"blessure",label:"⑲ Blessure",subtitle:"Les blessures reçues et leurs marques",cats:["Blessure"],polarity:"neg"},
-  {id:"guerison",label:"⑳ Guérison",subtitle:"La guérison et la récupération",cats:["Blessure"],polarity:"pos"},
-  {id:"violation",label:"㉑ Violation",subtitle:"L atteinte à l intégrité et aux limites",cats:["Violation"],polarity:"neg"},
-  {id:"integrite",label:"㉒ Intégrité",subtitle:"La restauration de l intégrité",cats:["Violation"],polarity:"pos"},
+  {id:"sideration",label:"③ Sidération & Épuisement",subtitle:"Les états de confusion et d épuisement",cats:["Rigidité","Épuisement","Confusion"],polarity:"neg"},
+  {id:"eveil",label:"④ Éveil & Régénération",subtitle:"La clarté et l énergie retrouvées",cats:["Rigidité","Épuisement","Confusion"],polarity:"pos"},
+  {id:"mecanismes",label:"⑤ Mécanismes & Blocages",subtitle:"Les défenses et fermetures intérieures",cats:["Contrôle","Isolement","Ouverture"],polarity:"neg"},
+  {id:"ouverture",label:"⑥ Ouverture",subtitle:"Le lâcher-prise et l ouverture",cats:["Contrôle","Isolement","Ouverture"],polarity:"pos"},
+  {id:"usure",label:"⑦ Usure",subtitle:"L usure et la dégradation intérieure",cats:["Usure"],polarity:"neg"},
+  {id:"restauration",label:"⑧ Restauration",subtitle:"La régénération et le renouveau",cats:["Usure"],polarity:"pos"},
+  {id:"deconnexion",label:"⑨ Déconnexion",subtitle:"La dissociation et la perte de soi",cats:["Dissociation"],polarity:"neg"},
+  {id:"reconnexion",label:"⑩ Reconnexion",subtitle:"Le retour à soi et à son corps",cats:["Dissociation"],polarity:"pos"},
+  {id:"perte",label:"⑪ Perte",subtitle:"Ce qui a été perdu ou retiré",cats:["Perte"],polarity:"neg"},
+  {id:"retrouvailles",label:"⑫ Retrouvailles",subtitle:"Ce qui a été retrouvé ou recréé",cats:["Perte"],polarity:"pos"},
+  {id:"abandon",label:"⑬ Abandon",subtitle:"Être laissé, ignoré, non choisi",cats:["Abandon"],polarity:"neg"},
+  {id:"accueil",label:"⑭ Accueil",subtitle:"Être reçu, choisi, protégé",cats:["Abandon"],polarity:"pos"},
+  {id:"trahison",label:"⑮ Trahison",subtitle:"Être trompé, manipulé, trahi",cats:["Trahison"],polarity:"neg"},
+  {id:"confiance",label:"⑯ Confiance",subtitle:"La confiance retrouvée et la paix",cats:["Trahison"],polarity:"pos"},
+  {id:"blessure",label:"⑰ Blessure",subtitle:"Les blessures reçues et leurs marques",cats:["Blessure"],polarity:"neg"},
+  {id:"guerison",label:"⑱ Guérison",subtitle:"La guérison et la récupération",cats:["Blessure"],polarity:"pos"},
+  {id:"violation",label:"⑲ Violation",subtitle:"L atteinte à l intégrité et aux limites",cats:["Violation"],polarity:"neg"},
+  {id:"integrite",label:"⑳ Intégrité",subtitle:"La restauration de l intégrité",cats:["Violation"],polarity:"pos"},
+  {id:"existence-niee",label:"㉑ Existence niée",subtitle:"Ne pas avoir le droit d être là",cats:["Existence"],polarity:"neg"},
+  {id:"existence-retrouvee",label:"㉒ Existence retrouvée",subtitle:"Retrouver le droit d exister pleinement",cats:["Existence"],polarity:"pos"},
   {id:"culpabilite-honte",label:"㉓ Culpabilité & Honte",subtitle:"Le poids de la faute et du regard",cats:["Culpabilité","Honte"],polarity:"neg"},
   {id:"liberation",label:"㉔ Libération",subtitle:"L affranchissement de la culpabilité et de la honte",cats:["Culpabilité","Honte"],polarity:"pos"},
-  {id:"mecanismes",label:"㉕ Mécanismes & Blocages",subtitle:"Les défenses et fermetures intérieures",cats:["Contrôle","Isolement","Ouverture"],polarity:"neg"},
-  {id:"ouverture",label:"㉖ Ouverture",subtitle:"Le lâcher-prise et l ouverture",cats:["Contrôle","Isolement","Ouverture"],polarity:"pos"},
+  {id:"conditionnement",label:"㉕ Conditionnement",subtitle:"Ce qui a été installé par l extérieur",cats:["Conditionnement"],polarity:"neg"},
+  {id:"deconditionnement",label:"㉖ Déconditionnement",subtitle:"La libération des programmes installés",cats:["Conditionnement"],polarity:"pos"},
   {id:"effondrement",label:"㉗ Effondrement",subtitle:"L effondrement et la chute",cats:["Effondrement"],polarity:"neg"},
   {id:"reconstruction",label:"㉘ Reconstruction",subtitle:"La reconstruction et le relèvement",cats:["Effondrement"],polarity:"pos"},
   {id:"engagement",label:"㉙ Engagement",subtitle:"L élan vital et l engagement",cats:["Engagement"],polarity:"neg"},
 ];
+const GROUPS_B=[
+  // 0-3 ans — premiers états corporels et droit d être
+  {id:"existence-niee",label:"① Existence niée",subtitle:"Ne pas avoir le droit d être là",cats:["Existence"],polarity:"neg"},
+  {id:"existence-retrouvee",label:"② Existence retrouvée",subtitle:"Retrouver le droit d exister pleinement",cats:["Existence"],polarity:"pos"},
+  {id:"figement",label:"③ Figement",subtitle:"Le corps bloqué, paralysé, gelé",cats:["Figement"],polarity:"neg"},
+  {id:"degel",label:"④ Dégel",subtitle:"Le corps qui se libère et se déploie",cats:["Figement"],polarity:"pos"},
+  {id:"deconnexion",label:"⑤ Déconnexion",subtitle:"La dissociation et la perte de soi",cats:["Dissociation"],polarity:"neg"},
+  {id:"reconnexion",label:"⑥ Reconnexion",subtitle:"Le retour à soi et à son corps",cats:["Dissociation"],polarity:"pos"},
+  // 3-6 ans — premières relations et règles
+  {id:"conditionnement",label:"⑦ Conditionnement",subtitle:"Ce qui a été installé par l extérieur",cats:["Conditionnement"],polarity:"neg"},
+  {id:"deconditionnement",label:"⑧ Déconditionnement",subtitle:"La libération des programmes installés",cats:["Conditionnement"],polarity:"pos"},
+  {id:"abandon",label:"⑨ Abandon",subtitle:"Être laissé, ignoré, non choisi",cats:["Abandon"],polarity:"neg"},
+  {id:"accueil",label:"⑩ Accueil",subtitle:"Être reçu, choisi, protégé",cats:["Abandon"],polarity:"pos"},
+  {id:"violation",label:"⑪ Violation",subtitle:"L atteinte à l intégrité et aux limites",cats:["Violation"],polarity:"neg"},
+  {id:"integrite",label:"⑫ Intégrité",subtitle:"La restauration de l intégrité",cats:["Violation"],polarity:"pos"},
+  // 6-12 ans — regard social, école, pairs
+  {id:"culpabilite-honte",label:"⑬ Culpabilité & Honte",subtitle:"Le poids de la faute et du regard",cats:["Culpabilité","Honte"],polarity:"neg"},
+  {id:"liberation",label:"⑭ Libération",subtitle:"L affranchissement de la culpabilité et de la honte",cats:["Culpabilité","Honte"],polarity:"pos"},
+  {id:"usure",label:"⑮ Usure",subtitle:"L usure et la dégradation intérieure",cats:["Usure"],polarity:"neg"},
+  {id:"restauration",label:"⑯ Restauration",subtitle:"La régénération et le renouveau",cats:["Usure"],polarity:"pos"},
+  // 12-18 ans — adolescence, premières relations
+  {id:"trahison",label:"⑰ Trahison",subtitle:"Être trompé, manipulé, trahi",cats:["Trahison"],polarity:"neg"},
+  {id:"confiance",label:"⑱ Confiance",subtitle:"La confiance retrouvée et la paix",cats:["Trahison"],polarity:"pos"},
+  {id:"blessure",label:"⑲ Blessure",subtitle:"Les blessures reçues et leurs marques",cats:["Blessure"],polarity:"neg"},
+  {id:"guerison",label:"⑳ Guérison",subtitle:"La guérison et la récupération",cats:["Blessure"],polarity:"pos"},
+  {id:"mecanismes",label:"㉑ Mécanismes & Blocages",subtitle:"Les défenses et fermetures intérieures",cats:["Contrôle","Isolement","Ouverture"],polarity:"neg"},
+  {id:"ouverture",label:"㉒ Ouverture",subtitle:"Le lâcher-prise et l ouverture",cats:["Contrôle","Isolement","Ouverture"],polarity:"pos"},
+  // Adulte — accumulation et effondrement
+  {id:"perte",label:"㉓ Perte",subtitle:"Ce qui a été perdu ou retiré",cats:["Perte"],polarity:"neg"},
+  {id:"retrouvailles",label:"㉔ Retrouvailles",subtitle:"Ce qui a été retrouvé ou recréé",cats:["Perte"],polarity:"pos"},
+  {id:"sideration",label:"㉕ Sidération & Épuisement",subtitle:"Les états de confusion et d épuisement",cats:["Rigidité","Épuisement","Confusion"],polarity:"neg"},
+  {id:"eveil",label:"㉖ Éveil & Régénération",subtitle:"La clarté et l énergie retrouvées",cats:["Rigidité","Épuisement","Confusion"],polarity:"pos"},
+  {id:"effondrement",label:"㉗ Effondrement",subtitle:"L effondrement et la chute",cats:["Effondrement"],polarity:"neg"},
+  {id:"reconstruction",label:"㉘ Reconstruction",subtitle:"La reconstruction et le relèvement",cats:["Effondrement"],polarity:"pos"},
+  // Transformation
+  {id:"engagement",label:"㉙ Engagement",subtitle:"L élan vital et l engagement",cats:["Engagement"],polarity:"neg"},
+];
+
+// Active groups — switch between A and B
+let GROUPS=[...GROUPS_A];
+let activePath="A";
+
+function setPath(path){
+  activePath=path;
+  GROUPS=path==="A"?[...GROUPS_A]:[...GROUPS_B];
+}
+
 
 const LEVEL_NAMES=["Tous", "Corps", "Ressenti", "Émotion", "Relation", "Abstrait"];
 const LEVEL_COLORS=["", "#ff4d2e", "#ff8c42", "#f5c842", "#7ab8d4", "#555560"];
@@ -1622,7 +1674,21 @@ async function loadProfiles(){
         localStorage.removeItem("reviews_"+id);
         localStorage.removeItem("trashed_"+id);
         showToast(`Profil "${name}" supprimé`);
-        loadProfiles();
+        // PATH SELECTOR
+document.getElementById("path-a-btn").addEventListener("click",()=>{
+  setPath("A");
+  document.getElementById("path-a-btn").classList.add("active");
+  document.getElementById("path-b-btn").classList.remove("active");
+  showToast("Parcours A — Du corps vers le profond");
+});
+document.getElementById("path-b-btn").addEventListener("click",()=>{
+  setPath("B");
+  document.getElementById("path-b-btn").classList.add("active");
+  document.getElementById("path-a-btn").classList.remove("active");
+  showToast("Parcours B — Du développement vers le présent");
+});
+
+loadProfiles();
       }catch(e){showToast("Erreur suppression: "+e.message);}
     }));
   }catch(e){list.innerHTML=`<div style="font-size:13px;color:var(--red-text)">Erreur: ${e.message}</div>`;}
