@@ -2045,7 +2045,8 @@ function showCard(){
   // Progress
   const pct=Math.round((gameIdx/gameQueue.length)*100);
   document.getElementById("gp-fill").style.width=pct+"%";
-  document.getElementById("g-counter").textContent=`${gameIdx+1} / ${gameQueue.length}`;
+  const workedCount=gameWorked.length;
+  document.getElementById("g-counter").textContent=`${gameIdx+1} / ${gameQueue.length} · ✅ ${workedCount}`;
   const card=document.getElementById("g-card");
   card.classList.add("show","anim-in");
   setTimeout(()=>card.classList.remove("anim-in"),300);
@@ -2077,6 +2078,7 @@ document.getElementById("g-yes").addEventListener("click",async()=>{
         const result=await sb("sessions",{method:"POST",body:{profile_id:currentProfile.id,date,ids:[d.id]},prefer:"return=representation"});
         if(result&&result[0])SESSIONS.push({id:result[0].id,date,ids:[d.id]});
         scheduleReview(d.id,reviewDates[d.id]?reviewDates[d.id].reviewCount+1:0);
+        renderHomeProgress();
       }catch(e){}
     }
     gameIdx++;showGameState();
@@ -2085,7 +2087,11 @@ document.getElementById("g-yes").addEventListener("click",async()=>{
 
 document.getElementById("g-later").addEventListener("click",()=>{
   const d=gameQueue[gameIdx];
-  animateCard("anim-up",()=>{gameLater.push(d.id);todoIds.add(d.id);saveTodo();gameIdx++;showGameState();});
+  animateCard("anim-up",()=>{
+    gameLater.push(d.id);todoIds.add(d.id);saveTodo();
+    renderHomeProgress();
+    gameIdx++;showGameState();
+  });
 });
 
 document.getElementById("g-skip").addEventListener("click",()=>{
@@ -2095,6 +2101,7 @@ document.getElementById("g-skip").addEventListener("click",()=>{
     trashedIds.add(d.id);
     saveTrashed();
     if(isDueForReview(d.id))markIntegrated(d.id);
+    renderHomeProgress();
     gameIdx++;showGameState();
   });
 });
