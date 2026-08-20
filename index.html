@@ -85,11 +85,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .home-global-track{width:100%;height:4px;background:var(--surface3);border-radius:2px;overflow:hidden;}
 .home-global-fill{height:100%;border-radius:2px;background:var(--accent);transition:width 0.6s ease;}
 .home-global-pct{font-size:12px;color:var(--text-faint);}
-.path-selector{display:flex;gap:10px;margin-top:0.5rem;}
-.path-btn{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 20px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text-muted);font-size:13px;font-weight:500;font-family:inherit;cursor:pointer;transition:all 0.15s;min-width:160px;}
-.path-btn span{font-size:11px;color:var(--text-faint);font-weight:400;}
-.path-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(200,184,154,0.08);}
-.path-btn.active span{color:rgba(200,184,154,0.6);}
+.path-selector-inline{display:flex;gap:4px;align-items:center;background:var(--surface2);border:1px solid var(--border-md);border-radius:var(--radius);padding:3px;}
+.path-btn-sm{padding:5px 12px;border-radius:7px;border:none;background:transparent;color:var(--text-faint);font-size:12px;font-weight:500;font-family:inherit;cursor:pointer;transition:all 0.15s;}
+.path-btn-sm.active{background:var(--surface3);color:var(--accent);border:1px solid var(--accent);}
 .home-footer{display:flex;gap:12px;align-items:center;}
 .home-footer-btn{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--radius);border:1px solid var(--border);background:none;color:var(--text-faint);font-size:12px;font-family:inherit;cursor:pointer;transition:all 0.15s;}
 .home-footer-btn:hover{border-color:var(--border-md);color:var(--text-muted);}
@@ -187,6 +185,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .sf-desc{font-size:12px;color:var(--text-muted);}
 .sf-count{font-size:20px;font-weight:700;color:var(--accent);flex-shrink:0;}
 .modal-actions{display:flex;gap:8px;justify-content:flex-end;}
+.sf-section-label{font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:0.5rem;}
+.sf-modes{display:flex;gap:8px;margin-bottom:0.5rem;}
+.sf-mode{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 8px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface2);color:var(--text-muted);font-size:12px;font-weight:500;font-family:inherit;cursor:pointer;transition:all 0.15s;}
+.sf-mode span{font-size:10px;color:var(--text-faint);font-weight:400;}
+.sf-mode.active{border-color:var(--accent);color:var(--accent);background:rgba(200,184,154,0.08);}
 .sf-cancel{padding:9px 18px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface2);color:var(--text-muted);font-size:13px;font-family:inherit;cursor:pointer;}
 .sf-start{padding:9px 22px;border-radius:var(--radius);border:1px solid var(--purple-border);background:var(--purple-bg);color:var(--purple-text);font-size:13px;font-weight:500;font-family:inherit;cursor:pointer;}
 /* GAME */
@@ -390,7 +393,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 <div class="modal-overlay" id="sf-modal">
   <div class="modal-box">
     <div class="modal-title">Mon Parcours 🧭</div>
-    <div class="modal-sub">Choisis la durée de ta séance</div>
+    <div class="modal-sub">Choisis ton mode et la durée</div>
+    <div class="sf-section-label">Mode</div>
+    <div class="sf-modes">
+      <button class="sf-mode active" data-mode="A">🔥 Parcours A<span>Corps vers profond</span></button>
+      <button class="sf-mode" data-mode="B">🌱 Parcours B<span>Développement</span></button>
+      <button class="sf-mode" data-mode="R">🎲 Aléatoire<span>Full random</span></button>
+    </div>
+    <div class="sf-section-label" style="margin-top:1rem">Durée</div>
     <div class="sf-cards">
       <div class="sf-card" data-size="5"><div class="sf-icon">⚡</div><div class="sf-info"><div class="sf-name">Micro-séance</div><div class="sf-desc">Rapide et ciblée</div></div><div class="sf-count">5</div></div>
       <div class="sf-card" data-size="10"><div class="sf-icon">🎯</div><div class="sf-info"><div class="sf-name">Séance</div><div class="sf-desc">Format standard</div></div><div class="sf-count">10</div></div>
@@ -1544,39 +1554,39 @@ const GROUPS_A=[
   {id:"engagement",label:"㉙ Engagement",subtitle:"L élan vital et l engagement",cats:["Engagement"],polarity:"neg"},
 ];
 const GROUPS_B=[
-  // 0-3 ans — premiers états corporels et droit d être
-  {id:"existence-niee",label:"① Existence niée",subtitle:"Ne pas avoir le droit d être là",cats:["Existence"],polarity:"neg"},
-  {id:"existence-retrouvee",label:"② Existence retrouvée",subtitle:"Retrouver le droit d exister pleinement",cats:["Existence"],polarity:"pos"},
-  {id:"figement",label:"③ Figement",subtitle:"Le corps bloqué, paralysé, gelé",cats:["Figement"],polarity:"neg"},
-  {id:"degel",label:"④ Dégel",subtitle:"Le corps qui se libère et se déploie",cats:["Figement"],polarity:"pos"},
-  {id:"deconnexion",label:"⑤ Déconnexion",subtitle:"La dissociation et la perte de soi",cats:["Dissociation"],polarity:"neg"},
-  {id:"reconnexion",label:"⑥ Reconnexion",subtitle:"Le retour à soi et à son corps",cats:["Dissociation"],polarity:"pos"},
-  // 3-6 ans — premières relations et règles
-  {id:"conditionnement",label:"⑦ Conditionnement",subtitle:"Ce qui a été installé par l extérieur",cats:["Conditionnement"],polarity:"neg"},
-  {id:"deconditionnement",label:"⑧ Déconditionnement",subtitle:"La libération des programmes installés",cats:["Conditionnement"],polarity:"pos"},
-  {id:"abandon",label:"⑨ Abandon",subtitle:"Être laissé, ignoré, non choisi",cats:["Abandon"],polarity:"neg"},
-  {id:"accueil",label:"⑩ Accueil",subtitle:"Être reçu, choisi, protégé",cats:["Abandon"],polarity:"pos"},
-  {id:"violation",label:"⑪ Violation",subtitle:"L atteinte à l intégrité et aux limites",cats:["Violation"],polarity:"neg"},
-  {id:"integrite",label:"⑫ Intégrité",subtitle:"La restauration de l intégrité",cats:["Violation"],polarity:"pos"},
-  // 6-12 ans — regard social, école, pairs
-  {id:"culpabilite-honte",label:"⑬ Culpabilité & Honte",subtitle:"Le poids de la faute et du regard",cats:["Culpabilité","Honte"],polarity:"neg"},
-  {id:"liberation",label:"⑭ Libération",subtitle:"L affranchissement de la culpabilité et de la honte",cats:["Culpabilité","Honte"],polarity:"pos"},
-  {id:"usure",label:"⑮ Usure",subtitle:"L usure et la dégradation intérieure",cats:["Usure"],polarity:"neg"},
-  {id:"restauration",label:"⑯ Restauration",subtitle:"La régénération et le renouveau",cats:["Usure"],polarity:"pos"},
-  // 12-18 ans — adolescence, premières relations
-  {id:"trahison",label:"⑰ Trahison",subtitle:"Être trompé, manipulé, trahi",cats:["Trahison"],polarity:"neg"},
-  {id:"confiance",label:"⑱ Confiance",subtitle:"La confiance retrouvée et la paix",cats:["Trahison"],polarity:"pos"},
-  {id:"blessure",label:"⑲ Blessure",subtitle:"Les blessures reçues et leurs marques",cats:["Blessure"],polarity:"neg"},
-  {id:"guerison",label:"⑳ Guérison",subtitle:"La guérison et la récupération",cats:["Blessure"],polarity:"pos"},
-  {id:"mecanismes",label:"㉑ Mécanismes & Blocages",subtitle:"Les défenses et fermetures intérieures",cats:["Contrôle","Isolement","Ouverture"],polarity:"neg"},
-  {id:"ouverture",label:"㉒ Ouverture",subtitle:"Le lâcher-prise et l ouverture",cats:["Contrôle","Isolement","Ouverture"],polarity:"pos"},
-  // Adulte — accumulation et effondrement
-  {id:"perte",label:"㉓ Perte",subtitle:"Ce qui a été perdu ou retiré",cats:["Perte"],polarity:"neg"},
-  {id:"retrouvailles",label:"㉔ Retrouvailles",subtitle:"Ce qui a été retrouvé ou recréé",cats:["Perte"],polarity:"pos"},
-  {id:"sideration",label:"㉕ Sidération & Épuisement",subtitle:"Les états de confusion et d épuisement",cats:["Rigidité","Épuisement","Confusion"],polarity:"neg"},
-  {id:"eveil",label:"㉖ Éveil & Régénération",subtitle:"La clarté et l énergie retrouvées",cats:["Rigidité","Épuisement","Confusion"],polarity:"pos"},
-  {id:"effondrement",label:"㉗ Effondrement",subtitle:"L effondrement et la chute",cats:["Effondrement"],polarity:"neg"},
-  {id:"reconstruction",label:"㉘ Reconstruction",subtitle:"La reconstruction et le relèvement",cats:["Effondrement"],polarity:"pos"},
+  // Adulte — le plus récent
+  {id:"effondrement",label:"① Effondrement",subtitle:"L effondrement et la chute",cats:["Effondrement"],polarity:"neg"},
+  {id:"reconstruction",label:"② Reconstruction",subtitle:"La reconstruction et le relèvement",cats:["Effondrement"],polarity:"pos"},
+  {id:"sideration",label:"③ Sidération & Épuisement",subtitle:"Les états de confusion et d épuisement",cats:["Rigidité","Épuisement","Confusion"],polarity:"neg"},
+  {id:"eveil",label:"④ Éveil & Régénération",subtitle:"La clarté et l énergie retrouvées",cats:["Rigidité","Épuisement","Confusion"],polarity:"pos"},
+  {id:"perte",label:"⑤ Perte",subtitle:"Ce qui a été perdu ou retiré",cats:["Perte"],polarity:"neg"},
+  {id:"retrouvailles",label:"⑥ Retrouvailles",subtitle:"Ce qui a été retrouvé ou recréé",cats:["Perte"],polarity:"pos"},
+  // 12-18 ans — adolescence
+  {id:"mecanismes",label:"⑦ Mécanismes & Blocages",subtitle:"Les défenses et fermetures intérieures",cats:["Contrôle","Isolement","Ouverture"],polarity:"neg"},
+  {id:"ouverture",label:"⑧ Ouverture",subtitle:"Le lâcher-prise et l ouverture",cats:["Contrôle","Isolement","Ouverture"],polarity:"pos"},
+  {id:"blessure",label:"⑨ Blessure",subtitle:"Les blessures reçues et leurs marques",cats:["Blessure"],polarity:"neg"},
+  {id:"guerison",label:"⑩ Guérison",subtitle:"La guérison et la récupération",cats:["Blessure"],polarity:"pos"},
+  {id:"trahison",label:"⑪ Trahison",subtitle:"Être trompé, manipulé, trahi",cats:["Trahison"],polarity:"neg"},
+  {id:"confiance",label:"⑫ Confiance",subtitle:"La confiance retrouvée et la paix",cats:["Trahison"],polarity:"pos"},
+  {id:"usure",label:"⑬ Usure",subtitle:"L usure et la dégradation intérieure",cats:["Usure"],polarity:"neg"},
+  {id:"restauration",label:"⑭ Restauration",subtitle:"La régénération et le renouveau",cats:["Usure"],polarity:"pos"},
+  // 6-12 ans — regard social
+  {id:"culpabilite-honte",label:"⑮ Culpabilité & Honte",subtitle:"Le poids de la faute et du regard",cats:["Culpabilité","Honte"],polarity:"neg"},
+  {id:"liberation",label:"⑯ Libération",subtitle:"L affranchissement de la culpabilité et de la honte",cats:["Culpabilité","Honte"],polarity:"pos"},
+  // 3-6 ans — premières relations
+  {id:"violation",label:"⑰ Violation",subtitle:"L atteinte à l intégrité et aux limites",cats:["Violation"],polarity:"neg"},
+  {id:"integrite",label:"⑱ Intégrité",subtitle:"La restauration de l intégrité",cats:["Violation"],polarity:"pos"},
+  {id:"abandon",label:"⑲ Abandon",subtitle:"Être laissé, ignoré, non choisi",cats:["Abandon"],polarity:"neg"},
+  {id:"accueil",label:"⑳ Accueil",subtitle:"Être reçu, choisi, protégé",cats:["Abandon"],polarity:"pos"},
+  {id:"conditionnement",label:"㉑ Conditionnement",subtitle:"Ce qui a été installé par l extérieur",cats:["Conditionnement"],polarity:"neg"},
+  {id:"deconditionnement",label:"㉒ Déconditionnement",subtitle:"La libération des programmes installés",cats:["Conditionnement"],polarity:"pos"},
+  // 0-3 ans — originel
+  {id:"deconnexion",label:"㉓ Déconnexion",subtitle:"La dissociation et la perte de soi",cats:["Dissociation"],polarity:"neg"},
+  {id:"reconnexion",label:"㉔ Reconnexion",subtitle:"Le retour à soi et à son corps",cats:["Dissociation"],polarity:"pos"},
+  {id:"figement",label:"㉕ Figement",subtitle:"Le corps bloqué, paralysé, gelé",cats:["Figement"],polarity:"neg"},
+  {id:"degel",label:"㉖ Dégel",subtitle:"Le corps qui se libère et se déploie",cats:["Figement"],polarity:"pos"},
+  {id:"existence-niee",label:"㉗ Existence niée",subtitle:"Ne pas avoir le droit d être là",cats:["Existence"],polarity:"neg"},
+  {id:"existence-retrouvee",label:"㉘ Existence retrouvée",subtitle:"Retrouver le droit d exister pleinement",cats:["Existence"],polarity:"pos"},
   // Transformation
   {id:"engagement",label:"㉙ Engagement",subtitle:"L élan vital et l engagement",cats:["Engagement"],polarity:"neg"},
 ];
@@ -1677,15 +1687,17 @@ async function loadProfiles(){
         // PATH SELECTOR
 document.getElementById("path-a-btn").addEventListener("click",()=>{
   setPath("A");
+  document.querySelectorAll(".path-btn-sm").forEach(b=>b.classList.remove("active"));
   document.getElementById("path-a-btn").classList.add("active");
-  document.getElementById("path-b-btn").classList.remove("active");
-  showToast("Parcours A — Du corps vers le profond");
+  showToast("🔥 Parcours A — Du corps vers le profond");
+  render();
 });
 document.getElementById("path-b-btn").addEventListener("click",()=>{
   setPath("B");
+  document.querySelectorAll(".path-btn-sm").forEach(b=>b.classList.remove("active"));
   document.getElementById("path-b-btn").classList.add("active");
-  document.getElementById("path-a-btn").classList.remove("active");
-  showToast("Parcours B — Du développement vers le présent");
+  showToast("🌱 Parcours B — Du développement vers le présent");
+  render();
 });
 
 loadProfiles();
@@ -1987,13 +1999,24 @@ document.getElementById("validate-btn").addEventListener("click",async()=>{
 
 // SESSION FORMAT
 let sessionSize=5;
+let gameMode="A"; // A, B, or R
 
 function openSessionFormat(){
   if(!currentProfile){showToast("Connecte-toi d abord");return;}
   document.querySelectorAll(".sf-card").forEach(c=>c.classList.remove("sel"));
   document.getElementById("sf-start").disabled=true;
+  // Set active mode button
+  document.querySelectorAll(".sf-mode").forEach(b=>b.classList.toggle("active",b.dataset.mode===gameMode));
   document.getElementById("sf-modal").classList.add("show");
 }
+
+document.querySelectorAll(".sf-mode").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll(".sf-mode").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    gameMode=btn.dataset.mode;
+  });
+});
 
 document.querySelectorAll(".sf-card").forEach(card=>{
   card.addEventListener("click",()=>{
