@@ -354,8 +354,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
       <div class="profile-badge"><i class="ti ti-user"></i><span id="profile-name-badge">—</span></div>
       <button class="header-btn" id="switch-btn"><i class="ti ti-arrow-left"></i> Accueil</button>
       <div class="path-selector-inline">
-        <button class="path-btn-sm active" id="path-a-btn">🔥 A</button>
-        <button class="path-btn-sm" id="path-b-btn">🌱 B</button>
+        <button class="path-btn-sm" id="path-a-btn">🔥 A</button>
+        <button class="path-btn-sm active" id="path-b-btn">🌱 B</button>
       </div>
       <button class="header-btn purple" id="game-btn"><i class="ti ti-cards"></i> Découverte</button>
       <button class="header-btn blue" id="progress-btn"><i class="ti ti-chart-bar"></i> Stats</button>
@@ -1596,8 +1596,8 @@ const GROUPS_B=[
 ];
 
 // Active groups — switch between A and B
-let GROUPS=[...GROUPS_A];
-let activePath="A";
+let GROUPS=[...GROUPS_B];
+let activePath="B";
 
 function setPath(path){
   activePath=path;
@@ -1693,9 +1693,12 @@ document.addEventListener("click",e=>{
   const btn=e.target.closest(".path-btn-sm");
   if(!btn)return;
   const mode=btn.id==="path-a-btn"?"A":"B";
+  console.log("PATH CLICK", mode, "GROUPS before:", GROUPS.length, GROUPS[0]?.label);
   setPath(mode);
+  console.log("PATH SET", "GROUPS after:", GROUPS.length, GROUPS[0]?.label);
   document.querySelectorAll(".path-btn-sm").forEach(b=>b.classList.remove("active"));
-  btn.classList.add("active");
+  document.getElementById("path-a-btn")&&document.getElementById("path-a-btn").classList.toggle("active",mode==="A");
+  document.getElementById("path-b-btn")&&document.getElementById("path-b-btn").classList.toggle("active",mode==="B");
   showToast(mode==="A"?"🔥 Parcours A — Du corps vers le profond":"🌱 Parcours B — Du développement vers le présent");
   render();
 });
