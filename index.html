@@ -1835,7 +1835,12 @@ document.getElementById("search").addEventListener("input",e=>{query=e.target.va
 
 function getFiltered(){
   const wids=workedIds();
-  // groupOrder not needed with new sort
+  // Build group order from active GROUPS
+  const groupOrder={};
+  GROUPS.forEach((g,i)=>{g.cats.forEach(cat=>{
+    const key=cat+"_"+(g.polarity||"neg");
+    groupOrder[key]=i;
+  });});
   return DATA.filter(d=>{
     const qOk=!query||d.text.toLowerCase().includes(query.toLowerCase())||d.cat.toLowerCase().includes(query.toLowerCase());
     const levelOk=levelFilter===0||d.depth===levelFilter;
@@ -1883,15 +1888,17 @@ function render(){
     const isTodo=todoIds.has(d.id)&&!isWorked;
     const isDue=isDueForReview(d.id)&&!isWorked;
     const cls=isWorked?"worked":isTodo?"todo":isDue?"due":"";
-    const group=getGroupForCat(d.cat);
+    const group=getGroupForCat(d.cat,d.role);
     const gid=group?group.id:"";
     const gname=group?group.label.replace(/^.\s*/,""):"";
-    const polarity=d.role==="coping"?"pos":"neg";
+    const isPos=group?group.polarity==="pos":d.role==="coping";
 
     // Group separator
     if(gid!==lastGid&&group){
       lastGid=gid;lastPolarity=null;
-      html+=`<div class="group-separator"><div class="group-sep-label">${group.label}</div><div class="group-sep-sub">${group.subtitle}</div></div>`;
+      const sepColor=isPos?"rgba(141,201,74,0.2)":"rgba(255,77,46,0.15)";
+      const labelColor=isPos?"var(--green-text)":"var(--red-text)";
+      html+=`<div class="group-separator" style="border-color:${sepColor}"><div class="group-sep-label" style="color:${labelColor}">${group.label}</div><div class="group-sep-sub">${group.subtitle}</div></div>`;
     }
 
     html+=`<div class="card${cls?" "+cls:""}" data-id="${d.id}">
