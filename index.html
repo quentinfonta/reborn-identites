@@ -1688,19 +1688,15 @@ async function loadProfiles(){
         localStorage.removeItem("reviews_"+id);
         localStorage.removeItem("trashed_"+id);
         showToast(`Profil "${name}" supprimé`);
-        // PATH SELECTOR
-document.getElementById("path-a-btn").addEventListener("click",()=>{
-  setPath("A");
+        // PATH SELECTOR — use event delegation to handle late DOM
+document.addEventListener("click",e=>{
+  const btn=e.target.closest(".path-btn-sm");
+  if(!btn)return;
+  const mode=btn.id==="path-a-btn"?"A":"B";
+  setPath(mode);
   document.querySelectorAll(".path-btn-sm").forEach(b=>b.classList.remove("active"));
-  document.getElementById("path-a-btn").classList.add("active");
-  showToast("🔥 Parcours A — Du corps vers le profond");
-  render();
-});
-document.getElementById("path-b-btn").addEventListener("click",()=>{
-  setPath("B");
-  document.querySelectorAll(".path-btn-sm").forEach(b=>b.classList.remove("active"));
-  document.getElementById("path-b-btn").classList.add("active");
-  showToast("🌱 Parcours B — Du développement vers le présent");
+  btn.classList.add("active");
+  showToast(mode==="A"?"🔥 Parcours A — Du corps vers le profond":"🌱 Parcours B — Du développement vers le présent");
   render();
 });
 
