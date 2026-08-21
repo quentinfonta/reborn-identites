@@ -85,9 +85,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .home-global-track{width:100%;height:4px;background:var(--surface3);border-radius:2px;overflow:hidden;}
 .home-global-fill{height:100%;border-radius:2px;background:var(--accent);transition:width 0.6s ease;}
 .home-global-pct{font-size:12px;color:var(--text-faint);}
-.path-selector-inline{display:flex;gap:4px;align-items:center;background:var(--surface2);border:1px solid var(--border-md);border-radius:var(--radius);padding:3px;}
-.path-btn-sm{padding:5px 12px;border-radius:7px;border:none;background:transparent;color:var(--text-faint);font-size:12px;font-weight:500;font-family:inherit;cursor:pointer;transition:all 0.15s;}
-.path-btn-sm.active{background:var(--surface3);color:var(--accent);border:1px solid var(--accent);}
+
 .home-footer{display:flex;gap:12px;align-items:center;}
 .home-footer-btn{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--radius);border:1px solid var(--border);background:none;color:var(--text-faint);font-size:12px;font-family:inherit;cursor:pointer;transition:all 0.15s;}
 .home-footer-btn:hover{border-color:var(--border-md);color:var(--text-muted);}
@@ -353,10 +351,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     <div class="main-header-right">
       <div class="profile-badge"><i class="ti ti-user"></i><span id="profile-name-badge">—</span></div>
       <button class="header-btn" id="switch-btn"><i class="ti ti-arrow-left"></i> Accueil</button>
-      <div class="path-selector-inline">
-        <button class="path-btn-sm" id="path-a-btn">🔥 A</button>
-        <button class="path-btn-sm active" id="path-b-btn">🌱 B</button>
-      </div>
       <button class="header-btn purple" id="game-btn"><i class="ti ti-cards"></i> Découverte</button>
       <button class="header-btn blue" id="progress-btn"><i class="ti ti-chart-bar"></i> Stats</button>
     </div>
@@ -400,8 +394,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     <div class="modal-sub">Choisis ton mode et la durée</div>
     <div class="sf-section-label">Mode</div>
     <div class="sf-modes">
-      <button class="sf-mode active" data-mode="A">🔥 Parcours A<span>Corps vers profond</span></button>
-      <button class="sf-mode" data-mode="B">🌱 Parcours B<span>Développement</span></button>
+      <button class="sf-mode active" data-mode="B">🌱 Parcours<span>Du récent vers l originel</span></button>
       <button class="sf-mode" data-mode="R">🎲 Aléatoire<span>Full random</span></button>
     </div>
     <div class="sf-section-label" style="margin-top:1rem">Durée</div>
@@ -1526,38 +1519,8 @@ const DEFAULT_DATA = [
   {id:9993,text:'Je suis osé',cat:'Isolement',depth:3,role:'coping'},
   {id:9994,text:'Je suis déclaré',cat:'Isolement',depth:4,role:'coping'}
 ];
-const GROUPS_A=[
-  {id:"figement",label:"① Figement",subtitle:"Le corps bloqué, paralysé, gelé",cats:["Figement"],polarity:"neg"},
-  {id:"degel",label:"② Dégel",subtitle:"Le corps qui se libère et se déploie",cats:["Figement"],polarity:"pos"},
-  {id:"sideration",label:"③ Sidération & Épuisement",subtitle:"Les états de confusion et d épuisement",cats:["Rigidité","Épuisement","Confusion"],polarity:"neg"},
-  {id:"eveil",label:"④ Éveil & Régénération",subtitle:"La clarté et l énergie retrouvées",cats:["Rigidité","Épuisement","Confusion"],polarity:"pos"},
-  {id:"mecanismes",label:"⑤ Mécanismes & Blocages",subtitle:"Les défenses et fermetures intérieures",cats:["Contrôle","Isolement","Ouverture"],polarity:"neg"},
-  {id:"ouverture",label:"⑥ Ouverture",subtitle:"Le lâcher-prise et l ouverture",cats:["Contrôle","Isolement","Ouverture"],polarity:"pos"},
-  {id:"usure",label:"⑦ Usure",subtitle:"L usure et la dégradation intérieure",cats:["Usure"],polarity:"neg"},
-  {id:"restauration",label:"⑧ Restauration",subtitle:"La régénération et le renouveau",cats:["Usure"],polarity:"pos"},
-  {id:"deconnexion",label:"⑨ Déconnexion",subtitle:"La dissociation et la perte de soi",cats:["Dissociation"],polarity:"neg"},
-  {id:"reconnexion",label:"⑩ Reconnexion",subtitle:"Le retour à soi et à son corps",cats:["Dissociation"],polarity:"pos"},
-  {id:"perte",label:"⑪ Perte",subtitle:"Ce qui a été perdu ou retiré",cats:["Perte"],polarity:"neg"},
-  {id:"retrouvailles",label:"⑫ Retrouvailles",subtitle:"Ce qui a été retrouvé ou recréé",cats:["Perte"],polarity:"pos"},
-  {id:"abandon",label:"⑬ Abandon",subtitle:"Être laissé, ignoré, non choisi",cats:["Abandon"],polarity:"neg"},
-  {id:"accueil",label:"⑭ Accueil",subtitle:"Être reçu, choisi, protégé",cats:["Abandon"],polarity:"pos"},
-  {id:"trahison",label:"⑮ Trahison",subtitle:"Être trompé, manipulé, trahi",cats:["Trahison"],polarity:"neg"},
-  {id:"confiance",label:"⑯ Confiance",subtitle:"La confiance retrouvée et la paix",cats:["Trahison"],polarity:"pos"},
-  {id:"blessure",label:"⑰ Blessure",subtitle:"Les blessures reçues et leurs marques",cats:["Blessure"],polarity:"neg"},
-  {id:"guerison",label:"⑱ Guérison",subtitle:"La guérison et la récupération",cats:["Blessure"],polarity:"pos"},
-  {id:"violation",label:"⑲ Violation",subtitle:"L atteinte à l intégrité et aux limites",cats:["Violation"],polarity:"neg"},
-  {id:"integrite",label:"⑳ Intégrité",subtitle:"La restauration de l intégrité",cats:["Violation"],polarity:"pos"},
-  {id:"existence-niee",label:"㉑ Existence niée",subtitle:"Ne pas avoir le droit d être là",cats:["Existence"],polarity:"neg"},
-  {id:"existence-retrouvee",label:"㉒ Existence retrouvée",subtitle:"Retrouver le droit d exister pleinement",cats:["Existence"],polarity:"pos"},
-  {id:"culpabilite-honte",label:"㉓ Culpabilité & Honte",subtitle:"Le poids de la faute et du regard",cats:["Culpabilité","Honte"],polarity:"neg"},
-  {id:"liberation",label:"㉔ Libération",subtitle:"L affranchissement de la culpabilité et de la honte",cats:["Culpabilité","Honte"],polarity:"pos"},
-  {id:"conditionnement",label:"㉕ Conditionnement",subtitle:"Ce qui a été installé par l extérieur",cats:["Conditionnement"],polarity:"neg"},
-  {id:"deconditionnement",label:"㉖ Déconditionnement",subtitle:"La libération des programmes installés",cats:["Conditionnement"],polarity:"pos"},
-  {id:"effondrement",label:"㉗ Effondrement",subtitle:"L effondrement et la chute",cats:["Effondrement"],polarity:"neg"},
-  {id:"reconstruction",label:"㉘ Reconstruction",subtitle:"La reconstruction et le relèvement",cats:["Effondrement"],polarity:"pos"},
-  {id:"engagement",label:"㉙ Engagement",subtitle:"L élan vital et l engagement",cats:["Engagement"],polarity:"neg"},
-];
-const GROUPS_B=[
+
+const GROUPS=[
   // Adulte — le plus récent
   {id:"effondrement",label:"① Effondrement",subtitle:"L effondrement et la chute",cats:["Effondrement"],polarity:"neg"},
   {id:"reconstruction",label:"② Reconstruction",subtitle:"La reconstruction et le relèvement",cats:["Effondrement"],polarity:"pos"},
@@ -1596,13 +1559,7 @@ const GROUPS_B=[
 ];
 
 // Active groups — switch between A and B
-let GROUPS=[...GROUPS_B];
-let activePath="B";
 
-function setPath(path){
-  activePath=path;
-  GROUPS=path==="A"?[...GROUPS_A]:[...GROUPS_B];
-}
 
 
 const LEVEL_NAMES=["Tous", "Corps", "Ressenti", "Émotion", "Relation", "Abstrait"];
@@ -1688,20 +1645,7 @@ async function loadProfiles(){
         localStorage.removeItem("reviews_"+id);
         localStorage.removeItem("trashed_"+id);
         showToast(`Profil "${name}" supprimé`);
-        // PATH SELECTOR — use event delegation to handle late DOM
-document.addEventListener("click",e=>{
-  const btn=e.target.closest(".path-btn-sm");
-  if(!btn)return;
-  const mode=btn.id==="path-a-btn"?"A":"B";
-  console.log("PATH CLICK", mode, "GROUPS before:", GROUPS.length, GROUPS[0]?.label);
-  setPath(mode);
-  console.log("PATH SET", "GROUPS after:", GROUPS.length, GROUPS[0]?.label);
-  document.querySelectorAll(".path-btn-sm").forEach(b=>b.classList.remove("active"));
-  document.getElementById("path-a-btn")&&document.getElementById("path-a-btn").classList.toggle("active",mode==="A");
-  document.getElementById("path-b-btn")&&document.getElementById("path-b-btn").classList.toggle("active",mode==="B");
-  showToast(mode==="A"?"🔥 Parcours A — Du corps vers le profond":"🌱 Parcours B — Du développement vers le présent");
-  render();
-});
+        
 
 loadProfiles();
       }catch(e){showToast("Erreur suppression: "+e.message);}
@@ -2009,7 +1953,7 @@ document.getElementById("validate-btn").addEventListener("click",async()=>{
 
 // SESSION FORMAT
 let sessionSize=5;
-let gameMode="A"; // A, B, or R
+let gameMode="B"; // A, B, or R
 
 function openSessionFormat(){
   if(!currentProfile){showToast("Connecte-toi d abord");return;}
