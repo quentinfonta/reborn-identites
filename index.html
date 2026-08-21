@@ -26,11 +26,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .screen{display:none;min-height:100vh;padding:2rem 1.5rem 5rem;}
 .screen.show{display:flex;flex-direction:column;}
 #profile-screen,#pin-screen{align-items:center;justify-content:center;gap:2rem;}
-#main-screen{display:none;padding:2rem 1.5rem 5rem;}
+#main-screen{display:none;padding:0;}
 #main-screen.show{display:block;}
 .brand{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);}
 .screen-title{font-size:26px;font-weight:600;text-align:center;}
-.screen-sub{font-size:14px;color:var(--text-muted);text-align:center;}
 .profile-box{background:var(--surface);border:1px solid var(--border-md);border-radius:var(--radius-lg);padding:2rem;width:100%;max-width:440px;}
 .box-label{font-size:11px;font-weight:500;color:var(--text-faint);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:1rem;}
 .profile-list{display:flex;flex-direction:column;gap:6px;margin-bottom:1.25rem;max-height:260px;overflow-y:auto;}
@@ -77,7 +76,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .home-card-icon{font-size:40px;}
 .home-card-title{font-size:17px;font-weight:600;}
 .home-card-sub{font-size:13px;color:var(--text-muted);line-height:1.4;}
-/* Progress bars on home */
 .home-progress-section{width:100%;max-width:400px;text-align:center;}
 .home-global-progress{display:flex;flex-direction:column;align-items:center;gap:12px;}
 .home-global-number{font-size:48px;font-weight:600;color:var(--accent);line-height:1;}
@@ -85,94 +83,96 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .home-global-track{width:100%;height:4px;background:var(--surface3);border-radius:2px;overflow:hidden;}
 .home-global-fill{height:100%;border-radius:2px;background:var(--accent);transition:width 0.6s ease;}
 .home-global-pct{font-size:12px;color:var(--text-faint);}
-
 .home-footer{display:flex;gap:12px;align-items:center;}
 .home-footer-btn{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--radius);border:1px solid var(--border);background:none;color:var(--text-faint);font-size:12px;font-family:inherit;cursor:pointer;transition:all 0.15s;}
 .home-footer-btn:hover{border-color:var(--border-md);color:var(--text-muted);}
-/* MAIN */
-.main-container{max-width:960px;margin:0 auto;}
-.main-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:12px;}
-.brand-title{font-size:22px;font-weight:600;}
+/* MAIN — new scroll layout */
+.main-header{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.brand-title{font-size:18px;font-weight:600;}
 .main-header-right{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
 .profile-badge{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;border:1px solid var(--gold-border);background:var(--gold-bg);color:var(--gold-text);font-size:13px;font-weight:500;}
-.header-btn{display:flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface2);color:var(--text-muted);font-size:13px;font-family:inherit;cursor:pointer;transition:all 0.15s;}
+.header-btn{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface2);color:var(--text-muted);font-size:12px;font-family:inherit;cursor:pointer;transition:all 0.15s;}
 .header-btn:hover{border-color:var(--border-strong);color:var(--text);}
 .header-btn.blue{border-color:var(--blue-border);color:var(--blue-text);background:var(--blue-bg);}
 .header-btn.purple{border-color:var(--purple-border);color:var(--purple-text);background:var(--purple-bg);}
-/* FILTERS */
-.filters-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem;align-items:center;}
-.filter-btn{padding:5px 14px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--text-muted);font-size:12px;font-family:inherit;cursor:pointer;transition:all 0.15s;}
+/* FILTERS BAR */
+.filters-bar{position:sticky;top:57px;z-index:90;background:var(--bg);border-bottom:1px solid var(--border);padding:0.6rem 1.5rem;display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.filter-btn{padding:4px 12px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--text-muted);font-size:12px;font-family:inherit;cursor:pointer;transition:all 0.15s;}
 .filter-btn:hover{border-color:var(--border-md);color:var(--text);}
 .filter-btn.active{background:var(--surface2);border-color:var(--border-strong);color:var(--text);font-weight:500;}
-.level-nav{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border-md);border-radius:20px;padding:4px 10px;}
-.level-nav-btn{background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:15px;padding:0 2px;line-height:1;transition:color 0.15s;}
+.level-nav{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border-md);border-radius:20px;padding:3px 8px;}
+.level-nav-btn{background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:14px;padding:0 2px;line-height:1;}
 .level-nav-btn:hover{color:var(--text);}
-.level-nav-display{display:flex;align-items:center;gap:6px;min-width:80px;justify-content:center;}
+.level-nav-display{display:flex;align-items:center;gap:5px;min-width:75px;justify-content:center;}
 .level-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;display:inline-block;}
 .level-nav-name{font-size:12px;font-weight:500;color:var(--text);}
-/* SEARCH */
-.search-bar{position:relative;margin-bottom:1rem;}
-.search-bar i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text-faint);font-size:16px;pointer-events:none;}
-.search-input{width:100%;padding:10px 14px 10px 38px;border:1px solid var(--border-md);border-radius:var(--radius);background:var(--surface);color:var(--text);font-size:14px;font-family:inherit;}
+/* SCROLL DICT */
+.dict-scroll{padding:0 1.5rem 6rem;}
+.dict-search{padding:1rem 1.5rem 0.5rem;position:sticky;top:104px;z-index:80;background:var(--bg);}
+.search-input{width:100%;padding:9px 14px 9px 36px;border:1px solid var(--border-md);border-radius:var(--radius);background:var(--surface);color:var(--text);font-size:14px;font-family:inherit;}
 .search-input:focus{outline:none;border-color:var(--border-strong);}
 .search-input::placeholder{color:var(--text-faint);}
-.stats-bar{font-size:13px;color:var(--text-faint);margin-bottom:0.875rem;}
-.stats-bar span{color:var(--text-muted);font-weight:500;}
-/* GROUP SEPARATORS */
-.group-separator{grid-column:1/-1;margin:1.5rem 0 0.5rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);}
-.group-separator:first-child{margin-top:0;}
-.group-sep-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--text-faint);}
-.group-sep-sub{font-size:12px;color:var(--text-faint);margin-top:2px;opacity:0.6;}
-.polarity-sep{grid-column:1/-1;display:flex;align-items:center;gap:10px;margin:1rem 0 0.25rem;font-size:12px;font-weight:600;}
-.polarity-sep::after{content:'';flex:1;height:1px;}
-.polarity-sep.neg{color:rgba(255,77,46,0.7);}
-.polarity-sep.neg::after{background:rgba(255,77,46,0.2);}
-.polarity-sep.pos{color:rgba(141,201,74,0.7);}
-.polarity-sep.pos::after{background:rgba(141,201,74,0.2);}
-/* CARDS */
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:7px;}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:0.875rem 1rem;cursor:pointer;transition:all 0.15s;user-select:none;}
-.card:hover{border-color:var(--border-md);background:var(--surface2);}
-.card.worked{border-color:var(--green-border);background:var(--green-bg);}
-.card.worked .identity{color:var(--green-text);}
-.card.todo{border-color:var(--gold-border);background:var(--gold-bg);}
-.card.todo .identity{color:var(--gold-text);}
-.card.due{border-color:var(--blue-border);background:var(--blue-bg);}
-.card.due .identity{color:var(--blue-text);}
-.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
-.identity{font-size:13px;font-weight:500;line-height:1.45;flex:1;color:var(--text);}
-.check-circle{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--border-md);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
-.card.worked .check-circle{background:var(--green-bg);border-color:var(--green-border);}
-.check-circle i{font-size:11px;opacity:0;color:var(--green-text);}
-.card.worked .check-circle i{opacity:1;}
-.card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:8px;}
-.group-badge{font-size:10px;padding:2px 7px;border-radius:8px;border:1px solid var(--border);color:var(--text-faint);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.todo-btn{background:none;border:none;cursor:pointer;font-size:13px;padding:0;opacity:0.3;transition:opacity 0.15s;line-height:1;}
-.todo-btn:hover{opacity:1;}
-.card.todo .todo-btn{opacity:1;}
-.trash-btn{background:none;border:none;cursor:pointer;font-size:12px;padding:0;opacity:0;transition:opacity 0.15s;line-height:1;}
-.card:hover .trash-btn{opacity:0.3;}
-.card:hover .trash-btn:hover{opacity:1;}
-.card.trashed{border-color:var(--red-border);background:var(--red-bg);opacity:0.5;}
-.card.worked{cursor:pointer;}
-.no-results{padding:3rem;text-align:center;color:var(--text-faint);font-size:14px;grid-column:1/-1;}
+.search-wrap{position:relative;}
+.search-wrap i{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--text-faint);font-size:15px;pointer-events:none;}
+/* GROUP SECTION */
+.group-section{margin-bottom:2.5rem;}
+.group-header{position:sticky;top:150px;z-index:70;background:var(--bg);padding:0.75rem 0;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;}
+.group-header:hover .group-toggle{opacity:1;}
+.group-header-left{display:flex;align-items:center;gap:10px;}
+.group-polarity-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.group-label{font-size:13px;font-weight:600;color:var(--text-muted);}
+.group-sub{font-size:11px;color:var(--text-faint);margin-top:1px;}
+.group-count{font-size:11px;color:var(--text-faint);padding:2px 8px;border-radius:8px;border:1px solid var(--border);}
+.group-toggle{font-size:12px;color:var(--text-faint);opacity:0.5;transition:opacity 0.15s;}
+/* LEVEL STRIP */
+.level-strip{display:flex;align-items:center;gap:4px;padding:0.4rem 0;margin-bottom:0.25rem;}
+.level-strip-dot{width:6px;height:6px;border-radius:50%;}
+.level-strip-label{font-size:10px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;}
+.level-divider{flex:1;height:1px;background:var(--border);}
+/* IDENTITY ROW */
+.id-list{display:flex;flex-direction:column;gap:3px;}
+.id-row{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--radius);border:1px solid transparent;cursor:pointer;transition:all 0.12s;user-select:none;}
+.id-row:hover{background:var(--surface);border-color:var(--border);}
+.id-row.worked{background:var(--green-bg);border-color:var(--green-border);}
+.id-row.todo{background:var(--gold-bg);border-color:var(--gold-border);}
+.id-row.checked{background:var(--surface2);border-color:var(--border-md);}
+.id-row.trashed{opacity:0.35;}
+.id-text{flex:1;font-size:13px;font-weight:500;}
+.id-row.worked .id-text{color:var(--green-text);}
+.id-row.todo .id-text{color:var(--gold-text);}
+.id-actions{display:flex;gap:4px;opacity:0;transition:opacity 0.12s;}
+.id-row:hover .id-actions{opacity:1;}
+.id-row.todo .id-actions,.id-row.worked .id-actions{opacity:0.6;}
+.id-action-btn{background:none;border:none;cursor:pointer;font-size:12px;padding:2px 4px;color:var(--text-faint);line-height:1;}
+.id-action-btn:hover{color:var(--text);}
+.id-check{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--border-md);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.id-row.worked .id-check{background:var(--green-bg);border-color:var(--green-border);}
+.id-row.checked .id-check{background:var(--surface3);border-color:var(--border-strong);}
+.check-icon{font-size:9px;opacity:0;color:var(--green-text);}
+.id-row.worked .check-icon{opacity:1;}
+.id-row.checked .check-icon{opacity:1;color:var(--text-muted);}
+.group-collapsed .id-list,.group-collapsed .level-strip{display:none;}
 /* SESSION BAR */
-.session-bar{position:sticky;bottom:0;background:var(--bg);border-top:1px solid var(--border-md);padding:1rem 0;margin-top:2rem;}
+.session-bar{position:fixed;bottom:0;left:0;right:0;background:var(--bg);border-top:1px solid var(--border-md);padding:0.875rem 1.5rem;z-index:200;}
 .session-inner{max-width:960px;margin:0 auto;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
-.session-tags{display:flex;flex-wrap:wrap;gap:6px;flex:1;min-height:28px;}
-.sel-tag{font-size:12px;padding:4px 11px;border-radius:8px;background:var(--green-bg);color:var(--green-text);border:1px solid var(--green-border);cursor:pointer;}
+.session-tags{display:flex;flex-wrap:wrap;gap:6px;flex:1;min-height:24px;}
+.sel-tag{font-size:12px;padding:3px 10px;border-radius:8px;background:var(--green-bg);color:var(--green-text);border:1px solid var(--green-border);cursor:pointer;}
 .sel-tag:hover{opacity:0.7;}
 .empty-sel{font-size:13px;color:var(--text-faint);font-style:italic;align-self:center;}
-.validate-btn{display:flex;align-items:center;gap:8px;padding:10px 20px;border-radius:var(--radius);border:1px solid var(--green-border);background:var(--green-bg);color:var(--green-text);font-size:13px;font-weight:500;font-family:inherit;cursor:pointer;white-space:nowrap;}
-.validate-btn:hover{opacity:0.8;}
+.validate-btn{display:flex;align-items:center;gap:6px;padding:9px 18px;border-radius:var(--radius);border:1px solid var(--green-border);background:var(--green-bg);color:var(--green-text);font-size:13px;font-weight:500;font-family:inherit;cursor:pointer;white-space:nowrap;}
 .validate-btn:disabled{opacity:0.3;cursor:default;}
 .session-count{font-size:12px;color:var(--text-faint);white-space:nowrap;}
-/* SESSION FORMAT */
+/* MODALS & OVERLAYS */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:400;align-items:center;justify-content:center;padding:1.5rem;}
 .modal-overlay.show{display:flex;}
 .modal-box{background:var(--surface);border:1px solid var(--border-strong);border-radius:var(--radius-lg);padding:1.5rem;max-width:480px;width:100%;max-height:85vh;overflow-y:auto;}
 .modal-title{font-size:18px;font-weight:600;margin-bottom:0.25rem;}
 .modal-sub{font-size:13px;color:var(--text-muted);margin-bottom:1.25rem;}
+.sf-section-label{font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:0.5rem;}
+.sf-modes{display:flex;gap:8px;margin-bottom:0.5rem;}
+.sf-mode{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 8px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface2);color:var(--text-muted);font-size:12px;font-weight:500;font-family:inherit;cursor:pointer;transition:all 0.15s;}
+.sf-mode span{font-size:10px;color:var(--text-faint);font-weight:400;}
+.sf-mode.active{border-color:var(--accent);color:var(--accent);background:rgba(200,184,154,0.08);}
 .sf-cards{display:flex;flex-direction:column;gap:10px;margin-bottom:1.5rem;}
 .sf-card{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface2);cursor:pointer;transition:all 0.15s;}
 .sf-card:hover{border-color:var(--border-strong);}
@@ -183,11 +183,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .sf-desc{font-size:12px;color:var(--text-muted);}
 .sf-count{font-size:20px;font-weight:700;color:var(--accent);flex-shrink:0;}
 .modal-actions{display:flex;gap:8px;justify-content:flex-end;}
-.sf-section-label{font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:0.5rem;}
-.sf-modes{display:flex;gap:8px;margin-bottom:0.5rem;}
-.sf-mode{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 8px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface2);color:var(--text-muted);font-size:12px;font-weight:500;font-family:inherit;cursor:pointer;transition:all 0.15s;}
-.sf-mode span{font-size:10px;color:var(--text-faint);font-weight:400;}
-.sf-mode.active{border-color:var(--accent);color:var(--accent);background:rgba(200,184,154,0.08);}
 .sf-cancel{padding:9px 18px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface2);color:var(--text-muted);font-size:13px;font-family:inherit;cursor:pointer;}
 .sf-start{padding:9px 22px;border-radius:var(--radius);border:1px solid var(--purple-border);background:var(--purple-bg);color:var(--purple-text);font-size:13px;font-weight:500;font-family:inherit;cursor:pointer;}
 /* GAME */
@@ -208,7 +203,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .game-trans-start{padding:12px 36px;border-radius:var(--radius-lg);border:1px solid var(--accent);background:transparent;color:var(--accent);font-size:15px;font-weight:500;font-family:inherit;cursor:pointer;}
 .game-card{display:none;flex-direction:column;align-items:center;text-align:center;max-width:480px;width:100%;margin-top:3rem;}
 .game-card.show{display:flex;}
-.game-card-level{font-size:12px;color:var(--text-faint);margin-bottom:0.4rem;display:flex;align-items:center;gap:6px;}
+.game-card-level{font-size:12px;color:var(--text-faint);margin-bottom:0.4rem;display:flex;align-items:center;gap:6px;justify-content:center;}
 .game-card-group{font-size:13px;color:var(--text-muted);margin-bottom:0.5rem;}
 .game-card-text{font-size:34px;font-weight:600;color:var(--text);margin-bottom:2.5rem;line-height:1.3;}
 .game-btns{display:flex;gap:10px;justify-content:center;}
@@ -230,8 +225,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .game-res-btn{padding:11px 22px;border-radius:var(--radius);font-size:13px;font-weight:500;font-family:inherit;cursor:pointer;border:1px solid var(--border-md);background:var(--surface2);color:var(--text-muted);}
 .game-res-btn.primary{border-color:var(--green-border);background:var(--green-bg);color:var(--green-text);}
 @keyframes cardIn{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
-@keyframes cardOutRight{from{opacity:1;transform:translateX(0) rotate(0);}to{opacity:0;transform:translateX(130px) rotate(8deg);}}
-@keyframes cardOutLeft{from{opacity:1;transform:translateX(0) rotate(0);}to{opacity:0;transform:translateX(-130px) rotate(-8deg);}}
+@keyframes cardOutRight{from{opacity:1;transform:translateX(0);}to{opacity:0;transform:translateX(130px) rotate(8deg);}}
+@keyframes cardOutLeft{from{opacity:1;transform:translateX(0);}to{opacity:0;transform:translateX(-130px) rotate(-8deg);}}
 @keyframes cardOutUp{from{opacity:1;transform:translateY(0);}to{opacity:0;transform:translateY(-60px);}}
 .anim-in{animation:cardIn 0.3s ease forwards;}
 .anim-right{animation:cardOutRight 0.22s ease forwards;}
@@ -262,10 +257,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .cat-fill{height:100%;border-radius:5px;background:rgba(200,184,154,0.2);border-right:2px solid var(--accent);display:flex;align-items:center;justify-content:flex-end;padding-right:8px;min-width:24px;}
 .cat-count{font-size:11px;font-weight:600;color:var(--accent);}
 .no-data{font-size:14px;color:var(--text-faint);font-style:italic;}
-
-.chat-send{width:36px;height:36px;border-radius:50%;border:none;background:var(--purple-bg);color:var(--purple-text);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;transition:all 0.15s;}
-.chat-send:hover{background:var(--purple-border);color:white;}
-.chat-send:disabled{opacity:0.3;cursor:default;}
 .toast{position:fixed;bottom:5rem;left:50%;transform:translateX(-50%);background:var(--surface3);color:var(--text);border:1px solid var(--border-strong);border-radius:var(--radius);padding:9px 18px;font-size:13px;font-weight:500;opacity:0;transition:opacity 0.2s;pointer-events:none;z-index:800;white-space:nowrap;}
 .toast.show{opacity:1;}
 .spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--border-md);border-top-color:var(--accent);border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;}
@@ -278,7 +269,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 
 <div class="screen show" id="profile-screen">
   <div class="brand">REBORN</div>
-  <div><div class="screen-title">Dictionnaire des identités</div><div class="screen-sub" style="margin-top:8px">Choisis ton profil</div></div>
+  <div><div class="screen-title">Dictionnaire des identités</div><div style="font-size:14px;color:var(--text-muted);text-align:center;margin-top:8px">Choisis ton profil</div></div>
   <div class="profile-box">
     <div class="box-label">Profils existants</div>
     <div class="profile-list" id="profile-list"><span class="spinner"></span></div>
@@ -289,7 +280,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
         <input type="text" class="txt-input" id="new-name" placeholder="Prénom…"/>
         <input type="text" class="txt-input" id="new-pin" placeholder="PIN (4 chiffres)" maxlength="4" style="width:140px;flex:none;"/>
       </div>
-      <div class="pin-hint">Le code PIN protège l'accès.</div>
+      <div class="pin-hint">Le code PIN protège l accès.</div>
       <div id="create-err" style="font-size:13px;color:var(--red-text);min-height:16px;"></div>
       <button class="green-btn" id="create-btn" style="align-self:flex-end">Créer</button>
     </div>
@@ -318,7 +309,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 <div class="home-screen" id="home-screen">
   <div class="home-welcome">
     <div class="home-welcome-name">Bonjour, <span id="home-name"></span> 👋</div>
-    <div class="home-welcome-sub">Que veux-tu faire aujourd'hui ?</div>
+    <div class="home-welcome-sub">Que veux-tu faire aujourd hui ?</div>
   </div>
   <div class="home-cards">
     <div class="home-card" id="home-dict-btn">
@@ -342,42 +333,45 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 </div>
 
 <div id="main-screen">
-<div class="main-container">
   <div class="main-header">
     <div>
-      <div class="brand" style="margin-bottom:4px">REBORN</div>
+      <div class="brand" style="margin-bottom:2px">REBORN</div>
       <div class="brand-title">Dictionnaire</div>
     </div>
     <div class="main-header-right">
       <div class="profile-badge"><i class="ti ti-user"></i><span id="profile-name-badge">—</span></div>
       <button class="header-btn" id="switch-btn"><i class="ti ti-arrow-left"></i> Accueil</button>
-      <button class="header-btn purple" id="game-btn"><i class="ti ti-cards"></i> Découverte</button>
+      <button class="header-btn purple" id="game-btn"><i class="ti ti-cards"></i> Parcours</button>
       <button class="header-btn blue" id="progress-btn"><i class="ti ti-chart-bar"></i> Stats</button>
     </div>
   </div>
   <div class="filters-bar">
     <button class="filter-btn active" data-polarity="all">Toutes</button>
-    <button class="filter-btn" data-polarity="neg">🔴 Identités négatives</button>
-    <button class="filter-btn" data-polarity="pos">🟢 Identités positives</button>
-    <div style="width:1px;height:20px;background:var(--border);margin:0 4px;"></div>
+    <button class="filter-btn" data-polarity="neg">🔴 Négatives</button>
+    <button class="filter-btn" data-polarity="pos">🟢 Positives</button>
+    <div style="width:1px;height:16px;background:var(--border);margin:0 4px;"></div>
     <button class="filter-btn active" data-state="all">Toutes</button>
     <button class="filter-btn" data-state="untouched">Non touchées</button>
     <button class="filter-btn" data-state="todo">🔖 À faire</button>
     <button class="filter-btn" data-state="worked">✅ Travaillées</button>
-    <button class="filter-btn" data-state="trashed">🗑 Indésirables</button>
+    <button class="filter-btn" data-state="trashed">🗑 Écartées</button>
     <div style="flex:1;"></div>
     <div class="level-nav">
       <button class="level-nav-btn" id="level-prev">←</button>
       <div class="level-nav-display" id="level-nav-display">
-        <span id="level-dot-display" class="level-dot" style="width:10px;height:10px;background:var(--l1);"></span>
+        <span id="level-dot-display" class="level-dot" style="width:9px;height:9px;background:var(--l1);"></span>
         <span class="level-nav-name" id="level-nav-name">Corps</span>
       </div>
       <button class="level-nav-btn" id="level-next">→</button>
     </div>
   </div>
-  <div class="search-bar"><i class="ti ti-search"></i><input type="text" class="search-input" id="search" placeholder="Rechercher…"/></div>
-  <div class="stats-bar" id="stats-bar"></div>
-  <div class="grid" id="grid"></div>
+  <div class="dict-search">
+    <div class="search-wrap">
+      <i class="ti ti-search"></i>
+      <input type="text" class="search-input" id="search" placeholder="Rechercher une identité…"/>
+    </div>
+  </div>
+  <div class="dict-scroll" id="dict-scroll"></div>
   <div class="session-bar">
     <div class="session-inner">
       <div class="session-tags" id="session-tags"><span class="empty-sel">Aucune identité cochée</span></div>
@@ -386,8 +380,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     </div>
   </div>
 </div>
-</div>
 
+<!-- SESSION FORMAT MODAL -->
 <div class="modal-overlay" id="sf-modal">
   <div class="modal-box">
     <div class="modal-title">Mon Parcours 🧭</div>
@@ -410,6 +404,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   </div>
 </div>
 
+<!-- GAME OVERLAY -->
 <div class="game-overlay" id="game-overlay">
   <div class="game-topbar">
     <div class="game-progress-track"><div class="game-progress-fill" id="gp-fill" style="width:0%"></div></div>
@@ -440,12 +435,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     <div class="game-res-sub" id="g-res-sub"></div>
     <div class="game-res-grid" id="g-res-grid"></div>
     <div class="game-res-btns">
-      <button class="game-res-btn primary" id="g-validate">Valider les travaillées</button>
+      <button class="game-res-btn primary" id="g-validate">Terminer</button>
       <button class="game-res-btn" id="g-restart">Rejouer</button>
     </div>
   </div>
 </div>
 
+<!-- PROGRESS OVERLAY -->
 <div class="overlay" id="progress-overlay">
   <div class="overlay-inner">
     <div class="overlay-top">
@@ -1519,7 +1515,6 @@ const DEFAULT_DATA = [
   {id:9993,text:'Je suis osé',cat:'Isolement',depth:3,role:'coping'},
   {id:9994,text:'Je suis déclaré',cat:'Isolement',depth:4,role:'coping'}
 ];
-
 const GROUPS=[
   // Adulte — le plus récent
   {id:"effondrement",label:"① Effondrement",subtitle:"L effondrement et la chute",cats:["Effondrement"],polarity:"neg"},
@@ -1558,12 +1553,8 @@ const GROUPS=[
   {id:"engagement",label:"㉙ Engagement",subtitle:"L élan vital et l engagement",cats:["Engagement"],polarity:"neg"},
 ];
 
-// Active groups — switch between A and B
-
-
-
-const LEVEL_NAMES=["Tous", "Corps", "Ressenti", "Émotion", "Relation", "Abstrait"];
 const LEVEL_COLORS=["", "#ff4d2e", "#ff8c42", "#f5c842", "#7ab8d4", "#555560"];
+const LEVEL_NAMES=["Tous", "Corps", "Ressenti", "Émotion", "Relation", "Abstrait"];
 
 function getGroupForCat(cat,role){
   if(role){
@@ -1575,16 +1566,13 @@ function getGroupForCat(cat,role){
 function rand(){return crypto.getRandomValues(new Uint32Array(1))[0]/0xFFFFFFFF;}
 function shuffle(arr){
   const a=[...arr];
-  // Use multiple rounds to ensure true randomness
-  for(let r=0;r<3;r++){
-    for(let i=a.length-1;i>0;i--){const j=Math.floor(rand()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
-  }
+  for(let r=0;r<3;r++)for(let i=a.length-1;i>0;i--){const j=Math.floor(rand()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
   return a;
 }
 
 let DATA=[...DEFAULT_DATA];
-let currentProfile=null,SESSIONS=[],checked=new Set(),todoIds=new Set(),reviewDates={};
-let stateFilter="all",levelFilter=1,polarityFilter="all",query="";let trashedIds=new Set();
+let currentProfile=null,SESSIONS=[],checked=new Set(),todoIds=new Set(),reviewDates={},trashedIds=new Set();
+let stateFilter="all",levelFilter=0,polarityFilter="all",query="";
 let pinTarget=null,pinVal="";
 
 function workedIds(){return new Set(SESSIONS.flatMap(s=>s.ids));}
@@ -1596,8 +1584,8 @@ function scheduleReview(id,count){
 }
 function markIntegrated(id){delete reviewDates[id];saveReviews();}
 function saveTodo(){try{localStorage.setItem("todo_"+currentProfile.id,JSON.stringify([...todoIds]));}catch(e){}}
-function saveTrashed(){try{localStorage.setItem("trashed_"+currentProfile.id,JSON.stringify([...trashedIds]));}catch(e){}}
 function saveReviews(){try{localStorage.setItem("reviews_"+currentProfile.id,JSON.stringify(reviewDates));}catch(e){}}
+function saveTrashed(){try{localStorage.setItem("trashed_"+currentProfile.id,JSON.stringify([...trashedIds]));}catch(e){}}
 function showToast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2500);}
 
 function showScreen(id){
@@ -1608,6 +1596,7 @@ function showScreen(id){
   if(el)el.classList.add("show");
 }
 
+// PROFILE
 async function loadProfiles(){
   const list=document.getElementById("profile-list");
   list.innerHTML='<span class="spinner"></span>';
@@ -1618,7 +1607,8 @@ async function loadProfiles(){
       const ini=p.name.slice(0,2).toUpperCase();
       const d=new Date(p.created_at).toLocaleDateString("fr-FR",{day:"numeric",month:"short"});
       return`<div class="profile-item" data-id="${p.id}" data-name="${p.name}" data-hash="${p.pin_hash}">
-        <div class="profile-avatar">${ini}</div><div class="profile-name">${p.name}</div>
+        <div class="profile-avatar">${ini}</div>
+        <div class="profile-name">${p.name}</div>
         <div class="profile-meta">depuis ${d}</div>
         <button class="profile-delete-btn" data-id="${p.id}" data-name="${p.name}" title="Supprimer">🗑</button>
       </div>`;
@@ -1629,26 +1619,19 @@ async function loadProfiles(){
     }));
     list.querySelectorAll(".profile-delete-btn").forEach(btn=>btn.addEventListener("click",async e=>{
       e.stopPropagation();
-      const id=btn.dataset.id;
-      const name=btn.dataset.name;
+      const id=btn.dataset.id,name=btn.dataset.name;
       const hash=btn.closest(".profile-item").dataset.hash;
-      // Ask for PIN first
       const pin=prompt(`Entre ton code PIN pour supprimer le profil "${name}" :`);
       if(!pin)return;
       const enteredHash=await hashPin(pin);
       if(enteredHash!==hash){showToast("Code PIN incorrect");return;}
-      if(!confirm(`Supprimer définitivement le profil "${name}" et toutes ses données ?`))return;
+      if(!confirm(`Supprimer définitivement le profil "${name}" ?`))return;
       try{
         await sb(`sessions?profile_id=eq.${id}`,{method:"DELETE",prefer:"return=minimal"});
         await sb(`profiles?id=eq.${id}`,{method:"DELETE",prefer:"return=minimal"});
-        localStorage.removeItem("todo_"+id);
-        localStorage.removeItem("reviews_"+id);
-        localStorage.removeItem("trashed_"+id);
-        showToast(`Profil "${name}" supprimé`);
-        
-
-loadProfiles();
-      }catch(e){showToast("Erreur suppression: "+e.message);}
+        ["todo_","reviews_","trashed_"].forEach(k=>localStorage.removeItem(k+id));
+        showToast(`Profil "${name}" supprimé`);loadProfiles();
+      }catch(e){showToast("Erreur: "+e.message);}
     }));
   }catch(e){list.innerHTML=`<div style="font-size:13px;color:var(--red-text)">Erreur: ${e.message}</div>`;}
 }
@@ -1674,14 +1657,13 @@ document.querySelectorAll(".pin-key").forEach(key=>{
       else{
         document.getElementById("pin-error").textContent="Code incorrect";
         document.getElementById("pin-dots").classList.add("shake");
-        setTimeout(()=>{document.getElementById("pin-dots").classList.remove("shake");pinVal="";updateDots();document.getElementById("pin-error").textContent="";  },500);
+        setTimeout(()=>{document.getElementById("pin-dots").classList.remove("shake");pinVal="";updateDots();document.getElementById("pin-error").textContent=""},500);
       }
     }
   });
 });
 
 document.getElementById("pin-back").addEventListener("click",()=>{pinTarget=null;pinVal="";showScreen("profile-screen");});
-
 document.getElementById("create-btn").addEventListener("click",async()=>{
   const name=document.getElementById("new-name").value.trim();
   const pin=document.getElementById("new-pin").value.trim();
@@ -1700,25 +1682,21 @@ document.getElementById("create-btn").addEventListener("click",async()=>{
 });
 document.getElementById("new-name").addEventListener("keydown",e=>{if(e.key==="Enter")document.getElementById("create-btn").click();});
 
-document.getElementById("switch-btn").addEventListener("click",()=>{showScreen("home-screen");document.getElementById("home-name").textContent=currentProfile?currentProfile.name:"";});
-document.getElementById("home-switch-btn").addEventListener("click",()=>{currentProfile=null;SESSIONS=[];checked.clear();todoIds.clear();reviewDates={};showScreen("profile-screen");
-loadProfiles();});
-
 async function enterProfile(id,name){
   currentProfile={id,name};
   document.getElementById("profile-name-badge").textContent=name;
   document.getElementById("home-name").textContent=name;
-  checked.clear();todoIds.clear();reviewDates={};
+  checked.clear();todoIds.clear();reviewDates={};trashedIds.clear();
   await loadData();
   showScreen("home-screen");
   renderHomeProgress();
 }
 
 async function loadData(){
-  try{const sessions=await sb(`sessions?profile_id=eq.${currentProfile.id}&select=*&order=created_at.asc`);SESSIONS=(sessions||[]).map(s=>{return{id:s.id,date:s.date,ids:(s.ids||[]).map(Number)}});}catch(e){SESSIONS=[];}
-  try{const stored=localStorage.getItem("todo_"+currentProfile.id);if(stored)JSON.parse(stored).map(Number).forEach(id=>todoIds.add(id));}catch(e){}
-  try{const stored=localStorage.getItem("trashed_"+currentProfile.id);if(stored)JSON.parse(stored).map(Number).forEach(id=>trashedIds.add(id));}catch(e){}
-  try{const stored=localStorage.getItem("reviews_"+currentProfile.id);if(stored)reviewDates=JSON.parse(stored)||{};}catch(e){reviewDates={};}
+  try{const s=await sb(`sessions?profile_id=eq.${currentProfile.id}&select=*&order=created_at.asc`);SESSIONS=(s||[]).map(x=>{return{id:x.id,date:x.date,ids:(x.ids||[]).map(Number)}});}catch(e){SESSIONS=[];}
+  try{const s=localStorage.getItem("todo_"+currentProfile.id);if(s)JSON.parse(s).map(Number).forEach(id=>todoIds.add(id));}catch(e){}
+  try{const s=localStorage.getItem("reviews_"+currentProfile.id);if(s)reviewDates=JSON.parse(s)||{};}catch(e){reviewDates={};}
+  try{const s=localStorage.getItem("trashed_"+currentProfile.id);if(s)JSON.parse(s).map(Number).forEach(id=>trashedIds.add(id));}catch(e){}
 }
 
 function renderHomeProgress(){
@@ -1727,51 +1705,39 @@ function renderHomeProgress(){
   const done=DATA.filter(d=>wids.has(d.id)).length;
   const pct=total?Math.round((done/total)*100):0;
   const el=document.getElementById("home-global-progress");
-  el.innerHTML=`
-    <div class="home-global-number">${done}</div>
-    <div class="home-global-label">identités travaillées sur ${total}</div>
-    <div class="home-global-track"><div class="home-global-fill" style="width:${pct}%"></div></div>
-    <div class="home-global-pct">${pct}%</div>
-  `;
+  el.innerHTML=`<div class="home-global-number">${done}</div><div class="home-global-label">identités travaillées sur ${total}</div><div class="home-global-track"><div class="home-global-fill" style="width:${pct}%"></div></div><div class="home-global-pct">${pct}%</div>`;
 }
 
-// HOME BUTTONS
+// HOME
 document.getElementById("home-dict-btn").addEventListener("click",()=>{showScreen("main-screen");render();});
 document.getElementById("home-game-btn").addEventListener("click",openSessionFormat);
 document.getElementById("home-progress-btn").addEventListener("click",()=>{renderProgress();document.getElementById("progress-overlay").classList.add("show");});
+document.getElementById("home-switch-btn").addEventListener("click",()=>{currentProfile=null;SESSIONS=[];checked.clear();todoIds.clear();trashedIds.clear();reviewDates={};showScreen("profile-screen");loadProfiles();});
+document.getElementById("switch-btn").addEventListener("click",()=>{showScreen("home-screen");document.getElementById("home-name").textContent=currentProfile?currentProfile.name:"";});
 document.getElementById("game-btn").addEventListener("click",openSessionFormat);
 document.getElementById("progress-btn").addEventListener("click",()=>{renderProgress();document.getElementById("progress-overlay").classList.add("show");});
 document.getElementById("close-progress").addEventListener("click",()=>document.getElementById("progress-overlay").classList.remove("show"));
 
 // LEVEL NAV
-const levelColors=["", "#ff4d2e", "#ff8c42", "#f5c842", "#7ab8d4", "#555560"];
-const levelNames=["Tous", "Corps", "Ressenti", "Émotion", "Relation", "Abstrait"];
-
 function updateLevelNav(){
-  const name=levelNames[levelFilter]||"Tous";
-  const color=levelFilter===0?"var(--border-md)":levelColors[levelFilter];
+  const color=levelFilter===0?"var(--border-md)":LEVEL_COLORS[levelFilter];
+  const name=LEVEL_NAMES[levelFilter]||"Tous";
   document.getElementById("level-nav-name").textContent=name;
   const dot=document.getElementById("level-dot-display");
   if(dot)dot.style.background=color;
 }
-
-document.getElementById("level-prev").addEventListener("click",()=>{
-  levelFilter=levelFilter<=0?5:levelFilter-1;
-  updateLevelNav();render();
-});
-document.getElementById("level-next").addEventListener("click",()=>{
-  levelFilter=levelFilter>=5?0:levelFilter+1;
-  updateLevelNav();render();
-});
+document.getElementById("level-prev").addEventListener("click",()=>{levelFilter=levelFilter<=0?5:levelFilter-1;updateLevelNav();render();});
+document.getElementById("level-next").addEventListener("click",()=>{levelFilter=levelFilter>=5?0:levelFilter+1;updateLevelNav();render();});
 updateLevelNav();
 
-// STATE FILTERS
+// POLARITY FILTER
 document.querySelectorAll("[data-polarity]").forEach(btn=>btn.addEventListener("click",()=>{
   polarityFilter=btn.dataset.polarity;
   document.querySelectorAll("[data-polarity]").forEach(b=>b.classList.remove("active"));
   btn.classList.add("active");render();
 }));
 
+// STATE FILTER
 document.querySelectorAll("[data-state]").forEach(btn=>btn.addEventListener("click",()=>{
   stateFilter=btn.dataset.state;
   document.querySelectorAll("[data-state]").forEach(b=>b.classList.remove("active"));
@@ -1780,149 +1746,174 @@ document.querySelectorAll("[data-state]").forEach(btn=>btn.addEventListener("cli
 
 document.getElementById("search").addEventListener("input",e=>{query=e.target.value;render();});
 
-function getFiltered(){
-  const wids=workedIds();
-  // Build group order from active GROUPS
-  const groupOrder={};
-  GROUPS.forEach((g,i)=>{g.cats.forEach(cat=>{
-    const key=cat+"_"+(g.polarity||"neg");
-    groupOrder[key]=i;
-  });});
-  return DATA.filter(d=>{
-    const qOk=!query||d.text.toLowerCase().includes(query.toLowerCase())||d.cat.toLowerCase().includes(query.toLowerCase());
-    const levelOk=levelFilter===0||d.depth===levelFilter;
-    const isWorked=checked.has(d.id)||wids.has(d.id);
-    const isTodo=todoIds.has(d.id)&&!isWorked;
-    const isDue=isDueForReview(d.id)&&!isWorked;
-    let stateOk=true;
-    if(stateFilter==="untouched")stateOk=!isWorked&&!isTodo&&!isDue&&!trashedIds.has(d.id);
-    else if(stateFilter==="trashed")stateOk=trashedIds.has(d.id);
-    else if(stateFilter==="worked")stateOk=isWorked;
-    else if(stateFilter==="todo")stateOk=isTodo;
-    else if(stateFilter==="due")stateOk=isDue;
-    if(stateFilter!=="trashed"&&trashedIds.has(d.id))return false;
-    if(stateFilter==="trashed"&&!trashedIds.has(d.id))return false;
-    const polarityOk=polarityFilter==="all"||
-      (polarityFilter==="neg"&&(d.role==="source"||d.role==="verdict"))||
-      (polarityFilter==="pos"&&d.role==="coping");
-    return qOk&&levelOk&&stateOk&&polarityOk;
-  }).sort((a,b)=>{
-    // Find group index for each identity considering polarity
-    const findIdx=(d)=>{
-      const isPos=d.role==="coping";
-      const g=GROUPS.findIndex(g=>g.cats.includes(d.cat)&&(isPos?g.polarity==="pos":g.polarity==="neg"));
-      return g===-1?GROUPS.findIndex(g=>g.cats.includes(d.cat)):g;
-    };
-    return findIdx(a)-findIdx(b);
-  });
-}
-
+// RENDER — scroll layout
 function render(){
   const wids=workedIds();
-  const items=getFiltered();
-  document.getElementById("stats-bar").innerHTML=`<span>${items.length}</span> identité${items.length>1?"s":""}`;
-  const grid=document.getElementById("grid");
-  if(!items.length){grid.innerHTML='<div class="no-results"><i class="ti ti-search" style="font-size:24px;display:block;margin-bottom:8px;opacity:0.2"></i>Aucun résultat</div>';renderSession();return;}
-  // Split by group and polarity
-  // groupOrder not needed with new sort
-  
+  const scroll=document.getElementById("dict-scroll");
+
+  // Build grouped data sorted by group order then depth
   let html="";
-  let lastGid=null;
-  let lastPolarity=null;
 
-  items.forEach(d=>{
-    const isWorked=checked.has(d.id)||wids.has(d.id);
-    const isTodo=todoIds.has(d.id)&&!isWorked;
-    const isDue=isDueForReview(d.id)&&!isWorked;
-    const cls=isWorked?"worked":isTodo?"todo":isDue?"due":"";
-    const group=getGroupForCat(d.cat,d.role);
-    const gid=group?group.id:"";
-    const gname=group?group.label.replace(/^.\s*/,""):"";
-    const isPos=group?group.polarity==="pos":d.role==="coping";
+  GROUPS.forEach(g=>{
+    // Filter identities for this group and polarity
+    const groupData=DATA.filter(d=>{
+      if(!g.cats.includes(d.cat))return false;
+      const isPos=d.role==="coping";
+      const matchPol=g.polarity==="pos"?isPos:!isPos;
+      if(!matchPol)return false;
+      if(polarityFilter==="neg"&&g.polarity==="pos")return false;
+      if(polarityFilter==="pos"&&g.polarity==="neg")return false;
+      if(levelFilter!==0&&d.depth!==levelFilter)return false;
+      if(query&&!d.text.toLowerCase().includes(query.toLowerCase()))return false;
+      const isWorked=wids.has(d.id);
+      const isTodo=todoIds.has(d.id)&&!isWorked;
+      const isTrashed=trashedIds.has(d.id);
+      if(stateFilter==="untouched")return!isWorked&&!isTodo&&!isTrashed;
+      if(stateFilter==="worked")return isWorked;
+      if(stateFilter==="todo")return isTodo&&!isWorked;
+      if(stateFilter==="trashed")return isTrashed;
+      if(stateFilter==="all")return !isTrashed||stateFilter==="trashed";
+      return true;
+    });
 
-    // Group separator
-    if(gid!==lastGid&&group){
-      lastGid=gid;lastPolarity=null;
-      const sepColor=isPos?"rgba(141,201,74,0.2)":"rgba(255,77,46,0.15)";
-      const labelColor=isPos?"var(--green-text)":"var(--red-text)";
-      html+=`<div class="group-separator" style="border-color:${sepColor}"><div class="group-sep-label" style="color:${labelColor}">${group.label}</div><div class="group-sep-sub">${group.subtitle}</div></div>`;
-    }
+    if(!groupData.length)return;
 
-    html+=`<div class="card${cls?" "+cls:""}" data-id="${d.id}">
-      <div class="card-top"><span class="identity">${d.text}</span><div class="check-circle"><i class="ti ti-check"></i></div></div>
-      <div class="card-footer">
-        <span class="group-badge">${gname}</span>
-        <button class="todo-btn" data-id="${d.id}" title="À faire">🔖</button>
-        <button class="trash-btn" data-id="${d.id}" title="Indésirable">🗑</button>
+    // Sort by depth within group
+    groupData.sort((a,b)=>(a.depth||3)-(b.depth||3));
+
+    const isPos=g.polarity==="pos";
+    const dotColor=isPos?"var(--green-border)":"var(--red-border)";
+    const labelColor=isPos?"var(--green-text)":"var(--red-text)";
+    const workedCount=groupData.filter(d=>wids.has(d.id)).length;
+
+    html+=`<div class="group-section" data-gid="${g.id}">
+      <div class="group-header">
+        <div class="group-header-left">
+          <div class="group-polarity-dot" style="background:${dotColor}"></div>
+          <div>
+            <div class="group-label" style="color:${labelColor}">${g.label}</div>
+            <div class="group-sub">${g.subtitle}</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div class="group-count">${workedCount}/${groupData.length}</div>
+          <span class="group-toggle">▾</span>
+        </div>
       </div>
-    </div>`;
-  });
-  grid.innerHTML=html;
+      <div class="id-list">`;
 
-  grid.querySelectorAll(".card").forEach(card=>{
-    card.addEventListener("click",e=>{
-      if(e.target.closest(".todo-btn"))return;
-      const id=+card.dataset.id;
-      if(workedIds().has(id))return;
+    // Group by depth level for visual separators
+    let lastDepth=null;
+    groupData.forEach(d=>{
+      const depth=d.depth||3;
+      if(depth!==lastDepth){
+        lastDepth=depth;
+        const lc=LEVEL_COLORS[depth]||"var(--text-faint)";
+        const ln=LEVEL_NAMES[depth]||"";
+        html+=`<div class="level-strip">
+          <div class="level-strip-dot" style="background:${lc}"></div>
+          <span class="level-strip-label" style="color:${lc}">${ln}</span>
+          <div class="level-divider"></div>
+        </div>`;
+      }
+
+      const isWorked=wids.has(d.id)||checked.has(d.id);
+      const isTodo=todoIds.has(d.id)&&!wids.has(d.id);
+      const isChecked=checked.has(d.id)&&!wids.has(d.id);
+      const isTrashed=trashedIds.has(d.id);
+      let rowCls="id-row";
+      if(wids.has(d.id))rowCls+=" worked";
+      else if(isChecked)rowCls+=" checked";
+      else if(isTodo)rowCls+=" todo";
+      if(isTrashed)rowCls+=" trashed";
+
+      html+=`<div class="${rowCls}" data-id="${d.id}">
+        <div class="id-check"><i class="ti ti-check check-icon"></i></div>
+        <span class="id-text">${d.text}</span>
+        <div class="id-actions">
+          <button class="id-action-btn todo-btn" data-id="${d.id}" title="À faire">🔖</button>
+          <button class="id-action-btn trash-btn" data-id="${d.id}" title="Exclure">🗑</button>
+        </div>
+      </div>`;
+    });
+
+    html+="</div></div>";
+  });
+
+  scroll.innerHTML=html||'<div style="padding:3rem;text-align:center;color:var(--text-faint)">Aucune identité trouvée</div>';
+
+  // Events
+  scroll.querySelectorAll(".id-row").forEach(row=>{
+    row.addEventListener("click",e=>{
+      if(e.target.closest(".id-action-btn"))return;
+      const id=+row.dataset.id;
+      if(wids.has(id)){
+        // Double-click to undo worked
+        return;
+      }
       if(checked.has(id))checked.delete(id);
       else if(todoIds.has(id)){todoIds.delete(id);saveTodo();}
       else checked.add(id);
-      render();
+      renderRow(row,id,wids);
+      renderSession();
+    });
+    row.addEventListener("dblclick",async e=>{
+      if(e.target.closest(".id-action-btn"))return;
+      const id=+row.dataset.id;
+      if(!wids.has(id))return;
+      const session=SESSIONS.find(s=>s.ids.includes(id));
+      if(!session)return;
+      if(session.ids.length===1){
+        try{await sb(`sessions?id=eq.${session.id}`,{method:"DELETE",prefer:"return=minimal"});SESSIONS=SESSIONS.filter(s=>s.id!==session.id);}catch(e){showToast("Erreur");return;}
+      }else{
+        const newIds=session.ids.filter(i=>i!==id);
+        try{await sb(`sessions?id=eq.${session.id}`,{method:"PATCH",body:{ids:newIds},prefer:"return=minimal"});session.ids=newIds;}catch(e){showToast("Erreur");return;}
+      }
+      showToast("↩ Remise en non touchée");
+      row.classList.remove("worked");row.classList.remove("checked");
+      renderSession();renderHomeProgress();
     });
   });
-  grid.querySelectorAll(".todo-btn").forEach(btn=>{
+
+  scroll.querySelectorAll(".todo-btn").forEach(btn=>{
     btn.addEventListener("click",e=>{
       e.stopPropagation();
       const id=+btn.dataset.id;
-      if(workedIds().has(id))return;
+      if(wids.has(id))return;
       if(todoIds.has(id)){todoIds.delete(id);showToast("Retiré des À faire");}
-      else{todoIds.add(id);checked.delete(id);showToast("🔖 Ajouté aux À faire");}
+      else{todoIds.add(id);checked.delete(id);showToast("🔖 À faire");}
       saveTodo();render();
     });
   });
 
-  grid.querySelectorAll(".trash-btn").forEach(btn=>{
+  scroll.querySelectorAll(".trash-btn").forEach(btn=>{
     btn.addEventListener("click",e=>{
       e.stopPropagation();
       const id=+btn.dataset.id;
-      if(trashedIds.has(id)){
-        trashedIds.delete(id);showToast("Restaurée");
-      } else {
-        trashedIds.add(id);checked.delete(id);todoIds.delete(id);
-        showToast("🗑 Mise de côté");
-      }
-      saveTrashed();render();
+      if(trashedIds.has(id)){trashedIds.delete(id);showToast("Restaurée");}
+      else{trashedIds.add(id);checked.delete(id);todoIds.delete(id);showToast("🚫 Exclue");}
+      saveTrashed();saveTodo();render();
     });
   });
 
-  // Click on worked card to undo
-  grid.querySelectorAll(".card.worked").forEach(card=>{
-    card.addEventListener("dblclick",async e=>{
-      if(e.target.closest(".todo-btn")||e.target.closest(".trash-btn"))return;
-      const id=+card.dataset.id;
-      if(!workedIds().has(id))return;
-      // Find and remove from sessions
-      const session=SESSIONS.find(s=>s.ids.includes(id));
-      if(!session)return;
-      if(session.ids.length===1){
-        // Delete entire session
-        try{
-          await sb(`sessions?id=eq.${session.id}`,{method:"DELETE",prefer:"return=minimal"});
-          SESSIONS=SESSIONS.filter(s=>s.id!==session.id);
-        }catch(e){showToast("Erreur suppression");return;}
-      } else {
-        // Remove just this id from session
-        const newIds=session.ids.filter(i=>i!==id);
-        try{
-          await sb(`sessions?id=eq.${session.id}`,{method:"PATCH",body:{ids:newIds},prefer:"return=minimal"});
-          session.ids=newIds;
-        }catch(e){showToast("Erreur suppression");return;}
-      }
-      showToast("↩ Remise en non touchée");
-      render();renderHomeProgress();
+  // Collapsible groups
+  scroll.querySelectorAll(".group-header").forEach(header=>{
+    header.addEventListener("click",e=>{
+      if(e.target.closest(".id-action-btn"))return;
+      const section=header.closest(".group-section");
+      section.classList.toggle("group-collapsed");
+      header.querySelector(".group-toggle").textContent=section.classList.contains("group-collapsed")?"▸":"▾";
     });
   });
+
   renderSession();
+}
+
+function renderRow(row,id,wids){
+  const isWorked=wids.has(id)||checked.has(id);
+  const isTodo=todoIds.has(id)&&!wids.has(id);
+  const isChecked=checked.has(id)&&!wids.has(id);
+  row.className="id-row"+(wids.has(id)?" worked":isChecked?" checked":isTodo?" todo":"");
 }
 
 function renderSession(){
@@ -1952,14 +1943,12 @@ document.getElementById("validate-btn").addEventListener("click",async()=>{
 });
 
 // SESSION FORMAT
-let sessionSize=5;
-let gameMode="B"; // A, B, or R
+let sessionSize=5,gameMode="B";
 
 function openSessionFormat(){
   if(!currentProfile){showToast("Connecte-toi d abord");return;}
   document.querySelectorAll(".sf-card").forEach(c=>c.classList.remove("sel"));
   document.getElementById("sf-start").disabled=true;
-  // Set active mode button
   document.querySelectorAll(".sf-mode").forEach(b=>b.classList.toggle("active",b.dataset.mode===gameMode));
   document.getElementById("sf-modal").classList.add("show");
 }
@@ -1971,7 +1960,6 @@ document.querySelectorAll(".sf-mode").forEach(btn=>{
     gameMode=btn.dataset.mode;
   });
 });
-
 document.querySelectorAll(".sf-card").forEach(card=>{
   card.addEventListener("click",()=>{
     document.querySelectorAll(".sf-card").forEach(c=>c.classList.remove("sel"));
@@ -1988,43 +1976,34 @@ let gameQueue=[],gameIdx=0,gameWorked=[],gameLater=[],gameSkipped=[],lastGameGro
 
 function buildGamePool(size){
   const wids=workedIds();
-  const pool=[];
+  const available=DATA.filter(d=>!wids.has(d.id)&&!trashedIds.has(d.id));
+  let pool=[];
 
-  // For each group in clinical order:
-  // First all negatives (source+verdict) of the group
-  // Only add positives (coping) when all negatives of that group are done
-  for(const g of GROUPS){
-    if(pool.length>=size)break;
-    const groupData=DATA.filter(d=>g.cats.includes(d.cat));
-    const available=groupData.filter(d=>!wids.has(d.id)&&!todoIds.has(d.id)&&!pool.find(p=>p.id===d.id));
-    
-    const negatives=available.filter(d=>d.role==="source"||d.role==="verdict");
-    const positives=available.filter(d=>d.role==="coping");
-    
-    // Check if all negatives of this group are already worked
-    const allNegDone=groupData
-      .filter(d=>d.role==="source"||d.role==="verdict")
-      .every(d=>wids.has(d.id)||todoIds.has(d.id));
-
-    if(!allNegDone){
-      // Still negatives to work — add negatives only
-      pool.push(...shuffle(negatives).slice(0,size-pool.length));
-    } else {
-      // All negatives done — add positives
-      pool.push(...shuffle(positives).slice(0,size-pool.length));
+  if(gameMode==="R"){
+    const neg=shuffle(shuffle(available.filter(d=>d.role==="source"||d.role==="verdict")));
+    const pos=shuffle(shuffle(available.filter(d=>d.role==="coping")));
+    pool=[...neg,...pos].slice(0,size);
+  }else{
+    for(const g of GROUPS){
+      if(pool.length>=size)break;
+      const groupAvail=DATA.filter(d=>g.cats.includes(d.cat)&&!wids.has(d.id)&&!trashedIds.has(d.id)&&!pool.find(p=>p.id===d.id));
+      const isNeg=g.polarity==="neg";
+      const items=groupAvail.filter(d=>isNeg?(d.role==="source"||d.role==="verdict"):d.role==="coping");
+      // Sort by depth within group, shuffle within same level
+      const byDepth={};
+      items.forEach(d=>{const lv=d.depth||3;if(!byDepth[lv])byDepth[lv]=[];byDepth[lv].push(d);});
+      const sorted=[];
+      [1,2,3,4,5].forEach(lv=>{if(byDepth[lv])sorted.push(...shuffle(byDepth[lv]));});
+      pool.push(...sorted.slice(0,size-pool.length));
     }
   }
-
-  // Due reviews always first
-  const dueReviews=shuffle(DATA.filter(d=>isDueForReview(d.id)&&!wids.has(d.id)));
-  return [...dueReviews,...pool].slice(0,size+dueReviews.length);
+  const due=shuffle(DATA.filter(d=>isDueForReview(d.id)&&!wids.has(d.id)));
+  return [...due,...pool].slice(0,size+due.length);
 }
 
 function startGame(){
   gameQueue=buildGamePool(sessionSize);
   gameIdx=0;gameWorked=[];gameLater=[];gameSkipped=[];lastGameGroup=null;
-  const dueCount=gameQueue.filter(d=>isDueForReview(d.id)).length;
-  if(dueCount)showToast(`${dueCount} à réviser`);
   document.getElementById("game-overlay").classList.add("show");
   showGameState();
 }
@@ -2032,7 +2011,7 @@ function startGame(){
 function showGameState(){
   if(gameIdx>=gameQueue.length){endGame();return;}
   const d=gameQueue[gameIdx];
-  const group=getGroupForCat(d.cat);
+  const group=getGroupForCat(d.cat,d.role);
   const groupId=group?group.id:null;
   if(groupId!==lastGameGroup){lastGameGroup=groupId;showGroupTrans(group,()=>showCard());}
   else showCard();
@@ -2042,47 +2021,32 @@ function showGroupTrans(group,onDone){
   const trans=document.getElementById("g-trans");
   document.getElementById("g-card").classList.remove("show");
   trans.classList.add("show");
-  const label=group?group.label:"";
-  const emoji=label.match(/^(.)/);
-  document.getElementById("g-trans-emoji").textContent=emoji?emoji[1]:"";
-  document.getElementById("g-trans-title").textContent=label.replace(/^.\s*/,"");
+  const emoji=group?group.label.match(/^(.)/)?.[1]:"";
+  document.getElementById("g-trans-emoji").textContent=emoji;
+  document.getElementById("g-trans-title").textContent=group?group.label.replace(/^.\s*/,""):"";
   document.getElementById("g-trans-sub").textContent=group?group.subtitle:"";
   const btn=document.getElementById("g-trans-start");
-  const newBtn=btn.cloneNode(true);btn.parentNode.replaceChild(newBtn,btn);
-  newBtn.addEventListener("click",()=>{trans.classList.remove("show");onDone();});
+  const nb=btn.cloneNode(true);btn.parentNode.replaceChild(nb,btn);
+  nb.addEventListener("click",()=>{trans.classList.remove("show");onDone();});
 }
 
 function showCard(){
   const d=gameQueue[gameIdx];
-  const group=getGroupForCat(d.cat);
-  const gname=group?group.label:"";
+  const group=getGroupForCat(d.cat,d.role);
   const lvl=d.depth||3;
-  const levelName=levelNames[lvl]||"";
-  const levelColor=levelColors[lvl]||"var(--text-faint)";
-  // Group progress within current group
-  const wids=workedIds();
-  let groupProgress="";
-  if(group){
-    const groupTotal=DATA.filter(d2=>group.cats.includes(d2.cat)).length;
-    const groupDone=DATA.filter(d2=>group.cats.includes(d2.cat)&&wids.has(d2.id)).length;
-    groupProgress=`${groupDone}/${groupTotal}`;
-  }
-  document.getElementById("g-card-group").innerHTML=`<span style="font-weight:600">${gname}</span><span style="margin-left:8px;opacity:0.5">${groupProgress}</span>`;
+  const lc=LEVEL_COLORS[lvl]||"var(--text-faint)";
+  const ln=LEVEL_NAMES[lvl]||"";
+  document.getElementById("g-card-group").textContent=group?group.label:"";
   document.getElementById("g-card-text").textContent=d.text;
-  // Level heat bar
-  const levelEl=document.getElementById("g-card-level");
-  levelEl.innerHTML=Array.from({length:5},(_,i)=>
-    `<span style="width:8px;height:8px;border-radius:50%;background:${i<lvl?levelColors[i+1]:"var(--border-md)"};display:inline-block;margin-right:3px;"></span>`
-  ).join("")+`<span style="color:${levelColor};font-weight:600;">${levelName}</span>`;
-  // Header badge
+  const le=document.getElementById("g-card-level");
+  le.innerHTML=Array.from({length:5},(_,i)=>
+    `<span style="width:8px;height:8px;border-radius:50%;background:${i<lvl?LEVEL_COLORS[i+1]:"var(--border-md)"};display:inline-block;margin-right:3px;"></span>`
+  ).join("")+`<span style="color:${lc};font-weight:600;">${ln}</span>`;
   const badge=document.getElementById("g-level-badge");
-  badge.textContent=gname.replace(/^.\s*/,"");
-  badge.style.borderColor=levelColor;
-  badge.style.color=levelColor;
-  // Progress
-  const pct=Math.round((gameIdx/gameQueue.length)*100);
-  document.getElementById("gp-fill").style.width=pct+"%";
+  badge.textContent=group?group.label.replace(/^.\s*/,""):ln;
+  badge.style.borderColor=lc;badge.style.color=lc;
   const workedCount=gameWorked.length;
+  document.getElementById("gp-fill").style.width=Math.round((gameIdx/gameQueue.length)*100)+"%";
   document.getElementById("g-counter").textContent=`${gameIdx+1} / ${gameQueue.length} · ✅ ${workedCount}`;
   const card=document.getElementById("g-card");
   card.classList.add("show","anim-in");
@@ -2098,8 +2062,7 @@ function animateCard(cls,cb){
 function confetti(){
   const colors=["#8dc94a","#c8b89a","#5aaaf0","#a78bfa","#d4933a"];
   for(let i=0;i<20;i++){
-    const el=document.createElement("div");
-    el.className="confetti-dot";
+    const el=document.createElement("div");el.className="confetti-dot";
     el.style.cssText=`background:${colors[Math.floor(rand()*colors.length)]};left:${20+rand()*60}vw;top:${20+rand()*30}vh;animation:confettiDrop ${0.5+rand()*0.5}s ${rand()*0.3}s ease-out forwards;`;
     document.body.appendChild(el);setTimeout(()=>el.remove(),1200);
   }
@@ -2124,22 +2087,15 @@ document.getElementById("g-yes").addEventListener("click",async()=>{
 
 document.getElementById("g-later").addEventListener("click",()=>{
   const d=gameQueue[gameIdx];
-  animateCard("anim-up",()=>{
-    gameLater.push(d.id);todoIds.add(d.id);saveTodo();
-    renderHomeProgress();
-    gameIdx++;showGameState();
-  });
+  animateCard("anim-up",()=>{gameLater.push(d.id);todoIds.add(d.id);saveTodo();renderHomeProgress();gameIdx++;showGameState();});
 });
 
 document.getElementById("g-skip").addEventListener("click",()=>{
   const d=gameQueue[gameIdx];
   animateCard("anim-left",()=>{
-    gameSkipped.push(d.id);
-    trashedIds.add(d.id);
-    saveTrashed();
+    gameSkipped.push(d.id);trashedIds.add(d.id);saveTrashed();
     if(isDueForReview(d.id))markIntegrated(d.id);
-    renderHomeProgress();
-    gameIdx++;showGameState();
+    renderHomeProgress();gameIdx++;showGameState();
   });
 });
 
@@ -2165,18 +2121,26 @@ function endGame(){
   document.getElementById("g-trans").classList.remove("show");
   document.getElementById("g-results").classList.add("show");
   document.getElementById("gp-fill").style.width="100%";
-  document.getElementById("g-res-sub").textContent=`${gameWorked.length} travaillées · ${gameLater.length} à faire · ${gameSkipped.length} passées`;
+  document.getElementById("g-res-sub").textContent=`${gameWorked.length} travaillées · ${gameLater.length} à faire · ${gameSkipped.length} exclues`;
   document.getElementById("g-res-grid").innerHTML=[
     {lbl:"Travaillées",val:gameWorked.length,color:"var(--green-text)"},
     {lbl:"À faire",val:gameLater.length,color:"var(--gold-text)"},
-    {lbl:"Passées",val:gameSkipped.length,color:"var(--text-faint)"},
+    {lbl:"Exclues",val:gameSkipped.length,color:"var(--red-text)"},
   ].map(s=>`<div class="game-res-stat"><div class="game-res-val" style="color:${s.color}">${s.val}</div><div class="game-res-lbl">${s.lbl}</div></div>`).join("");
   renderHomeProgress();
 }
 
-document.getElementById("g-validate").addEventListener("click",()=>{document.getElementById("game-overlay").classList.remove("show");document.getElementById("g-results").classList.remove("show");lastGameGroup=null;renderHomeProgress();});
-document.getElementById("g-restart").addEventListener("click",()=>{document.getElementById("g-results").classList.remove("show");lastGameGroup=null;startGame();});
+document.getElementById("g-validate").addEventListener("click",()=>{
+  document.getElementById("game-overlay").classList.remove("show");
+  document.getElementById("g-results").classList.remove("show");
+  lastGameGroup=null;renderHomeProgress();
+});
+document.getElementById("g-restart").addEventListener("click",()=>{
+  document.getElementById("g-results").classList.remove("show");
+  lastGameGroup=null;startGame();
+});
 
+// PROGRESS
 function renderProgress(){
   document.getElementById("progress-sub").textContent=currentProfile?"Profil — "+currentProfile.name:"";
   const total=SESSIONS.reduce((a,s)=>a+s.ids.length,0);
@@ -2191,10 +2155,10 @@ function renderProgress(){
   else{const max=Math.max(...SESSIONS.map(s=>s.ids.length));barEl.innerHTML=SESSIONS.map(s=>{const pct=max?Math.round((s.ids.length/max)*100):0;return`<div class="bar-row"><span class="bar-label">${s.date}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.max(pct,4)}%"><span class="bar-count">${s.ids.length}</span></div></div></div>`;  }).join("");}
   const catEl=document.getElementById("cat-chart");
   const allIds=SESSIONS.flatMap(s=>s.ids);const gc={};
-  allIds.forEach(id=>{const item=DATA.find(d=>d.id===id);if(item){const g=getGroupForCat(item.cat);const k=g?g.label:"Autre";gc[k]=(gc[k]||0)+1;  }});
+  allIds.forEach(id=>{const item=DATA.find(d=>d.id===id);if(item){const g=getGroupForCat(item.cat,item.role);const k=g?g.label:"Autre";gc[k]=(gc[k]||0)+1;  }});
   const sorted=Object.entries(gc).sort((a,b)=>b[1]-a[1]);
   if(!sorted.length){catEl.innerHTML='<div class="no-data">Aucune donnée.</div>';}
-  else{const maxG=sorted[0][1];catEl.innerHTML=sorted.map(([g,c])=>{const pct=Math.round((c/maxG)*100);return`<div class="cat-row"><span class="cat-label">${g.replace(/^.\s*/,"")}</span><div class="cat-track"><div class="cat-fill" style="width:${Math.max(pct,4)}%"><span class="cat-count">${c}</span></div></div></div>`;  }).join("");}
+  else{const mx=sorted[0][1];catEl.innerHTML=sorted.map(([g,c])=>{const pct=Math.round((c/mx)*100);return`<div class="cat-row"><span class="cat-label">${g.replace(/^.\s*/,"")}</span><div class="cat-track"><div class="cat-fill" style="width:${Math.max(pct,4)}%"><span class="cat-count">${c}</span></div></div></div>`;  }).join("");}
 }
 
 loadProfiles();
