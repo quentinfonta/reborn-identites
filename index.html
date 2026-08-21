@@ -136,7 +136,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .id-row.worked{background:var(--green-bg);border-color:var(--green-border);}
 .id-row.todo{background:var(--gold-bg);border-color:var(--gold-border);}
 .id-row.checked{background:var(--surface2);border-color:var(--border-md);}
-.id-row.trashed{opacity:0.35;}
+.id-row.trashed{opacity:0.4;}.id-row.trashed .id-text{text-decoration:line-through;color:var(--text-faint);}
 .id-text{flex:1;font-size:13px;font-weight:500;}
 .id-row.worked .id-text{color:var(--green-text);}
 .id-row.todo .id-text{color:var(--gold-text);}
@@ -1797,7 +1797,7 @@ function render(){
         </div>
         <div style="display:flex;align-items:center;gap:8px;">
           <div class="group-count">${workedCount}/${groupData.length}</div>
-          <span class="group-toggle">▾</span>
+          <span class="group-toggle">▸</span>
         </div>
       </div>
       <div class="id-list">`;
