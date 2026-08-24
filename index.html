@@ -286,6 +286,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .no-data{font-size:14px;color:var(--text-faint);font-style:italic;}
 
 /* UTILS */
+.scan-level-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px;border-radius:var(--radius);border:1px solid transparent;transition:all 0.15s;}
+.scan-level-item.active{border-color:var(--border-md);background:var(--surface);}
+.scan-level-item:not([style*="cursor:default"]):hover{background:var(--surface2);}
 .toast{position:fixed;bottom:4.5rem;left:50%;transform:translateX(-50%);background:var(--surface3);color:var(--text);border:1px solid var(--border-strong);border-radius:var(--radius);padding:8px 16px;font-size:13px;font-weight:500;opacity:0;transition:opacity 0.2s;pointer-events:none;z-index:800;white-space:nowrap;}
 .toast.show{opacity:1;}
 .spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--border-md);border-top-color:var(--accent);border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;}
@@ -417,7 +420,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
       <button class="header-btn green" id="scan-validate-btn" disabled><i class="ti ti-check"></i> Valider <span id="scan-count"></span></button>
     </div>
   </div>
-  <div class="filters-bar">
+  <div id="scan-level-header" style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:0.75rem 1.5rem;border-bottom:1px solid var(--border);"></div>
+  <div class="filters-bar" style="top:auto;position:relative;">
     <button class="filter-btn active" data-scan-pol="all">Toutes</button>
     <button class="filter-btn" data-scan-pol="neg">🔴 Négatives</button>
     <button class="filter-btn" data-scan-pol="pos">🟢 Positives</button>
@@ -1565,6 +1569,24 @@ const DEFAULT_DATA = [
   {id:9992,text:'Je suis crié',cat:'Isolement',depth:1,role:'source'},
   {id:9993,text:'Je suis osé',cat:'Isolement',depth:3,role:'coping'},
   {id:9994,text:'Je suis déclaré',cat:'Isolement',depth:4,role:'coping'}
+,
+  {id:9001,text:'Je suis recroquevillé',cat:'Figement',depth:1,role:'source'},
+  {id:9002,text:'Je suis voûté',cat:'Figement',depth:1,role:'source'},
+  {id:9003,text:'Je suis affaissé',cat:'Figement',depth:1,role:'source'},
+  {id:9004,text:'Je suis tassé',cat:'Figement',depth:1,role:'source'},
+  {id:9005,text:'Je suis tendu',cat:'Figement',depth:1,role:'source'},
+  {id:9006,text:'Je suis serré',cat:'Figement',depth:1,role:'source'},
+  {id:9007,text:'Je suis bandé',cat:'Figement',depth:1,role:'source'},
+  {id:9008,text:'Je suis arc-bouté',cat:'Figement',depth:1,role:'source'},
+  {id:9009,text:'Je suis barbouillé',cat:'Figement',depth:2,role:'source'},
+  {id:9010,text:'Je suis écœuré',cat:'Figement',depth:2,role:'source'},
+  {id:9011,text:'Je suis refroidi',cat:'Figement',depth:1,role:'source'},
+  {id:9012,text:'Je suis détendu',cat:'Figement',depth:1,role:'coping'},
+  {id:9013,text:'Je suis décrispé',cat:'Figement',depth:1,role:'coping'},
+  {id:9014,text:'Je suis desserré',cat:'Figement',depth:1,role:'coping'},
+  {id:9015,text:'Je suis réchauffé',cat:'Figement',depth:1,role:'coping'},
+  {id:9016,text:'Je suis mu',cat:'Dissociation',depth:2,role:'coping'},
+  {id:9017,text:'Je suis emballé',cat:'Dissociation',depth:2,role:'coping'}
 ];
 const GROUPS=[
   // Adulte — le plus récent
@@ -1749,7 +1771,7 @@ function renderHomeProgress(){
 
 // HOME
 document.getElementById("home-dict-btn").addEventListener("click",()=>{showScreen("main-screen");render();});
-document.getElementById("home-scan-btn").addEventListener("click",()=>{showScreen("scan-screen");renderScan();});
+document.getElementById("home-scan-btn").addEventListener("click",()=>{showScreen("scan-screen");scanChecked.clear();openScan();});
 document.getElementById("home-game-btn").addEventListener("click",openSessionFormat);
 document.getElementById("home-progress-btn").addEventListener("click",()=>{renderProgress();document.getElementById("progress-overlay").classList.add("show");});
 document.getElementById("home-switch-btn").addEventListener("click",()=>{currentProfile=null;SESSIONS=[];checked.clear();todoIds.clear();trashedIds.clear();reviewDates={};showScreen("profile-screen");loadProfiles();});
