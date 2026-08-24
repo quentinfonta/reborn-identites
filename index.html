@@ -1771,7 +1771,7 @@ function renderHomeProgress(){
 
 // HOME
 document.getElementById("home-dict-btn").addEventListener("click",()=>{showScreen("main-screen");render();});
-document.getElementById("home-scan-btn").addEventListener("click",()=>{showScreen("scan-screen");scanChecked.clear();openScan();});
+document.getElementById("home-scan-btn").addEventListener("click",()=>{if(!currentProfile){showToast("Connecte-toi d abord");return;}showScreen("scan-screen");scanChecked.clear();openScan();});
 document.getElementById("home-game-btn").addEventListener("click",openSessionFormat);
 document.getElementById("home-progress-btn").addEventListener("click",()=>{renderProgress();document.getElementById("progress-overlay").classList.add("show");});
 document.getElementById("home-switch-btn").addEventListener("click",()=>{currentProfile=null;SESSIONS=[];checked.clear();todoIds.clear();trashedIds.clear();reviewDates={};showScreen("profile-screen");loadProfiles();});
@@ -1988,43 +1988,103 @@ document.getElementById("validate-btn").addEventListener("click",async()=>{
 });
 
 // SCAN RAPIDE
+const SCAN_UNLOCK_THRESHOLD=50;
+let scanLevel=1;
+
+function getScanLevelStats(){
+  const wids=workedIds();
+  const stats=[];
+  for(let lvl=1;lvl<=5;lvl++){
+    const total=DATA.filter(d=>(d.depth||3)===lvl&&!trashedIds.has(d.id)).length;
+    const done=DATA.filter(d=>(d.depth||3)===lvl&&wids.has(d.id)).length;
+    const pct=total?Math.round((done/total)*100):0;
+    stats.push({lvl,total,done,pct});
+  }
+  return stats;
+}
+
+function isLevelUnlocked(lvl){
+  if(lvl===1)return true;
+  return getScanLevelStats()[lvl-2].pct>=SCAN_UNLOCK_THRESHOLD;
+}
+
+function openScan(){
+  const stats=getScanLevelStats();
+  scanLevel=1;
+  for(let lvl=1;lvl<=5;lvl++){
+    if(isLevelUnlocked(lvl)&&stats[lvl-1].pct<100){scanLevel=lvl;break;}
+  }
+  renderScanHeader();
+  renderScan();
+}
+
+function renderScanHeader(){
+  const stats=getScanLevelStats();
+  const header=document.getElementById("scan-level-header");
+  if(!header)return;
+  header.innerHTML=stats.map(s=>{
+    const lc=LEVEL_COLORS[s.lvl];
+    const ln=LEVEL_NAMES[s.lvl];
+    const unlocked=isLevelUnlocked(s.lvl);
+    const active=s.lvl===scanLevel;
+    return`<div class="scan-level-item${active?" active":""}" data-lvl="${s.lvl}" style="opacity:${unlocked?1:0.35};cursor:${unlocked?"pointer":"default"}">
+      <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px;">
+        <div style="width:7px;height:7px;border-radius:50%;background:${lc};flex-shrink:0;"></div>
+        <span style="font-size:10px;font-weight:600;color:${active?lc:"var(--text-muted)"};">${ln}</span>
+        ${!unlocked?'<span style="font-size:9px;">🔒</span>':''}
+      </div>
+      <div style="width:100%;height:3px;background:var(--surface3);border-radius:2px;overflow:hidden;">
+        <div style="height:100%;background:${lc};width:${s.pct}%;"></div>
+      </div>
+      <span style="font-size:10px;color:${active?lc:"var(--text-faint)"};">${s.pct}%</span>
+    </div>`;
+  }).join("");
+  header.querySelectorAll(".scan-level-item").forEach(item=>{
+    item.addEventListener("click",()=>{
+      const lvl=+item.dataset.lvl;
+      if(!isLevelUnlocked(lvl))return;
+      scanLevel=lvl;
+      renderScanHeader();
+      renderScan();
+    });
+  });
+}
+
 function renderScan(){
   const wids=workedIds();
   const scroll=document.getElementById("scan-scroll");
-  // Build by level, across all groups
-  let html="";
-  for(let lvl=1;lvl<=5;lvl++){
-    const lc=LEVEL_COLORS[lvl]||"var(--text-faint)";
-    const ln=LEVEL_NAMES[lvl]||"";
-    // Get all identities of this level
-    const neg=DATA.filter(d=>(d.depth||3)===lvl&&(d.role==="source"||d.role==="verdict")&&!trashedIds.has(d.id)&&(scanPolarity==="all"||scanPolarity==="neg"));
-    const pos=DATA.filter(d=>(d.depth||3)===lvl&&d.role==="coping"&&!trashedIds.has(d.id)&&(scanPolarity==="all"||scanPolarity==="pos"));
-    const items=shuffle([...neg,...pos]);
-    if(!items.length)continue;
-    html+=`<div style="padding:0.75rem 0 0.25rem;display:flex;align-items:center;gap:6px;">
-      <div style="width:8px;height:8px;border-radius:50%;background:${lc};flex-shrink:0;"></div>
-      <span style="font-size:10px;color:${lc};text-transform:uppercase;letter-spacing:1px;font-weight:600;">${ln}</span>
-      <div style="flex:1;height:1px;background:var(--border);"></div>
-    </div>
-    <div class="id-list">`;
-    items.forEach(d=>{
-      const isWorked=wids.has(d.id);
-      const isChecked=scanChecked.has(d.id);
-      const isPos=d.role==="coping";
-      const group=getGroupForCat(d.cat,d.role);
-      const gname=group?group.label.replace(/^.\s*/,""):"";
-      let cls="id-row";
-      if(isWorked)cls+=" worked";
-      else if(isChecked)cls+=" checked";
-      html+=`<div class="${cls}" data-scan-id="${d.id}">
-        <div class="id-check"><i class="ti ti-check check-icon"></i></div>
-        <span class="id-text">${d.text}</span>
-        <span class="group-tag" style="color:${isPos?"var(--green-text)":"var(--red-text)"};border-color:${isPos?"var(--green-border)":"var(--red-border)"}">${gname}</span>
+  const neg=DATA.filter(d=>(d.depth||3)===scanLevel&&(d.role==="source"||d.role==="verdict")&&!trashedIds.has(d.id)&&(scanPolarity==="all"||scanPolarity==="neg"));
+  const pos=DATA.filter(d=>(d.depth||3)===scanLevel&&d.role==="coping"&&!trashedIds.has(d.id)&&(scanPolarity==="all"||scanPolarity==="pos"));
+  const items=[...neg,...pos];
+  if(!items.length){scroll.innerHTML='<div style="padding:3rem;text-align:center;color:var(--text-faint)">Aucune identité à ce niveau</div>';return;}
+  let html='<div class="id-list">';
+  let lastPol=null;
+  items.forEach(d=>{
+    const isPos=d.role==="coping";
+    const pol=isPos?"pos":"neg";
+    if(pol!==lastPol){
+      lastPol=pol;
+      const pc=isPos?"var(--green-text)":"var(--red-text)";
+      const pb=isPos?"var(--green-border)":"var(--red-border)";
+      html+=`<div style="display:flex;align-items:center;gap:6px;padding:0.5rem 0 0.25rem;">
+        <span style="font-size:9px;color:${pc};text-transform:uppercase;letter-spacing:1px;font-weight:600;border:1px solid ${pb};padding:1px 6px;border-radius:5px;">${isPos?"Positives":"Négatives"}</span>
+        <div style="flex:1;height:1px;background:var(--border);"></div>
       </div>`;
-    });
-    html+="</div>";
-  }
-  scroll.innerHTML=html||'<div style="padding:3rem;text-align:center;color:var(--text-faint)">Aucune identité</div>';
+    }
+    const isWorked=wids.has(d.id),isChecked=scanChecked.has(d.id);
+    const group=getGroupForCat(d.cat,d.role);
+    const gname=group?group.label.replace(/^.\s*/,""):"";
+    let cls="id-row";
+    if(isWorked)cls+=" worked";
+    else if(isChecked)cls+=" checked";
+    html+=`<div class="${cls}" data-scan-id="${d.id}">
+      <div class="id-check"><i class="ti ti-check check-icon"></i></div>
+      <span class="id-text">${d.text}</span>
+      <span class="group-tag" style="color:${isPos?"var(--green-text)":"var(--red-text)"};border-color:${isPos?"var(--green-border)":"var(--red-border)"}">${gname}</span>
+    </div>`;
+  });
+  html+="</div>";
+  scroll.innerHTML=html;
   scroll.querySelectorAll("[data-scan-id]").forEach(row=>{
     row.addEventListener("click",()=>{
       const id=+row.dataset.scanId;
@@ -2037,15 +2097,6 @@ function renderScan(){
   renderScanSession();
 }
 
-function renderScanSession(){
-  const count=scanChecked.size;
-  document.getElementById("scan-count").textContent=count?`(${count})`:"";
-  document.getElementById("scan-validate-btn").disabled=!count;
-  document.getElementById("scan-validate-bottom").disabled=!count;
-  document.getElementById("scan-tags").innerHTML=count
-    ?[...scanChecked].map(id=>{const d=DATA.find(x=>x.id===id);return d?`<span class="sel-tag">${d.text}</span>`:"";}).join("")
-    :'<span class="empty-sel">Coche ce qui résonne…</span>';
-}
 
 async function validateScan(){
   if(!currentProfile||!scanChecked.size)return;
