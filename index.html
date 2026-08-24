@@ -73,6 +73,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .home-card:hover{border-color:var(--border-strong);background:var(--surface2);transform:translateY(-2px);}
 .home-card.game{border-color:var(--purple-border);background:var(--purple-bg);}
 .home-card.game:hover{background:rgba(139,92,246,0.18);}
+.home-card.scan{border-color:var(--gold-border);background:var(--gold-bg);}
+.home-card.scan:hover{background:rgba(186,117,23,0.18);}
 .home-card-icon{font-size:40px;}
 .home-card-title{font-size:17px;font-weight:600;}
 .home-card-sub{font-size:13px;color:var(--text-muted);line-height:1.4;}
@@ -315,12 +317,17 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     <div class="home-card" id="home-dict-btn">
       <div class="home-card-icon">🗂</div>
       <div class="home-card-title">Dictionnaire</div>
-      <div class="home-card-sub">Explorer et cocher les identités librement</div>
+      <div class="home-card-sub">Explorer et cocher les identités par groupe</div>
     </div>
     <div class="home-card game" id="home-game-btn">
       <div class="home-card-icon">🃏</div>
       <div class="home-card-title">Mon Parcours</div>
-      <div class="home-card-sub">Ton chemin identitaire guidé, étape par étape</div>
+      <div class="home-card-sub">Séance guidée carte par carte</div>
+    </div>
+    <div class="home-card scan" id="home-scan-btn">
+      <div class="home-card-icon">⚡</div>
+      <div class="home-card-title">Scan rapide</div>
+      <div class="home-card-sub">Coche ce qui résonne, du corps vers l abstrait</div>
     </div>
   </div>
   <div class="home-progress-section">
@@ -377,6 +384,33 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
       <div class="session-tags" id="session-tags"><span class="empty-sel">Aucune identité cochée</span></div>
       <span class="session-count" id="session-count"></span>
       <button class="validate-btn" id="validate-btn" disabled><i class="ti ti-check"></i> Valider</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCAN SCREEN -->
+<div id="scan-screen" style="display:none;">
+  <div class="main-header">
+    <div>
+      <div class="brand" style="margin-bottom:2px">REBORN</div>
+      <div class="brand-title">Scan rapide ⚡</div>
+    </div>
+    <div class="main-header-right">
+      <div class="profile-badge"><i class="ti ti-user"></i><span id="scan-profile-badge">—</span></div>
+      <button class="header-btn" id="scan-back-btn"><i class="ti ti-arrow-left"></i> Accueil</button>
+      <button class="header-btn blue" id="scan-validate-btn" disabled><i class="ti ti-check"></i> Valider <span id="scan-count"></span></button>
+    </div>
+  </div>
+  <div class="filters-bar" style="top:57px;">
+    <button class="filter-btn active" data-scan-polarity="all">Toutes</button>
+    <button class="filter-btn" data-scan-polarity="neg">🔴 Négatives</button>
+    <button class="filter-btn" data-scan-polarity="pos">🟢 Positives</button>
+  </div>
+  <div class="dict-scroll" id="scan-scroll" style="padding-top:0.5rem;"></div>
+  <div class="session-bar">
+    <div class="session-inner">
+      <div class="session-tags" id="scan-tags"><span class="empty-sel">Coche ce qui résonne</span></div>
+      <button class="validate-btn" id="scan-validate-bottom" disabled><i class="ti ti-check"></i> Valider</button>
     </div>
   </div>
 </div>
@@ -1589,11 +1623,12 @@ function saveTrashed(){try{localStorage.setItem("trashed_"+currentProfile.id,JSO
 function showToast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2500);}
 
 function showScreen(id){
-  ["profile-screen","pin-screen","home-screen","main-screen"].forEach(s=>{
-    const el=document.getElementById(s);if(el)el.classList.remove("show");
+  ["profile-screen","pin-screen","home-screen","main-screen","scan-screen"].forEach(s=>{
+    const el=document.getElementById(s);
+    if(el){el.classList.remove("show");el.style.display="none";}
   });
   const el=document.getElementById(id);
-  if(el)el.classList.add("show");
+  if(el){el.classList.add("show");el.style.display="block";}
 }
 
 // PROFILE
@@ -1630,7 +1665,122 @@ async function loadProfiles(){
         await sb(`sessions?profile_id=eq.${id}`,{method:"DELETE",prefer:"return=minimal"});
         await sb(`profiles?id=eq.${id}`,{method:"DELETE",prefer:"return=minimal"});
         ["todo_","reviews_","trashed_"].forEach(k=>localStorage.removeItem(k+id));
-        showToast(`Profil "${name}" supprimé`);loadProfiles();
+        showToast(`Profil "${name}" supprimé`);// SCAN RAPIDE
+let scanChecked=new Set();
+let scanPolarity="all";
+
+function openScan(){
+  if(!currentProfile){showToast("Connecte-toi d abord");return;}
+  scanChecked.clear();
+  document.getElementById("scan-profile-badge").textContent=currentProfile.name;
+  showScreen("scan-screen");
+  renderScan();
+}
+
+function renderScan(){
+  const wids=workedIds();
+  const scroll=document.getElementById("scan-scroll");
+  let html="";
+
+  // Group by level, neg before pos
+  for(let lvl=1;lvl<=5;lvl++){
+    const lvlColor=LEVEL_COLORS[lvl]||"var(--text-faint)";
+    const lvlName=LEVEL_NAMES[lvl]||"";
+
+    const neg=DEFAULT_DATA.filter(d=>
+      (d.depth||3)===lvl&&
+      (d.role==="source"||d.role==="verdict")&&
+      !trashedIds.has(d.id)&&
+      (scanPolarity==="all"||scanPolarity==="neg")
+    );
+    const pos=DEFAULT_DATA.filter(d=>
+      (d.depth||3)===lvl&&
+      d.role==="coping"&&
+      !trashedIds.has(d.id)&&
+      (scanPolarity==="all"||scanPolarity==="pos")
+    );
+
+    const items=[...neg,...pos];
+    if(!items.length)continue;
+
+    html+=`<div class="level-strip" style="padding:0.75rem 0 0.25rem;">
+      <div class="level-strip-dot" style="background:${lvlColor};width:8px;height:8px;border-radius:50%;flex-shrink:0;"></div>
+      <span class="level-strip-label" style="color:${lvlColor};font-size:11px;text-transform:uppercase;letter-spacing:1px;">${lvlName}</span>
+      <div class="level-divider" style="flex:1;height:1px;background:var(--border);margin-left:8px;"></div>
+    </div>`;
+
+    items.forEach(d=>{
+      const isWorked=wids.has(d.id);
+      const isScanChecked=scanChecked.has(d.id);
+      const isPos=d.role==="coping";
+      const group=getGroupForCat(d.cat,d.role);
+      const gname=group?group.label.replace(/^.\s*/,""):"";
+      let rowCls="id-row";
+      if(isWorked)rowCls+=" worked";
+      else if(isScanChecked)rowCls+=" checked";
+
+      html+=`<div class="${rowCls}" data-scan-id="${d.id}">
+        <div class="id-check"><i class="ti ti-check check-icon"></i></div>
+        <span class="id-text">${d.text}</span>
+        <span style="font-size:10px;color:${isPos?"var(--green-text)":"var(--red-text)"};padding:1px 6px;border-radius:6px;border:1px solid ${isPos?"var(--green-border)":"var(--red-border)"};flex-shrink:0;">${gname}</span>
+      </div>`;
+    });
+  }
+
+  scroll.innerHTML=html||'<div style="padding:3rem;text-align:center;color:var(--text-faint)">Aucune identité</div>';
+
+  scroll.querySelectorAll("[data-scan-id]").forEach(row=>{
+    row.addEventListener("click",()=>{
+      const id=+row.dataset.scanId;
+      if(workedIds().has(id))return;
+      if(scanChecked.has(id)){scanChecked.delete(id);row.classList.remove("checked");}
+      else{scanChecked.add(id);row.classList.add("checked");}
+      renderScanSession();
+    });
+  });
+
+  renderScanSession();
+}
+
+function renderScanSession(){
+  const count=scanChecked.size;
+  document.getElementById("scan-count").textContent=count?`(${count})`:"";
+  document.getElementById("scan-validate-btn").disabled=!count;
+  document.getElementById("scan-validate-bottom").disabled=!count;
+  document.getElementById("scan-tags").innerHTML=count
+    ?[...scanChecked].map(id=>{const d=DEFAULT_DATA.find(x=>x.id===id);return d?`<span class="sel-tag">${d.text}</span>`:""}).join("")
+    :'<span class="empty-sel">Coche ce qui résonne</span>';
+}
+
+async function validateScan(){
+  if(!currentProfile||!scanChecked.size)return;
+  const wids=workedIds();
+  const newIds=[...scanChecked].filter(id=>!wids.has(id));
+  if(!newIds.length){scanChecked.clear();renderScan();return;}
+  const date=new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
+  try{
+    const result=await sb("sessions",{method:"POST",body:{profile_id:currentProfile.id,date,ids:newIds},prefer:"return=representation"});
+    if(result&&result[0])SESSIONS.push({id:result[0].id,date,ids:newIds});
+    newIds.forEach(id=>scheduleReview(id,reviewDates[id]?reviewDates[id].reviewCount+1:0));
+    scanChecked.clear();
+    renderScan();renderHomeProgress();
+    showToast(`✓ ${newIds.length} validée${newIds.length>1?"s":""}`);
+  }catch(e){showToast("Erreur sauvegarde");}
+}
+
+document.getElementById("home-scan-btn").addEventListener("click",openScan);
+document.getElementById("scan-back-btn").addEventListener("click",()=>{showScreen("home-screen");});
+document.getElementById("scan-validate-btn").addEventListener("click",validateScan);
+document.getElementById("scan-validate-bottom").addEventListener("click",validateScan);
+
+document.querySelectorAll("[data-scan-polarity]").forEach(btn=>btn.addEventListener("click",()=>{
+  scanPolarity=btn.dataset.scanPolarity;
+  document.querySelectorAll("[data-scan-polarity]").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  renderScan();
+}));
+
+loadProfiles();
       }catch(e){showToast("Erreur: "+e.message);}
     }));
   }catch(e){list.innerHTML=`<div style="font-size:13px;color:var(--red-text)">Erreur: ${e.message}</div>`;}
