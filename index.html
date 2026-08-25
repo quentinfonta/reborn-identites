@@ -425,6 +425,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     <button class="filter-btn active" data-scan-pol="all">Toutes</button>
     <button class="filter-btn" data-scan-pol="neg">🔴 Négatives</button>
     <button class="filter-btn" data-scan-pol="pos">🟢 Positives</button>
+    <div style="width:1px;height:14px;background:var(--border);margin:0 4px;"></div>
+    <button class="filter-btn" id="scan-show-worked-btn">✅ Voir travaillées</button>
   </div>
   <div class="dict-scroll" id="scan-scroll"></div>
   <div class="session-bar">
@@ -1822,6 +1824,11 @@ document.querySelectorAll("[data-scan-pol]").forEach(btn=>btn.addEventListener("
   document.querySelectorAll("[data-scan-pol]").forEach(b=>b.classList.remove("active"));
   btn.classList.add("active");renderScan();
 }));
+document.getElementById("scan-show-worked-btn").addEventListener("click",()=>{
+  scanShowWorked=!scanShowWorked;
+  document.getElementById("scan-show-worked-btn").classList.toggle("active",scanShowWorked);
+  renderScan();
+});
 
 // DICT RENDER
 function buildGroupHtml(g,wids,isForScan){
@@ -2002,6 +2009,7 @@ document.getElementById("validate-btn").addEventListener("click",async()=>{
 // SCAN RAPIDE
 const SCAN_UNLOCK_THRESHOLD=50;
 let scanLevel=1;
+let scanShowWorked=false;
 
 function getScanLevelStats(){
   const wids=workedIds();
@@ -2065,8 +2073,8 @@ function renderScanHeader(){
 function renderScan(){
   const wids=workedIds();
   const scroll=document.getElementById("scan-scroll");
-  const neg=DATA.filter(d=>(d.depth||3)===scanLevel&&(d.role==="source"||d.role==="verdict")&&!trashedIds.has(d.id)&&!wids.has(d.id)&&(scanPolarity==="all"||scanPolarity==="neg"));
-  const pos=DATA.filter(d=>(d.depth||3)===scanLevel&&d.role==="coping"&&!trashedIds.has(d.id)&&!wids.has(d.id)&&(scanPolarity==="all"||scanPolarity==="pos"));
+  const neg=DATA.filter(d=>(d.depth||3)===scanLevel&&(d.role==="source"||d.role==="verdict")&&!trashedIds.has(d.id)&&(scanShowWorked||!wids.has(d.id))&&(scanPolarity==="all"||scanPolarity==="neg"));
+  const pos=DATA.filter(d=>(d.depth||3)===scanLevel&&d.role==="coping"&&!trashedIds.has(d.id)&&(scanShowWorked||!wids.has(d.id))&&(scanPolarity==="all"||scanPolarity==="pos"));
   const items=[...neg,...pos];
   if(!items.length){scroll.innerHTML='<div style="padding:3rem;text-align:center;color:var(--text-faint)">Aucune identité à ce niveau</div>';return;}
   let html='<div class="id-list">';
