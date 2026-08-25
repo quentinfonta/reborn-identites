@@ -2053,8 +2053,8 @@ function renderScanHeader(){
 function renderScan(){
   const wids=workedIds();
   const scroll=document.getElementById("scan-scroll");
-  const neg=DATA.filter(d=>(d.depth||3)===scanLevel&&(d.role==="source"||d.role==="verdict")&&!trashedIds.has(d.id)&&(scanPolarity==="all"||scanPolarity==="neg"));
-  const pos=DATA.filter(d=>(d.depth||3)===scanLevel&&d.role==="coping"&&!trashedIds.has(d.id)&&(scanPolarity==="all"||scanPolarity==="pos"));
+  const neg=DATA.filter(d=>(d.depth||3)===scanLevel&&(d.role==="source"||d.role==="verdict")&&!trashedIds.has(d.id)&&!wids.has(d.id)&&(scanPolarity==="all"||scanPolarity==="neg"));
+  const pos=DATA.filter(d=>(d.depth||3)===scanLevel&&d.role==="coping"&&!trashedIds.has(d.id)&&!wids.has(d.id)&&(scanPolarity==="all"||scanPolarity==="pos"));
   const items=[...neg,...pos];
   if(!items.length){scroll.innerHTML='<div style="padding:3rem;text-align:center;color:var(--text-faint)">Aucune identité à ce niveau</div>';return;}
   let html='<div class="id-list">';
