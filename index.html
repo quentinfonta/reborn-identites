@@ -2161,6 +2161,16 @@ function renderScan(){
 }
 
 
+function renderScanSession(){
+  const count=scanChecked.size;
+  document.getElementById("scan-count").textContent=count?`(${count})`:"";
+  document.getElementById("scan-validate-btn").disabled=!count;
+  document.getElementById("scan-validate-bottom").disabled=!count;
+  document.getElementById("scan-tags").innerHTML=count
+    ?[...scanChecked].map(id=>{const d=DATA.find(x=>x.id===id);return d?`<span class="sel-tag">${d.text}</span>`:""}).join("")
+    :'<span class="empty-sel">Coche ce qui résonne…</span>';
+}
+
 async function validateScan(){
   if(!currentProfile||!scanChecked.size)return;
   const wids=workedIds();
