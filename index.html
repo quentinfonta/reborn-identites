@@ -2132,8 +2132,11 @@ function attachGroupEvents(container,isForScan){
     header.addEventListener("click",e=>{
       if(e.target.closest(".id-action-btn"))return;
       const section=header.closest(".group-section");
+      const gid=section.dataset.gid;
       const collapsed=section.classList.toggle("group-collapsed");
       header.querySelector(".group-toggle").textContent=collapsed?"▸":"▾";
+      if(collapsed)openGroups.delete(gid);
+      else openGroups.add(gid);
     });
   });
   // Row clicks
@@ -2186,12 +2189,23 @@ function attachGroupEvents(container,isForScan){
   }
 }
 
+const openGroups=new Set();
+
 function render(){
   const wids=workedIds();
   const scroll=document.getElementById("dict-scroll");
   let html="";
   GROUPS.forEach(g=>{html+=buildGroupHtml(g,wids,false);});
   scroll.innerHTML=html||'<div style="padding:3rem;text-align:center;color:var(--text-faint)">Aucune identité</div>';
+  // Restore open state
+  scroll.querySelectorAll(".group-section").forEach(section=>{
+    const gid=section.dataset.gid;
+    if(openGroups.has(gid)){
+      section.classList.remove("group-collapsed");
+      const toggle=section.querySelector(".group-toggle");
+      if(toggle)toggle.textContent="▾";
+    }
+  });
   attachGroupEvents(scroll,false);
   renderSession();
 }
