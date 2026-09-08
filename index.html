@@ -422,33 +422,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   </div>
 </div>
 
-<!-- SCAN RAPIDE -->
-<div class="block-screen" id="scan-screen">
-  <div class="main-header">
-    <div><div class="brand" style="margin-bottom:2px">REBORN</div><div class="brand-title">⚡ Scan rapide</div></div>
-    <div class="main-header-right">
-      <div class="profile-badge"><i class="ti ti-user"></i><span id="scan-profile-badge">—</span></div>
-      <button class="header-btn" id="scan-back-btn"><i class="ti ti-arrow-left"></i> Accueil</button>
-      <button class="header-btn green" id="scan-validate-btn" disabled><i class="ti ti-check"></i> Valider <span id="scan-count"></span></button>
-    </div>
-  </div>
-  <div id="scan-level-header" style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:0.75rem 1.5rem;border-bottom:1px solid var(--border);"></div>
-  <div class="filters-bar" style="top:auto;position:relative;">
-    <button class="filter-btn active" data-scan-pol="all">Toutes</button>
-    <button class="filter-btn" data-scan-pol="neg">🔴 Négatives</button>
-    <button class="filter-btn" data-scan-pol="pos">🟢 Positives</button>
-    <div style="width:1px;height:14px;background:var(--border);margin:0 4px;"></div>
-    <button class="filter-btn" id="scan-show-worked-btn">✅ Voir travaillées</button>
-  </div>
-  <div class="dict-scroll" id="scan-scroll"></div>
-  <div class="session-bar">
-    <div class="session-inner">
-      <div class="session-tags" id="scan-tags"><span class="empty-sel">Coche ce qui résonne…</span></div>
-      <button class="validate-btn" id="scan-validate-bottom" disabled><i class="ti ti-check"></i> Valider</button>
-    </div>
-  </div>
-</div>
-
 <!-- SESSION FORMAT -->
 <div class="modal-overlay" id="sf-modal">
   <div class="modal-box">
@@ -2025,7 +1998,7 @@ function renderHomeProgress(){
 
 // HOME
 document.getElementById("home-dict-btn").addEventListener("click",()=>{showScreen("main-screen");render();});
-document.getElementById("home-scan-btn").addEventListener("click",()=>{if(!currentProfile){showToast("Connecte-toi d abord");return;}showScreen("scan-screen");scanChecked.clear();openScan();});
+
 document.getElementById("home-game-btn").addEventListener("click",openSessionFormat);
 document.getElementById("home-progress-btn").addEventListener("click",()=>{renderProgress();document.getElementById("progress-overlay").classList.add("show");});
 document.getElementById("home-switch-btn").addEventListener("click",()=>{currentProfile=null;SESSIONS=[];checked.clear();todoIds.clear();trashedIds.clear();reviewDates={};showScreen("profile-screen");loadProfiles();});
