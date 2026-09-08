@@ -64,9 +64,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .pin-dots{display:flex;gap:10px;margin:0.25rem 0;}
 .pin-dot{width:12px;height:12px;border-radius:50%;border:1.5px solid var(--border-md);background:transparent;transition:all 0.15s;}
 .pin-dot.filled{background:var(--accent);border-color:var(--accent);}
-.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:200px;}
+.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:200px;touch-action:manipulation;}
 .pin-key{padding:14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:18px;font-weight:500;font-family:inherit;cursor:pointer;text-align:center;transition:all 0.15s;}
 .pin-key:hover{background:var(--surface3);}
+.pin-key{touch-action:manipulation;}
 .pin-key.del{font-size:14px;color:var(--text-muted);}
 .pin-error{font-size:13px;color:var(--red-text);min-height:18px;text-align:center;}
 .back-link{font-size:13px;color:var(--text-faint);cursor:pointer;text-decoration:underline;}
@@ -138,7 +139,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .group-header-left{display:flex;align-items:center;gap:8px;}
 .group-polarity-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
 .group-label{font-size:13px;font-weight:600;}
-.group-sub{font-size:10px;color:var(--text-faint);margin-top:1px;}
+.group-sub{font-size:11px;color:var(--text-faint);margin-top:2px;font-style:italic;}
 .group-count{font-size:10px;color:var(--text-faint);padding:1px 7px;border-radius:8px;border:1px solid var(--border);}
 .group-toggle{font-size:11px;color:var(--text-faint);opacity:0.4;transition:opacity 0.15s;}
 .group-collapsed .id-list,.group-collapsed .level-strip{display:none;}
@@ -226,8 +227,24 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .game-trans-start{padding:11px 34px;border-radius:var(--radius-lg);border:1px solid var(--accent);background:transparent;color:var(--accent);font-size:14px;font-weight:500;font-family:inherit;cursor:pointer;}
 .game-card{display:none;flex-direction:column;align-items:center;text-align:center;max-width:480px;width:100%;margin-top:3rem;}
 .game-card.show{display:flex;}
-.game-card-level{font-size:12px;color:var(--text-faint);margin-bottom:0.4rem;display:flex;align-items:center;gap:5px;justify-content:center;}
-.game-card-group{font-size:12px;color:var(--text-muted);margin-bottom:1rem;}
+.game-card-meta{width:100%;display:flex;flex-direction:column;gap:8px;margin-bottom:1.5rem;}
+.game-level-progress{display:flex;align-items:center;gap:8px;}
+.game-level-bar-wrap{flex:1;height:4px;background:var(--surface3);border-radius:2px;overflow:hidden;}
+.game-level-bar-fill{height:100%;border-radius:2px;transition:width 0.4s;}
+.game-level-label{font-size:11px;font-weight:600;white-space:nowrap;}
+.game-level-pct{font-size:10px;color:var(--text-faint);white-space:nowrap;}
+.game-group-info{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.game-group-name{font-size:12px;color:var(--text-muted);font-weight:500;}
+.game-group-pos{font-size:11px;color:var(--text-faint);}
+.game-card-desc{font-size:12px;color:var(--text-faint);font-style:italic;margin-top:-1rem;margin-bottom:1.5rem;text-align:center;}
+.game-session-progress{margin-top:1.5rem;width:100%;display:flex;flex-direction:column;align-items:center;gap:6px;}
+.game-session-dots{display:flex;gap:4px;flex-wrap:wrap;justify-content:center;max-width:320px;}
+.game-session-dot{width:8px;height:8px;border-radius:50%;background:var(--surface3);transition:all 0.2s;}
+.game-session-dot.worked{background:var(--green-border);}
+.game-session-dot.todo{background:var(--gold-border);}
+.game-session-dot.current{background:var(--accent);transform:scale(1.3);}
+.game-session-dot.skipped{background:var(--red-border);opacity:0.4;}
+.game-session-label{font-size:10px;color:var(--text-faint);}
 .game-card-text{font-size:32px;font-weight:600;color:var(--text);margin-bottom:2.5rem;line-height:1.3;}
 .game-btns{display:flex;gap:10px;justify-content:center;}
 .game-btn-action{display:flex;flex-direction:column;align-items:center;gap:6px;padding:15px 20px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text-muted);font-size:11px;font-family:inherit;cursor:pointer;transition:all 0.15s;min-width:100px;}
@@ -349,18 +366,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   <div class="home-cards">
     <div class="home-card" id="home-dict-btn">
       <div class="home-card-icon">🗂</div>
-      <div class="home-card-title">Dictionnaire</div>
-      <div class="home-card-sub">Explorer par groupe</div>
-    </div>
-    <div class="home-card scan" id="home-scan-btn">
-      <div class="home-card-icon">⚡</div>
-      <div class="home-card-title">Scan rapide</div>
-      <div class="home-card-sub">Coche ce qui résonne</div>
+      <div class="home-card-title">Bibliothèque</div>
+      <div class="home-card-sub">Toutes les identités — explorer, noter, retrouver</div>
     </div>
     <div class="home-card game" id="home-game-btn">
-      <div class="home-card-icon">🃏</div>
-      <div class="home-card-title">Mon Parcours</div>
-      <div class="home-card-sub">Séance guidée carte par carte</div>
+      <div class="home-card-icon">🧭</div>
+      <div class="home-card-title">Parcours guidé</div>
+      <div class="home-card-sub">Un chemin progressif du corps vers le profond</div>
     </div>
   </div>
   <div class="home-progress-section">
@@ -477,14 +489,18 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     <button class="game-trans-start" id="g-trans-start">Commencer →</button>
   </div>
   <div class="game-card" id="g-card">
-    <div class="game-card-level" id="g-card-level"></div>
-    <div class="game-card-group" id="g-card-group"></div>
+    <div class="game-card-meta">
+      <div class="game-level-progress" id="g-level-progress"></div>
+      <div class="game-group-info" id="g-group-info"></div>
+    </div>
     <div class="game-card-text" id="g-card-text"></div>
+    <div class="game-card-desc" id="g-card-desc"></div>
     <div class="game-btns">
       <button class="game-btn-action yes" id="g-yes"><span class="game-btn-icon">✅</span><span class="game-btn-label">Travaillée</span></button>
       <button class="game-btn-action later" id="g-later"><span class="game-btn-icon">🔖</span><span class="game-btn-label">À faire</span></button>
-      <button class="game-btn-action" id="g-skip"><span class="game-btn-icon">🚫</span><span class="game-btn-label">Exclure</span></button>
+      <button class="game-btn-action" id="g-skip"><span class="game-btn-icon">🚫</span><span class="game-btn-label">Passer</span></button>
     </div>
+    <div class="game-session-progress" id="g-session-progress"></div>
   </div>
   <div class="game-results" id="g-results">
     <div class="game-res-title">Session terminée 🎉</div>
@@ -1815,6 +1831,22 @@ const DEFAULT_DATA = [
   {id:12525,text:'Je suis abdiqué',cat:'Effondrement',depth:4,role:'source'},
   {id:12526,text:'Je suis désimpliqué',cat:'Engagement',depth:4,role:'source'},
   {id:12527,text:'Je suis dépris',cat:'Engagement',depth:4,role:'source'}
+,
+  {id:12528,text:'Je suis chaviré',cat:'Violation',depth:2,role:'source'},
+  {id:12529,text:'Je suis incendié',cat:'Violation',depth:2,role:'source'},
+  {id:12530,text:'Je suis mangé',cat:'Violation',depth:2,role:'source'},
+  {id:12531,text:'Je suis pesé',cat:'Violation',depth:2,role:'source'},
+  {id:12532,text:'Je suis remué',cat:'Violation',depth:2,role:'source'},
+  {id:12533,text:'Je suis allumé',cat:'Violation',depth:2,role:'source'},
+  {id:12534,text:'Je suis électrisé',cat:'Violation',depth:2,role:'source'},
+  {id:12535,text:'Je suis aimanté',cat:'Violation',depth:2,role:'source'},
+  {id:12536,text:'Je suis convoité',cat:'Violation',depth:2,role:'source'},
+  {id:12537,text:'Je suis désiré',cat:'Violation',depth:2,role:'source'},
+  {id:12538,text:'Je suis happé',cat:'Violation',depth:2,role:'source'},
+  {id:12539,text:'Je suis avalé',cat:'Violation',depth:2,role:'source'},
+  {id:12540,text:'Je suis dévoré',cat:'Violation',depth:2,role:'source'},
+  {id:12541,text:'Je suis absorbé',cat:'Violation',depth:2,role:'source'},
+  {id:12542,text:'Je suis aspiré',cat:'Violation',depth:2,role:'source'}
 ];
 const GROUPS=[
   {id:"figement",label:"① Figement",subtitle:"Corps bloqué, paralysé, incapable d agir",desc:"corps bloqué, paralysé, incapable d agir",cats:["Figement"],polarity:"neg"},
@@ -2446,16 +2478,50 @@ function showCard(){
   const group=getGroupForCat(d.cat,d.role);
   const lvl=d.depth||3;
   const lc=LEVEL_COLORS[lvl]||"var(--text-faint)";
-  document.getElementById("g-card-group").textContent=group?group.label:"";
+  const ln=LEVEL_NAMES[lvl]||"";
+
+  // Level progress bar
+  const levelTotal=gameQueue.filter(x=>(x.depth||3)===lvl).length;
+  const levelDone=gameQueue.slice(0,gameIdx).filter(x=>(x.depth||3)===lvl).length;
+  const levelPct=levelTotal?Math.round((levelDone/levelTotal)*100):0;
+  document.getElementById("g-level-progress").innerHTML=`
+    <span class="game-level-label" style="color:${lc}">${ln}</span>
+    <div class="game-level-bar-wrap"><div class="game-level-bar-fill" style="width:${levelPct}%;background:${lc};"></div></div>
+    <span class="game-level-pct">${levelPct}%</span>`;
+
+  // Group info
+  const groupTotal=group?gameQueue.filter(x=>getGroupForCat(x.cat,x.role)?.id===group.id).length:0;
+  const groupDone=group?gameQueue.slice(0,gameIdx).filter(x=>getGroupForCat(x.cat,x.role)?.id===group.id).length:0;
+  document.getElementById("g-group-info").innerHTML=group?`
+    <span class="game-group-name">${group.label}</span>
+    <span class="game-group-pos">${groupDone+1}/${groupTotal} dans ce groupe</span>`:"";
+
+  // Card text
   document.getElementById("g-card-text").textContent=d.text;
-  document.getElementById("g-card-level").innerHTML=
-    Array.from({length:5},(_,i)=>`<span style="width:8px;height:8px;border-radius:50%;background:${i<lvl?LEVEL_COLORS[i+1]:"var(--border-md)"};display:inline-block;margin-right:3px;"></span>`).join("")+
-    `<span style="color:${lc};font-weight:600;">${LEVEL_NAMES[lvl]||""}</span>`;
+  document.getElementById("g-card-desc").textContent=group?`(${group.desc||group.subtitle})`:"";
+
+  // Top badge
   const badge=document.getElementById("g-level-badge");
-  badge.textContent=group?group.label.replace(/^.\s*/,""):LEVEL_NAMES[lvl];
-  badge.style.borderColor=lc;badge.style.color=lc;
+  badge.textContent=ln;badge.style.borderColor=lc;badge.style.color=lc;
+
+  // Global progress bar
   document.getElementById("gp-fill").style.width=Math.round((gameIdx/gameQueue.length)*100)+"%";
   document.getElementById("g-counter").textContent=`${gameIdx+1} / ${gameQueue.length} · ✅ ${gameWorked.length}`;
+
+  // Session dots
+  const dots=gameQueue.map((_,i)=>{
+    let cls="game-session-dot";
+    if(i<gameIdx){
+      if(gameWorked.includes(gameQueue[i].id))cls+=" worked";
+      else if(gameLater.includes(gameQueue[i].id))cls+=" todo";
+      else cls+=" skipped";
+    }else if(i===gameIdx)cls+=" current";
+    return`<div class="${cls}"></div>`;
+  }).join("");
+  document.getElementById("g-session-progress").innerHTML=`
+    <div class="game-session-dots">${dots}</div>
+    <div class="game-session-label">✅ ${gameWorked.length} travaillées · 🔖 ${gameLater.length} à faire</div>`;
+
   const card=document.getElementById("g-card");
   card.classList.add("show","anim-in");setTimeout(()=>card.classList.remove("anim-in"),300);
 }
