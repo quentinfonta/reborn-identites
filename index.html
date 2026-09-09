@@ -138,8 +138,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .group-header:hover .group-toggle{opacity:1;}
 .group-header-left{display:flex;align-items:center;gap:8px;}
 .group-polarity-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-.group-label{font-size:13px;font-weight:600;}
-.group-sub{font-size:11px;color:var(--text-faint);margin-top:2px;font-style:italic;}
+.group-label{font-size:13px;font-weight:600;line-height:1.2;}
+.group-sub{font-size:10px;color:var(--text-faint);margin-top:1px;font-style:italic;}
 .group-count{font-size:10px;color:var(--text-faint);padding:1px 7px;border-radius:8px;border:1px solid var(--border);}
 .group-toggle{font-size:11px;color:var(--text-faint);opacity:0.4;transition:opacity 0.15s;}
 .group-collapsed .id-list,.group-collapsed .level-strip{display:none;}
@@ -2068,7 +2068,10 @@ function buildGroupHtml(g,wids,isForScan){
     <div class="group-header">
       <div class="group-header-left">
         <div class="group-polarity-dot" style="background:${dotColor}"></div>
-        <div><div class="group-label" style="color:${labelColor}">${g.label}</div><div class="group-sub">${g.subtitle}</div></div>
+        <div>
+          <div class="group-label" style="color:${labelColor}">${g.label}</div>
+          <div class="group-sub">${g.desc||g.subtitle}</div>
+        </div>
       </div>
       <div style="display:flex;align-items:center;gap:6px;">
         <div class="group-count">${workedCount}/${items.length}</div>
