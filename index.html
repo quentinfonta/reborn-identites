@@ -306,6 +306,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .scan-level-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px;border-radius:var(--radius);border:1px solid transparent;transition:all 0.15s;}
 .scan-level-item.active{border-color:var(--border-md);background:var(--surface);}
 .scan-level-item:not([style*="cursor:default"]):hover{background:var(--surface2);}
+.dict-menu-list{display:flex;flex-direction:column;gap:6px;padding:0.5rem 0 6rem;}
+.dict-menu-card{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface);cursor:pointer;transition:all 0.15s;}
+.dict-menu-card:hover{border-color:var(--border-md);background:var(--surface2);}
+.dict-menu-card-left{display:flex;align-items:flex-start;gap:10px;flex:1;}
+.dict-menu-card-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
 .dict-group-nav{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0.75rem 0 1rem;border-bottom:1px solid var(--border);margin-bottom:0.5rem;}
 .dict-nav-btn{padding:6px 12px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface2);color:var(--text-muted);font-size:11px;font-family:inherit;cursor:pointer;transition:all 0.15s;flex:1;}
 .dict-nav-btn:hover:not(:disabled){border-color:var(--border-strong);color:var(--text);}
@@ -2212,36 +2217,53 @@ function render(){
   const scroll=document.getElementById("dict-scroll");
 
   if(dictGroupIdx!==null){
-    // Single group view
+    // SINGLE GROUP VIEW
     const g=GROUPS[dictGroupIdx];
     const html=buildGroupHtml(g,wids,false,true);
+    const prevG=dictGroupIdx>0?GROUPS[dictGroupIdx-1]:null;
+    const nextG=dictGroupIdx<GROUPS.length-1?GROUPS[dictGroupIdx+1]:null;
     scroll.innerHTML=`
       <div class="dict-group-nav">
-        <button class="dict-nav-btn" id="dict-prev-btn" ${dictGroupIdx===0?"disabled":""}>← ${dictGroupIdx>0?GROUPS[dictGroupIdx-1].label.replace(/^.\s*/,""):"—"}</button>
-        <button class="dict-menu-btn" id="dict-menu-btn">☰ Menu</button>
-        <button class="dict-nav-btn" id="dict-next-btn" ${dictGroupIdx===GROUPS.length-1?"disabled":""} style="text-align:right;">${dictGroupIdx<GROUPS.length-1?GROUPS[dictGroupIdx+1].label.replace(/^.\s*/,""):"—"} →</button>
+        <button class="dict-nav-btn" id="dict-prev-btn" ${!prevG?"disabled":""}>← ${prevG?prevG.label.replace(/^.\s*/,""):"—"}</button>
+        <button class="dict-menu-btn" id="dict-menu-btn">☰ Groupes</button>
+        <button class="dict-nav-btn" id="dict-next-btn" ${!nextG?"disabled":""} style="text-align:right;">${nextG?nextG.label.replace(/^.\s*/,""):"—"} →</button>
       </div>
-      ${html||'<div style="padding:3rem;text-align:center;color:var(--text-faint)">Aucune identité dans ce groupe</div>'}`;
-    // Auto-open the single group
+      ${html||'<div style="padding:2rem;text-align:center;color:var(--text-faint)">Aucune identité</div>'}`;
     const section=scroll.querySelector(".group-section");
-    if(section){section.classList.remove("group-collapsed");const t=section.querySelector(".group-toggle");if(t)t.textContent="▾";}
-    // Nav listeners
+    if(section){section.classList.remove("group-collapsed");const t=section.querySelector(".group-toggle");if(t)t.style.display="none";}
     document.getElementById("dict-prev-btn")?.addEventListener("click",()=>{dictGroupIdx--;render();scroll.scrollTop=0;});
     document.getElementById("dict-next-btn")?.addEventListener("click",()=>{dictGroupIdx++;render();scroll.scrollTop=0;});
     document.getElementById("dict-menu-btn")?.addEventListener("click",()=>{dictGroupIdx=null;render();});
   } else {
-    // All groups view
-    let html="";
-    GROUPS.forEach(g=>{html+=buildGroupHtml(g,wids,false,false);});
-    scroll.innerHTML=html||'<div style="padding:3rem;text-align:center;color:var(--text-faint)">Aucune identité</div>';
-    // Restore open state
-    scroll.querySelectorAll(".group-section").forEach(section=>{
-      const gid=section.dataset.gid;
-      if(openGroups.has(gid)){
-        section.classList.remove("group-collapsed");
-        const toggle=section.querySelector(".group-toggle");
-        if(toggle)toggle.textContent="▾";
-      }
+    // MENU VIEW — groups as cards
+    const html=GROUPS.map((g,idx)=>{
+      const isPos=g.polarity==="pos";
+      const dotColor=isPos?"var(--green-border)":"var(--red-border)";
+      const labelColor=isPos?"var(--green-text)":"var(--red-text)";
+      const items=DATA.filter(d=>g.cats.includes(d.cat)&&(isPos?(d.role==="coping"):(d.role==="source"||d.role==="verdict")));
+      const worked=items.filter(d=>wids.has(d.id)).length;
+      const pct=items.length?Math.round((worked/items.length)*100):0;
+      return`<div class="dict-menu-card" data-gidx="${idx}">
+        <div class="dict-menu-card-left">
+          <div style="width:8px;height:8px;border-radius:50%;background:${dotColor};flex-shrink:0;margin-top:3px;"></div>
+          <div>
+            <div style="font-size:13px;font-weight:600;color:${labelColor};">${g.label}</div>
+            <div style="font-size:10px;color:var(--text-faint);margin-top:2px;font-style:italic;">${g.desc||g.subtitle}</div>
+          </div>
+        </div>
+        <div class="dict-menu-card-right">
+          <div style="font-size:10px;color:var(--text-faint);">${pct}%</div>
+          <div style="width:40px;height:3px;background:var(--surface3);border-radius:2px;overflow:hidden;"><div style="height:100%;width:${pct}%;background:${dotColor};"></div></div>
+          <span style="color:var(--text-faint);font-size:12px;">→</span>
+        </div>
+      </div>`;
+    }).join("");
+    scroll.innerHTML=`<div class="dict-menu-list">${html}</div>`;
+    scroll.querySelectorAll(".dict-menu-card").forEach(card=>{
+      card.addEventListener("click",()=>{
+        dictGroupIdx=+card.dataset.gidx;
+        render();scroll.scrollTop=0;
+      });
     });
   }
   attachGroupEvents(scroll,false);
