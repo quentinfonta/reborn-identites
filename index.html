@@ -306,12 +306,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .scan-level-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px;border-radius:var(--radius);border:1px solid transparent;transition:all 0.15s;}
 .scan-level-item.active{border-color:var(--border-md);background:var(--surface);}
 .scan-level-item:not([style*="cursor:default"]):hover{background:var(--surface2);}
-.dict-menu-list{display:flex;flex-direction:column;gap:6px;padding:0.5rem 0 6rem;}
-.dict-menu-card{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface);cursor:pointer;transition:all 0.15s;}
-.dict-menu-card:hover{border-color:var(--border-md);background:var(--surface2);}
-.dict-menu-card-left{display:flex;align-items:flex-start;gap:10px;flex:1;}
-.dict-menu-card-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
-.dict-group-nav{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0.75rem 0 1rem;border-bottom:1px solid var(--border);margin-bottom:0.5rem;}
+.dict-level-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:1rem 0;border-bottom:1px solid var(--border);margin-bottom:1rem;}
+.dict-family{margin-bottom:1.5rem;}
+.dict-family-header{display:flex;align-items:center;gap:8px;padding:0.5rem 0;margin-bottom:0.25rem;border-bottom:1px solid var(--border);}
+.dict-family-items{display:flex;flex-direction:column;gap:2px;}
 .dict-nav-btn{padding:6px 12px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface2);color:var(--text-muted);font-size:11px;font-family:inherit;cursor:pointer;transition:all 0.15s;flex:1;}
 .dict-nav-btn:hover:not(:disabled){border-color:var(--border-strong);color:var(--text);}
 .dict-nav-btn:disabled{opacity:0.3;cursor:default;}
@@ -2101,14 +2099,29 @@ function buildGroupHtml(g,wids,isForScan,singleView=false){
     </div>
     <div class="id-list">`;
 
-  let lastDepth=null;
+  // Sort: depth 1→5, then neg before pos within each level
+  items.sort((a,b)=>{
+    const da=a.depth||3,db=b.depth||3;
+    if(da!==db)return da-db;
+    return (a.role==="coping"?1:0)-(b.role==="coping"?1:0);
+  });
+
+  let lastDepth=null,lastPol=null;
   items.forEach(d=>{
     const depth=d.depth||3;
+    const isPos=d.role==="coping";
     if(depth!==lastDepth){
-      lastDepth=depth;
+      lastDepth=depth;lastPol=null;
       const lc=LEVEL_COLORS[depth]||"var(--text-faint)";
       const ln=LEVEL_NAMES[depth]||"";
       html+=`<div class="level-strip"><div class="level-strip-dot" style="background:${lc}"></div><span class="level-strip-label" style="color:${lc}">${ln}</span><div class="level-divider"></div></div>`;
+    }
+    const pol=isPos?"pos":"neg";
+    if(pol!==lastPol){
+      lastPol=pol;
+      const pc=isPos?"var(--green-text)":"var(--red-text)";
+      const pb=isPos?"var(--green-border)":"var(--red-border)";
+      html+=`<div style="display:flex;align-items:center;gap:6px;padding:4px 0 2px;"><span style="font-size:9px;color:${pc};text-transform:uppercase;letter-spacing:1px;font-weight:600;border:1px solid ${pb};padding:1px 5px;border-radius:4px;">${isPos?"Positif":"Négatif"}</span></div>`;
     }
     const isWorked=wids.has(d.id),isTodo=todoIds.has(d.id)&&!isWorked;
     const isChecked=isForScan?scanChecked.has(d.id):checked.has(d.id);
@@ -2210,63 +2223,127 @@ function attachGroupEvents(container,isForScan){
   }
 }
 
-const openGroups=new Set();
+let dictLevelIdx=1; // 1-5
 
 function render(){
   const wids=workedIds();
   const scroll=document.getElementById("dict-scroll");
+  const lc=LEVEL_COLORS[dictLevelIdx]||"var(--text-faint)";
+  const ln=LEVEL_NAMES[dictLevelIdx]||"";
+  const levelDesc=["","Résonance immédiate — le corps sait sans réfléchir","Reconnaissable rapidement — quelques secondes suffisent","Demande un moment — quelque chose de plus subtil","Demande de la réflexion — son histoire personnelle","Élaboré — après avoir traversé les autres niveaux"][dictLevelIdx];
 
-  if(dictGroupIdx!==null){
-    // SINGLE GROUP VIEW
-    const g=GROUPS[dictGroupIdx];
-    const html=buildGroupHtml(g,wids,false,true);
-    const prevG=dictGroupIdx>0?GROUPS[dictGroupIdx-1]:null;
-    const nextG=dictGroupIdx<GROUPS.length-1?GROUPS[dictGroupIdx+1]:null;
-    scroll.innerHTML=`
-      <div class="dict-group-nav">
-        <button class="dict-nav-btn" id="dict-prev-btn" ${!prevG?"disabled":""}>← ${prevG?prevG.label.replace(/^.\s*/,""):"—"}</button>
-        <button class="dict-menu-btn" id="dict-menu-btn">☰ Groupes</button>
-        <button class="dict-nav-btn" id="dict-next-btn" ${!nextG?"disabled":""} style="text-align:right;">${nextG?nextG.label.replace(/^.\s*/,""):"—"} →</button>
+  let html=`<div class="dict-level-nav">
+    <button class="dict-nav-btn" id="dict-prev-lvl" ${dictLevelIdx===1?"disabled":""}>← ${dictLevelIdx>1?LEVEL_NAMES[dictLevelIdx-1]:"—"}</button>
+    <div style="text-align:center;">
+      <div style="font-size:13px;font-weight:600;color:${lc};">${ln}</div>
+      <div style="font-size:10px;color:var(--text-faint);margin-top:2px;">${levelDesc}</div>
+    </div>
+    <button class="dict-nav-btn" id="dict-next-lvl" ${dictLevelIdx===5?"disabled":""} style="text-align:right;">${dictLevelIdx<5?LEVEL_NAMES[dictLevelIdx+1]:"—"} →</button>
+  </div>`;
+
+  // For each group, show identities at this level
+  GROUPS.forEach(g=>{
+    const isPos=g.polarity==="pos";
+    const dotColor=isPos?"var(--green-border)":"var(--red-border)";
+    const labelColor=isPos?"var(--green-text)":"var(--red-text)";
+
+    const items=DATA.filter(d=>{
+      if(!g.cats.includes(d.cat))return false;
+      const roleMatch=isPos?(d.role==="coping"):(d.role==="source"||d.role==="verdict");
+      if(!roleMatch)return false;
+      if((d.depth||3)!==dictLevelIdx)return false;
+      if(polarityFilter==="neg"&&isPos)return false;
+      if(polarityFilter==="pos"&&!isPos)return false;
+      if(query&&!d.text.toLowerCase().includes(query.toLowerCase()))return false;
+      const isWorked=wids.has(d.id);
+      const isTodo=todoIds.has(d.id)&&!isWorked;
+      if(stateFilter==="untouched")return!isWorked&&!isTodo&&!trashedIds.has(d.id);
+      if(stateFilter==="worked")return isWorked;
+      if(stateFilter==="todo")return isTodo;
+      if(stateFilter==="trashed")return trashedIds.has(d.id);
+      return!trashedIds.has(d.id)||stateFilter==="trashed";
+    });
+
+    if(!items.length)return;
+
+    html+=`<div class="dict-family">
+      <div class="dict-family-header">
+        <div style="width:7px;height:7px;border-radius:50%;background:${dotColor};flex-shrink:0;"></div>
+        <span style="font-size:11px;font-weight:600;color:${labelColor};">${g.label}</span>
+        <span style="font-size:10px;color:var(--text-faint);font-style:italic;">${g.desc||g.subtitle}</span>
       </div>
-      ${html||'<div style="padding:2rem;text-align:center;color:var(--text-faint)">Aucune identité</div>'}`;
-    const section=scroll.querySelector(".group-section");
-    if(section){section.classList.remove("group-collapsed");const t=section.querySelector(".group-toggle");if(t)t.style.display="none";}
-    document.getElementById("dict-prev-btn")?.addEventListener("click",()=>{dictGroupIdx--;render();scroll.scrollTop=0;});
-    document.getElementById("dict-next-btn")?.addEventListener("click",()=>{dictGroupIdx++;render();scroll.scrollTop=0;});
-    document.getElementById("dict-menu-btn")?.addEventListener("click",()=>{dictGroupIdx=null;render();});
-  } else {
-    // MENU VIEW — groups as cards
-    const html=GROUPS.map((g,idx)=>{
-      const isPos=g.polarity==="pos";
-      const dotColor=isPos?"var(--green-border)":"var(--red-border)";
-      const labelColor=isPos?"var(--green-text)":"var(--red-text)";
-      const items=DATA.filter(d=>g.cats.includes(d.cat)&&(isPos?(d.role==="coping"):(d.role==="source"||d.role==="verdict")));
-      const worked=items.filter(d=>wids.has(d.id)).length;
-      const pct=items.length?Math.round((worked/items.length)*100):0;
-      return`<div class="dict-menu-card" data-gidx="${idx}">
-        <div class="dict-menu-card-left">
-          <div style="width:8px;height:8px;border-radius:50%;background:${dotColor};flex-shrink:0;margin-top:3px;"></div>
-          <div>
-            <div style="font-size:13px;font-weight:600;color:${labelColor};">${g.label}</div>
-            <div style="font-size:10px;color:var(--text-faint);margin-top:2px;font-style:italic;">${g.desc||g.subtitle}</div>
-          </div>
-        </div>
-        <div class="dict-menu-card-right">
-          <div style="font-size:10px;color:var(--text-faint);">${pct}%</div>
-          <div style="width:40px;height:3px;background:var(--surface3);border-radius:2px;overflow:hidden;"><div style="height:100%;width:${pct}%;background:${dotColor};"></div></div>
-          <span style="color:var(--text-faint);font-size:12px;">→</span>
+      <div class="dict-family-items">`;
+
+    items.forEach(d=>{
+      const isWorked=wids.has(d.id);
+      const isTodo=todoIds.has(d.id)&&!isWorked;
+      const isChecked=checked.has(d.id);
+      const isTrashed=trashedIds.has(d.id);
+      let cls="id-row";
+      if(isWorked)cls+=" worked";
+      else if(isChecked)cls+=" checked";
+      else if(isTodo)cls+=" todo";
+      if(isTrashed)cls+=" trashed";
+      html+=`<div class="${cls}" data-id="${d.id}">
+        <div class="id-check"><i class="ti ti-check check-icon"></i></div>
+        <span class="id-text">${d.text}</span>
+        <div class="id-actions">
+          <button class="id-action-btn todo-btn" data-id="${d.id}">🔖</button>
+          <button class="id-action-btn trash-btn" data-id="${d.id}">🗑</button>
         </div>
       </div>`;
-    }).join("");
-    scroll.innerHTML=`<div class="dict-menu-list">${html}</div>`;
-    scroll.querySelectorAll(".dict-menu-card").forEach(card=>{
-      card.addEventListener("click",()=>{
-        dictGroupIdx=+card.dataset.gidx;
-        render();scroll.scrollTop=0;
-      });
     });
-  }
-  attachGroupEvents(scroll,false);
+
+    html+="</div></div>";
+  });
+
+  scroll.innerHTML=html;
+
+  // Nav listeners
+  document.getElementById("dict-prev-lvl")?.addEventListener("click",()=>{dictLevelIdx--;render();scroll.scrollTop=0;});
+  document.getElementById("dict-next-lvl")?.addEventListener("click",()=>{dictLevelIdx++;render();scroll.scrollTop=0;});
+
+  // Row clicks
+  scroll.querySelectorAll(".id-row[data-id]").forEach(row=>{
+    row.addEventListener("click",e=>{
+      if(e.target.closest(".id-action-btn"))return;
+      const id=+row.dataset.id;
+      if(wids.has(id))return;
+      if(checked.has(id))checked.delete(id);
+      else if(todoIds.has(id)){todoIds.delete(id);saveTodo();}
+      else checked.add(id);
+      row.className="id-row"+(wids.has(id)?" worked":checked.has(id)?" checked":todoIds.has(id)?" todo":"");
+      renderSession();
+    });
+    row.addEventListener("dblclick",async e=>{
+      if(e.target.closest(".id-action-btn"))return;
+      const id=+row.dataset.id;
+      if(!wids.has(id))return;
+      const session=SESSIONS.find(s=>s.ids.includes(id));
+      if(!session)return;
+      try{
+        if(session.ids.length===1){await sb(`sessions?id=eq.${session.id}`,{method:"DELETE",prefer:"return=minimal"});SESSIONS=SESSIONS.filter(s=>s.id!==session.id);}
+        else{const newIds=session.ids.filter(i=>i!==id);await sb(`sessions?id=eq.${session.id}`,{method:"PATCH",body:{ids:newIds},prefer:"return=minimal"});session.ids=newIds;}
+        render();renderHomeProgress();showToast("↩ Remise en non touchée");
+      }catch(e){showToast("Erreur");}
+    });
+  });
+
+  scroll.querySelectorAll(".todo-btn").forEach(btn=>btn.addEventListener("click",e=>{
+    e.stopPropagation();const id=+btn.dataset.id;
+    if(wids.has(id))return;
+    if(todoIds.has(id)){todoIds.delete(id);showToast("Retiré");}
+    else{todoIds.add(id);checked.delete(id);showToast("🔖 À faire");}
+    saveTodo();render();
+  }));
+
+  scroll.querySelectorAll(".trash-btn").forEach(btn=>btn.addEventListener("click",e=>{
+    e.stopPropagation();const id=+btn.dataset.id;
+    if(trashedIds.has(id)){trashedIds.delete(id);showToast("Restaurée");}
+    else{trashedIds.add(id);checked.delete(id);todoIds.delete(id);showToast("🚫 Exclue");}
+    saveTrashed();saveTodo();render();
+  }));
+
   renderSession();
 }
 
