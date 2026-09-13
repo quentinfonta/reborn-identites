@@ -338,7 +338,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .scan-chapter-title{font-size:15px;font-weight:600;margin-bottom:4px;}
 .scan-chapter-intro{font-size:12px;color:var(--text-muted);font-style:italic;line-height:1.5;}
 .scan-chapter-items{display:flex;flex-direction:column;gap:2px;margin-top:0.75rem;}
-.scan-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:1rem 0;border-bottom:1px solid var(--border);margin-bottom:1rem;}
+.scan-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0.75rem 0 0.5rem;}
+.scan-tabs{display:flex;gap:6px;overflow-x:auto;padding:0.5rem 0 0.75rem;border-bottom:1px solid var(--border);margin-bottom:1rem;scrollbar-width:none;}
+.scan-tabs::-webkit-scrollbar{display:none;}
+.scan-tab{padding:5px 10px;border-radius:20px;border:1px solid var(--border-md);background:var(--surface2);color:var(--text-faint);font-size:11px;font-family:inherit;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.15s;}
+.scan-tab.active{border-color:var(--accent);color:var(--accent);background:var(--surface);}
+.scan-tab:hover:not(.active){border-color:var(--border-strong);color:var(--text-muted);}
 .scan-nav-info{text-align:center;}
 .scan-nav-theme{font-size:13px;font-weight:600;}
 .scan-nav-progress{font-size:10px;color:var(--text-faint);margin-top:2px;}
@@ -535,6 +540,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
       <div class="game-level-progress" id="g-level-progress"></div>
       <div class="game-group-info" id="g-group-info"></div>
     </div>
+    <div id="g-card-group" style="display:none;"></div>
     <div class="game-card-text" id="g-card-text"></div>
     <div class="game-card-desc" id="g-card-desc"></div>
     <div class="game-btns">
@@ -2388,6 +2394,16 @@ function renderScan(){
     });
   });
 
+  // Chapter tabs
+  cont.querySelectorAll(".scan-tab").forEach(tab=>{
+    tab.addEventListener("click",async()=>{
+      await saveScanChecked();
+      scanChapterIdx=+tab.dataset.cidx;
+      scanChecked.clear();
+      renderScan();cont.scrollTop=0;
+    });
+  });
+
   document.getElementById("scan-back-chapter").addEventListener("click",()=>{
     if(scanChapterIdx===0){scanThemeId=null;renderScan();}
     else{scanChapterIdx--;renderScan();cont.scrollTop=0;}
@@ -2685,7 +2701,7 @@ function showCard(){
   const lvl=d.depth||3;
   const lc=LEVEL_COLORS[lvl]||"var(--text-faint)";
   const ln=LEVEL_NAMES[lvl]||"";
-  document.getElementById("g-card-group").textContent=group?group.label:"";
+  if(document.getElementById("g-card-group"))document.getElementById("g-card-group").textContent=group?group.label:"";
   document.getElementById("g-card-text").textContent=d.text;
 
   // Level progress
