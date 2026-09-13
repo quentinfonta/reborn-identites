@@ -2394,6 +2394,40 @@ document.getElementById("scan-explore-btn")?.addEventListener("click",()=>{
   document.getElementById("scan-explore-btn").style.display="none";
 });
 
+
+function renderHomeThemes(){
+  const wids=workedIds();
+  const grid=document.getElementById("home-themes-grid");
+  if(!grid)return;
+  grid.innerHTML=SCAN_THEMES.map(t=>{
+    const allIds=t.chapters.flatMap(c=>c.ids);
+    const total=allIds.filter(w=>DATA.find(d=>d.text===`Je suis ${w}`)).length;
+    const done=allIds.filter(w=>{const d=DATA.find(x=>x.text===`Je suis ${w}`);return d&&wids.has(d.id);}).length;
+    const pct=total?Math.round((done/total)*100):0;
+    return`<div class="home-theme-row" data-tid="${t.id}">
+      <div class="home-theme-icon">${t.icon}</div>
+      <div class="home-theme-info">
+        <div class="home-theme-title">${t.title}</div>
+        <div class="home-theme-desc">${t.desc}</div>
+      </div>
+      <div class="home-theme-progress">
+        <div class="home-theme-pct">${pct}%</div>
+        <div class="home-theme-bar"><div class="home-theme-bar-fill" style="width:${pct}%"></div></div>
+      </div>
+    </div>`;
+  }).join("");
+  grid.querySelectorAll(".home-theme-row").forEach(row=>{
+    row.addEventListener("click",()=>{
+      scanThemeId=row.dataset.tid;
+      scanChapterIdx=0;scanChecked.clear();
+      showScreen("scan-screen");
+      document.getElementById("scan-profile-name").textContent=currentProfile?currentProfile.name:"";
+      renderScan();
+      document.getElementById("scan-explore-btn").style.display="flex";
+    });
+  });
+}
+
 loadProfiles();
       }catch(e){showToast("Erreur: "+e.message);}
     }));
