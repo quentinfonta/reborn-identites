@@ -318,7 +318,40 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .dict-menu-btn:hover{border-color:var(--border-strong);color:var(--text);}
 .dict-enter-btn{padding:3px 8px;border-radius:6px;border:1px solid var(--border-md);background:none;color:var(--text-faint);font-size:12px;font-family:inherit;cursor:pointer;transition:all 0.15s;}
 .dict-enter-btn:hover{border-color:var(--accent);color:var(--accent);}
-.toast{position:fixed;bottom:4.5rem;left:50%;transform:translateX(-50%);background:var(--surface3);color:var(--text);border:1px solid var(--border-strong);border-radius:var(--radius);padding:8px 16px;font-size:13px;font-weight:500;opacity:0;transition:opacity 0.2s;pointer-events:none;z-index:800;white-space:nowrap;}
+.scan-themes-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:1rem 0 6rem;}
+.scan-theme-card{display:flex;flex-direction:column;gap:6px;padding:1rem;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);cursor:pointer;transition:all 0.15s;}
+.scan-theme-card:hover{border-color:var(--border-strong);background:var(--surface2);transform:translateY(-1px);}
+.scan-theme-icon{font-size:28px;}
+.scan-theme-title{font-size:13px;font-weight:600;}
+.scan-theme-desc{font-size:10px;color:var(--text-faint);line-height:1.4;}
+.scan-chapter{margin-bottom:2rem;}
+.scan-chapter-header{padding:1rem 0 0.5rem;border-bottom:1px solid var(--border);margin-bottom:0.75rem;}
+.scan-chapter-num{font-size:10px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
+.scan-chapter-title{font-size:15px;font-weight:600;margin-bottom:4px;}
+.scan-chapter-intro{font-size:12px;color:var(--text-muted);font-style:italic;line-height:1.5;}
+.scan-chapter-items{display:flex;flex-direction:column;gap:2px;margin-top:0.75rem;}
+.scan-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:1rem 0;border-bottom:1px solid var(--border);margin-bottom:1rem;}
+.scan-nav-info{text-align:center;}
+.scan-nav-theme{font-size:13px;font-weight:600;}
+.scan-nav-progress{font-size:10px;color:var(--text-faint);margin-top:2px;}
+.scan-progress-dots{display:flex;gap:4px;justify-content:center;margin-top:6px;}
+.scan-progress-dot{width:6px;height:6px;border-radius:50%;background:var(--surface3);}
+.scan-progress-dot.done{background:var(--accent);}
+.scan-progress-dot.current{background:var(--accent);transform:scale(1.4);}
+.scan-chapter-footer{display:flex;justify-content:flex-end;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);}
+.scan-continue-btn{padding:10px 24px;border-radius:var(--radius-lg);border:1px solid var(--accent);background:transparent;color:var(--accent);font-size:13px;font-weight:500;font-family:inherit;cursor:pointer;}
+.scan-transition{padding:2rem;text-align:center;display:flex;flex-direction:column;align-items:center;gap:1rem;}
+.scan-transition-emoji{font-size:48px;}
+.scan-transition-title{font-size:20px;font-weight:600;}
+.scan-transition-text{font-size:13px;color:var(--text-muted);line-height:1.6;max-width:400px;}
+.scan-results{padding:2rem 0 6rem;}
+.scan-results-title{font-size:22px;font-weight:600;margin-bottom:0.5rem;}
+.scan-results-sub{font-size:13px;color:var(--text-muted);margin-bottom:2rem;}
+.scan-results-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:2rem;}
+.scan-result-stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem;text-align:center;}
+.scan-result-val{font-size:28px;font-weight:600;}
+.scan-result-lbl{font-size:10px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-top:4px;}
+.toast{position:fixed;bottom:4.5rem;.toast{position:fixed;bottom:4.5rem;left:50%;transform:translateX(-50%);background:var(--surface3);color:var(--text);border:1px solid var(--border-strong);border-radius:var(--radius);padding:8px 16px;font-size:13px;font-weight:500;opacity:0;transition:opacity 0.2s;pointer-events:none;z-index:800;white-space:nowrap;}
 .toast.show{opacity:1;}
 .spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--border-md);border-top-color:var(--accent);border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;}
 @keyframes spin{to{transform:rotate(360deg);}}
@@ -373,26 +406,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 <div class="home-screen" id="home-screen">
   <div class="home-welcome">
     <div class="home-welcome-name">Bonjour, <span id="home-name"></span> 👋</div>
-    <div class="home-welcome-sub">Que veux-tu faire aujourd hui ?</div>
+    <div class="home-welcome-sub">Qu est-ce qui te pèse le plus en ce moment ?</div>
   </div>
-  <div class="home-cards">
-    <div class="home-card" id="home-dict-btn">
-      <div class="home-card-icon">🗂</div>
-      <div class="home-card-title">Bibliothèque</div>
-      <div class="home-card-sub">Toutes les identités — explorer, noter, retrouver</div>
-    </div>
-    <div class="home-card game" id="home-game-btn">
-      <div class="home-card-icon">🧭</div>
-      <div class="home-card-title">Parcours guidé</div>
-      <div class="home-card-sub">Un chemin progressif du corps vers le profond</div>
-    </div>
-  </div>
-  <div class="home-progress-section">
-    <div class="home-global-progress" id="home-global-progress"></div>
-  </div>
+  <div class="home-themes-grid" id="home-themes-grid"></div>
   <div class="home-footer">
     <button class="home-footer-btn" id="home-progress-btn"><i class="ti ti-chart-bar"></i> Stats</button>
-    <button class="home-footer-btn" id="home-switch-btn"><i class="ti ti-switch-horizontal"></i> Changer de profil</button>
+    <button class="home-footer-btn" id="home-switch-btn"><i class="ti ti-switch-horizontal"></i> Changer</button>
   </div>
 </div>
 
@@ -430,6 +449,25 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     <div class="session-inner">
       <div class="session-tags" id="session-tags"><span class="empty-sel">Aucune identité cochée</span></div>
       <button class="validate-btn" id="validate-btn" disabled><i class="ti ti-check"></i> Valider</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCAN CORPOREL -->
+<div class="block-screen" id="scan-screen">
+  <div class="main-header">
+    <div><div class="brand" style="margin-bottom:2px">REBORN</div><div class="brand-title" id="scan-header-title">Scan corporel</div></div>
+    <div class="main-header-right">
+      <div class="profile-badge"><i class="ti ti-user"></i><span id="scan-profile-name">—</span></div>
+      <button class="header-btn" id="scan-home-btn"><i class="ti ti-arrow-left"></i> Thèmes</button>
+      <button class="header-btn blue" id="scan-explore-btn" style="display:none;"><i class="ti ti-book"></i> Explorer</button>
+    </div>
+  </div>
+  <div class="dict-scroll" id="scan-content"></div>
+  <div class="session-bar" id="scan-session-bar" style="display:none;">
+    <div class="session-inner">
+      <div class="session-tags" id="scan-tags"><span class="empty-sel">Coche ce qui résonne…</span></div>
+      <button class="validate-btn" id="scan-validate-btn" disabled><i class="ti ti-check"></i> Valider</button>
     </div>
   </div>
 </div>
@@ -1893,7 +1931,6 @@ function saveTrashed(){try{localStorage.setItem("trashed_"+currentProfile.id,JSO
 function showToast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2500);}
 
 function showScreen(id){
-  // Hide all screens
   document.querySelectorAll(".screen,.home-screen,.block-screen").forEach(el=>{
     el.classList.remove("show");
   });
@@ -1933,7 +1970,431 @@ async function loadProfiles(){
         await sb(`sessions?profile_id=eq.${id}`,{method:"DELETE",prefer:"return=minimal"});
         await sb(`profiles?id=eq.${id}`,{method:"DELETE",prefer:"return=minimal"});
         ["todo_","reviews_","trashed_"].forEach(k=>localStorage.removeItem(k+id));
-        showToast("Profil supprimé");loadProfiles();
+        showToast("Profil supprimé");const SCAN_THEMES=[
+  {
+    id:"etre_aime",title:"Être aimé",icon:"❤️",
+    desc:"Retrouver le droit d être aimé et de recevoir",
+    chapters:[
+      {title:"Ce que ton corps porte",intro:"Avant même les mots, le manque d amour s inscrit dans le corps.",
+       ids:["affamé","sevré","vidé","gelé","engourdi","étreint","bercé","câliné","caressé","embrassé","tenu","porté","effleuré"]},
+      {title:"Ce que tu as ressenti",intro:"Les émotions qui ont accompagné le manque d amour.",
+       ids:["abandonné","rejeté","ignoré","oublié","délaissé","esseulé","détesté","haï","fui","évité","dédaigné","snobé"]},
+      {title:"Ce que tu as conclu sur toi",intro:"Face au manque, tu as tiré des conclusions sur ta valeur.",
+       ids:["rabaissé","dévalorisé","méprisé","minimisé","sous-estimé","humilié","avili","souillé","sali","taché","déprécié","discrédité"]},
+      {title:"Ce que tu t es dit",intro:"Les programmes installés pour survivre au manque d amour.",
+       ids:["conditionné","blindé","cadenassé","fermé","retranché","muselé","contrôlé","surveillé","autocensuré","refoulé","réprimé","inhibé"]},
+      {title:"Ce vers quoi tu reviens",intro:"L amour n est pas quelque chose à mériter. Il est ton droit naturel.",
+       ids:["aimé","choisi","désiré","préféré","chéri","adoré","attiré","séduit","conquis","étreint","enlacé","bercé","câliné","protégé","gardé","soutenu","accompagné","comblé","nourri","rassasié","rempli","régalé","sécurisé"]}
+    ]
+  },
+  {
+    id:"exister",title:"Exister",icon:"🌱",
+    desc:"Avoir le droit d être là, de prendre de la place",
+    chapters:[
+      {title:"Ce que le corps a senti",intro:"Ne pas avoir le droit d exister commence dans le corps.",
+       ids:["comprimé","écrasé","étouffé","oppressé","aplati","planté","collé","retenu","bridé","effacé","gommé"]},
+      {title:"Ce que tu as vécu",intro:"Quand ta présence était niée, ignorée ou trop lourde pour les autres.",
+       ids:["ignoré","oublié","effacé","supprimé","rayé","raturé","barré","annulé","censuré","écarté","relégué","marginalisé","ostracisé","banni","exclu"]},
+      {title:"Ce que tu as conclu",intro:"Tu as décidé de prendre moins de place pour ne pas déranger.",
+       ids:["autocensuré","retenu","réprimé","inhibé","contenu","muselé","honteux","avili","culpabilisé","responsabilisé","blâmé"]},
+      {title:"Ce vers quoi tu reviens",intro:"Tu as le droit d exister pleinement, exactement tel que tu es.",
+       ids:["né","conçu","fondé","permis","autorisé","légitimé","validé","accepté","reconnu","vu","entériné","ratifié","voulu","attendu","désiré","choisi"]}
+    ]
+  },
+  {
+    id:"faire_confiance",title:"Faire confiance",icon:"🤝",
+    desc:"Sortir de la méfiance et retrouver la confiance",
+    chapters:[
+      {title:"Ce que le corps garde",intro:"La méfiance s est installée dans le corps comme une armure.",
+       ids:["tendu","contracté","raidi","blindé","cuirassé","fermé","rivé","vissé","hérissé","alarmé"]},
+      {title:"Ce qui s est passé",intro:"Quelqu un ou quelque chose a brisé ta confiance.",
+       ids:["trahi","trompé","dupé","floué","berné","leurré","manipulé","abusé","exploité","utilisé","sacrifié","doublé","calomnié","diffamé","dénigré","soupçonné"]},
+      {title:"Ce que tu as installé",intro:"Pour te protéger, tu as mis en place des mécanismes de défense.",
+       ids:["contrôlé","surveillé","épié","retranché","cadenassé","fermé","distant","retiré","distancié","réservé"]},
+      {title:"Ce vers quoi tu reviens",intro:"La confiance n est pas de la naïveté. C est de la force.",
+       ids:["rassuré","sécurisé","protégé","garanti","soutenu","accompagné","guidé","réconforté","apaisé","réconcilié","détrompé","éclairé"]}
+    ]
+  },
+  {
+    id:"securite",title:"Être en sécurité",icon:"🛡️",
+    desc:"Sortir de la peur et retrouver un sentiment de sécurité",
+    chapters:[
+      {title:"Ce que le corps ressent",intro:"Le danger s inscrit d abord dans le corps.",
+       ids:["figé","paralysé","tétanisé","pétrifié","tremblé","hérissé","alarmé","électrisé","tendu","contracté","noué","étouffé","suffoqué"]},
+      {title:"Ce que tu as vécu",intro:"Des situations ont créé un sentiment de danger permanent.",
+       ids:["menacé","ciblé","visé","traqué","pourchassé","espionné","pisté","attaqué","assailli","agressé","violé","frappé","battu","percuté"]},
+      {title:"Ce que tu as conclu",intro:"Tu as appris que le monde n est pas sûr.",
+       ids:["insécurisé","alarmé","apeuré","paniqué","hanté","taraudé","tourmenté","inquiété","stressé","épouvanté","terrorisé","angoissé"]},
+      {title:"Ce vers quoi tu reviens",intro:"Tu peux retrouver un espace intérieur de sécurité.",
+       ids:["sécurisé","protégé","gardé","sauvé","défendu","soutenu","accompagné","ancré","enraciné","centré","stabilisé","rassuré","calmé"]}
+    ]
+  },
+  {
+    id:"limites",title:"Être respecté",icon:"🚧",
+    desc:"Retrouver ses limites et son intégrité",
+    chapters:[
+      {title:"Ce que le corps a subi",intro:"Les limites franchies s inscrivent d abord dans la chair.",
+       ids:["frappé","battu","cogné","heurté","percuté","mordu","griffé","écorché","contusionné","bousculé","agrippé","repoussé","transpercé","envahi","fouetté","cinglé","mutilé","flagellé"]},
+      {title:"Ce que tu as ressenti",intro:"Quand ton espace intime a été violé.",
+       ids:["violé","profané","désacralisé","outragé","avili","souillé","sali","objectivé","chosifié","marchandisé","sexualisé","érotisé","fantasmé","déshabillé","exposé","convoité","dévoré","mangé","consommé","avalé","happé","absorbé"]},
+      {title:"Ce que tu t es dit",intro:"Face à la violation, tu as tiré des conclusions sur tes limites.",
+       ids:["coupable","honteux","responsabilisé","humilié","avili","souillé","abîmé","marqué","taché","sali"]},
+      {title:"Ce vers quoi tu reviens",intro:"Tes limites sont sacrées. Ton corps t appartient.",
+       ids:["sacré","purifié","réapproprié","restauré","blanchi","lavé","réhabilité","dignifié","respecté","honoré","protégé","défendu","préservé"]}
+    ]
+  },
+  {
+    id:"liberte",title:"Être libre",icon:"🕊️",
+    desc:"Sortir du contrôle et retrouver son autonomie",
+    chapters:[
+      {title:"Ce que le corps porte",intro:"Le contrôle et l enfermement s inscrivent dans le corps.",
+       ids:["figé","bloqué","coincé","paralysé","rivé","collé","scotché","vissé","ligoté","entravé","enchaîné","attaché","emprisonné","encagé","comprimé","étouffé"]},
+      {title:"Ce qu on t a imposé",intro:"Des personnes ou des systèmes ont pris le contrôle sur toi.",
+       ids:["contrôlé","dirigé","gouverné","dominé","opprimé","soumis","asservi","subjugué","assujetti","domestiqué","dressé","formaté","normé","codifié","embrigadé","enrégimenté","téléguidé","piloté","mené","dicté","manœuvré","manipulé","instrumentalisé"]},
+      {title:"Ce que tu t es interdit",intro:"Tu as intégré les interdits jusqu à les appliquer toi-même.",
+       ids:["censuré","autocensuré","réprimé","inhibé","muselé","bâillonné","refoulé","retenu","bridé","freiné","endigué","jugulé","empêché","corsété","cadenassé","fermé","verrouillé","prohibé","proscrit"]},
+      {title:"Ce vers quoi tu reviens",intro:"Tu es libre. Tu l as toujours été au fond.",
+       ids:["libéré","affranchi","émancipé","délié","délivré","déconditionné","désenchaîné","autonomisé","autodéterminé","décroché","désimpliqué","dépris","dégagé","ouvert","déployé","propulsé"]}
+    ]
+  },
+  {
+    id:"corps",title:"Être bien dans son corps",icon:"🌊",
+    desc:"Retrouver la connexion à son corps et ses sensations",
+    chapters:[
+      {title:"Le corps bloqué",intro:"Ton corps a appris à se figer pour se protéger.",
+       ids:["figé","gelé","glacé","contracté","noué","tendu","serré","raidi","bandé","recroquevillé","voûté","affaissé","tassé","aplati","engourdi","ankylosé","atrophié","prostré"]},
+      {title:"Le corps qui souffre",intro:"Les blessures que le corps a portées.",
+       ids:["blessé","meurtri","endolori","courbaturé","frappé","battu","étouffé","suffoqué","comprimé","écrasé","alourdi","lesté","consumé","brûlé","épuisé","vidé","lessivé","claqué","éreinté","exténué"]},
+      {title:"Le corps coupé",intro:"Parfois tu t es coupé de ton corps pour ne plus ressentir.",
+       ids:["dissocié","détaché","coupé","séparé","fragmenté","morcelé","anesthésié","engourdi","endormi","assoupi","sectionné","disloqué"]},
+      {title:"Le corps qui revient",intro:"Ton corps sait comment revenir à la vie.",
+       ids:["détendu","relâché","décrispé","desserré","réchauffé","ancré","enraciné","centré","stabilisé","ouvert","dilaté","déployé","soulevé","allégé","dégagé","dynamisé","revitalisé","rechargé","régénéré","ressourcé","reposé","restauré"]}
+    ]
+  },
+  {
+    id:"valeur",title:"Valoir quelque chose",icon:"💎",
+    desc:"Retrouver le sentiment de sa propre valeur",
+    chapters:[
+      {title:"Ce que ça fait dans le corps",intro:"Le sentiment de ne rien valoir s ancre dans le corps.",
+       ids:["affaissé","voûté","tassé","vidé","éteint","étouffé","contracté","retenu","bridé","écrasé","lesté","alourdi"]},
+      {title:"Ce qu on t a dit",intro:"D où vient ce sentiment que tu ne vaux rien.",
+       ids:["rabaissé","dévalorisé","méprisé","humilié","ridiculisé","bafoué","dénigré","déprécié","discrédité","disqualifié","fustigé","grondé","réprimandé","sanctionné","puni","jugé","condamné","blâmé","accusé","étiqueté","catalogué","calomnié","diffamé","sabordé"]},
+      {title:"Ce que tu as conclu",intro:"Tu t es dit que tu n étais pas assez bien.",
+       ids:["honteux","coupable","raté","échoué","défait","rejeté","déprécié","discrédité","disqualifié","fabriqué","simulé","masqué"]},
+      {title:"Ce vers quoi tu reviens",intro:"Ta valeur n a jamais eu besoin d être gagnée.",
+       ids:["valorisé","reconnu","estimé","admiré","apprécié","célébré","félicité","loué","respecté","révéré","honoré","distingué","complimenté","élevé","dignifié","consacré","couronné","élu","réhabilité"]}
+    ]
+  },
+  {
+    id:"honte",title:"Ne plus avoir honte",icon:"🌅",
+    desc:"Se libérer du regard des autres et de la honte",
+    chapters:[
+      {title:"La honte dans le corps",intro:"La honte a une texture physique très reconnaissable.",
+       ids:["contracté","recroquevillé","voûté","caché","dissimulé","masqué","voilé","étouffé","noué","figé","tremblé"]},
+      {title:"Ce qui a créé la honte",intro:"Quelqu un ou quelque chose t a fait sentir honteux.",
+       ids:["humilié","ridiculisé","moqué","bafoué","conspué","exposé","montré","flagellé","fustigé","avili","souillé","sali","profané","désacralisé","castré","stérilisé"]},
+      {title:"Ce que tu t es dit",intro:"La honte t a amené à te cacher et à te diminuer.",
+       ids:["honteux","souillé","taché","marqué","abîmé","raté","coupable","blâmé","condamné","damné","maudit"]},
+      {title:"Ce vers quoi tu reviens",intro:"Tu n es pas ta honte. Tu en es sorti.",
+       ids:["pardonné","absout","acquitté","gracié","amnistié","racheté","réhabilité","blanchi","lavé","purifié","libéré","affranchi","délivré","dignifié","élevé","révéré","sacré","honoré","célébré","reconnu","accepté"]}
+    ]
+  },
+  {
+    id:"culpabilite",title:"Ne plus se sentir coupable",icon:"⚖️",
+    desc:"Se libérer du poids de la culpabilité",
+    chapters:[
+      {title:"Le poids dans le corps",intro:"La culpabilité pèse physiquement.",
+       ids:["lesté","alourdi","écrasé","plombé","comprimé","noué","contracté","étouffé","prostré","effondré","affaissé"]},
+      {title:"Ce qu on t a mis sur les épaules",intro:"On t a chargé de responsabilités qui n étaient pas les tiennes.",
+       ids:["culpabilisé","accusé","incriminé","blâmé","condamné","jugé","sanctionné","puni","châtié","grondé","réprimandé","responsabilisé","surresponsabilisé","chargé","inculpé"]},
+      {title:"Ce que tu portes encore",intro:"Tu continues à te punir pour des choses passées.",
+       ids:["coupable","honteux","damné","maudit","sabordé","rabaissé","indigne","condamné"]},
+      {title:"Ce vers quoi tu reviens",intro:"Tu as le droit de te pardonner.",
+       ids:["pardonné","absout","acquitté","gracié","amnistié","racheté","réhabilité","blanchi","lavé","libéré","affranchi","délivré","soulagé","allégé","dégagé","assumé"]}
+    ]
+  },
+  {
+    id:"trahison",title:"Sortir de la trahison",icon:"🔓",
+    desc:"Guérir des blessures de trahison et retrouver la paix",
+    chapters:[
+      {title:"Ce que le corps a gardé",intro:"La trahison laisse des traces physiques profondes.",
+       ids:["tendu","contracté","raidi","blindé","cuirassé","fermé","hérissé","noué","figé","sonné","assommé","choqué"]},
+      {title:"Ce qui s est passé",intro:"Tu as été trahi par quelqu un en qui tu avais confiance.",
+       ids:["trahi","trompé","dupé","floué","berné","leurré","manipulé","abusé","exploité","utilisé","sacrifié","doublé","calomnié","diffamé","dénigré","soupçonné","déçu","désabusé","désenchanté","consterné","atterré","navré"]},
+      {title:"Ce que tu as installé",intro:"Pour ne plus souffrir, tu t es fermé.",
+       ids:["distant","retiré","distancié","réservé","blindé","cadenassé","fermé","retranché","surveillé","contrôlé","épié"]},
+      {title:"Ce vers quoi tu reviens",intro:"La confiance retrouvée est plus forte que la trahison subie.",
+       ids:["réconcilié","rassuré","réconforté","apaisé","calmé","soulagé","détrompé","éclairé","pardonné","affranchi","libéré","ouvert","déployé","soutenu","accompagné"]}
+    ]
+  },
+  {
+    id:"abandon",title:"Guérir de l abandon",icon:"🏠",
+    desc:"Sortir de la peur d être abandonné et se sentir enfin chez soi",
+    chapters:[
+      {title:"Ce que le corps porte",intro:"L abandon laisse un vide physique très réel.",
+       ids:["affamé","sevré","vidé","gelé","engourdi","secoué","tremblé","noué","contracté","étouffé","prostré","effondré"]},
+      {title:"Ce que tu as vécu",intro:"Tu as été laissé, ignoré, oublié.",
+       ids:["abandonné","délaissé","négligé","ignoré","oublié","rejeté","relégué","sacrifié","déserté","esseulé","isolé","séparé","arraché","éloigné"]},
+      {title:"Ce que tu as conclu",intro:"L abandon t a appris que tu n étais pas assez pour qu on reste.",
+       ids:["raté","rejeté","méprisé","oublié","dévalorisé","honteux","coupable","responsabilisé","blâmé","condamné"]},
+      {title:"Ce vers quoi tu reviens",intro:"Tu mérites qu on reste. Tu mérites d appartenir.",
+       ids:["choisi","désiré","aimé","préféré","attendu","voulu","gardé","protégé","soutenu","accompagné","guidé","encadré","épaulé","intégré","appartenu","lié","rattaché","uni","allié","accueilli","reçu","comblé","nourri","sécurisé","réintégré"]}
+    ]
+  },
+  {
+    id:"figement",title:"Passer à l action",icon:"⚡",
+    desc:"Sortir du figement et retrouver l élan",
+    chapters:[
+      {title:"Le figement dans le corps",intro:"Avant de passer à l action, reconnais ce qui t en empêche physiquement.",
+       ids:["figé","paralysé","tétanisé","pétrifié","immobilisé","bloqué","coincé","rivé","collé","scotché","vissé","planté","engourdi","ankylosé","atrophié","enkysté","cristallisé","fossilisé","sclérosé"]},
+      {title:"Ce qui t a stoppé",intro:"Des expériences t ont appris à ne pas agir.",
+       ids:["stoppé","arrêté","empêché","retenu","bridé","freiné","entravé","censuré","réprimé","inhibé","jugé","condamné","puni","sanctionné","ridiculisé","humilié","raté","échoué","défait","vaincu","sabordé"]},
+      {title:"Ce que tu t es dit",intro:"Tu as intégré la conviction que tu ne pouvais pas.",
+       ids:["démuni","dépourvu","démis","résigné","capitulé","abdiqué","découragé","défait","déprimé","désemparé","démotivé","désespéré","épuisé"]},
+      {title:"Ce vers quoi tu reviens",intro:"L élan est en toi. Il attendait juste d être libéré.",
+       ids:["libéré","débloqué","délivré","affranchi","propulsé","lancé","galvanisé","dynamisé","électrisé","animé","motivé","enthousiasmé","décidé","déterminé","acharné","engagé","voué","investi","habité","porté","appelé","envoyé","forgé","trempé","aiguisé","rodé"]}
+    ]
+  },
+  {
+    id:"sens",title:"Retrouver le sens",icon:"🧭",
+    desc:"Sortir du vide et retrouver ce qui compte vraiment",
+    chapters:[
+      {title:"Le vide dans le corps",intro:"La perte de sens laisse un vide physique.",
+       ids:["vidé","éteint","engourdi","prostré","affaissé","effondré","épuisé","lessivé","claqué","déprimé"]},
+      {title:"Ce que tu as traversé",intro:"Des événements ou des choix ont vidé ton existence de sens.",
+       ids:["perdu","égaré","déboussolé","désorienté","déstabilisé","confus","dispersé","éparpillé","désengagé","dépris","distancié","retiré","résigné","capitulé","abdiqué","désimpliqué"]},
+      {title:"Ce que ça a produit",intro:"Sans sens, tu t es mis à douter de tout.",
+       ids:["ébranlé","vacillé","hésité","tergiversé","découragé","démotivé","défait","anéanti","dévasté","perturbé","déconcerté","troublé"]},
+      {title:"Ce vers quoi tu reviens",intro:"Le sens n est pas à trouver. Il est à retrouver en toi.",
+       ids:["engagé","déterminé","voué","consacré","habité","animé","porté","appelé","destiné","envoyé","investi","motivé","enthousiasmé","décidé","acharné","éveillé","illuminé","accompli","réussi","grandi","mûri","découvert","établi","fondé","né","conçu"]}
+    ]
+  },
+  {
+    id:"lacher_prise",title:"Lâcher prise",icon:"🍃",
+    desc:"Sortir du contrôle et s ouvrir à la vie",
+    chapters:[
+      {title:"Le contrôle dans le corps",intro:"Contrôler coûte physiquement très cher.",
+       ids:["tendu","contracté","raidi","noué","serré","bandé","arc-bouté","bloqué","vissé","rivé","alourdi","lesté","écrasé","épuisé","drainé"]},
+      {title:"Pourquoi tu contrôles",intro:"Contrôler c est une façon de te protéger de ce que tu as vécu.",
+       ids:["trahi","abandonné","menacé","insécurisé","alarmé","apeuré","hanté","taraudé","angoissé","inquiété","terrorisé","traumatisé","blessé","meurtri"]},
+      {title:"Ce que le contrôle a créé",intro:"À force de tout vouloir maîtriser, tu t es enfermé.",
+       ids:["contrôlé","surveillé","épié","cadenassé","fermé","retranché","blindé","cuirassé","muselé","encagé","enchaîné","emprisonné","corsété"]},
+      {title:"Ce vers quoi tu reviens",intro:"Lâcher prise c est faire confiance à la vie.",
+       ids:["relâché","détendu","décrispé","desserré","allégé","soulagé","dégagé","ouvert","dilaté","déployé","libéré","affranchi","délivré","délié","décroché","apaisé","calmé","rassuré","sécurisé","ancré","centré","stabilisé"]}
+    ]
+  }
+];
+
+// SCAN CORPOREL
+let scanThemeId=null,scanChapterIdx=0,scanChecked=new Set(),scanHistory=[];
+
+function openScanScreen(){
+  if(!currentProfile){showToast("Connecte-toi d abord");return;}
+  document.getElementById("scan-profile-name").textContent=currentProfile.name;
+  scanThemeId=null;scanChapterIdx=0;scanChecked.clear();scanHistory=[];
+  showScreen("scan-screen");
+  renderScan();
+}
+
+function renderScan(){
+  const content=document.getElementById("scan-content");
+  const bar=document.getElementById("scan-session-bar");
+  document.getElementById("scan-header-title").textContent=scanThemeId?"Scan corporel":"Choisir un thème";
+
+  if(!scanThemeId){
+    // Theme selection
+    bar.style.display="none";
+    const wids=workedIds();
+    content.innerHTML=`
+      <div style="padding:1rem 0 0.5rem;">
+        <div style="font-size:13px;color:var(--text-muted);margin-bottom:1rem;">Qu est-ce qui te pèse le plus en ce moment ?</div>
+        <div class="scan-themes-grid">
+          ${SCAN_THEMES.map(t=>`
+            <div class="scan-theme-card" data-tid="${t.id}">
+              <div class="scan-theme-icon">${t.icon}</div>
+              <div class="scan-theme-title">${t.title}</div>
+              <div class="scan-theme-desc">${t.desc}</div>
+            </div>`).join("")}
+        </div>
+      </div>`;
+    content.querySelectorAll(".scan-theme-card").forEach(card=>{
+      card.addEventListener("click",()=>{
+        scanThemeId=card.dataset.tid;
+        scanChapterIdx=0;scanChecked.clear();scanHistory=[];
+        renderScan();
+      });
+    });
+    return;
+  }
+
+  const theme=SCAN_THEMES.find(t=>t.id===scanThemeId);
+  const chapter=theme.chapters[scanChapterIdx];
+  const wids=workedIds();
+  const totalChapters=theme.chapters.length;
+  const isLast=scanChapterIdx===totalChapters-1;
+
+  // Get valid ids for this chapter
+  const chapterIds=chapter.ids.filter(w=>DATA.find(d=>d.text===`Je suis ${w}`));
+
+  // Nav dots
+  const dots=theme.chapters.map((_,i)=>`<div class="scan-progress-dot ${i<scanChapterIdx?"done":i===scanChapterIdx?"current":""}"></div>`).join("");
+
+  content.innerHTML=`
+    <div class="scan-nav">
+      <button class="dict-nav-btn" id="scan-back-btn" style="flex:0 0 auto;padding:6px 10px;">${scanChapterIdx===0?"☰ Thèmes":"← Retour"}</button>
+      <div class="scan-nav-info">
+        <div class="scan-nav-theme">${theme.icon} ${theme.title}</div>
+        <div class="scan-nav-progress">Chapitre ${scanChapterIdx+1} sur ${totalChapters}</div>
+        <div class="scan-progress-dots">${dots}</div>
+      </div>
+      <div style="width:60px;"></div>
+    </div>
+    <div class="scan-chapter">
+      <div class="scan-chapter-header">
+        <div class="scan-chapter-num">Chapitre ${scanChapterIdx+1}</div>
+        <div class="scan-chapter-title">${chapter.title}</div>
+        <div class="scan-chapter-intro">${chapter.intro}</div>
+      </div>
+      <div class="scan-chapter-items" id="scan-items"></div>
+      <div class="scan-chapter-footer">
+        <button class="scan-continue-btn" id="scan-continue-btn">${isLast?"Terminer ✓":"Chapitre suivant →"}</button>
+      </div>
+    </div>`;
+
+  // Render items
+  const itemsEl=document.getElementById("scan-items");
+  chapterIds.forEach(w=>{
+    const d=DATA.find(x=>x.text===`Je suis ${w}`);
+    if(!d)return;
+    const isWorked=wids.has(d.id);
+    const isChecked=scanChecked.has(d.id);
+    let cls="id-row"+(isWorked?" worked":isChecked?" checked":"");
+    itemsEl.innerHTML+=`<div class="${cls}" data-scan-id="${d.id}">
+      <div class="id-check"><i class="ti ti-check check-icon"></i></div>
+      <span class="id-text">${d.text}</span>
+    </div>`;
+  });
+  itemsEl.querySelectorAll("[data-scan-id]").forEach(row=>{
+    row.addEventListener("click",()=>{
+      const id=+row.dataset.scanId;
+      if(workedIds().has(id))return;
+      if(scanChecked.has(id)){scanChecked.delete(id);row.classList.remove("checked");}
+      else{scanChecked.add(id);row.classList.add("checked");}
+      renderScanSession();
+    });
+  });
+
+  // Show session bar
+  bar.style.display="block";
+  renderScanSession();
+
+  // Back
+  document.getElementById("scan-back-btn").addEventListener("click",()=>{
+    if(scanChapterIdx===0){scanThemeId=null;renderScan();}
+    else{scanChapterIdx--;renderScan();content.scrollTop=0;}
+  });
+
+  // Continue
+  document.getElementById("scan-continue-btn").addEventListener("click",async()=>{
+    // Save checked
+    await saveScanChecked();
+    if(isLast){
+      showScanResults(theme);
+    }else{
+      const nextChapter=theme.chapters[scanChapterIdx+1];
+      const nextIds=nextChapter.ids.filter(w=>DATA.find(d=>d.text===`Je suis ${w}`));
+      const isPositiveChapter=scanChapterIdx===totalChapters-2;
+      showScanTransition(theme,scanChapterIdx,nextChapter,()=>{scanChapterIdx++;renderScan();content.scrollTop=0;});
+    }
+  });
+}
+
+async function saveScanChecked(){
+  const wids=workedIds();
+  const newIds=[...scanChecked].filter(id=>!wids.has(id));
+  if(!newIds.length)return;
+  const date=new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
+  try{
+    const result=await sb("sessions",{method:"POST",body:{profile_id:currentProfile.id,date,ids:newIds},prefer:"return=representation"});
+    if(result&&result[0])SESSIONS.push({id:result[0].id,date,ids:newIds});
+    newIds.forEach(id=>scheduleReview(id,reviewDates[id]?reviewDates[id].reviewCount+1:0));
+    renderHomeProgress();
+  }catch(e){showToast("Erreur sauvegarde");}
+}
+
+function showScanTransition(theme,currentIdx,nextChapter,onContinue){
+  const content=document.getElementById("scan-content");
+  const isPositive=currentIdx===theme.chapters.length-2;
+  content.innerHTML=`
+    <div class="scan-transition">
+      <div class="scan-transition-emoji">${isPositive?"🌅":"🔑"}</div>
+      <div class="scan-transition-title">${isPositive?"Tu arrives à la lumière":"Bien. Continue."}
+      </div>
+      <div class="scan-transition-text">${isPositive?"Tu as traversé les couches sombres. Le prochain chapitre t amène vers ce que tu veux ressentir.":"Tu viens de nommer ce que tu portes. Chaque identité reconnue est déjà libérée en partie."}</div>
+      <button class="scan-continue-btn" id="scan-trans-btn">Continuer → ${nextChapter.title}</button>
+    </div>`;
+  document.getElementById("scan-trans-btn").addEventListener("click",onContinue);
+}
+
+function showScanResults(theme){
+  const content=document.getElementById("scan-content");
+  const wids=workedIds();
+  const total=scanChecked.size;
+  document.getElementById("scan-session-bar").style.display="none";
+  content.innerHTML=`
+    <div class="scan-results">
+      <div class="scan-results-title">${theme.icon} Parcours terminé</div>
+      <div class="scan-results-sub">${theme.title} — tu as traversé les ${theme.chapters.length} chapitres</div>
+      <div class="scan-results-grid">
+        <div class="scan-result-stat"><div class="scan-result-val" style="color:var(--green-text)">${total}</div><div class="scan-result-lbl">Travaillées</div></div>
+        <div class="scan-result-stat"><div class="scan-result-val" style="color:var(--accent)">${theme.chapters.length}</div><div class="scan-result-lbl">Chapitres</div></div>
+        <div class="scan-result-stat"><div class="scan-result-val" style="color:var(--purple-text)">${Math.round((total/theme.chapters.reduce((a,c)=>a+c.ids.length,0))*100)||0}%</div><div class="scan-result-lbl">Résonance</div></div>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="scan-continue-btn" id="scan-restart-btn" style="flex:1;">↺ Autre thème</button>
+        <button class="scan-continue-btn" id="scan-home-result-btn" style="flex:1;border-color:var(--green-border);color:var(--green-text);">✓ Terminer</button>
+      </div>
+    </div>`;
+  document.getElementById("scan-restart-btn").addEventListener("click",()=>{scanThemeId=null;scanChecked.clear();renderScan();document.getElementById("scan-explore-btn").style.display="none";});
+  document.getElementById("scan-home-result-btn").addEventListener("click",()=>{showScreen("home-screen");renderHomeProgress();renderHomeThemes();document.getElementById("scan-explore-btn").style.display="none";});
+}
+
+function renderScanSession(){
+  const count=scanChecked.size;
+  document.getElementById("scan-validate-btn").disabled=!count;
+  document.getElementById("scan-tags").innerHTML=count
+    ?[...scanChecked].map(id=>{const d=DATA.find(x=>x.id===id);return d?`<span class="sel-tag">${d.text}</span>`:""}).join("")
+    :'<span class="empty-sel">Coche ce qui résonne…</span>';
+}
+
+document.getElementById("scan-validate-btn")?.addEventListener("click",async()=>{
+  await saveScanChecked();
+  scanChecked.clear();
+  renderScan();
+  showToast("✓ Validées");
+});
+
+
+document.getElementById("scan-home-btn").addEventListener("click",()=>{
+  scanThemeId=null;scanChecked.clear();
+  showScreen("home-screen");
+  renderHomeThemes();
+  document.getElementById("scan-explore-btn").style.display="none";
+});
+document.getElementById("scan-explore-btn")?.addEventListener("click",()=>{
+  // Open dict filtered on current theme ids
+  if(!scanThemeId)return;
+  const theme=SCAN_THEMES.find(t=>t.id===scanThemeId);
+  const themeWords=theme.chapters.flatMap(c=>c.ids);
+  // Set query to show only theme identities — use a special filter
+  showScreen("main-screen");
+  query=themeWords.join("|");
+  dictLevelIdx=1;
+  render();
+  document.getElementById("scan-explore-btn").style.display="none";
+});
+
+loadProfiles();
       }catch(e){showToast("Erreur: "+e.message);}
     }));
   }catch(e){list.innerHTML=`<div style="font-size:13px;color:var(--red-text)">Erreur: ${e.message}</div>`;}
@@ -1992,6 +2453,7 @@ async function enterProfile(id,name){
   await loadData();
   showScreen("home-screen");
   renderHomeProgress();
+  renderHomeThemes();
 }
 
 async function loadData(){
