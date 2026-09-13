@@ -2463,21 +2463,12 @@ async function loadData(){
   try{const s=localStorage.getItem("trashed_"+currentProfile.id);if(s)JSON.parse(s).map(Number).forEach(id=>trashedIds.add(id));}catch(e){}
 }
 
-function renderHomeProgress(){
-  const wids=workedIds();
-  const total=DATA.length,done=DATA.filter(d=>wids.has(d.id)).length;
-  const pct=total?Math.round((done/total)*100):0;
-  document.getElementById("home-global-progress").innerHTML=`
-    <div class="home-global-number">${done}</div>
-    <div class="home-global-label">identités travaillées sur ${total}</div>
-    <div class="home-global-track"><div class="home-global-fill" style="width:${pct}%"></div></div>
-    <div class="home-global-pct">${pct}%</div>`;
-}
+
 
 // HOME
-document.getElementById("home-dict-btn").addEventListener("click",()=>{showScreen("main-screen");render();});
 
-document.getElementById("home-game-btn").addEventListener("click",openSessionFormat);
+
+
 document.getElementById("home-progress-btn").addEventListener("click",()=>{renderProgress();document.getElementById("progress-overlay").classList.add("show");});
 document.getElementById("home-switch-btn").addEventListener("click",()=>{currentProfile=null;SESSIONS=[];checked.clear();todoIds.clear();trashedIds.clear();reviewDates={};showScreen("profile-screen");loadProfiles();});
 document.getElementById("switch-btn").addEventListener("click",()=>{showScreen("home-screen");});
