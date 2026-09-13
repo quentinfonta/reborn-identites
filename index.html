@@ -1,13 +1,10 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Identités REBORN</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>REBORN — Dictionnaire des Identités</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
 <style>
 :root{
   --bg:#0a0a0a;--surface:#111;--surface2:#1a1a1a;--surface3:#222;
@@ -368,10 +365,21 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 @keyframes spin{to{transform:rotate(360deg);}}
 .shake{animation:shake 0.35s ease;}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+.home-themes-grid{width:100%;max-width:480px;display:flex;flex-direction:column;gap:6px;overflow-y:auto;max-height:60vh;}
+.home-theme-row{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--surface);cursor:pointer;transition:all 0.15s;}
+.home-theme-row:hover{border-color:var(--border-md);background:var(--surface2);}
+.home-theme-icon{font-size:22px;flex-shrink:0;}
+.home-theme-info{flex:1;min-width:0;}
+.home-theme-title{font-size:13px;font-weight:600;}
+.home-theme-desc{font-size:10px;color:var(--text-faint);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.home-theme-progress{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0;}
+.home-theme-pct{font-size:10px;color:var(--text-faint);}
+.home-theme-bar{width:40px;height:3px;background:var(--surface3);border-radius:2px;overflow:hidden;}
+.home-theme-bar-fill{height:100%;border-radius:2px;background:var(--accent);}
 </style>
 </head>
 <body>
-
 <!-- PROFILE -->
 <div class="screen show" id="profile-screen">
   <div class="brand">REBORN</div>
@@ -561,7 +569,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 </div>
 
 <div class="toast" id="toast"></div>
-
 <script>
 
 const SB_URL="https://bxtsgyrgqdfeawpwuqqq.supabase.co";
@@ -1918,70 +1925,7 @@ const GROUPS=[
   {id:"reconstruction",label:"㉘ Reconstruction",subtitle:"Reprendre pied, reconstruire sa vie",desc:"reprendre pied, reconstruire sa vie",cats:["Effondrement"],polarity:"pos"},
   {id:"engagement",label:"㉙ Engagement",subtitle:"Retrouver le sens, s engager, avancer",desc:"retrouver le sens, s engager pleinement, avancer",cats:["Engagement"],polarity:"neg"},
 ];
-
-function getGroupForCat(cat,role){
-  if(role){const isPos=role==="coping";return GROUPS.find(g=>g.cats.includes(cat)&&(isPos?g.polarity==="pos":g.polarity==="neg"))||GROUPS.find(g=>g.cats.includes(cat));}
-  return GROUPS.find(g=>g.cats.includes(cat));
-}
-function rand(){return crypto.getRandomValues(new Uint32Array(1))[0]/0xFFFFFFFF;}
-function shuffle(arr){const a=[...arr];for(let r=0;r<3;r++)for(let i=a.length-1;i>0;i--){const j=Math.floor(rand()*(i+1));[a[i],a[j]]=[a[j],a[i]];;}return a;}
-
-let DATA=[...DEFAULT_DATA];
-let currentProfile=null,SESSIONS=[],checked=new Set(),todoIds=new Set(),reviewDates={},trashedIds=new Set();
-let stateFilter="all",levelFilter=0,polarityFilter="all",query="";
-let scanPolarity="all",scanChecked=new Set();
-let pinTarget=null,pinVal="";
-
-function workedIds(){return new Set(SESSIONS.flatMap(s=>s.ids));}
-function isDueForReview(id){const r=reviewDates[id];return r&&Date.now()>=r.nextReview;}
-function scheduleReview(id,count){reviewDates[id]={nextReview:Date.now()+((count===0?3:7)*86400000),reviewCount:count};saveReviews();}
-function markIntegrated(id){delete reviewDates[id];saveReviews();}
-function saveTodo(){try{localStorage.setItem("todo_"+currentProfile.id,JSON.stringify([...todoIds]));}catch(e){}}
-function saveReviews(){try{localStorage.setItem("reviews_"+currentProfile.id,JSON.stringify(reviewDates));}catch(e){}}
-function saveTrashed(){try{localStorage.setItem("trashed_"+currentProfile.id,JSON.stringify([...trashedIds]));}catch(e){}}
-function showToast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2500);}
-
-function showScreen(id){
-  document.querySelectorAll(".screen,.home-screen,.block-screen").forEach(el=>{
-    el.classList.remove("show");
-  });
-  const el=document.getElementById(id);
-  if(el)el.classList.add("show");
-}
-
-// PROFILE
-async function loadProfiles(){
-  const list=document.getElementById("profile-list");
-  list.innerHTML='<span class="spinner"></span>';
-  try{
-    const profiles=await sb("profiles?select=*&order=created_at.asc");
-    if(!profiles||!profiles.length){list.innerHTML='<div style="font-size:13px;color:var(--text-faint);font-style:italic">Aucun profil — crée-en un</div>';return;}
-    list.innerHTML=profiles.map(p=>{
-      const ini=p.name.slice(0,2).toUpperCase();
-      const d=new Date(p.created_at).toLocaleDateString("fr-FR",{day:"numeric",month:"short"});
-      return`<div class="profile-item" data-id="${p.id}" data-name="${p.name}" data-hash="${p.pin_hash}">
-        <div class="profile-avatar">${ini}</div><div class="profile-name">${p.name}</div>
-        <div class="profile-meta">depuis ${d}</div>
-        <button class="profile-delete-btn" data-id="${p.id}" data-name="${p.name}">🗑</button>
-      </div>`;
-    }).join("");
-    list.querySelectorAll(".profile-item").forEach(item=>item.addEventListener("click",e=>{
-      if(e.target.closest(".profile-delete-btn"))return;
-      openPin(item.dataset.id,item.dataset.name,item.dataset.hash);
-    }));
-    list.querySelectorAll(".profile-delete-btn").forEach(btn=>btn.addEventListener("click",async e=>{
-      e.stopPropagation();
-      const id=btn.dataset.id,name=btn.dataset.name;
-      const hash=btn.closest(".profile-item").dataset.hash;
-      const pin=prompt(`PIN pour supprimer "${name}" :`);
-      if(!pin)return;
-      if(await hashPin(pin)!==hash){showToast("PIN incorrect");return;}
-      if(!confirm(`Supprimer "${name}" définitivement ?`))return;
-      try{
-        await sb(`sessions?profile_id=eq.${id}`,{method:"DELETE",prefer:"return=minimal"});
-        await sb(`profiles?id=eq.${id}`,{method:"DELETE",prefer:"return=minimal"});
-        ["todo_","reviews_","trashed_"].forEach(k=>localStorage.removeItem(k+id));
-        showToast("Profil supprimé");const SCAN_THEMES=[
+const SCAN_THEMES=[
   {
     id:"etre_aime",title:"Être aimé",icon:"❤️",
     desc:"Retrouver le droit d être aimé et de recevoir",
@@ -2196,255 +2140,70 @@ async function loadProfiles(){
   }
 ];
 
-// SCAN CORPOREL
-let scanThemeId=null,scanChapterIdx=0,scanChecked=new Set(),scanHistory=[];
+function getGroupForCat(cat,role){
+  if(role){const isPos=role==="coping";return GROUPS.find(g=>g.cats.includes(cat)&&(isPos?g.polarity==="pos":g.polarity==="neg"))||GROUPS.find(g=>g.cats.includes(cat));}
+  return GROUPS.find(g=>g.cats.includes(cat));
+}
+function rand(){return crypto.getRandomValues(new Uint32Array(1))[0]/0xFFFFFFFF;}
+function shuffle(arr){const a=[...arr];for(let r=0;r<3;r++)for(let i=a.length-1;i>0;i--){const j=Math.floor(rand()*(i+1));[a[i],a[j]]=[a[j],a[i]];;}return a;}
 
-function openScanScreen(){
-  if(!currentProfile){showToast("Connecte-toi d abord");return;}
-  document.getElementById("scan-profile-name").textContent=currentProfile.name;
-  scanThemeId=null;scanChapterIdx=0;scanChecked.clear();scanHistory=[];
-  showScreen("scan-screen");
-  renderScan();
+let DATA=[...DEFAULT_DATA];
+let currentProfile=null,SESSIONS=[],checked=new Set(),todoIds=new Set(),reviewDates={},trashedIds=new Set();
+let stateFilter="all",levelFilter=0,polarityFilter="all",query="";
+let dictLevelIdx=1;
+let scanThemeId=null,scanChapterIdx=0,scanChecked=new Set();
+let pinTarget=null,pinVal="";
+let sessionSize=5,gameMode="B";
+let gameQueue=[],gameIdx=0,gameWorked=[],gameLater=[],gameSkipped=[],lastGameGroup=null;
+
+function workedIds(){return new Set(SESSIONS.flatMap(s=>s.ids));}
+function isDueForReview(id){const r=reviewDates[id];return r&&Date.now()>=r.nextReview;}
+function scheduleReview(id,count){reviewDates[id]={nextReview:Date.now()+((count===0?3:7)*86400000),reviewCount:count};saveReviews();}
+function markIntegrated(id){delete reviewDates[id];saveReviews();}
+function saveTodo(){try{localStorage.setItem("todo_"+currentProfile.id,JSON.stringify([...todoIds]));}catch(e){}}
+function saveReviews(){try{localStorage.setItem("reviews_"+currentProfile.id,JSON.stringify(reviewDates));}catch(e){}}
+function saveTrashed(){try{localStorage.setItem("trashed_"+currentProfile.id,JSON.stringify([...trashedIds]));}catch(e){}}
+function showToast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2500);}
+
+function showScreen(id){
+  document.querySelectorAll(".screen,.home-screen,.block-screen").forEach(el=>el.classList.remove("show"));
+  const el=document.getElementById(id);
+  if(el)el.classList.add("show");
 }
 
-function renderScan(){
-  const content=document.getElementById("scan-content");
-  const bar=document.getElementById("scan-session-bar");
-  document.getElementById("scan-header-title").textContent=scanThemeId?"Scan corporel":"Choisir un thème";
-
-  if(!scanThemeId){
-    // Theme selection
-    bar.style.display="none";
-    const wids=workedIds();
-    content.innerHTML=`
-      <div style="padding:1rem 0 0.5rem;">
-        <div style="font-size:13px;color:var(--text-muted);margin-bottom:1rem;">Qu est-ce qui te pèse le plus en ce moment ?</div>
-        <div class="scan-themes-grid">
-          ${SCAN_THEMES.map(t=>`
-            <div class="scan-theme-card" data-tid="${t.id}">
-              <div class="scan-theme-icon">${t.icon}</div>
-              <div class="scan-theme-title">${t.title}</div>
-              <div class="scan-theme-desc">${t.desc}</div>
-            </div>`).join("")}
-        </div>
-      </div>`;
-    content.querySelectorAll(".scan-theme-card").forEach(card=>{
-      card.addEventListener("click",()=>{
-        scanThemeId=card.dataset.tid;
-        scanChapterIdx=0;scanChecked.clear();scanHistory=[];
-        renderScan();
-      });
-    });
-    return;
-  }
-
-  const theme=SCAN_THEMES.find(t=>t.id===scanThemeId);
-  const chapter=theme.chapters[scanChapterIdx];
-  const wids=workedIds();
-  const totalChapters=theme.chapters.length;
-  const isLast=scanChapterIdx===totalChapters-1;
-
-  // Get valid ids for this chapter
-  const chapterIds=chapter.ids.filter(w=>DATA.find(d=>d.text===`Je suis ${w}`));
-
-  // Nav dots
-  const dots=theme.chapters.map((_,i)=>`<div class="scan-progress-dot ${i<scanChapterIdx?"done":i===scanChapterIdx?"current":""}"></div>`).join("");
-
-  content.innerHTML=`
-    <div class="scan-nav">
-      <button class="dict-nav-btn" id="scan-back-btn" style="flex:0 0 auto;padding:6px 10px;">${scanChapterIdx===0?"☰ Thèmes":"← Retour"}</button>
-      <div class="scan-nav-info">
-        <div class="scan-nav-theme">${theme.icon} ${theme.title}</div>
-        <div class="scan-nav-progress">Chapitre ${scanChapterIdx+1} sur ${totalChapters}</div>
-        <div class="scan-progress-dots">${dots}</div>
-      </div>
-      <div style="width:60px;"></div>
-    </div>
-    <div class="scan-chapter">
-      <div class="scan-chapter-header">
-        <div class="scan-chapter-num">Chapitre ${scanChapterIdx+1}</div>
-        <div class="scan-chapter-title">${chapter.title}</div>
-        <div class="scan-chapter-intro">${chapter.intro}</div>
-      </div>
-      <div class="scan-chapter-items" id="scan-items"></div>
-      <div class="scan-chapter-footer">
-        <button class="scan-continue-btn" id="scan-continue-btn">${isLast?"Terminer ✓":"Chapitre suivant →"}</button>
-      </div>
-    </div>`;
-
-  // Render items
-  const itemsEl=document.getElementById("scan-items");
-  chapterIds.forEach(w=>{
-    const d=DATA.find(x=>x.text===`Je suis ${w}`);
-    if(!d)return;
-    const isWorked=wids.has(d.id);
-    const isChecked=scanChecked.has(d.id);
-    let cls="id-row"+(isWorked?" worked":isChecked?" checked":"");
-    itemsEl.innerHTML+=`<div class="${cls}" data-scan-id="${d.id}">
-      <div class="id-check"><i class="ti ti-check check-icon"></i></div>
-      <span class="id-text">${d.text}</span>
-    </div>`;
-  });
-  itemsEl.querySelectorAll("[data-scan-id]").forEach(row=>{
-    row.addEventListener("click",()=>{
-      const id=+row.dataset.scanId;
-      if(workedIds().has(id))return;
-      if(scanChecked.has(id)){scanChecked.delete(id);row.classList.remove("checked");}
-      else{scanChecked.add(id);row.classList.add("checked");}
-      renderScanSession();
-    });
-  });
-
-  // Show session bar
-  bar.style.display="block";
-  renderScanSession();
-
-  // Back
-  document.getElementById("scan-back-btn").addEventListener("click",()=>{
-    if(scanChapterIdx===0){scanThemeId=null;renderScan();}
-    else{scanChapterIdx--;renderScan();content.scrollTop=0;}
-  });
-
-  // Continue
-  document.getElementById("scan-continue-btn").addEventListener("click",async()=>{
-    // Save checked
-    await saveScanChecked();
-    if(isLast){
-      showScanResults(theme);
-    }else{
-      const nextChapter=theme.chapters[scanChapterIdx+1];
-      const nextIds=nextChapter.ids.filter(w=>DATA.find(d=>d.text===`Je suis ${w}`));
-      const isPositiveChapter=scanChapterIdx===totalChapters-2;
-      showScanTransition(theme,scanChapterIdx,nextChapter,()=>{scanChapterIdx++;renderScan();content.scrollTop=0;});
-    }
-  });
-}
-
-async function saveScanChecked(){
-  const wids=workedIds();
-  const newIds=[...scanChecked].filter(id=>!wids.has(id));
-  if(!newIds.length)return;
-  const date=new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
+/* ===== PROFILES ===== */
+async function loadProfiles(){
+  const list=document.getElementById("profile-list");
+  list.innerHTML='<span class="spinner"></span>';
   try{
-    const result=await sb("sessions",{method:"POST",body:{profile_id:currentProfile.id,date,ids:newIds},prefer:"return=representation"});
-    if(result&&result[0])SESSIONS.push({id:result[0].id,date,ids:newIds});
-    newIds.forEach(id=>scheduleReview(id,reviewDates[id]?reviewDates[id].reviewCount+1:0));
-    renderHomeProgress();
-  }catch(e){showToast("Erreur sauvegarde");}
-}
-
-function showScanTransition(theme,currentIdx,nextChapter,onContinue){
-  const content=document.getElementById("scan-content");
-  const isPositive=currentIdx===theme.chapters.length-2;
-  content.innerHTML=`
-    <div class="scan-transition">
-      <div class="scan-transition-emoji">${isPositive?"🌅":"🔑"}</div>
-      <div class="scan-transition-title">${isPositive?"Tu arrives à la lumière":"Bien. Continue."}
-      </div>
-      <div class="scan-transition-text">${isPositive?"Tu as traversé les couches sombres. Le prochain chapitre t amène vers ce que tu veux ressentir.":"Tu viens de nommer ce que tu portes. Chaque identité reconnue est déjà libérée en partie."}</div>
-      <button class="scan-continue-btn" id="scan-trans-btn">Continuer → ${nextChapter.title}</button>
-    </div>`;
-  document.getElementById("scan-trans-btn").addEventListener("click",onContinue);
-}
-
-function showScanResults(theme){
-  const content=document.getElementById("scan-content");
-  const wids=workedIds();
-  const total=scanChecked.size;
-  document.getElementById("scan-session-bar").style.display="none";
-  content.innerHTML=`
-    <div class="scan-results">
-      <div class="scan-results-title">${theme.icon} Parcours terminé</div>
-      <div class="scan-results-sub">${theme.title} — tu as traversé les ${theme.chapters.length} chapitres</div>
-      <div class="scan-results-grid">
-        <div class="scan-result-stat"><div class="scan-result-val" style="color:var(--green-text)">${total}</div><div class="scan-result-lbl">Travaillées</div></div>
-        <div class="scan-result-stat"><div class="scan-result-val" style="color:var(--accent)">${theme.chapters.length}</div><div class="scan-result-lbl">Chapitres</div></div>
-        <div class="scan-result-stat"><div class="scan-result-val" style="color:var(--purple-text)">${Math.round((total/theme.chapters.reduce((a,c)=>a+c.ids.length,0))*100)||0}%</div><div class="scan-result-lbl">Résonance</div></div>
-      </div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;">
-        <button class="scan-continue-btn" id="scan-restart-btn" style="flex:1;">↺ Autre thème</button>
-        <button class="scan-continue-btn" id="scan-home-result-btn" style="flex:1;border-color:var(--green-border);color:var(--green-text);">✓ Terminer</button>
-      </div>
-    </div>`;
-  document.getElementById("scan-restart-btn").addEventListener("click",()=>{scanThemeId=null;scanChecked.clear();renderScan();document.getElementById("scan-explore-btn").style.display="none";});
-  document.getElementById("scan-home-result-btn").addEventListener("click",()=>{showScreen("home-screen");renderHomeProgress();renderHomeThemes();document.getElementById("scan-explore-btn").style.display="none";});
-}
-
-function renderScanSession(){
-  const count=scanChecked.size;
-  document.getElementById("scan-validate-btn").disabled=!count;
-  document.getElementById("scan-tags").innerHTML=count
-    ?[...scanChecked].map(id=>{const d=DATA.find(x=>x.id===id);return d?`<span class="sel-tag">${d.text}</span>`:""}).join("")
-    :'<span class="empty-sel">Coche ce qui résonne…</span>';
-}
-
-document.getElementById("scan-validate-btn")?.addEventListener("click",async()=>{
-  await saveScanChecked();
-  scanChecked.clear();
-  renderScan();
-  showToast("✓ Validées");
-});
-
-
-document.getElementById("scan-home-btn").addEventListener("click",()=>{
-  scanThemeId=null;scanChecked.clear();
-  showScreen("home-screen");
-  renderHomeThemes();
-  document.getElementById("scan-explore-btn").style.display="none";
-});
-document.getElementById("scan-explore-btn")?.addEventListener("click",()=>{
-  // Open dict filtered on current theme ids
-  if(!scanThemeId)return;
-  const theme=SCAN_THEMES.find(t=>t.id===scanThemeId);
-  const themeWords=theme.chapters.flatMap(c=>c.ids);
-  // Set query to show only theme identities — use a special filter
-  showScreen("main-screen");
-  query=themeWords.join("|");
-  dictLevelIdx=1;
-  render();
-  document.getElementById("scan-explore-btn").style.display="none";
-});
-
-
-function renderHomeThemes(){
-  const wids=workedIds();
-  const grid=document.getElementById("home-themes-grid");
-  if(!grid)return;
-  grid.innerHTML=SCAN_THEMES.map(t=>{
-    const allIds=t.chapters.flatMap(c=>c.ids);
-    const total=allIds.filter(w=>DATA.find(d=>d.text===`Je suis ${w}`)).length;
-    const done=allIds.filter(w=>{const d=DATA.find(x=>x.text===`Je suis ${w}`);return d&&wids.has(d.id);}).length;
-    const pct=total?Math.round((done/total)*100):0;
-    return`<div class="home-theme-row" data-tid="${t.id}">
-      <div class="home-theme-icon">${t.icon}</div>
-      <div class="home-theme-info">
-        <div class="home-theme-title">${t.title}</div>
-        <div class="home-theme-desc">${t.desc}</div>
-      </div>
-      <div class="home-theme-progress">
-        <div class="home-theme-pct">${pct}%</div>
-        <div class="home-theme-bar"><div class="home-theme-bar-fill" style="width:${pct}%"></div></div>
-      </div>
-    </div>`;
-  }).join("");
-  grid.querySelectorAll(".home-theme-row").forEach(row=>{
-    row.addEventListener("click",()=>{
-      scanThemeId=row.dataset.tid;
-      scanChapterIdx=0;scanChecked.clear();
-      showScreen("scan-screen");
-      document.getElementById("scan-profile-name").textContent=currentProfile?currentProfile.name:"";
-      renderScan();
-      document.getElementById("scan-explore-btn").style.display="flex";
-    });
-  });
-}
-
-
-function renderHomeProgress(){
-  renderHomeThemes();
-}
-
-loadProfiles();
+    const profiles=await sb("profiles?select=*&order=created_at.asc");
+    if(!profiles||!profiles.length){list.innerHTML='<div style="font-size:13px;color:var(--text-faint);font-style:italic">Aucun profil — crée-en un</div>';return;}
+    list.innerHTML=profiles.map(p=>{
+      const ini=p.name.slice(0,2).toUpperCase();
+      const d=new Date(p.created_at).toLocaleDateString("fr-FR",{day:"numeric",month:"short"});
+      return`<div class="profile-item" data-id="${p.id}" data-name="${p.name}" data-hash="${p.pin_hash}">
+        <div class="profile-avatar">${ini}</div><div class="profile-name">${p.name}</div>
+        <div class="profile-meta">depuis ${d}</div>
+        <button class="profile-delete-btn" data-id="${p.id}" data-name="${p.name}">🗑</button>
+      </div>`;
+    }).join("");
+    list.querySelectorAll(".profile-item").forEach(item=>item.addEventListener("click",e=>{
+      if(e.target.closest(".profile-delete-btn"))return;
+      openPin(item.dataset.id,item.dataset.name,item.dataset.hash);
+    }));
+    list.querySelectorAll(".profile-delete-btn").forEach(btn=>btn.addEventListener("click",async e=>{
+      e.stopPropagation();
+      const id=btn.dataset.id,name=btn.dataset.name;
+      const hash=btn.closest(".profile-item").dataset.hash;
+      const pin=prompt(`PIN pour supprimer "${name}" :`);
+      if(!pin)return;
+      if(await hashPin(pin)!==hash){showToast("PIN incorrect");return;}
+      if(!confirm(`Supprimer "${name}" définitivement ?`))return;
+      try{
+        await sb(`sessions?profile_id=eq.${id}`,{method:"DELETE",prefer:"return=minimal"});
+        await sb(`profiles?id=eq.${id}`,{method:"DELETE",prefer:"return=minimal"});
+        ["todo_","reviews_","trashed_"].forEach(k=>localStorage.removeItem(k+id));
+        showToast("Profil supprimé");loadProfiles();
       }catch(e){showToast("Erreur: "+e.message);}
     }));
   }catch(e){list.innerHTML=`<div style="font-size:13px;color:var(--red-text)">Erreur: ${e.message}</div>`;}
@@ -2499,10 +2258,9 @@ async function enterProfile(id,name){
   currentProfile={id,name};
   document.getElementById("profile-name-badge").textContent=name;
   document.getElementById("home-name").textContent=name;
-  checked.clear();todoIds.clear();reviewDates={};trashedIds.clear();
+  checked.clear();todoIds.clear();reviewDates={};trashedIds.clear();scanChecked.clear();
   await loadData();
   showScreen("home-screen");
-  renderHomeProgress();
   renderHomeThemes();
 }
 
@@ -2513,262 +2271,242 @@ async function loadData(){
   try{const s=localStorage.getItem("trashed_"+currentProfile.id);if(s)JSON.parse(s).map(Number).forEach(id=>trashedIds.add(id));}catch(e){}
 }
 
-
-
-// HOME
-
-
+/* ===== HOME THEMES ===== */
+function renderHomeThemes(){
+  const wids=workedIds();
+  const grid=document.getElementById("home-themes-grid");
+  if(!grid)return;
+  grid.innerHTML=SCAN_THEMES.map(t=>{
+    const allIds=t.chapters.flatMap(c=>c.ids);
+    const total=allIds.filter(w=>DATA.find(d=>d.text===`Je suis ${w}`)).length;
+    const done=allIds.filter(w=>{const d=DATA.find(x=>x.text===`Je suis ${w}`);return d&&wids.has(d.id);}).length;
+    const pct=total?Math.round((done/total)*100):0;
+    return`<div class="home-theme-row" data-tid="${t.id}">
+      <div class="home-theme-icon">${t.icon}</div>
+      <div class="home-theme-info">
+        <div class="home-theme-title">${t.title}</div>
+        <div class="home-theme-desc">${t.desc}</div>
+      </div>
+      <div class="home-theme-progress">
+        <div class="home-theme-pct">${pct}%</div>
+        <div class="home-theme-bar"><div class="home-theme-bar-fill" style="width:${pct}%"></div></div>
+      </div>
+    </div>`;
+  }).join("");
+  grid.querySelectorAll(".home-theme-row").forEach(row=>{
+    row.addEventListener("click",()=>{
+      scanThemeId=row.dataset.tid;scanChapterIdx=0;scanChecked.clear();
+      document.getElementById("scan-profile-name").textContent=currentProfile?currentProfile.name:"";
+      showScreen("scan-screen");
+      renderScan();
+    });
+  });
+}
+function renderHomeProgress(){renderHomeThemes();}
 
 document.getElementById("home-progress-btn").addEventListener("click",()=>{renderProgress();document.getElementById("progress-overlay").classList.add("show");});
 document.getElementById("home-switch-btn").addEventListener("click",()=>{currentProfile=null;SESSIONS=[];checked.clear();todoIds.clear();trashedIds.clear();reviewDates={};showScreen("profile-screen");loadProfiles();});
-document.getElementById("switch-btn").addEventListener("click",()=>{showScreen("home-screen");});
-document.getElementById("game-btn").addEventListener("click",openSessionFormat);
-document.getElementById("progress-btn").addEventListener("click",()=>{renderProgress();document.getElementById("progress-overlay").classList.add("show");});
-document.getElementById("close-progress").addEventListener("click",()=>document.getElementById("progress-overlay").classList.remove("show"));
 
+/* ===== SCAN CORPOREL ===== */
+function renderScan(){
+  const cont=document.getElementById("scan-content");
+  const bar=document.getElementById("scan-session-bar");
 
-// LEVEL NAV
-function updateLevelNav(){
-  const color=levelFilter===0?"var(--border-md)":LEVEL_COLORS[levelFilter];
-  document.getElementById("level-nav-name").textContent=LEVEL_NAMES[levelFilter]||"Tous";
-  const dot=document.getElementById("level-dot-display");if(dot)dot.style.background=color;
-}
-document.getElementById("level-prev").addEventListener("click",()=>{levelFilter=levelFilter<=0?5:levelFilter-1;updateLevelNav();render();});
-document.getElementById("level-next").addEventListener("click",()=>{levelFilter=levelFilter>=5?0:levelFilter+1;updateLevelNav();render();});
-updateLevelNav();
-
-// FILTERS
-document.querySelectorAll("[data-polarity]").forEach(btn=>btn.addEventListener("click",()=>{
-  polarityFilter=btn.dataset.polarity;
-  document.querySelectorAll("[data-polarity]").forEach(b=>b.classList.remove("active"));
-  btn.classList.add("active");render();
-}));
-document.querySelectorAll("[data-state]").forEach(btn=>btn.addEventListener("click",()=>{
-  stateFilter=btn.dataset.state;
-  document.querySelectorAll("[data-state]").forEach(b=>b.classList.remove("active"));
-  btn.classList.add("active");render();
-}));
-document.getElementById("search").addEventListener("input",e=>{query=e.target.value;render();});
-
-// SCAN FILTERS
-
-
-// DICT RENDER
-function buildGroupHtml(g,wids,isForScan,singleView=false){
-  const isPos=g.polarity==="pos";
-  const dotColor=isPos?"var(--green-border)":"var(--red-border)";
-  const labelColor=isPos?"var(--green-text)":"var(--red-text)";
-
-  const items=DATA.filter(d=>{
-    if(!g.cats.includes(d.cat))return false;
-    const roleMatch=isPos?(d.role==="coping"):(d.role==="source"||d.role==="verdict");
-    if(!roleMatch)return false;
-    if(isForScan){
-      if(scanPolarity==="neg"&&isPos)return false;
-      if(scanPolarity==="pos"&&!isPos)return false;
-      return!trashedIds.has(d.id);
-    }
-    if(polarityFilter==="neg"&&isPos)return false;
-    if(polarityFilter==="pos"&&!isPos)return false;
-    if(levelFilter!==0&&d.depth!==levelFilter)return false;
-    if(query&&!d.text.toLowerCase().includes(query.toLowerCase()))return false;
-    const isWorked=wids.has(d.id);
-    const isTodo=todoIds.has(d.id)&&!isWorked;
-    if(stateFilter==="untouched")return!isWorked&&!isTodo&&!trashedIds.has(d.id);
-    if(stateFilter==="worked")return isWorked;
-    if(stateFilter==="todo")return isTodo;
-    if(stateFilter==="trashed")return trashedIds.has(d.id);
-    return true;
-  }).sort((a,b)=>(a.depth||3)-(b.depth||3));
-
-  if(!items.length)return"";
-
-  const workedCount=items.filter(d=>wids.has(d.id)).length;
-  const enterBtn=!singleView&&!isForScan?`<button class="dict-enter-btn" data-gidx="${GROUPS.indexOf(g)}">→</button>`:"";
-  let html=`<div class="group-section${singleView?"":" group-collapsed"}" data-gid="${g.id}">
-    <div class="group-header">
-      <div class="group-header-left">
-        <div class="group-polarity-dot" style="background:${dotColor}"></div>
-        <div>
-          <div class="group-label" style="color:${labelColor}">${g.label}</div>
-          <div class="group-sub">${g.desc||g.subtitle}</div>
-        </div>
-      </div>
-      <div style="display:flex;align-items:center;gap:6px;">
-        <div class="group-count">${workedCount}/${items.length}</div>
-        ${enterBtn}
-        <span class="group-toggle">▸</span>
-      </div>
-    </div>
-    <div class="id-list">`;
-
-  // Sort: depth 1→5, then neg before pos within each level
-  items.sort((a,b)=>{
-    const da=a.depth||3,db=b.depth||3;
-    if(da!==db)return da-db;
-    return (a.role==="coping"?1:0)-(b.role==="coping"?1:0);
-  });
-
-  let lastDepth=null,lastPol=null;
-  items.forEach(d=>{
-    const depth=d.depth||3;
-    const isPos=d.role==="coping";
-    if(depth!==lastDepth){
-      lastDepth=depth;lastPol=null;
-      const lc=LEVEL_COLORS[depth]||"var(--text-faint)";
-      const ln=LEVEL_NAMES[depth]||"";
-      html+=`<div class="level-strip"><div class="level-strip-dot" style="background:${lc}"></div><span class="level-strip-label" style="color:${lc}">${ln}</span><div class="level-divider"></div></div>`;
-    }
-    const pol=isPos?"pos":"neg";
-    if(pol!==lastPol){
-      lastPol=pol;
-      const pc=isPos?"var(--green-text)":"var(--red-text)";
-      const pb=isPos?"var(--green-border)":"var(--red-border)";
-      html+=`<div style="display:flex;align-items:center;gap:6px;padding:4px 0 2px;"><span style="font-size:9px;color:${pc};text-transform:uppercase;letter-spacing:1px;font-weight:600;border:1px solid ${pb};padding:1px 5px;border-radius:4px;">${isPos?"Positif":"Négatif"}</span></div>`;
-    }
-    const isWorked=wids.has(d.id),isTodo=todoIds.has(d.id)&&!isWorked;
-    const isChecked=isForScan?scanChecked.has(d.id):checked.has(d.id);
-    const isTrashed=trashedIds.has(d.id);
-    let cls="id-row";
-    if(isWorked)cls+=" worked";
-    else if(isChecked)cls+=" checked";
-    else if(isTodo&&!isForScan)cls+=" todo";
-    if(isTrashed)cls+=" trashed";
-    const dataAttr=isForScan?`data-scan-id="${d.id}"`:`data-id="${d.id}"`;
-    const gname=g.label.replace(/^.\s*/,"");
-    html+=`<div class="${cls}" ${dataAttr}>
-      <div class="id-check"><i class="ti ti-check check-icon"></i></div>
-      <span class="id-text">${d.text}</span>`;
-    if(isForScan){
-      html+=`<span class="group-tag" style="color:${isPos?"var(--green-text)":"var(--red-text)"};border-color:${isPos?"var(--green-border)":"var(--red-border)"}">${gname}</span>`;
-    }else{
-      html+=`<div class="id-actions">
-        <button class="id-action-btn todo-btn" data-id="${d.id}">🔖</button>
-        <button class="id-action-btn trash-btn" data-id="${d.id}">🗑</button>
-      </div>`;
-    }
-    html+="</div>";
-  });
-  html+="</div></div>";
-  return html;
-}
-
-function attachGroupEvents(container,isForScan){
-  const wids=workedIds();
-  // Enter single group view
-  container.querySelectorAll(".dict-enter-btn").forEach(btn=>{
-    btn.addEventListener("click",e=>{
-      e.stopPropagation();
-      dictGroupIdx=+btn.dataset.gidx;
-      render();
-      document.getElementById("dict-scroll").scrollTop=0;
-    });
-  });
-  // Toggle collapse
-  container.querySelectorAll(".group-header").forEach(header=>{
-    header.addEventListener("click",e=>{
-      if(e.target.closest(".id-action-btn"))return;
-      const section=header.closest(".group-section");
-      const gid=section.dataset.gid;
-      const collapsed=section.classList.toggle("group-collapsed");
-      header.querySelector(".group-toggle").textContent=collapsed?"▸":"▾";
-      if(collapsed)openGroups.delete(gid);
-      else openGroups.add(gid);
-    });
-  });
-  // Row clicks
-  const attr=isForScan?"data-scan-id":"data-id";
-  container.querySelectorAll(`[${attr}]`).forEach(row=>{
-    row.addEventListener("click",e=>{
-      if(e.target.closest(".id-action-btn"))return;
-      const id=+row.dataset[isForScan?"scanId":"id"];
-      if(workedIds().has(id)){
-        if(!isForScan)return;
-        return;
-      }
-      const set=isForScan?scanChecked:checked;
-      if(set.has(id)){set.delete(id);row.classList.remove("checked");}
-      else{
-        if(!isForScan&&todoIds.has(id)){todoIds.delete(id);saveTodo();}
-        set.add(id);row.classList.add("checked");
-      }
-      isForScan?renderScanSession():renderSession();
-    });
-    if(!isForScan){
-      row.addEventListener("dblclick",async e=>{
-        if(e.target.closest(".id-action-btn"))return;
-        const id=+row.dataset.id;
-        if(!workedIds().has(id))return;
-        const session=SESSIONS.find(s=>s.ids.includes(id));
-        if(!session)return;
-        try{
-          if(session.ids.length===1){await sb(`sessions?id=eq.${session.id}`,{method:"DELETE",prefer:"return=minimal"});SESSIONS=SESSIONS.filter(s=>s.id!==session.id);}
-          else{const newIds=session.ids.filter(i=>i!==id);await sb(`sessions?id=eq.${session.id}`,{method:"PATCH",body:{ids:newIds},prefer:"return=minimal"});session.ids=newIds;}
-          row.classList.remove("worked","checked");renderSession();renderHomeProgress();showToast("↩ Remise en non touchée");
-        }catch(e){showToast("Erreur");}
+  if(!scanThemeId){
+    bar.style.display="none";
+    document.getElementById("scan-header-title").textContent="Choisir un thème";
+    cont.innerHTML=`<div style="padding:1rem 0 6rem;">
+      <div class="scan-themes-grid">
+        ${SCAN_THEMES.map(t=>`<div class="scan-theme-card" data-tid="${t.id}">
+          <div class="scan-theme-icon">${t.icon}</div>
+          <div class="scan-theme-title">${t.title}</div>
+          <div class="scan-theme-desc">${t.desc}</div>
+        </div>`).join("")}
+      </div></div>`;
+    cont.querySelectorAll(".scan-theme-card").forEach(card=>{
+      card.addEventListener("click",()=>{
+        scanThemeId=card.dataset.tid;scanChapterIdx=0;scanChecked.clear();
+        renderScan();
       });
+    });
+    return;
+  }
+
+  const theme=SCAN_THEMES.find(t=>t.id===scanThemeId);
+  const chapter=theme.chapters[scanChapterIdx];
+  const wids=workedIds();
+  const total=theme.chapters.length;
+  const isLast=scanChapterIdx===total-1;
+  document.getElementById("scan-header-title").textContent=theme.title;
+
+  const dots=theme.chapters.map((_,i)=>`<div class="scan-progress-dot ${i<scanChapterIdx?"done":i===scanChapterIdx?"current":""}"></div>`).join("");
+
+  const items=chapter.ids.filter(w=>DATA.find(d=>d.text===`Je suis ${w}`));
+
+  let itemsHtml=items.map(w=>{
+    const d=DATA.find(x=>x.text===`Je suis ${w}`);
+    if(!d)return"";
+    const isWorked=wids.has(d.id),isChecked=scanChecked.has(d.id);
+    const cls="id-row"+(isWorked?" worked":isChecked?" checked":"");
+    return`<div class="${cls}" data-scan-id="${d.id}"><div class="id-check"><i class="ti ti-check check-icon"></i></div><span class="id-text">${d.text}</span></div>`;
+  }).join("");
+
+  cont.innerHTML=`
+    <div class="scan-nav">
+      <button class="dict-nav-btn" id="scan-back-chapter" style="flex:0 0 auto;padding:6px 12px;">
+        ${scanChapterIdx===0?"☰ Thèmes":"← Retour"}
+      </button>
+      <div class="scan-nav-info">
+        <div class="scan-nav-theme">${theme.icon} ${theme.title}</div>
+        <div class="scan-nav-progress">Chapitre ${scanChapterIdx+1} / ${total}</div>
+        <div class="scan-progress-dots">${dots}</div>
+      </div>
+      <div style="width:80px;"></div>
+    </div>
+    <div class="scan-chapter">
+      <div class="scan-chapter-header">
+        <div class="scan-chapter-num">Chapitre ${scanChapterIdx+1}</div>
+        <div class="scan-chapter-title">${chapter.title}</div>
+        <div class="scan-chapter-intro">${chapter.intro}</div>
+      </div>
+      <div class="scan-chapter-items">${itemsHtml}</div>
+      <div class="scan-chapter-footer">
+        <button class="scan-continue-btn" id="scan-continue">${isLast?"Terminer ✓":"Chapitre suivant →"}</button>
+      </div>
+    </div>`;
+
+  bar.style.display="block";
+  renderScanSession();
+
+  cont.querySelectorAll("[data-scan-id]").forEach(row=>{
+    row.addEventListener("click",()=>{
+      const id=+row.dataset.scanId;
+      if(workedIds().has(id))return;
+      if(scanChecked.has(id)){scanChecked.delete(id);row.classList.remove("checked");}
+      else{scanChecked.add(id);row.classList.add("checked");}
+      renderScanSession();
+    });
+  });
+
+  document.getElementById("scan-back-chapter").addEventListener("click",()=>{
+    if(scanChapterIdx===0){scanThemeId=null;renderScan();}
+    else{scanChapterIdx--;renderScan();cont.scrollTop=0;}
+  });
+
+  document.getElementById("scan-continue").addEventListener("click",async()=>{
+    await saveScanChecked();
+    if(isLast){showScanResults(theme);}
+    else{
+      const next=theme.chapters[scanChapterIdx+1];
+      const isPreLast=scanChapterIdx===total-2;
+      showScanTransition(isPreLast,next.title,()=>{scanChapterIdx++;renderScan();cont.scrollTop=0;});
     }
   });
-  if(!isForScan){
-    container.querySelectorAll(".todo-btn").forEach(btn=>btn.addEventListener("click",e=>{
-      e.stopPropagation();const id=+btn.dataset.id;
-      if(workedIds().has(id))return;
-      if(todoIds.has(id)){todoIds.delete(id);showToast("Retiré");}
-      else{todoIds.add(id);checked.delete(id);showToast("🔖 À faire");}
-      saveTodo();render();
-    }));
-    container.querySelectorAll(".trash-btn").forEach(btn=>btn.addEventListener("click",e=>{
-      e.stopPropagation();const id=+btn.dataset.id;
-      if(trashedIds.has(id)){trashedIds.delete(id);showToast("Restaurée");}
-      else{trashedIds.add(id);checked.delete(id);todoIds.delete(id);showToast("🚫 Exclue");}
-      saveTrashed();saveTodo();render();
-    }));
-  }
 }
 
-let dictLevelIdx=1; // 1-5
+function renderScanSession(){
+  const count=scanChecked.size;
+  document.getElementById("scan-validate-btn").disabled=!count;
+  document.getElementById("scan-tags").innerHTML=count
+    ?[...scanChecked].map(id=>{const d=DATA.find(x=>x.id===id);return d?`<span class="sel-tag">${d.text}</span>`:"";}).join("")
+    :'<span class="empty-sel">Coche ce qui résonne…</span>';
+}
+
+async function saveScanChecked(){
+  const wids=workedIds();
+  const newIds=[...scanChecked].filter(id=>!wids.has(id));
+  if(!newIds.length)return;
+  const date=new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
+  try{
+    const r=await sb("sessions",{method:"POST",body:{profile_id:currentProfile.id,date,ids:newIds},prefer:"return=representation"});
+    if(r&&r[0])SESSIONS.push({id:r[0].id,date,ids:newIds});
+    newIds.forEach(id=>scheduleReview(id,reviewDates[id]?reviewDates[id].reviewCount+1:0));
+    renderHomeThemes();
+  }catch(e){showToast("Erreur sauvegarde");}
+}
+
+function showScanTransition(isPreLast,nextTitle,onContinue){
+  const cont=document.getElementById("scan-content");
+  cont.innerHTML=`<div class="scan-transition">
+    <div class="scan-transition-emoji">${isPreLast?"🌅":"🔑"}</div>
+    <div class="scan-transition-title">${isPreLast?"Tu arrives à la lumière":"Bien. Continue."}</div>
+    <div class="scan-transition-text">${isPreLast?"Tu as traversé les couches sombres. Le prochain chapitre t amène vers ce que tu veux ressentir.":"Tu viens de nommer ce que tu portes. Chaque identité reconnue est déjà libérée en partie."}</div>
+    <button class="scan-continue-btn" id="scan-trans-next">Continuer → ${nextTitle}</button>
+  </div>`;
+  document.getElementById("scan-trans-next").addEventListener("click",onContinue);
+}
+
+function showScanResults(theme){
+  const cont=document.getElementById("scan-content");
+  document.getElementById("scan-session-bar").style.display="none";
+  const total=scanChecked.size;
+  const totalPossible=theme.chapters.reduce((a,c)=>a+c.ids.filter(w=>DATA.find(d=>d.text===`Je suis ${w}`)).length,0);
+  cont.innerHTML=`<div class="scan-results">
+    <div class="scan-results-title">${theme.icon} Parcours terminé</div>
+    <div class="scan-results-sub">${theme.title} — ${theme.chapters.length} chapitres traversés</div>
+    <div class="scan-results-grid">
+      <div class="scan-result-stat"><div class="scan-result-val" style="color:var(--green-text)">${total}</div><div class="scan-result-lbl">Travaillées</div></div>
+      <div class="scan-result-stat"><div class="scan-result-val" style="color:var(--accent)">${theme.chapters.length}</div><div class="scan-result-lbl">Chapitres</div></div>
+      <div class="scan-result-stat"><div class="scan-result-val" style="color:var(--purple-text)">${totalPossible?Math.round((total/totalPossible)*100):0}%</div><div class="scan-result-lbl">Résonance</div></div>
+    </div>
+    <div style="display:flex;gap:10px;">
+      <button class="scan-continue-btn" id="scan-res-retry" style="flex:1;">↺ Autre thème</button>
+      <button class="scan-continue-btn" id="scan-res-home" style="flex:1;border-color:var(--green-border);color:var(--green-text);">✓ Terminer</button>
+    </div>
+  </div>`;
+  document.getElementById("scan-res-retry").addEventListener("click",()=>{scanThemeId=null;scanChecked.clear();renderScan();});
+  document.getElementById("scan-res-home").addEventListener("click",()=>{showScreen("home-screen");renderHomeThemes();});
+}
+
+document.getElementById("scan-validate-btn")?.addEventListener("click",async()=>{
+  await saveScanChecked();scanChecked.clear();renderScanSession();showToast("✓ Validées");
+});
+document.getElementById("scan-home-btn").addEventListener("click",()=>{
+  showScreen("home-screen");renderHomeThemes();
+});
+
+/* ===== DICT ===== */
+const openGroups=new Set();
+let dictGroupIdx=null;
 
 function render(){
   const wids=workedIds();
   const scroll=document.getElementById("dict-scroll");
   const lc=LEVEL_COLORS[dictLevelIdx]||"var(--text-faint)";
   const ln=LEVEL_NAMES[dictLevelIdx]||"";
-  const levelDesc=["","Résonance immédiate — le corps sait sans réfléchir","Reconnaissable rapidement — quelques secondes suffisent","Demande un moment — quelque chose de plus subtil","Demande de la réflexion — son histoire personnelle","Élaboré — après avoir traversé les autres niveaux"][dictLevelIdx];
+  const lvlDescs=["","Résonance immédiate — le corps sait sans réfléchir","Reconnaissable rapidement — quelques secondes","Demande un moment — quelque chose de plus subtil","Demande de la réflexion — son histoire personnelle","Élaboré — après avoir traversé les autres niveaux"];
 
   let html=`<div class="dict-level-nav">
     <button class="dict-nav-btn" id="dict-prev-lvl" ${dictLevelIdx===1?"disabled":""}>← ${dictLevelIdx>1?LEVEL_NAMES[dictLevelIdx-1]:"—"}</button>
     <div style="text-align:center;">
       <div style="font-size:13px;font-weight:600;color:${lc};">${ln}</div>
-      <div style="font-size:10px;color:var(--text-faint);margin-top:2px;">${levelDesc}</div>
+      <div style="font-size:10px;color:var(--text-faint);margin-top:2px;">${lvlDescs[dictLevelIdx]}</div>
     </div>
     <button class="dict-nav-btn" id="dict-next-lvl" ${dictLevelIdx===5?"disabled":""} style="text-align:right;">${dictLevelIdx<5?LEVEL_NAMES[dictLevelIdx+1]:"—"} →</button>
   </div>`;
 
-  // For each group, show identities at this level
   GROUPS.forEach(g=>{
     const isPos=g.polarity==="pos";
     const dotColor=isPos?"var(--green-border)":"var(--red-border)";
     const labelColor=isPos?"var(--green-text)":"var(--red-text)";
-
     const items=DATA.filter(d=>{
       if(!g.cats.includes(d.cat))return false;
-      const roleMatch=isPos?(d.role==="coping"):(d.role==="source"||d.role==="verdict");
-      if(!roleMatch)return false;
+      if(isPos?d.role!=="coping":(d.role==="coping"))return false;
       if((d.depth||3)!==dictLevelIdx)return false;
       if(polarityFilter==="neg"&&isPos)return false;
       if(polarityFilter==="pos"&&!isPos)return false;
-      if(query&&!d.text.toLowerCase().includes(query.toLowerCase()))return false;
-      const isWorked=wids.has(d.id);
-      const isTodo=todoIds.has(d.id)&&!isWorked;
+      if(query){
+        const words=query.split("|");
+        if(!words.some(w=>d.text.toLowerCase().includes(w.toLowerCase())))return false;
+      }
+      const isWorked=wids.has(d.id),isTodo=todoIds.has(d.id)&&!isWorked;
       if(stateFilter==="untouched")return!isWorked&&!isTodo&&!trashedIds.has(d.id);
       if(stateFilter==="worked")return isWorked;
       if(stateFilter==="todo")return isTodo;
       if(stateFilter==="trashed")return trashedIds.has(d.id);
       return!trashedIds.has(d.id)||stateFilter==="trashed";
     });
-
     if(!items.length)return;
-
     html+=`<div class="dict-family">
       <div class="dict-family-header">
         <div style="width:7px;height:7px;border-radius:50%;background:${dotColor};flex-shrink:0;"></div>
@@ -2776,37 +2514,23 @@ function render(){
         <span style="font-size:10px;color:var(--text-faint);font-style:italic;">${g.desc||g.subtitle}</span>
       </div>
       <div class="dict-family-items">`;
-
     items.forEach(d=>{
-      const isWorked=wids.has(d.id);
-      const isTodo=todoIds.has(d.id)&&!isWorked;
-      const isChecked=checked.has(d.id);
-      const isTrashed=trashedIds.has(d.id);
-      let cls="id-row";
-      if(isWorked)cls+=" worked";
-      else if(isChecked)cls+=" checked";
-      else if(isTodo)cls+=" todo";
-      if(isTrashed)cls+=" trashed";
+      const isWorked=wids.has(d.id),isTodo=todoIds.has(d.id)&&!isWorked,isChecked=checked.has(d.id),isTrashed=trashedIds.has(d.id);
+      let cls="id-row"+(isWorked?" worked":isChecked?" checked":isTodo?" todo":"")+(isTrashed?" trashed":"");
       html+=`<div class="${cls}" data-id="${d.id}">
         <div class="id-check"><i class="ti ti-check check-icon"></i></div>
         <span class="id-text">${d.text}</span>
-        <div class="id-actions">
-          <button class="id-action-btn todo-btn" data-id="${d.id}">🔖</button>
-          <button class="id-action-btn trash-btn" data-id="${d.id}">🗑</button>
-        </div>
+        <div class="id-actions"><button class="id-action-btn todo-btn" data-id="${d.id}">🔖</button><button class="id-action-btn trash-btn" data-id="${d.id}">🗑</button></div>
       </div>`;
     });
-
     html+="</div></div>";
   });
 
-  scroll.innerHTML=html;
+  scroll.innerHTML=html||'<div style="padding:3rem;text-align:center;color:var(--text-faint)">Aucune identité à ce niveau</div>';
 
-  // Nav listeners
   document.getElementById("dict-prev-lvl")?.addEventListener("click",()=>{dictLevelIdx--;render();scroll.scrollTop=0;});
   document.getElementById("dict-next-lvl")?.addEventListener("click",()=>{dictLevelIdx++;render();scroll.scrollTop=0;});
 
-  // Row clicks
   scroll.querySelectorAll(".id-row[data-id]").forEach(row=>{
     row.addEventListener("click",e=>{
       if(e.target.closest(".id-action-btn"))return;
@@ -2827,26 +2551,23 @@ function render(){
       try{
         if(session.ids.length===1){await sb(`sessions?id=eq.${session.id}`,{method:"DELETE",prefer:"return=minimal"});SESSIONS=SESSIONS.filter(s=>s.id!==session.id);}
         else{const newIds=session.ids.filter(i=>i!==id);await sb(`sessions?id=eq.${session.id}`,{method:"PATCH",body:{ids:newIds},prefer:"return=minimal"});session.ids=newIds;}
-        render();renderHomeProgress();showToast("↩ Remise en non touchée");
+        row.className="id-row";renderSession();renderHomeThemes();showToast("↩ Remise en non touchée");
       }catch(e){showToast("Erreur");}
     });
   });
-
   scroll.querySelectorAll(".todo-btn").forEach(btn=>btn.addEventListener("click",e=>{
     e.stopPropagation();const id=+btn.dataset.id;
-    if(wids.has(id))return;
+    if(workedIds().has(id))return;
     if(todoIds.has(id)){todoIds.delete(id);showToast("Retiré");}
     else{todoIds.add(id);checked.delete(id);showToast("🔖 À faire");}
     saveTodo();render();
   }));
-
   scroll.querySelectorAll(".trash-btn").forEach(btn=>btn.addEventListener("click",e=>{
     e.stopPropagation();const id=+btn.dataset.id;
     if(trashedIds.has(id)){trashedIds.delete(id);showToast("Restaurée");}
     else{trashedIds.add(id);checked.delete(id);todoIds.delete(id);showToast("🚫 Exclue");}
     saveTrashed();saveTodo();render();
   }));
-
   renderSession();
 }
 
@@ -2868,16 +2589,50 @@ document.getElementById("validate-btn").addEventListener("click",async()=>{
   const btn=document.getElementById("validate-btn");btn.disabled=true;
   const date=new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
   try{
-    const result=await sb("sessions",{method:"POST",body:{profile_id:currentProfile.id,date,ids:newIds},prefer:"return=representation"});
-    if(result&&result[0])SESSIONS.push({id:result[0].id,date,ids:newIds});
+    const r=await sb("sessions",{method:"POST",body:{profile_id:currentProfile.id,date,ids:newIds},prefer:"return=representation"});
+    if(r&&r[0])SESSIONS.push({id:r[0].id,date,ids:newIds});
     newIds.forEach(id=>{checked.delete(id);scheduleReview(id,reviewDates[id]?reviewDates[id].reviewCount+1:0);});
-    render();renderHomeProgress();showToast(`✓ ${newIds.length} validée${newIds.length>1?"s":""}`);
+    render();renderHomeThemes();showToast(`✓ ${newIds.length} validée${newIds.length>1?"s":""}`);
   }catch(e){showToast("Erreur");btn.disabled=false;}
 });
 
-// SESSION FORMAT
-let sessionSize=5,gameMode="B";
-let dictGroupIdx=null; // null = show all groups, number = show single group
+// FILTERS
+document.querySelectorAll("[data-polarity]").forEach(btn=>btn.addEventListener("click",()=>{
+  polarityFilter=btn.dataset.polarity;
+  document.querySelectorAll("[data-polarity]").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");render();
+}));
+document.querySelectorAll("[data-state]").forEach(btn=>btn.addEventListener("click",()=>{
+  stateFilter=btn.dataset.state;
+  document.querySelectorAll("[data-state]").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");render();
+}));
+document.getElementById("search").addEventListener("input",e=>{query=e.target.value;render();});
+document.getElementById("switch-btn").addEventListener("click",()=>{showScreen("home-screen");renderHomeThemes();});
+document.getElementById("progress-btn").addEventListener("click",()=>{renderProgress();document.getElementById("progress-overlay").classList.add("show");});
+
+/* ===== GAME ===== */
+function buildGamePool(size){
+  const wids=workedIds();
+  const available=DATA.filter(d=>!wids.has(d.id)&&!trashedIds.has(d.id));
+  let pool=[];
+  if(gameMode==="R"){
+    pool=[...shuffle(available.filter(d=>d.role!=="coping")),...shuffle(available.filter(d=>d.role==="coping"))].slice(0,size);
+  }else{
+    for(const g of GROUPS){
+      if(pool.length>=size)break;
+      const isNeg=g.polarity==="neg";
+      const items=available.filter(d=>g.cats.includes(d.cat)&&(isNeg?(d.role!=="coping"):d.role==="coping")&&!pool.find(p=>p.id===d.id));
+      const byDepth={};
+      items.forEach(d=>{const lv=d.depth||3;if(!byDepth[lv])byDepth[lv]=[];byDepth[lv].push(d);});
+      const sorted=[];[1,2,3,4,5].forEach(lv=>{if(byDepth[lv])sorted.push(...shuffle(byDepth[lv]));});
+      pool.push(...sorted.slice(0,size-pool.length));
+    }
+  }
+  const due=shuffle(DATA.filter(d=>isDueForReview(d.id)&&!workedIds().has(d.id)));
+  return [...due,...pool].slice(0,size+due.length);
+}
+
 function openSessionFormat(){
   if(!currentProfile){showToast("Connecte-toi d abord");return;}
   document.querySelectorAll(".sf-card").forEach(c=>c.classList.remove("sel"));
@@ -2897,31 +2652,6 @@ document.querySelectorAll(".sf-card").forEach(card=>card.addEventListener("click
 document.getElementById("sf-cancel").addEventListener("click",()=>document.getElementById("sf-modal").classList.remove("show"));
 document.getElementById("sf-start").addEventListener("click",()=>{document.getElementById("sf-modal").classList.remove("show");startGame();});
 
-// GAME
-let gameQueue=[],gameIdx=0,gameWorked=[],gameLater=[],gameSkipped=[],lastGameGroup=null;
-
-function buildGamePool(size){
-  const wids=workedIds();
-  const available=DATA.filter(d=>!wids.has(d.id)&&!trashedIds.has(d.id));
-  let pool=[];
-  if(gameMode==="R"){
-    pool=[...shuffle(shuffle(available.filter(d=>d.role==="source"||d.role==="verdict"))),...shuffle(shuffle(available.filter(d=>d.role==="coping")))].slice(0,size);
-  }else{
-    for(const g of GROUPS){
-      if(pool.length>=size)break;
-      const avail=DATA.filter(d=>g.cats.includes(d.cat)&&!wids.has(d.id)&&!trashedIds.has(d.id)&&!pool.find(p=>p.id===d.id));
-      const isNeg=g.polarity==="neg";
-      const items=avail.filter(d=>isNeg?(d.role==="source"||d.role==="verdict"):d.role==="coping");
-      const byDepth={};
-      items.forEach(d=>{const lv=d.depth||3;if(!byDepth[lv])byDepth[lv]=[];byDepth[lv].push(d);});
-      const sorted=[];[1,2,3,4,5].forEach(lv=>{if(byDepth[lv])sorted.push(...shuffle(byDepth[lv]));});
-      pool.push(...sorted.slice(0,size-pool.length));
-    }
-  }
-  const due=shuffle(DATA.filter(d=>isDueForReview(d.id)&&!workedIds().has(d.id)));
-  return [...due,...pool].slice(0,size+due.length);
-}
-
 function startGame(){
   gameQueue=buildGamePool(sessionSize);
   gameIdx=0;gameWorked=[];gameLater=[];gameSkipped=[];lastGameGroup=null;
@@ -2933,8 +2663,7 @@ function showGameState(){
   if(gameIdx>=gameQueue.length){endGame();return;}
   const d=gameQueue[gameIdx];
   const group=getGroupForCat(d.cat,d.role);
-  const groupId=group?group.id:null;
-  if(groupId!==lastGameGroup){lastGameGroup=groupId;showGroupTrans(group,()=>showCard());}
+  if(group?.id!==lastGameGroup){lastGameGroup=group?.id||null;showGroupTrans(group,()=>showCard());}
   else showCard();
 }
 
@@ -2956,8 +2685,10 @@ function showCard(){
   const lvl=d.depth||3;
   const lc=LEVEL_COLORS[lvl]||"var(--text-faint)";
   const ln=LEVEL_NAMES[lvl]||"";
+  document.getElementById("g-card-group").textContent=group?group.label:"";
+  document.getElementById("g-card-text").textContent=d.text;
 
-  // Level progress bar
+  // Level progress
   const levelTotal=gameQueue.filter(x=>(x.depth||3)===lvl).length;
   const levelDone=gameQueue.slice(0,gameIdx).filter(x=>(x.depth||3)===lvl).length;
   const levelPct=levelTotal?Math.round((levelDone/levelTotal)*100):0;
@@ -2966,38 +2697,24 @@ function showCard(){
     <div class="game-level-bar-wrap"><div class="game-level-bar-fill" style="width:${levelPct}%;background:${lc};"></div></div>
     <span class="game-level-pct">${levelPct}%</span>`;
 
-  // Group info
   const groupTotal=group?gameQueue.filter(x=>getGroupForCat(x.cat,x.role)?.id===group.id).length:0;
   const groupDone=group?gameQueue.slice(0,gameIdx).filter(x=>getGroupForCat(x.cat,x.role)?.id===group.id).length:0;
-  document.getElementById("g-group-info").innerHTML=group?`
-    <span class="game-group-name">${group.label}</span>
-    <span class="game-group-pos">${groupDone+1}/${groupTotal} dans ce groupe</span>`:"";
+  document.getElementById("g-group-info").innerHTML=group?`<span class="game-group-name">${group.label}</span><span class="game-group-pos">${groupDone+1}/${groupTotal}</span>`:"";
 
-  // Card text
-  document.getElementById("g-card-text").textContent=d.text;
   document.getElementById("g-card-desc").textContent=group?`(${group.desc||group.subtitle})`:"";
 
-  // Top badge
   const badge=document.getElementById("g-level-badge");
   badge.textContent=ln;badge.style.borderColor=lc;badge.style.color=lc;
-
-  // Global progress bar
   document.getElementById("gp-fill").style.width=Math.round((gameIdx/gameQueue.length)*100)+"%";
   document.getElementById("g-counter").textContent=`${gameIdx+1} / ${gameQueue.length} · ✅ ${gameWorked.length}`;
 
-  // Session dots
   const dots=gameQueue.map((_,i)=>{
     let cls="game-session-dot";
-    if(i<gameIdx){
-      if(gameWorked.includes(gameQueue[i].id))cls+=" worked";
-      else if(gameLater.includes(gameQueue[i].id))cls+=" todo";
-      else cls+=" skipped";
-    }else if(i===gameIdx)cls+=" current";
+    if(i<gameIdx){if(gameWorked.includes(gameQueue[i].id))cls+=" worked";else if(gameLater.includes(gameQueue[i].id))cls+=" todo";else cls+=" skipped";}
+    else if(i===gameIdx)cls+=" current";
     return`<div class="${cls}"></div>`;
   }).join("");
-  document.getElementById("g-session-progress").innerHTML=`
-    <div class="game-session-dots">${dots}</div>
-    <div class="game-session-label">✅ ${gameWorked.length} travaillées · 🔖 ${gameLater.length} à faire</div>`;
+  document.getElementById("g-session-progress").innerHTML=`<div class="game-session-dots">${dots}</div><div class="game-session-label">✅ ${gameWorked.length} travaillées · 🔖 ${gameLater.length} à faire</div>`;
 
   const card=document.getElementById("g-card");
   card.classList.add("show","anim-in");setTimeout(()=>card.classList.remove("anim-in"),300);
@@ -3007,7 +2724,6 @@ function animateCard(cls,cb){
   const card=document.getElementById("g-card");
   card.classList.add(cls);setTimeout(()=>{card.classList.remove("show",cls);cb();},220);
 }
-
 function confetti(){
   const colors=["#8dc94a","#c8b89a","#5aaaf0","#a78bfa","#d4933a"];
   for(let i=0;i<20;i++){
@@ -3027,7 +2743,7 @@ document.getElementById("g-yes").addEventListener("click",async()=>{
         const r=await sb("sessions",{method:"POST",body:{profile_id:currentProfile.id,date,ids:[d.id]},prefer:"return=representation"});
         if(r&&r[0])SESSIONS.push({id:r[0].id,date,ids:[d.id]});
         scheduleReview(d.id,reviewDates[d.id]?reviewDates[d.id].reviewCount+1:0);
-        renderHomeProgress();
+        renderHomeThemes();
       }catch(e){}
     }
     gameIdx++;showGameState();
@@ -3035,15 +2751,11 @@ document.getElementById("g-yes").addEventListener("click",async()=>{
 });
 document.getElementById("g-later").addEventListener("click",()=>{
   const d=gameQueue[gameIdx];
-  animateCard("anim-up",()=>{gameLater.push(d.id);todoIds.add(d.id);saveTodo();renderHomeProgress();gameIdx++;showGameState();});
+  animateCard("anim-up",()=>{gameLater.push(d.id);todoIds.add(d.id);saveTodo();renderHomeThemes();gameIdx++;showGameState();});
 });
 document.getElementById("g-skip").addEventListener("click",()=>{
   const d=gameQueue[gameIdx];
-  animateCard("anim-left",()=>{
-    gameSkipped.push(d.id);trashedIds.add(d.id);saveTrashed();
-    if(isDueForReview(d.id))markIntegrated(d.id);
-    renderHomeProgress();gameIdx++;showGameState();
-  });
+  animateCard("anim-left",()=>{gameSkipped.push(d.id);trashedIds.add(d.id);saveTrashed();if(isDueForReview(d.id))markIntegrated(d.id);renderHomeThemes();gameIdx++;showGameState();});
 });
 document.addEventListener("keydown",e=>{
   if(!document.getElementById("game-overlay").classList.contains("show"))return;
@@ -3058,7 +2770,7 @@ document.getElementById("g-quit").addEventListener("click",()=>{
   document.getElementById("g-trans").classList.remove("show");
   document.getElementById("g-card").classList.remove("show");
   document.getElementById("g-results").classList.remove("show");
-  lastGameGroup=null;renderHomeProgress();
+  lastGameGroup=null;renderHomeThemes();
 });
 function endGame(){
   document.getElementById("g-card").classList.remove("show");
@@ -3071,12 +2783,12 @@ function endGame(){
     {lbl:"À faire",val:gameLater.length,color:"var(--gold-text)"},
     {lbl:"Exclues",val:gameSkipped.length,color:"var(--red-text)"},
   ].map(s=>`<div class="game-res-stat"><div class="game-res-val" style="color:${s.color}">${s.val}</div><div class="game-res-lbl">${s.lbl}</div></div>`).join("");
-  renderHomeProgress();
+  renderHomeThemes();
 }
-document.getElementById("g-validate").addEventListener("click",()=>{document.getElementById("game-overlay").classList.remove("show");document.getElementById("g-results").classList.remove("show");lastGameGroup=null;renderHomeProgress();});
+document.getElementById("g-validate").addEventListener("click",()=>{document.getElementById("game-overlay").classList.remove("show");document.getElementById("g-results").classList.remove("show");lastGameGroup=null;renderHomeThemes();});
 document.getElementById("g-restart").addEventListener("click",()=>{document.getElementById("g-results").classList.remove("show");lastGameGroup=null;startGame();});
 
-// PROGRESS
+/* ===== PROGRESS ===== */
 function renderProgress(){
   document.getElementById("progress-sub").textContent=currentProfile?"Profil — "+currentProfile.name:"";
   const total=SESSIONS.reduce((a,s)=>a+s.ids.length,0);
@@ -3088,14 +2800,15 @@ function renderProgress(){
   ].map(s=>`<div class="stat-card"><div class="stat-label">${s.label}</div><div class="stat-value">${s.value}</div><div class="stat-unit">${s.unit}</div></div>`).join("");
   const barEl=document.getElementById("bar-chart");
   if(!SESSIONS.length)barEl.innerHTML='<div class="no-data">Aucune session.</div>';
-  else{const max=Math.max(...SESSIONS.map(s=>s.ids.length));barEl.innerHTML=SESSIONS.map(s=>{const pct=max?Math.round((s.ids.length/max)*100):0;return`<div class="bar-row"><span class="bar-label">${s.date}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.max(pct,4)}%"><span class="bar-count">${s.ids.length}</span></div></div></div>`;  }).join("");}
-  const catEl=document.getElementById("cat-chart");
+  else{const max=Math.max(...SESSIONS.map(s=>s.ids.length));barEl.innerHTML=SESSIONS.map(s=>{const pct=max?Math.round((s.ids.length/max)*100):0;return`<div class="bar-row"><span class="bar-label">${s.date}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.max(pct,4)}%"><span class="bar-count">${s.ids.length}</span></div></div></div>`;}).join("");}
   const gc={};
-  SESSIONS.flatMap(s=>s.ids).forEach(id=>{const item=DATA.find(d=>d.id===id);if(item){const g=getGroupForCat(item.cat,item.role);const k=g?g.label:"Autre";gc[k]=(gc[k]||0)+1;  }});
+  SESSIONS.flatMap(s=>s.ids).forEach(id=>{const item=DATA.find(d=>d.id===id);if(item){const g=getGroupForCat(item.cat,item.role);const k=g?g.label:"Autre";gc[k]=(gc[k]||0)+1;}});
   const sorted=Object.entries(gc).sort((a,b)=>b[1]-a[1]);
+  const catEl=document.getElementById("cat-chart");
   if(!sorted.length)catEl.innerHTML='<div class="no-data">Aucune donnée.</div>';
-  else{const mx=sorted[0][1];catEl.innerHTML=sorted.map(([g,c])=>{const pct=Math.round((c/mx)*100);return`<div class="cat-row"><span class="cat-label">${g.replace(/^.\s*/,"")}</span><div class="cat-track"><div class="cat-fill" style="width:${Math.max(pct,4)}%"><span class="cat-count">${c}</span></div></div></div>`;  }).join("");}
+  else{const mx=sorted[0][1];catEl.innerHTML=sorted.map(([g,c])=>{const pct=Math.round((c/mx)*100);return`<div class="cat-row"><span class="cat-label">${g.replace(/^.\s*/,"")}</span><div class="cat-track"><div class="cat-fill" style="width:${Math.max(pct,4)}%"><span class="cat-count">${c}</span></div></div></div>`;}).join("");}
 }
+document.getElementById("close-progress").addEventListener("click",()=>document.getElementById("progress-overlay").classList.remove("show"));
 
 loadProfiles();
 
