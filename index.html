@@ -337,12 +337,16 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .scan-chapter-num{font-size:10px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
 .scan-chapter-title{font-size:15px;font-weight:600;margin-bottom:4px;}
 .scan-chapter-intro{font-size:12px;color:var(--text-muted);font-style:italic;line-height:1.5;}
-.scan-chapter-items{display:flex;flex-direction:column;gap:2px;margin-top:0.75rem;}
+.scan-pills-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:0.75rem;padding-bottom:1rem;}
+.scan-pill{padding:8px 14px;border-radius:20px;border:1px solid var(--border-md);background:var(--surface2);color:var(--text-muted);font-size:13px;cursor:pointer;transition:all 0.15s;user-select:none;}
+.scan-pill:hover{border-color:var(--border-strong);color:var(--text);}
+.scan-pill.checked{border-color:var(--accent);background:var(--accent);color:#fff;font-weight:500;}
+.scan-pill.worked{border-color:var(--green-border);background:var(--green-bg);color:var(--green-text);cursor:default;}
 .scan-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0.75rem 0 0.5rem;}
 .scan-tabs{display:flex;gap:6px;overflow-x:auto;padding:0.5rem 0 0.75rem;border-bottom:1px solid var(--border);margin-bottom:1rem;scrollbar-width:none;}
 .scan-tabs::-webkit-scrollbar{display:none;}
-.scan-tab{padding:5px 10px;border-radius:20px;border:1px solid var(--border-md);background:var(--surface2);color:var(--text-faint);font-size:11px;font-family:inherit;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.15s;}
-.scan-tab.active{border-color:var(--accent);color:var(--accent);background:var(--surface);}
+.scan-tab{padding:7px 12px;border-radius:20px;border:1px solid var(--border-md);background:var(--surface2);color:var(--text-faint);font-size:12px;font-family:inherit;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.15s;}
+.scan-tab.active{border-color:var(--accent);color:#fff;background:var(--accent);font-weight:500;}
 .scan-tab:hover:not(.active){border-color:var(--border-strong);color:var(--text-muted);}
 .scan-nav-info{text-align:center;}
 .scan-nav-theme{font-size:13px;font-weight:600;}
@@ -1899,6 +1903,15 @@ const DEFAULT_DATA = [
   {id:12544,text:'Je suis fustigé',cat:'Culpabilité',depth:3,role:'source'},
   {id:12545,text:'Je suis sabordé',cat:'Effondrement',depth:3,role:'source'},
   {id:12546,text:'Je suis corsé',cat:'Contrôle',depth:2,role:'source'}
+,
+  {id:12547,text:'Je suis posé',cat:'Engagement',depth:3,role:'coping'},
+  {id:12548,text:'Je suis magnétisé',cat:'Engagement',depth:3,role:'coping'},
+  {id:12549,text:'Je suis solide',cat:'Engagement',depth:2,role:'coping'},
+  {id:12550,text:'Je suis présent',cat:'Engagement',depth:2,role:'coping'},
+  {id:12551,text:'Je suis disponible',cat:'Engagement',depth:3,role:'coping'},
+  {id:12552,text:'Je suis détourné',cat:'Honte',depth:3,role:'source'},
+  {id:12553,text:'Je suis baissé',cat:'Honte',depth:2,role:'source'},
+  {id:12554,text:'Je suis fléchi',cat:'Honte',depth:2,role:'source'}
 ];
 const GROUPS=[
   {id:"figement",label:"① Figement",subtitle:"Corps bloqué, paralysé, incapable d agir",desc:"corps bloqué, paralysé, incapable d agir",cats:["Figement"],polarity:"neg"},
@@ -2437,8 +2450,8 @@ function renderScan(){
     const d=DATA.find(x=>x.text===`Je suis ${w}`);
     if(!d)return"";
     const isWorked=wids.has(d.id),isChecked=scanChecked.has(d.id);
-    const cls="id-row"+(isWorked?" worked":isChecked?" checked":"");
-    return`<div class="${cls}" data-scan-id="${d.id}"><div class="id-check"><i class="ti ti-check check-icon"></i></div><span class="id-text">${d.text}</span></div>`;
+    let cls="scan-pill"+(isWorked?" worked":isChecked?" checked":"");
+    return`<div class="${cls}" data-scan-id="${d.id}">${d.text}</div>`;
   }).join("");
 
   cont.innerHTML=`
@@ -2459,7 +2472,7 @@ function renderScan(){
         <div class="scan-chapter-title">${chapter.title}</div>
         <div class="scan-chapter-intro">${chapter.intro}</div>
       </div>
-      <div class="scan-chapter-items">${itemsHtml}</div>
+      <div class="scan-pills-grid">${itemsHtml}</div>
       <div class="scan-chapter-footer">
         <button class="scan-continue-btn" id="scan-continue">${isLast?"Terminer ✓":"Chapitre suivant →"}</button>
       </div>
@@ -2468,12 +2481,12 @@ function renderScan(){
   bar.style.display="block";
   renderScanSession();
 
-  cont.querySelectorAll("[data-scan-id]").forEach(row=>{
-    row.addEventListener("click",()=>{
-      const id=+row.dataset.scanId;
+  cont.querySelectorAll("[data-scan-id]").forEach(pill=>{
+    pill.addEventListener("click",()=>{
+      const id=+pill.dataset.scanId;
       if(workedIds().has(id))return;
-      if(scanChecked.has(id)){scanChecked.delete(id);row.classList.remove("checked");}
-      else{scanChecked.add(id);row.classList.add("checked");}
+      if(scanChecked.has(id)){scanChecked.delete(id);pill.classList.remove("checked");}
+      else{scanChecked.add(id);pill.classList.add("checked");}
       renderScanSession();
     });
   });
