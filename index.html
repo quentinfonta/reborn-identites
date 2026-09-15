@@ -27,7 +27,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 #profile-screen,#pin-screen{align-items:center;justify-content:center;gap:2rem;}
 .home-screen{display:none;min-height:100vh;align-items:center;justify-content:center;flex-direction:column;gap:2rem;padding:2rem;}
 .home-screen.show{display:flex;}
-.block-screen{display:none;}
+.block-screen{display:none;overflow-y:auto;height:100vh;}
 .block-screen.show{display:block;}
 
 /* PROFILE */
@@ -344,7 +344,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .scan-pill.worked{border-color:var(--green-border);background:var(--green-bg);color:var(--green-text);cursor:default;}
 .scan-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0.75rem 1.5rem 0.5rem;}
 .scan-tabs{display:flex;gap:6px;overflow-x:auto;padding:0.25rem 1.5rem 0.75rem;border-bottom:1px solid var(--border);scrollbar-width:none;}
-.scan-sticky-header{position:sticky;top:60px;z-index:20;background:var(--bg);border-bottom:1px solid var(--border);}
+.scan-sticky-header{position:sticky;top:0;z-index:20;background:var(--bg);}
 .scan-tabs::-webkit-scrollbar{display:none;}
 .scan-tab{padding:7px 12px;border-radius:20px;border:1px solid var(--border-md);background:var(--surface2);color:var(--text-faint);font-size:12px;font-family:inherit;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.15s;}
 .scan-tab.active{border-color:var(--accent);color:#fff;background:var(--accent);font-weight:500;}
@@ -2494,20 +2494,20 @@ function renderScan(){
     });
   });
 
-  // Chapter tabs — in sticky header
+  // Chapter tabs + back — event delegation on sticky header
   const stickyEl=document.getElementById("scan-sticky-header");
-  stickyEl.querySelectorAll(".scan-tab").forEach(tab=>{
-    tab.addEventListener("click",async()=>{
+  stickyEl.addEventListener("click",async e=>{
+    const tab=e.target.closest(".scan-tab");
+    const back=e.target.closest("#scan-back-chapter");
+    if(tab){
       await saveScanChecked();
       scanChapterIdx=+tab.dataset.cidx;
       scanChecked.clear();
       renderScan();cont.scrollTop=0;
-    });
-  });
-
-  stickyEl.querySelector("#scan-back-chapter")?.addEventListener("click",()=>{
-    if(scanChapterIdx===0){scanThemeId=null;renderScan();}
-    else{scanChapterIdx--;renderScan();cont.scrollTop=0;}
+    } else if(back){
+      if(scanChapterIdx===0){scanThemeId=null;document.getElementById("scan-sticky-header").innerHTML="";renderScan();}
+      else{scanChapterIdx--;renderScan();cont.scrollTop=0;}
+    }
   });
 
   document.getElementById("scan-continue").addEventListener("click",async()=>{
