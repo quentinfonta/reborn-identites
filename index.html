@@ -342,8 +342,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .scan-pill:hover{border-color:var(--border-strong);color:var(--text);}
 .scan-pill.checked{border-color:var(--accent);background:var(--accent);color:#fff;font-weight:500;}
 .scan-pill.worked{border-color:var(--green-border);background:var(--green-bg);color:var(--green-text);cursor:default;}
-.scan-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0.75rem 0 0.5rem;position:sticky;top:0;background:var(--bg);z-index:11;}
-.scan-tabs{display:flex;gap:6px;overflow-x:auto;padding:0.5rem 0 0.75rem;border-bottom:1px solid var(--border);margin-bottom:1rem;scrollbar-width:none;position:sticky;top:0;background:var(--bg);z-index:10;}
+.scan-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0.75rem 1.5rem 0.5rem;}
+.scan-tabs{display:flex;gap:6px;overflow-x:auto;padding:0.25rem 1.5rem 0.75rem;border-bottom:1px solid var(--border);scrollbar-width:none;}
+.scan-sticky-header{position:sticky;top:60px;z-index:20;background:var(--bg);border-bottom:1px solid var(--border);}
 .scan-tabs::-webkit-scrollbar{display:none;}
 .scan-tab{padding:7px 12px;border-radius:20px;border:1px solid var(--border-md);background:var(--surface2);color:var(--text-faint);font-size:12px;font-family:inherit;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.15s;}
 .scan-tab.active{border-color:var(--accent);color:#fff;background:var(--accent);font-weight:500;}
@@ -491,6 +492,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
       <button class="header-btn blue" id="scan-explore-btn" style="display:none;"><i class="ti ti-book"></i> Explorer</button>
     </div>
   </div>
+  <div class="scan-sticky-header" id="scan-sticky-header"></div>
   <div class="dict-scroll" id="scan-content"></div>
   <div class="session-bar" id="scan-session-bar" style="display:none;">
     <div class="session-inner">
@@ -2417,6 +2419,7 @@ function renderScan(){
 
   if(!scanThemeId){
     bar.style.display="none";
+    document.getElementById("scan-sticky-header").innerHTML="";
     document.getElementById("scan-header-title").textContent="Choisir un thème";
     cont.innerHTML=`<div style="padding:1rem 0 6rem;">
       <div class="scan-themes-grid">
@@ -2476,7 +2479,7 @@ function renderScan(){
       <div class="scan-chapter-footer">
         <button class="scan-continue-btn" id="scan-continue">${isLast?"Terminer ✓":"Chapitre suivant →"}</button>
       </div>
-    </div>`;
+    </div></div>`;
 
   bar.style.display="block";
   renderScanSession();
@@ -2491,8 +2494,9 @@ function renderScan(){
     });
   });
 
-  // Chapter tabs
-  cont.querySelectorAll(".scan-tab").forEach(tab=>{
+  // Chapter tabs — in sticky header
+  const stickyEl=document.getElementById("scan-sticky-header");
+  stickyEl.querySelectorAll(".scan-tab").forEach(tab=>{
     tab.addEventListener("click",async()=>{
       await saveScanChecked();
       scanChapterIdx=+tab.dataset.cidx;
@@ -2501,7 +2505,7 @@ function renderScan(){
     });
   });
 
-  document.getElementById("scan-back-chapter").addEventListener("click",()=>{
+  stickyEl.querySelector("#scan-back-chapter")?.addEventListener("click",()=>{
     if(scanChapterIdx===0){scanThemeId=null;renderScan();}
     else{scanChapterIdx--;renderScan();cont.scrollTop=0;}
   });
