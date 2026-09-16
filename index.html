@@ -2437,19 +2437,25 @@ function renderHomeThemes(){
   const wids=workedIds();
   const grid=document.getElementById("home-themes-grid");
   if(!grid)return;
-  grid.innerHTML=SCAN_THEMES.map(t=>{
+  const total_themes=SCAN_THEMES.length;
+  grid.innerHTML=SCAN_THEMES.map((t,i)=>{
     const allIds=t.chapters.flatMap(c=>c.ids);
     const total=allIds.filter(w=>DATA.find(d=>d.text===`Je suis ${w}`)).length;
     const done=allIds.filter(w=>{const d=DATA.find(x=>x.text===`Je suis ${w}`);return d&&wids.has(d.id);}).length;
     const pct=total?Math.round((done/total)*100):0;
-    return`<div class="home-theme-row" data-tid="${t.id}">
-      <div class="home-theme-icon">${t.icon}</div>
+    // Progressive: first themes bigger, last ones smaller
+    const progress=i/total_themes; // 0 to 1
+    const opacity=Math.max(0.45, 1-progress*0.55);
+    const fontSize=Math.max(11, 13-progress*2);
+    const iconSize=Math.max(15, 20-progress*5);
+    const padding=Math.max(7, 11-progress*4);
+    return`<div class="home-theme-row" data-tid="${t.id}" style="opacity:${opacity.toFixed(2)};padding:${padding.toFixed(0)}px 12px;">
+      <div class="home-theme-icon" style="font-size:${iconSize.toFixed(0)}px;width:${iconSize+4}px;">${t.icon}</div>
       <div class="home-theme-info">
-        <div class="home-theme-title">${t.title}</div>
-        <div class="home-theme-desc">${t.desc}</div>
+        <div class="home-theme-title" style="font-size:${fontSize.toFixed(0)}px;">${t.title}</div>
       </div>
       <div class="home-theme-progress">
-        <div class="home-theme-pct">${pct}%</div>
+        <div class="home-theme-pct" style="font-size:${Math.max(9,fontSize-2).toFixed(0)}px;">${pct}%</div>
         <div class="home-theme-bar"><div class="home-theme-bar-fill" style="width:${pct}%"></div></div>
       </div>
     </div>`;
@@ -2515,7 +2521,7 @@ function renderScan(){
 
   cont.innerHTML=`
     <div class="scan-nav">
-      <button class="dict-nav-btn" id="scan-back-chapter" style="flex:0 0 auto;padding:6px 12px;">
+      <button class="dict-nav-btn" data-back="1" style="flex:0 0 auto;padding:6px 12px;">
         ${scanChapterIdx===0?"☰ Thèmes":"← Retour"}
       </button>
       <div class="scan-nav-info">
@@ -2550,19 +2556,30 @@ function renderScan(){
     });
   });
 
-  // Chapter tabs + back — event delegation on sticky header
+  // Chapter tabs + back — fresh delegation each render
   const stickyEl=document.getElementById("scan-sticky-header");
-  stickyEl.addEventListener("click",async e=>{
+  // Remove old listeners by replacing element
+  const newSticky=stickyEl.cloneNode(true);
+  stickyEl.parentNode.replaceChild(newSticky,stickyEl);
+  newSticky.addEventListener("click",async e=>{
     const tab=e.target.closest(".scan-tab");
-    const back=e.target.closest("#scan-back-chapter");
+    const back=e.target.closest("[data-back]");
     if(tab){
       await saveScanChecked();
       scanChapterIdx=+tab.dataset.cidx;
       scanChecked.clear();
-      renderScan();cont.scrollTop=0;
+      renderScan();
+      document.getElementById("scan-content").scrollTop=0;
     } else if(back){
-      if(scanChapterIdx===0){scanThemeId=null;document.getElementById("scan-sticky-header").innerHTML="";renderScan();}
-      else{scanChapterIdx--;renderScan();cont.scrollTop=0;}
+      if(scanChapterIdx===0){
+        scanThemeId=null;
+        document.getElementById("scan-sticky-header").innerHTML="";
+        renderScan();
+      } else {
+        scanChapterIdx--;
+        renderScan();
+        document.getElementById("scan-content").scrollTop=0;
+      }
     }
   });
 
@@ -2634,8 +2651,11 @@ function showScanResults(theme){
 document.getElementById("scan-validate-btn")?.addEventListener("click",async()=>{
   await saveScanChecked();scanChecked.clear();renderScanSession();showToast("✓ Validées");
 });
-document.getElementById("scan-home-btn").addEventListener("click",()=>{
-  showScreen("home-screen");renderHomeThemes();
+document.getElementById("scan-home-btn")?.addEventListener("click",()=>{
+  scanThemeId=null;scanChapterIdx=0;scanChecked.clear();
+  document.getElementById("scan-sticky-header").innerHTML="";
+  showScreen("home-screen");
+  renderHomeThemes();
 });
 
 /* ===== DICT ===== */
