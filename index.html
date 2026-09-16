@@ -1948,9 +1948,25 @@ const GROUPS=[
 ];
 const SCAN_THEMES=[
   {
+    id:"ouvrir_porte",title:"Ouvrir la porte",icon:"🚪",
+    desc:"Ce qui t empêche de ressentir quoi que ce soit",
+    chapters:[
+      {title:"Ce qui t empêche",intro:"Avant d accéder à quoi que ce soit, quelque chose en toi résiste. C est normal. C est une protection.",
+       ids:["blindé","cuirassé","cadenassé","verrouillé","barricadé","emmuré","enkysté","cristallisé","fossilisé","sclérosé","congelé","durci","cloisonné","compartimenté"]},
+      {title:"Coupé de toi",intro:"Pour ne plus souffrir, tu t es coupé de tes propres sensations.",
+       ids:["dissocié","détaché","coupé","anesthésié","engourdi","absent","flottant","neutralisé","désactivé","sectionné","fragmenté","morcelé","disloqué"]},
+      {title:"Ce que tu réprimes",intro:"Tu contrôles, tu retiens, tu empêches quelque chose de sortir.",
+       ids:["retenu","réprimé","refoulé","inhibé","censuré","autocensuré","muselé","bâillonné","contenu","bridé","freiné","empêché","corsété","stoppé"]},
+      {title:"S ouvrir",intro:"L ouverture n est pas un effort. C est juste arrêter de se fermer.",
+       ids:["ouvert","dilaté","déployé","relâché","détendu","décrispé","desserré","libéré","affranchi","délivré","délié","décroché","dégagé","apaisé","calmé"]}
+    ]
+  },
+  {
     id:"corps",title:"Être bien dans son corps",icon:"🌊",
     desc:"Retrouver la connexion à son corps et ses sensations",
     chapters:[
+      {title:"Ce qui t empêche",intro:"Quelque chose t empêche d habiter ton corps pleinement.",
+       ids:["dissocié","coupé","anesthésié","engourdi","absent","figé","gelé","blindé","enkysté","durci","congelé"]},
       {title:"Le corps bloqué",intro:"Ton corps a appris à se figer pour se protéger.",
        ids:["figé","gelé","glacé","contracté","noué","tendu","serré","raidi","bandé","recroquevillé","voûté","affaissé","tassé","aplati","engourdi","ankylosé","prostré"]},
       {title:"Le corps qui souffre",intro:"Les blessures que le corps a portées.",
@@ -1965,7 +1981,9 @@ const SCAN_THEMES=[
     id:"figement",title:"Passer à l action",icon:"⚡",
     desc:"Sortir du figement et retrouver l élan",
     chapters:[
-      {title:"Le figement dans le corps",intro:"Avant de passer à l action, reconnais ce qui t en empêche physiquement.",
+      {title:"Ce qui t empêche",intro:"Avant même d agir, quelque chose en toi t en empêche.",
+       ids:["blindé","enkysté","cristallisé","figé","paralysé","congelé","durci","retenu","réprimé","refoulé","inhibé","stoppé"]},
+      {title:"Le figement dans le corps",intro:"Le corps porte l impossibilité d agir.",
        ids:["figé","paralysé","tétanisé","pétrifié","immobilisé","bloqué","coincé","rivé","collé","scotché","vissé","planté","engourdi","ankylosé","enkysté","cristallisé","fossilisé","sclérosé"]},
       {title:"Ce qui t a stoppé",intro:"Des expériences t ont appris à ne pas agir.",
        ids:["stoppé","arrêté","empêché","retenu","bridé","freiné","entravé","censuré","réprimé","inhibé","jugé","condamné","puni","sanctionné","ridiculisé","humilié","raté","échoué","défait","sabordé"]},
@@ -1979,6 +1997,8 @@ const SCAN_THEMES=[
     id:"securite",title:"Être en sécurité",icon:"🛡️",
     desc:"Sortir de la peur et retrouver un sentiment de sécurité",
     chapters:[
+      {title:"Ce qui t empêche",intro:"Quelque chose t empêche de te sentir en sécurité même maintenant.",
+       ids:["blindé","cuirassé","vigilant","alarmé","hérissé","tendu","contracté","raidi","enkysté","durci","barricadé"]},
       {title:"Ce que le corps ressent",intro:"Le danger s inscrit d abord dans le corps.",
        ids:["figé","paralysé","tétanisé","pétrifié","tremblé","hérissé","alarmé","électrisé","tendu","contracté","noué","étouffé","suffoqué"]},
       {title:"Ce que tu as vécu",intro:"Des situations ont créé un sentiment de danger permanent.",
@@ -1993,6 +2013,8 @@ const SCAN_THEMES=[
     id:"lacher_prise",title:"Lâcher prise",icon:"🍃",
     desc:"Sortir du contrôle et s ouvrir à la vie",
     chapters:[
+      {title:"Ce qui t empêche",intro:"Quelque chose t empêche de lâcher — une peur profonde que tout s effondre si tu le fais.",
+       ids:["blindé","enkysté","durci","congelé","cristallisé","retenu","contrôlé","surveillé","cadenassé","verrouillé","barricadé"]},
       {title:"Le contrôle dans le corps",intro:"Contrôler coûte physiquement très cher.",
        ids:["tendu","contracté","raidi","noué","serré","bandé","bloqué","vissé","rivé","alourdi","lesté","écrasé","épuisé","drainé"]},
       {title:"Pourquoi tu contrôles",intro:"Contrôler c est une façon de te protéger de ce que tu as vécu.",
@@ -2007,6 +2029,8 @@ const SCAN_THEMES=[
     id:"abandon",title:"Guérir de l abandon",icon:"🏠",
     desc:"Sortir de la peur d être abandonné et se sentir enfin chez soi",
     chapters:[
+      {title:"Ce qui t empêche",intro:"Quelque chose t empêche de toucher cette blessure — parce qu elle est profonde.",
+       ids:["blindé","enkysté","anesthésié","dissocié","coupé","congelé","durci","retenu","refoulé","cadenassé","barricadé"]},
       {title:"Ce que le corps porte",intro:"L abandon laisse un vide physique très réel.",
        ids:["affamé","sevré","vidé","gelé","engourdi","secoué","tremblé","noué","contracté","étouffé","prostré","effondré"]},
       {title:"Ce que tu as vécu",intro:"Tu as été laissé, ignoré, oublié.",
@@ -2021,6 +2045,8 @@ const SCAN_THEMES=[
     id:"etre_aime",title:"Être aimé",icon:"❤️",
     desc:"Retrouver le droit d être aimé et de recevoir",
     chapters:[
+      {title:"Ce qui t empêche",intro:"Quelque chose t empêche de recevoir l amour même quand il est là.",
+       ids:["blindé","cuirassé","fermé","cadenassé","enkysté","anesthésié","dissocié","retenu","refoulé","durci","barricadé","congelé"]},
       {title:"Ce que ton corps porte",intro:"Avant même les mots, le manque d amour s inscrit dans le corps.",
        ids:["affamé","sevré","vidé","gelé","engourdi","étreint","bercé","câliné","caressé","embrassé","tenu","porté","effleuré"]},
       {title:"Ce que tu as ressenti",intro:"Les émotions qui ont accompagné le manque d amour.",
@@ -2037,6 +2063,8 @@ const SCAN_THEMES=[
     id:"limites",title:"Être respecté",icon:"🚧",
     desc:"Retrouver ses limites et son intégrité",
     chapters:[
+      {title:"Ce qui t empêche",intro:"Quelque chose t empêche d accéder à cette blessure — souvent de la honte ou de la dissociation.",
+       ids:["dissocié","anesthésié","engourdi","coupé","blindé","enkysté","honteux","muselé","refoulé","retenu","congelé"]},
       {title:"Ce que le corps a subi",intro:"Les limites franchies s inscrivent d abord dans la chair.",
        ids:["frappé","battu","cogné","heurté","percuté","mordu","griffé","écorché","contusionné","bousculé","agrippé","repoussé","transpercé","envahi","fouetté","cinglé","mutilé","flagellé"]},
       {title:"Ce que tu as ressenti",intro:"Quand ton espace intime a été violé.",
@@ -2051,6 +2079,8 @@ const SCAN_THEMES=[
     id:"faire_confiance",title:"Faire confiance",icon:"🤝",
     desc:"Sortir de la méfiance et retrouver la confiance",
     chapters:[
+      {title:"Ce qui t empêche",intro:"Quelque chose t empêche de faire confiance même quand c est safe.",
+       ids:["blindé","cuirassé","barricadé","enkysté","durci","congelé","cadenassé","verrouillé","retranché","fermé","retenu","refoulé"]},
       {title:"Ce que le corps garde",intro:"La méfiance s est installée dans le corps comme une armure.",
        ids:["tendu","contracté","raidi","blindé","cuirassé","fermé","rivé","vissé","hérissé","alarmé"]},
       {title:"Ce qui s est passé",intro:"Quelqu un ou quelque chose a brisé ta confiance.",
@@ -2065,6 +2095,8 @@ const SCAN_THEMES=[
     id:"trahison",title:"Sortir de la trahison",icon:"🔓",
     desc:"Guérir des blessures de trahison et retrouver la paix",
     chapters:[
+      {title:"Ce qui t empêche",intro:"Quelque chose t empêche de toucher cette blessure — souvent une colère ou une honte enfouie.",
+       ids:["blindé","enkysté","durci","congelé","anesthésié","dissocié","retenu","refoulé","barricadé","cadenassé","muselé"]},
       {title:"Ce que le corps a gardé",intro:"La trahison laisse des traces physiques profondes.",
        ids:["tendu","contracté","raidi","blindé","cuirassé","fermé","hérissé","noué","figé","sonné","assommé","choqué"]},
       {title:"Ce qui s est passé",intro:"Tu as été trahi par quelqu un en qui tu avais confiance.",
@@ -2079,8 +2111,10 @@ const SCAN_THEMES=[
     id:"honte",title:"Ne plus avoir honte",icon:"🌅",
     desc:"Se libérer du regard des autres et de la honte",
     chapters:[
+      {title:"Ce qui t empêche",intro:"La honte elle-même t empêche d accéder à la honte. C est son paradoxe.",
+       ids:["honteux","muselé","caché","dissimulé","masqué","voilé","blindé","enkysté","anesthésié","refoulé","retenu","congelé"]},
       {title:"La honte dans le corps",intro:"La honte a une texture physique très reconnaissable.",
-       ids:["contracté","recroquevillé","voûté","caché","dissimulé","masqué","voilé","étouffé","noué","figé","tremblé"]},
+       ids:["contracté","recroquevillé","voûté","caché","dissimulé","masqué","voilé","étouffé","noué","figé","tremblé","baissé","détourné","fléchi"]},
       {title:"Ce qui a créé la honte",intro:"Quelqu un ou quelque chose t a fait sentir honteux.",
        ids:["humilié","ridiculisé","moqué","bafoué","conspué","exposé","montré","flagellé","fustigé","avili","souillé","sali","profané","désacralisé","castré","stérilisé"]},
       {title:"Ce que tu t es dit",intro:"La honte t a amené à te cacher et à te diminuer.",
@@ -2093,6 +2127,8 @@ const SCAN_THEMES=[
     id:"culpabilite",title:"Ne plus se sentir coupable",icon:"⚖️",
     desc:"Se libérer du poids de la culpabilité",
     chapters:[
+      {title:"Ce qui t empêche",intro:"La culpabilité elle-même t empêche de la toucher — tu penses mériter de la porter.",
+       ids:["blindé","enkysté","durci","retenu","refoulé","muselé","cadenassé","congelé","dissocié","anesthésié","barricadé"]},
       {title:"Le poids dans le corps",intro:"La culpabilité pèse physiquement.",
        ids:["lesté","alourdi","écrasé","plombé","comprimé","noué","contracté","étouffé","prostré","effondré","affaissé"]},
       {title:"Ce qu on t a mis sur les épaules",intro:"On t a chargé de responsabilités qui n étaient pas les tiennes.",
@@ -2107,6 +2143,8 @@ const SCAN_THEMES=[
     id:"blessure",title:"Guérir ses blessures",icon:"💔",
     desc:"Cicatriser ce qui a été blessé en soi",
     chapters:[
+      {title:"Ce qui t empêche",intro:"Les blessures profondes sont souvent protégées par une couche de protection épaisse.",
+       ids:["blindé","enkysté","anesthésié","dissocié","coupé","durci","congelé","retenu","refoulé","barricadé","muselé"]},
       {title:"La blessure dans le corps",intro:"Les blessures ont une adresse physique précise.",
        ids:["blessé","meurtri","endolori","lacéré","écorché","contusionné","marqué","abîmé","perforé","transpercé","frappé","battu","cogné"]},
       {title:"Ce qui t a blessé",intro:"Des mots, des actes, des absences qui ont laissé des traces.",
@@ -2121,24 +2159,28 @@ const SCAN_THEMES=[
     id:"epuisement",title:"Sortir de l épuisement",icon:"🌪️",
     desc:"Retrouver de l énergie et de la vitalité",
     chapters:[
+      {title:"Ce qui t empêche",intro:"L épuisement lui-même t empêche d y accéder — tu n as plus l énergie de ressentir.",
+       ids:["anesthésié","dissocié","engourdi","absent","neutralisé","désactivé","enkysté","congelé","résigné","capitulé","abdiqué"]},
       {title:"Le corps épuisé",intro:"L épuisement a un visage physique très concret.",
        ids:["épuisé","vidé","éteint","drainé","lessivé","claqué","éreinté","exténué","prostré","effondré","affaissé","engourdi","ankylosé"]},
       {title:"Ce qui t a épuisé",intro:"L épuisement ne vient pas de nulle part.",
-       ids:["surchargé","débordé","dépassé","submergé","écrasé","accablé","rongé","miné","sapé","usé","abîmé","détérioré","sacrifié","exploité","utilisé"]},
+       ids:["surchargé","débordé","dépassé","submergé","écrasé","accablé","rongé","miné","sapé","usé","abîmé","sacrifié","exploité","utilisé"]},
       {title:"Ce que l épuisement a créé",intro:"Un corps épuisé finit par couper le contact avec tout.",
-       ids:["dissocié","détaché","coupé","anesthésié","absent","flottant","résigné","capitulé","abdiqué","désengagé","déprimé","désemparé"]},
+       ids:["dissocié","détaché","coupé","anesthésié","absent","résigné","capitulé","abdiqué","désengagé","déprimé","désemparé"]},
       {title:"L énergie retrouvée",intro:"L énergie revient quand on se repose vraiment.",
-       ids:["reposé","rechargé","revitalisé","régénéré","ressourcé","restauré","dynamisé","galvanisé","animé","ravivé","soulagé","allégé","libéré","dégagé"]}
+       ids:["reposé","rechargé","revitalisé","régénéré","ressourcé","restauré","dynamisé","galvanisé","animé","soulagé","allégé","libéré","dégagé"]}
     ]
   },
   {
     id:"effondrement",title:"Traverser l effondrement",icon:"🔥",
     desc:"Sortir du burnout et reconstruire",
     chapters:[
+      {title:"Ce qui t empêche",intro:"L effondrement fait peur à regarder en face — quelque chose te protège de sa profondeur.",
+       ids:["blindé","enkysté","anesthésié","dissocié","congelé","durci","retenu","refoulé","barricadé","résigné","capitulé"]},
       {title:"L effondrement dans le corps",intro:"Quand tout s effondre, le corps tombe en premier.",
        ids:["effondré","brisé","démoli","ravagé","dévasté","anéanti","pulvérisé","écrasé","prostré","affaissé","tassé","vidé","éteint"]},
       {title:"Ce qui s est effondré",intro:"Des certitudes, des relations, des illusions se sont brisées.",
-       ids:["trahi","abandonné","défait","vaincu","submergé","noyé","englouti","avalé","assommé","foudroyé","terrassé","lésé","sabordé"]},
+       ids:["trahi","abandonné","défait","vaincu","submergé","noyé","englouti","avalé","assommé","foudroyé","terrassé","sabordé"]},
       {title:"Dans le chaos",intro:"L effondrement crée un chaos qu on ne sait pas comment traverser.",
        ids:["perdu","égaré","déboussolé","désorienté","confus","dispersé","éparpillé","résigné","capitulé","désespéré","déprimé","épuisé"]},
       {title:"Se relever",intro:"On ne revient pas de l effondrement comme avant. On revient plus solide.",
@@ -2149,10 +2191,12 @@ const SCAN_THEMES=[
     id:"liberte",title:"Être libre",icon:"🕊️",
     desc:"Sortir du contrôle et retrouver son autonomie",
     chapters:[
+      {title:"Ce qui t empêche",intro:"Quelque chose t empêche d accéder à ta liberté — souvent la peur de ce qui arriverait si tu étais vraiment libre.",
+       ids:["blindé","enkysté","durci","congelé","cadenassé","verrouillé","barricadé","retenu","refoulé","inhibé","censuré","autocensuré"]},
       {title:"Ce que le corps porte",intro:"Le contrôle et l enfermement s inscrivent dans le corps.",
        ids:["figé","bloqué","coincé","paralysé","rivé","collé","scotché","vissé","ligoté","entravé","enchaîné","attaché","emprisonné","encagé","comprimé","étouffé"]},
       {title:"Ce qu on t a imposé",intro:"Des personnes ou des systèmes ont pris le contrôle sur toi.",
-       ids:["contrôlé","dirigé","gouverné","dominé","opprimé","soumis","asservi","subjugué","domestiqué","dressé","formaté","normé","codifié","embrigadé","enrégimenté","manipulé","instrumentalisé"]},
+       ids:["contrôlé","dirigé","gouverné","dominé","opprimé","soumis","asservi","subjugué","domestiqué","dressé","formaté","normé","codifié","embrigadé","manipulé","instrumentalisé"]},
       {title:"Ce que tu t es interdit",intro:"Tu as intégré les interdits jusqu à les appliquer toi-même.",
        ids:["censuré","autocensuré","réprimé","inhibé","muselé","bâillonné","refoulé","retenu","bridé","freiné","endigué","jugulé","empêché","corsété","cadenassé","fermé","verrouillé","prohibé","proscrit"]},
       {title:"La liberté retrouvée",intro:"Tu es libre. Tu l as toujours été au fond.",
@@ -2163,6 +2207,8 @@ const SCAN_THEMES=[
     id:"valeur",title:"Valoir quelque chose",icon:"💎",
     desc:"Retrouver le sentiment de sa propre valeur",
     chapters:[
+      {title:"Ce qui t empêche",intro:"Quelque chose t empêche de recevoir ta propre valeur — souvent la conviction profonde que tu ne la mérites pas.",
+       ids:["blindé","enkysté","anesthésié","durci","congelé","retenu","refoulé","muselé","honteux","coupable","barricadé"]},
       {title:"Ce que ça fait dans le corps",intro:"Le sentiment de ne rien valoir s ancre dans le corps.",
        ids:["affaissé","voûté","tassé","vidé","éteint","étouffé","contracté","retenu","bridé","écrasé","lesté","alourdi"]},
       {title:"Ce qu on t a dit",intro:"D où vient ce sentiment que tu ne vaux rien.",
@@ -2177,6 +2223,8 @@ const SCAN_THEMES=[
     id:"exister",title:"Exister",icon:"🌱",
     desc:"Avoir le droit d être là et de prendre de la place",
     chapters:[
+      {title:"Ce qui t empêche",intro:"Quelque chose t empêche de toucher le droit d exister — souvent parce que ça a été nié très tôt.",
+       ids:["blindé","enkysté","anesthésié","dissocié","congelé","durci","retenu","refoulé","muselé","honteux","barricadé"]},
       {title:"Ce que le corps a senti",intro:"Ne pas avoir le droit d exister commence dans le corps.",
        ids:["comprimé","écrasé","étouffé","oppressé","aplati","planté","collé","retenu","bridé","effacé","gommé"]},
       {title:"Ce que tu as vécu",intro:"Quand ta présence était niée, ignorée ou trop lourde pour les autres.",
@@ -2191,6 +2239,8 @@ const SCAN_THEMES=[
     id:"dissociation",title:"Sortir de la dissociation",icon:"🔮",
     desc:"Revenir à soi et retrouver ses émotions",
     chapters:[
+      {title:"Ce qui t empêche",intro:"La dissociation elle-même t empêche de la voir — tu es tellement coupé que tu ne sais plus que tu l es.",
+       ids:["anesthésié","engourdi","absent","flottant","neutralisé","désactivé","enkysté","congelé","figé","gelé","cristallisé"]},
       {title:"La déconnexion dans le corps",intro:"La dissociation c est quand tu n es plus vraiment là.",
        ids:["dissocié","détaché","coupé","séparé","fragmenté","morcelé","flottant","absent","anesthésié","engourdi","endormi","assoupi","sectionné","disloqué","volatilisé"]},
       {title:"Ce qui t a coupé de toi",intro:"Des expériences trop douloureuses ont forcé la déconnexion.",
@@ -2198,13 +2248,15 @@ const SCAN_THEMES=[
       {title:"Ce que la dissociation a créé",intro:"Coupé de toi, tu as perdu accès à une partie de ta vie.",
        ids:["perdu","égaré","confus","déboussolé","désorienté","éparpillé","dispersé","absent","vidé","éteint","anesthésié","neutralisé","désactivé"]},
       {title:"Revenir à soi",intro:"Revenir dans son corps est le premier acte de guérison.",
-       ids:["reconnecté","revitalisé","rechargé","ancré","enraciné","centré","stabilisé","réchauffé","réanimé","régénéré","ressuscité","restauré","ressourcé","reposé","libéré","déployé","ouvert"]}
+       ids:["reconnecté","revitalisé","rechargé","ancré","enraciné","centré","stabilisé","réchauffé","régénéré","ressuscité","restauré","ressourcé","reposé","libéré","déployé","ouvert"]}
     ]
   },
   {
     id:"sens",title:"Retrouver le sens",icon:"🧭",
     desc:"Sortir du vide et retrouver ce qui compte vraiment",
     chapters:[
+      {title:"Ce qui t empêche",intro:"Quelque chose t empêche d accéder au sens — souvent un épuisement profond ou une conviction que rien ne vaut la peine.",
+       ids:["anesthésié","dissocié","engourdi","résigné","capitulé","abdiqué","enkysté","congelé","désespéré","blindé","barricadé"]},
       {title:"Le vide dans le corps",intro:"La perte de sens laisse un vide physique.",
        ids:["vidé","éteint","engourdi","prostré","affaissé","effondré","épuisé","lessivé","claqué","déprimé"]},
       {title:"Ce que tu as traversé",intro:"Des événements ont vidé ton existence de sens.",
@@ -2219,10 +2271,12 @@ const SCAN_THEMES=[
     id:"deconditionnement",title:"Se déconditionner",icon:"⚙️",
     desc:"Se libérer des programmes reçus",
     chapters:[
+      {title:"Ce qui t empêche",intro:"Le conditionnement lui-même t empêche de le voir — tu penses que c est toi.",
+       ids:["blindé","enkysté","durci","congelé","cristallisé","formaté","normé","codifié","standardisé","retenu","refoulé","muselé"]},
       {title:"Le conditionnement dans le corps",intro:"Les programmes reçus finissent par habiter le corps.",
        ids:["formaté","normé","codifié","standardisé","domestiqué","dressé","façonné","lissé","poli","taillé","corsé","rigidifié"]},
       {title:"Ce qu on t a programmé",intro:"Famille, société, école — des voix qui ont remplacé la tienne.",
-       ids:["conditionné","endoctriné","embrigadé","enrégimenté","assimilé","colonisé","asservi","subjugué","possédé","instrumentalisé","manipulé","dirigé","gouverné","contrôlé","surveillé","formaté","programmé"]},
+       ids:["conditionné","endoctriné","embrigadé","enrégimenté","assimilé","colonisé","asservi","subjugué","possédé","instrumentalisé","manipulé","dirigé","gouverné","contrôlé","surveillé","programmé"]},
       {title:"Ce que ça a créé en toi",intro:"Tu t es mis à penser, ressentir et agir selon leurs règles.",
        ids:["censuré","autocensuré","réprimé","inhibé","refoulé","retenu","bridé","muselé","bâillonné","prohibé","proscrit","normé","codifié","étiqueté","catalogué","réduit"]},
       {title:"Ta propre voix",intro:"Sous les programmes, tu as une voix. Elle t appartient.",
@@ -2233,14 +2287,16 @@ const SCAN_THEMES=[
     id:"reconstruction",title:"Se reconstruire",icon:"🏗️",
     desc:"Après l effondrement, rebâtir sur des bases solides",
     chapters:[
+      {title:"Ce qui t empêche",intro:"Quelque chose t empêche de te reconstruire — souvent la peur que ça s effondre à nouveau.",
+       ids:["blindé","enkysté","anesthésié","durci","congelé","résigné","capitulé","désespéré","retenu","refoulé","barricadé"]},
       {title:"Les décombres",intro:"Avant de reconstruire, il faut regarder ce qui est tombé.",
        ids:["effondré","brisé","démoli","ravagé","dévasté","anéanti","pulvérisé","défait","vaincu","perdu","égaré","abandonné","sacrifié","sabordé"]},
       {title:"Ce qui a tenu",intro:"Même dans l effondrement, quelque chose en toi a résisté.",
-       ids:["résisté","tenu","survécu","enduré","persisté","continué","refusé","lutté","préservé","gardé","maintenu","stabilisé","ancré","enraciné"]},
+       ids:["résisté","tenu","survécu","enduré","persisté","continué","préservé","gardé","maintenu","stabilisé","ancré","enraciné"]},
       {title:"Les premières pierres",intro:"Reconstruire commence par de petits gestes concrets.",
        ids:["décidé","déterminé","engagé","investi","motivé","animé","habité","porté","appelé","forgé","trempé","aiguisé","rodé","affirmé","réaffirmé"]},
       {title:"La nouvelle fondation",intro:"Ce que tu reconstruis est plus solide que ce qui s est effondré.",
-       ids:["reconstruit","relevé","redressé","ressuscité","restauré","régénéré","renouvelé","ressourcé","rechargé","revitalisé","accompli","réussi","grandi","mûri","établi","fondé","né","légitimé","dignifié","élevé"]}
+       ids:["reconstruit","relevé","redressé","ressuscité","restauré","régénéré","renouvelé","ressourcé","rechargé","revitalisé","accompli","réussi","grandi","mûri","établi","fondé","légitimé","dignifié","élevé"]}
     ]
   }
 ];
