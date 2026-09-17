@@ -2512,7 +2512,8 @@ const EXERCISES=[
 let currentExercise=null,currentExPart=0;
 
 function renderExercises(){
-  const cont=document.getElementById("exercises-content");
+  const cont=document.getElementById("home-themes-grid")||document.getElementById("exercises-content");
+  if(!cont)return;
   cont.innerHTML=`<div style="padding:0.5rem 0 6rem;">
     ${EXERCISES.map((e,i)=>{
       const opacity=Math.max(0.6,1-(i/EXERCISES.length)*0.35);
@@ -2591,18 +2592,19 @@ function renderExerciseDetail(){
   });
 
   document.getElementById("ex-back-btn").addEventListener("click",()=>{
-    if(currentExPart===0){currentExercise=null;renderExercises();}
+    if(currentExPart===0){currentExercise=null;renderExercisesInline();}
     else{currentExPart--;renderExerciseDetail();}
   });
   document.getElementById("ex-next-btn").addEventListener("click",()=>{
-    if(isLast){currentExercise=null;renderExercises();showToast("✓ Exercice complété");}
+    if(isLast){currentExercise=null;renderExercisesInline();showToast("✓ Exercice complété");}
     else{currentExPart++;renderExerciseDetail();}
   });
 }
 
 function renderVieDeReve(){
   const ex=currentExercise;
-  const cont=document.getElementById("exercises-content");
+  const cont=document.getElementById("home-themes-grid")||document.getElementById("exercises-content");
+  if(!cont)return;
   cont.innerHTML=`
     <div style="padding:0 0 6rem;">
       <div class="scan-chapter-top" style="padding:0.75rem 0 0.5rem;margin-bottom:1rem;border-bottom:1px solid var(--border);">
@@ -2637,8 +2639,8 @@ function renderVieDeReve(){
       try{localStorage.setItem(`ex_${currentProfile?.id}_vie_de_reve_${si}`,JSON.stringify(vals));}catch(e){}
     });
   });
-  document.getElementById("vdr-back-btn").addEventListener("click",()=>{currentExercise=null;renderExercises();});
-  document.getElementById("vdr-save-btn").addEventListener("click",()=>{showToast("✓ Vision sauvegardée");});
+  document.getElementById("vdr-back-btn").addEventListener("click",()=>{currentExercise=null;renderExercisesInline();});
+  document.getElementById("vdr-save-btn").addEventListener("click",()=>{showToast("✓ Vision sauvegardée");renderExercisesInline();});
 }
 
 document.getElementById("exercises-home-btn").addEventListener("click",()=>{showScreen("home-screen");renderHomeThemes();});
