@@ -91,7 +91,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .home-global-fill{height:100%;border-radius:2px;background:var(--accent);transition:width 0.6s ease;}
 .home-global-pct{font-size:12px;color:var(--text-faint);}
 .home-themes-grid{width:100%;max-width:560px;display:flex;flex-direction:column;gap:4px;overflow-y:auto;max-height:65vh;min-height:100px;padding-right:2px;}
-.home-theme-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface);cursor:pointer;transition:all 0.15s;}
+.home-theme-row{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--surface);cursor:pointer;transition:all 0.15s;}
 .home-theme-row:hover{border-color:var(--border-md);background:var(--surface2);}
 .home-theme-icon{font-size:18px;flex-shrink:0;width:24px;text-align:center;}
 .home-theme-info{flex:1;min-width:0;}
@@ -382,7 +382,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 
 .home-themes-grid{width:100%;max-width:560px;display:flex;flex-direction:column;gap:4px;overflow-y:auto;max-height:65vh;min-height:100px;padding-right:2px;}
-.home-theme-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface);cursor:pointer;transition:all 0.15s;}
+.home-theme-row{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--surface);cursor:pointer;transition:all 0.15s;}
 .home-theme-row:hover{border-color:var(--border-md);background:var(--surface2);}
 .home-theme-icon{font-size:18px;flex-shrink:0;width:24px;text-align:center;}
 .home-theme-info{flex:1;min-width:0;}
@@ -439,7 +439,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 <!-- HOME -->
 <div class="home-screen" id="home-screen">
   <div class="home-top-bar">
-    <button class="home-top-btn" id="home-todo-btn"><i class="ti ti-check"></i> To-do</button>
     <div class="home-top-nav">
       <button class="home-top-btn active" id="home-reconnexion-btn">Reconnexion</button>
       <button class="home-top-btn" id="home-journal-btn">Journal</button>
@@ -535,23 +534,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     </div>
   </div>
   <div class="dict-scroll" id="journal-content"></div>
-</div>
-
-<!-- TODO SCREEN -->
-<div class="block-screen" id="todo-screen">
-  <div class="main-header">
-    <div><div class="brand" style="margin-bottom:2px">REBORN</div><div class="brand-title">À faire</div></div>
-    <div class="main-header-right">
-      <button class="header-btn" id="todo-home-btn"><i class="ti ti-arrow-left"></i> Accueil</button>
-    </div>
-  </div>
-  <div class="dict-scroll" id="todo-content"></div>
-  <div class="session-bar">
-    <div class="session-inner">
-      <input type="text" id="todo-input" placeholder="Ajouter une tâche…" style="flex:1;padding:8px 12px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface2);color:var(--text);font-size:13px;font-family:inherit;">
-      <button class="validate-btn" id="todo-add-btn"><i class="ti ti-plus"></i> Ajouter</button>
-    </div>
-  </div>
 </div>
 
 <!-- SESSION FORMAT -->
@@ -2418,7 +2400,11 @@ async function loadProfiles(){
         await sb(`profiles?id=eq.${id}`,{method:"DELETE",prefer:"return=minimal"});
         ["todo_","reviews_","trashed_"].forEach(k=>localStorage.removeItem(k+id));
         showToast("Profil supprimé");
-
+        loadProfiles();
+      }catch(e){showToast("Erreur: "+e.message);}
+    }));
+  }catch(e){list.innerHTML=`<div style="color:var(--red-text);font-size:13px;">Erreur: ${e.message}</div>`;}
+}
 
 /* ===== EXERCISES ===== */
 let currentExercise=null,currentExPart=0;
@@ -2432,7 +2418,7 @@ function renderExercises(){
       const fontSize=Math.max(12,14-(i/EXERCISES.length)*2);
       const iconSize=Math.max(16,22-(i/EXERCISES.length)*5);
       const padding=Math.max(8,12-(i/EXERCISES.length)*3);
-      return`<div class="home-theme-row" data-exid="${e.id}" style="opacity:${opacity.toFixed(2)};padding:${padding.toFixed(0)}px 12px;margin-bottom:4px;">
+      return`<div class="home-theme-row" data-exid="${e.id}" style="opacity:${opacity.toFixed(2)};padding:${padding.toFixed(0)}px 12px;">
         <div style="font-size:${iconSize.toFixed(0)}px;width:${(iconSize+4).toFixed(0)}px;flex-shrink:0;">${e.icon}</div>
         <div style="flex:1;min-width:0;">
           <div style="font-size:${fontSize.toFixed(0)}px;font-weight:600;">${e.title}</div>
@@ -2605,185 +2591,9 @@ document.getElementById("journal-home-btn").addEventListener("click",()=>{showSc
 
 
 /* ===== TO-DO ===== */
-function renderTodo(){
-  const cont=document.getElementById("todo-content");
-  const key=`todo_tasks_${currentProfile?.id}`;
-  let tasks=[];
-  try{tasks=JSON.parse(localStorage.getItem(key)||"[]");}catch(e){}
-  
-  if(!tasks.length){
-    cont.innerHTML='<div style="padding:2rem;text-align:center;color:var(--text-faint);font-size:13px;">Aucune tâche pour l instant.</div>';
-    return;
-  }
 
-  cont.innerHTML=`<div style="padding:1rem 0 6rem;display:flex;flex-direction:column;gap:6px;">
-    ${tasks.map((t,i)=>`
-      <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:var(--radius);border:1px solid ${t.done?"var(--green-border)":"var(--border)"};background:var(--surface);cursor:pointer;" data-todo-idx="${i}">
-        <div style="width:18px;height:18px;border-radius:50%;border:1px solid ${t.done?"var(--green-border)":"var(--border-md)"};background:${t.done?"var(--green-border)":"transparent"};flex-shrink:0;display:flex;align-items:center;justify-content:center;">
-          ${t.done?'<i class="ti ti-check" style="font-size:10px;color:#fff;"></i>':""}
-        </div>
-        <span style="flex:1;font-size:13px;${t.done?"text-decoration:line-through;color:var(--text-faint);":""}">${t.text}</span>
-        <button class="id-action-btn todo-del-btn" data-idx="${i}" style="font-size:12px;">🗑</button>
-      </div>`).join("")}
-  </div>`;
 
-  cont.querySelectorAll("[data-todo-idx]").forEach(row=>{
-    row.addEventListener("click",e=>{
-      if(e.target.closest(".todo-del-btn"))return;
-      const idx=+row.dataset.todoIdx;
-      tasks[idx].done=!tasks[idx].done;
-      try{localStorage.setItem(key,JSON.stringify(tasks));}catch(e){}
-      renderTodo();
-    });
-  });
-  cont.querySelectorAll(".todo-del-btn").forEach(btn=>{
-    btn.addEventListener("click",e=>{
-      e.stopPropagation();
-      tasks.splice(+btn.dataset.idx,1);
-      try{localStorage.setItem(key,JSON.stringify(tasks));}catch(e){}
-      renderTodo();
-    });
-  });
-}
 
-document.getElementById("todo-home-btn").addEventListener("click",()=>{showScreen("home-screen");renderHomeThemes();});
-
-document.getElementById("todo-add-btn").addEventListener("click",()=>{
-  const input=document.getElementById("todo-input");
-  const text=input.value.trim();
-  if(!text)return;
-  const key=`todo_tasks_${currentProfile?.id}`;
-  let tasks=[];
-  try{tasks=JSON.parse(localStorage.getItem(key)||"[]");}catch(e){}
-  tasks.push({text,done:false,date:new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long"})});
-  try{localStorage.setItem(key,JSON.stringify(tasks));}catch(e){}
-  input.value="";
-  renderTodo();
-  showToast("✓ Tâche ajoutée");
-});
-document.getElementById("todo-input").addEventListener("keydown",e=>{if(e.key==="Enter")document.getElementById("todo-add-btn").click();});
-
-const EXERCISES=[
-  {
-    id:"introspection_video",
-    title:"Introspection vidéo",
-    icon:"🎥",
-    desc:"Avant tout — te voir tel que tu es vraiment",
-    duration:"15-20 min",
-    parts:[
-      {
-        title:"Qui tu es aujourd hui",
-        intro:"Prends ton téléphone, appuie sur record. Personne d autre ne verra cette vidéo.",
-        questions:[
-          "Comment tu te sens dans ta vie en ce moment — vraiment ?",
-          "T es où niveau confiance sur 10 — et pourquoi ?",
-          "Qu est-ce que tu ne t autorises pas à être ou à faire ?"
-        ]
-      },
-      {
-        title:"Tu parles à demain",
-        intro:"Prends une grande inspiration. Ferme les yeux 10 secondes. Puis regarde la caméra et parle directement à la version de toi dans 3 mois.",
-        questions:[
-          "Ce que tu veux qu il sache.",
-          "Ce que tu veux qu il soit devenu.",
-          "Ce que tu veux qu il ressente."
-        ],
-        note:"Garde cette vidéo précieusement. On la regardera ensemble dans 3 mois."
-      }
-    ]
-  },
-  {
-    id:"mes_proches",
-    title:"Mes proches",
-    icon:"👥",
-    desc:"Comprendre ton environnement pour comprendre qui tu es",
-    duration:"20-30 min",
-    parts:[
-      {
-        title:"Ton entourage proche",
-        intro:"Qui sont les 5 personnes que tu vois le plus souvent ? Amis, collègues, famille, partenaire.",
-        fields:[
-          {label:"Prénom / relation",type:"text",placeholder:"Ex: Thomas — ami d enfance"},
-          {label:"Prénom / relation",type:"text",placeholder:"Ex: Ma mère"},
-          {label:"Prénom / relation",type:"text",placeholder:""},
-          {label:"Prénom / relation",type:"text",placeholder:""},
-          {label:"Prénom / relation",type:"text",placeholder:""}
-        ]
-      },
-      {
-        title:"Ce qu ils t inspirent",
-        intro:"Pour chacun, ce qui te vient directement à l esprit — leur énergie, ambitions, manière de voir le monde.",
-        fields:[
-          {label:"Ce que tu ressens avec cette personne",type:"textarea",placeholder:""},
-          {label:"Ce que tu ressens avec cette personne",type:"textarea",placeholder:""},
-          {label:"Ce que tu ressens avec cette personne",type:"textarea",placeholder:""},
-          {label:"Ce que tu ressens avec cette personne",type:"textarea",placeholder:""},
-          {label:"Ce que tu ressens avec cette personne",type:"textarea",placeholder:""}
-        ]
-      },
-      {
-        title:"Ce qu ils pensent de toi",
-        intro:"Demande à chacun 5 à 10 adjectifs — ce qu ils apprécient et ce qu ils détestent. Le but n est pas de te blesser mais de révéler des parties de toi que tu n aurais jamais écouté.",
-        fields:[
-          {label:"Adjectifs reçus",type:"textarea",placeholder:"Ex: généreux, trop dans sa tête, loyal..."},
-          {label:"Adjectifs reçus",type:"textarea",placeholder:""},
-          {label:"Adjectifs reçus",type:"textarea",placeholder:""},
-          {label:"Adjectifs reçus",type:"textarea",placeholder:""},
-          {label:"Adjectifs reçus",type:"textarea",placeholder:""}
-        ]
-      }
-    ]
-  },
-  {
-    id:"vie_de_reve",
-    title:"Ma vie de rêve",
-    icon:"🌟",
-    desc:"Approfondir la vision — ce que tu veux vraiment",
-    duration:"30-45 min",
-    intro:"Tu as déjà dit à ta future version ce que tu voulais qu il soit. Maintenant on creuse — pas ce qu on t a dit de vouloir, mais ce que toi tu veux vraiment.",
-    spheres:[
-      {icon:"💼",label:"Travail & Mission",questions:["Dans 3 ans, qu est-ce que tu fais comme travail — concrètement ?","Qu est-ce qui te donne de l énergie dans ce que tu fais ?","Qu est-ce qui t en empêche aujourd hui ?","Une chose concrète que tu peux faire cette semaine."]},
-      {icon:"💪",label:"Corps & Santé",questions:["Comment tu te sens physiquement dans ta vie de rêve ?","Qu est-ce que tu veux ressentir dans ton corps ?","Qu est-ce qui t en empêche aujourd hui ?","Une chose concrète que tu peux faire cette semaine."]},
-      {icon:"❤️",label:"Relations & Amour",questions:["Quel type de relations tu veux dans ta vie ?","Comment tu veux te sentir avec les autres ?","Qu est-ce qui t en empêche aujourd hui ?","Une chose concrète que tu peux faire cette semaine."]},
-      {icon:"💰",label:"Finances & Liberté",questions:["De quoi tu as besoin financièrement pour vivre comme tu veux ?","Qu est-ce que l argent représente pour toi vraiment ?","Qu est-ce qui t en empêche aujourd hui ?","Une chose concrète que tu peux faire cette semaine."]},
-      {icon:"🌍",label:"Impact & Sens",questions:["Quel impact tu veux avoir sur les autres, sur le monde ?","Qu est-ce qui compte vraiment pour toi au fond ?","Qu est-ce qui t en empêche aujourd hui ?","Une chose concrète que tu peux faire cette semaine."]},
-      {icon:"🕊️",label:"Liberté & Épanouissement",questions:["À quoi ressemble ta journée idéale dans 3 ans ?","Qu est-ce que tu t autorises à être que tu ne t autorises pas aujourd hui ?","Qu est-ce qui t en empêche aujourd hui ?","Une chose concrète que tu peux faire cette semaine."]}
-    ]
-  }
-];
-
-loadProfiles();
-      }catch(e){showToast("Erreur: "+e.message);}
-    }));
-  }catch(e){list.innerHTML=`<div style="font-size:13px;color:var(--red-text)">Erreur: ${e.message}</div>`;}
-}
-
-function openPin(id,name,hash){
-  pinTarget={id,name,hash};pinVal="";
-  document.getElementById("pin-avatar").textContent=name.slice(0,2).toUpperCase();
-  document.getElementById("pin-name").textContent=name;
-  document.getElementById("pin-error").textContent="";
-  updateDots();showScreen("pin-screen");
-}
-function updateDots(){document.querySelectorAll(".pin-dot").forEach((d,i)=>d.classList.toggle("filled",i<pinVal.length));}
-
-document.querySelectorAll(".pin-key").forEach(key=>{
-  key.addEventListener("click",async()=>{
-    const v=key.dataset.v;
-    if(v==="del"){pinVal=pinVal.slice(0,-1);updateDots();return;}
-    if(pinVal.length>=4)return;
-    pinVal+=v;updateDots();
-    if(pinVal.length===4){
-      const hash=await hashPin(pinVal);
-      if(hash===pinTarget.hash)await enterProfile(pinTarget.id,pinTarget.name);
-      else{
-        document.getElementById("pin-error").textContent="Code incorrect";
-        document.getElementById("pin-dots").classList.add("shake");
-        setTimeout(()=>{document.getElementById("pin-dots").classList.remove("shake");pinVal="";updateDots();document.getElementById("pin-error").textContent="";},500);
-      }
-    }
-  });
-});
 document.getElementById("pin-back").addEventListener("click",()=>{pinTarget=null;pinVal="";showScreen("profile-screen");});
 document.getElementById("create-btn").addEventListener("click",async()=>{
   const name=document.getElementById("new-name").value.trim();
@@ -2910,11 +2720,7 @@ function setHomeTab(tab){
     grid.style.display="flex";
     grid.style.flexDirection="column";
     renderExercisesInline();
-  } else if(tab==="todo"){
-    sub.textContent="";
-    grid.style.display="flex";
-    grid.style.flexDirection="column";
-    renderTodoInline();
+ 
   }
 }
 
@@ -2969,52 +2775,7 @@ function renderJournalInline(){
   });
 }
 
-function renderTodoInline(){
-  const grid=document.getElementById("home-themes-grid");
-  const key=`todo_tasks_${currentProfile?.id}`;
-  let tasks=[];
-  try{tasks=JSON.parse(localStorage.getItem(key)||"[]");}catch(e){}
 
-  const taskHtml=tasks.length
-    ?tasks.map((t,i)=>`
-      <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);" data-todo-idx="${i}">
-        <div style="width:16px;height:16px;border-radius:50%;border:1px solid ${t.done?"var(--green-border)":"var(--border-md)"};background:${t.done?"var(--green-border)":"transparent"};flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;">
-          ${t.done?'<i class="ti ti-check" style="font-size:9px;color:#fff;"></i>':""}
-        </div>
-        <span style="flex:1;font-size:13px;${t.done?"text-decoration:line-through;color:var(--text-faint);":""}">${t.text}</span>
-        <span style="font-size:10px;color:var(--text-faint);">${t.date||""}</span>
-      </div>`).join("")
-    :'<div style="font-size:13px;color:var(--text-faint);text-align:center;padding:2rem 0;">Rien à faire.</div>';
-
-  grid.innerHTML=`
-    <div style="display:flex;gap:8px;margin-bottom:1rem;">
-      <input type="text" id="todo-input-inline" placeholder="Ajouter une tâche…" style="flex:1;padding:8px 0;border:none;border-bottom:1px solid var(--border-md);background:transparent;color:var(--text);font-size:13px;font-family:inherit;outline:none;">
-      <button id="todo-add-inline" style="font-size:13px;color:var(--accent);background:none;border:none;cursor:pointer;font-family:inherit;padding:0 4px;">+</button>
-    </div>
-    ${taskHtml}`;
-
-  grid.querySelectorAll("[data-todo-idx]").forEach(row=>{
-    row.addEventListener("click",()=>{
-      const i=+row.dataset.todoIdx;
-      tasks[i].done=!tasks[i].done;
-      try{localStorage.setItem(key,JSON.stringify(tasks));}catch(e){}
-      renderTodoInline();
-    });
-  });
-  document.getElementById("todo-add-inline")?.addEventListener("click",()=>{
-    const input=document.getElementById("todo-input-inline");
-    const text=input.value.trim();
-    if(!text)return;
-    tasks.push({text,done:false,date:new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long"})});
-    try{localStorage.setItem(key,JSON.stringify(tasks));}catch(e){}
-    input.value="";
-    renderTodoInline();
-    showToast("✓ Ajouté");
-  });
-  document.getElementById("todo-input-inline")?.addEventListener("keydown",e=>{
-    if(e.key==="Enter")document.getElementById("todo-add-inline").click();
-  });
-}
 
 function renderExercisesInline(){
   const grid=document.getElementById("home-themes-grid");
