@@ -2419,94 +2419,6 @@ async function loadProfiles(){
         ["todo_","reviews_","trashed_"].forEach(k=>localStorage.removeItem(k+id));
         showToast("Profil supprimé");
 
-const EXERCISES=[
-  {
-    id:"introspection_video",
-    title:"Introspection vidéo",
-    icon:"🎥",
-    desc:"Avant tout — te voir tel que tu es vraiment",
-    duration:"15-20 min",
-    parts:[
-      {
-        title:"Qui tu es aujourd hui",
-        intro:"Prends ton téléphone, appuie sur record. Personne d autre ne verra cette vidéo.",
-        questions:[
-          "Comment tu te sens dans ta vie en ce moment — vraiment ?",
-          "T es où niveau confiance sur 10 — et pourquoi ?",
-          "Qu est-ce que tu ne t autorises pas à être ou à faire ?"
-        ]
-      },
-      {
-        title:"Tu parles à demain",
-        intro:"Prends une grande inspiration. Ferme les yeux 10 secondes. Puis regarde la caméra et parle directement à la version de toi dans 3 mois.",
-        questions:[
-          "Ce que tu veux qu il sache.",
-          "Ce que tu veux qu il soit devenu.",
-          "Ce que tu veux qu il ressente."
-        ],
-        note:"Garde cette vidéo précieusement. On la regardera ensemble dans 3 mois."
-      }
-    ]
-  },
-  {
-    id:"mes_proches",
-    title:"Mes proches",
-    icon:"👥",
-    desc:"Comprendre ton environnement pour comprendre qui tu es",
-    duration:"20-30 min",
-    parts:[
-      {
-        title:"Ton entourage proche",
-        intro:"Qui sont les 5 personnes que tu vois le plus souvent ? Amis, collègues, famille, partenaire.",
-        fields:[
-          {label:"Prénom / relation",type:"text",placeholder:"Ex: Thomas — ami d enfance"},
-          {label:"Prénom / relation",type:"text",placeholder:"Ex: Ma mère"},
-          {label:"Prénom / relation",type:"text",placeholder:""},
-          {label:"Prénom / relation",type:"text",placeholder:""},
-          {label:"Prénom / relation",type:"text",placeholder:""}
-        ]
-      },
-      {
-        title:"Ce qu ils t inspirent",
-        intro:"Pour chacun, ce qui te vient directement à l esprit — leur énergie, ambitions, manière de voir le monde.",
-        fields:[
-          {label:"Ce que tu ressens avec cette personne",type:"textarea",placeholder:""},
-          {label:"Ce que tu ressens avec cette personne",type:"textarea",placeholder:""},
-          {label:"Ce que tu ressens avec cette personne",type:"textarea",placeholder:""},
-          {label:"Ce que tu ressens avec cette personne",type:"textarea",placeholder:""},
-          {label:"Ce que tu ressens avec cette personne",type:"textarea",placeholder:""}
-        ]
-      },
-      {
-        title:"Ce qu ils pensent de toi",
-        intro:"Demande à chacun 5 à 10 adjectifs — ce qu ils apprécient et ce qu ils détestent. Le but n est pas de te blesser mais de révéler des parties de toi que tu n aurais jamais écouté.",
-        fields:[
-          {label:"Adjectifs reçus",type:"textarea",placeholder:"Ex: généreux, trop dans sa tête, loyal..."},
-          {label:"Adjectifs reçus",type:"textarea",placeholder:""},
-          {label:"Adjectifs reçus",type:"textarea",placeholder:""},
-          {label:"Adjectifs reçus",type:"textarea",placeholder:""},
-          {label:"Adjectifs reçus",type:"textarea",placeholder:""}
-        ]
-      }
-    ]
-  },
-  {
-    id:"vie_de_reve",
-    title:"Ma vie de rêve",
-    icon:"🌟",
-    desc:"Approfondir la vision — ce que tu veux vraiment",
-    duration:"30-45 min",
-    intro:"Tu as déjà dit à ta future version ce que tu voulais qu il soit. Maintenant on creuse — pas ce qu on t a dit de vouloir, mais ce que toi tu veux vraiment.",
-    spheres:[
-      {icon:"💼",label:"Travail & Mission",questions:["Dans 3 ans, qu est-ce que tu fais comme travail — concrètement ?","Qu est-ce qui te donne de l énergie dans ce que tu fais ?","Qu est-ce qui t en empêche aujourd hui ?","Une chose concrète que tu peux faire cette semaine."]},
-      {icon:"💪",label:"Corps & Santé",questions:["Comment tu te sens physiquement dans ta vie de rêve ?","Qu est-ce que tu veux ressentir dans ton corps ?","Qu est-ce qui t en empêche aujourd hui ?","Une chose concrète que tu peux faire cette semaine."]},
-      {icon:"❤️",label:"Relations & Amour",questions:["Quel type de relations tu veux dans ta vie ?","Comment tu veux te sentir avec les autres ?","Qu est-ce qui t en empêche aujourd hui ?","Une chose concrète que tu peux faire cette semaine."]},
-      {icon:"💰",label:"Finances & Liberté",questions:["De quoi tu as besoin financièrement pour vivre comme tu veux ?","Qu est-ce que l argent représente pour toi vraiment ?","Qu est-ce qui t en empêche aujourd hui ?","Une chose concrète que tu peux faire cette semaine."]},
-      {icon:"🌍",label:"Impact & Sens",questions:["Quel impact tu veux avoir sur les autres, sur le monde ?","Qu est-ce qui compte vraiment pour toi au fond ?","Qu est-ce qui t en empêche aujourd hui ?","Une chose concrète que tu peux faire cette semaine."]},
-      {icon:"🕊️",label:"Liberté & Épanouissement",questions:["À quoi ressemble ta journée idéale dans 3 ans ?","Qu est-ce que tu t autorises à être que tu ne t autorises pas aujourd hui ?","Qu est-ce qui t en empêche aujourd hui ?","Une chose concrète que tu peux faire cette semaine."]}
-    ]
-  }
-];
 
 /* ===== EXERCISES ===== */
 let currentExercise=null,currentExPart=0;
@@ -2750,6 +2662,95 @@ document.getElementById("todo-add-btn").addEventListener("click",()=>{
   showToast("✓ Tâche ajoutée");
 });
 document.getElementById("todo-input").addEventListener("keydown",e=>{if(e.key==="Enter")document.getElementById("todo-add-btn").click();});
+
+const EXERCISES=[
+  {
+    id:"introspection_video",
+    title:"Introspection vidéo",
+    icon:"🎥",
+    desc:"Avant tout — te voir tel que tu es vraiment",
+    duration:"15-20 min",
+    parts:[
+      {
+        title:"Qui tu es aujourd hui",
+        intro:"Prends ton téléphone, appuie sur record. Personne d autre ne verra cette vidéo.",
+        questions:[
+          "Comment tu te sens dans ta vie en ce moment — vraiment ?",
+          "T es où niveau confiance sur 10 — et pourquoi ?",
+          "Qu est-ce que tu ne t autorises pas à être ou à faire ?"
+        ]
+      },
+      {
+        title:"Tu parles à demain",
+        intro:"Prends une grande inspiration. Ferme les yeux 10 secondes. Puis regarde la caméra et parle directement à la version de toi dans 3 mois.",
+        questions:[
+          "Ce que tu veux qu il sache.",
+          "Ce que tu veux qu il soit devenu.",
+          "Ce que tu veux qu il ressente."
+        ],
+        note:"Garde cette vidéo précieusement. On la regardera ensemble dans 3 mois."
+      }
+    ]
+  },
+  {
+    id:"mes_proches",
+    title:"Mes proches",
+    icon:"👥",
+    desc:"Comprendre ton environnement pour comprendre qui tu es",
+    duration:"20-30 min",
+    parts:[
+      {
+        title:"Ton entourage proche",
+        intro:"Qui sont les 5 personnes que tu vois le plus souvent ? Amis, collègues, famille, partenaire.",
+        fields:[
+          {label:"Prénom / relation",type:"text",placeholder:"Ex: Thomas — ami d enfance"},
+          {label:"Prénom / relation",type:"text",placeholder:"Ex: Ma mère"},
+          {label:"Prénom / relation",type:"text",placeholder:""},
+          {label:"Prénom / relation",type:"text",placeholder:""},
+          {label:"Prénom / relation",type:"text",placeholder:""}
+        ]
+      },
+      {
+        title:"Ce qu ils t inspirent",
+        intro:"Pour chacun, ce qui te vient directement à l esprit — leur énergie, ambitions, manière de voir le monde.",
+        fields:[
+          {label:"Ce que tu ressens avec cette personne",type:"textarea",placeholder:""},
+          {label:"Ce que tu ressens avec cette personne",type:"textarea",placeholder:""},
+          {label:"Ce que tu ressens avec cette personne",type:"textarea",placeholder:""},
+          {label:"Ce que tu ressens avec cette personne",type:"textarea",placeholder:""},
+          {label:"Ce que tu ressens avec cette personne",type:"textarea",placeholder:""}
+        ]
+      },
+      {
+        title:"Ce qu ils pensent de toi",
+        intro:"Demande à chacun 5 à 10 adjectifs — ce qu ils apprécient et ce qu ils détestent. Le but n est pas de te blesser mais de révéler des parties de toi que tu n aurais jamais écouté.",
+        fields:[
+          {label:"Adjectifs reçus",type:"textarea",placeholder:"Ex: généreux, trop dans sa tête, loyal..."},
+          {label:"Adjectifs reçus",type:"textarea",placeholder:""},
+          {label:"Adjectifs reçus",type:"textarea",placeholder:""},
+          {label:"Adjectifs reçus",type:"textarea",placeholder:""},
+          {label:"Adjectifs reçus",type:"textarea",placeholder:""}
+        ]
+      }
+    ]
+  },
+  {
+    id:"vie_de_reve",
+    title:"Ma vie de rêve",
+    icon:"🌟",
+    desc:"Approfondir la vision — ce que tu veux vraiment",
+    duration:"30-45 min",
+    intro:"Tu as déjà dit à ta future version ce que tu voulais qu il soit. Maintenant on creuse — pas ce qu on t a dit de vouloir, mais ce que toi tu veux vraiment.",
+    spheres:[
+      {icon:"💼",label:"Travail & Mission",questions:["Dans 3 ans, qu est-ce que tu fais comme travail — concrètement ?","Qu est-ce qui te donne de l énergie dans ce que tu fais ?","Qu est-ce qui t en empêche aujourd hui ?","Une chose concrète que tu peux faire cette semaine."]},
+      {icon:"💪",label:"Corps & Santé",questions:["Comment tu te sens physiquement dans ta vie de rêve ?","Qu est-ce que tu veux ressentir dans ton corps ?","Qu est-ce qui t en empêche aujourd hui ?","Une chose concrète que tu peux faire cette semaine."]},
+      {icon:"❤️",label:"Relations & Amour",questions:["Quel type de relations tu veux dans ta vie ?","Comment tu veux te sentir avec les autres ?","Qu est-ce qui t en empêche aujourd hui ?","Une chose concrète que tu peux faire cette semaine."]},
+      {icon:"💰",label:"Finances & Liberté",questions:["De quoi tu as besoin financièrement pour vivre comme tu veux ?","Qu est-ce que l argent représente pour toi vraiment ?","Qu est-ce qui t en empêche aujourd hui ?","Une chose concrète que tu peux faire cette semaine."]},
+      {icon:"🌍",label:"Impact & Sens",questions:["Quel impact tu veux avoir sur les autres, sur le monde ?","Qu est-ce qui compte vraiment pour toi au fond ?","Qu est-ce qui t en empêche aujourd hui ?","Une chose concrète que tu peux faire cette semaine."]},
+      {icon:"🕊️",label:"Liberté & Épanouissement",questions:["À quoi ressemble ta journée idéale dans 3 ans ?","Qu est-ce que tu t autorises à être que tu ne t autorises pas aujourd hui ?","Qu est-ce qui t en empêche aujourd hui ?","Une chose concrète que tu peux faire cette semaine."]}
+    ]
+  }
+];
 
 loadProfiles();
       }catch(e){showToast("Erreur: "+e.message);}
