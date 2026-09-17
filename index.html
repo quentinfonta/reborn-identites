@@ -2364,7 +2364,8 @@ async function loadProfiles(){
         await sb(`sessions?profile_id=eq.${id}`,{method:"DELETE",prefer:"return=minimal"});
         await sb(`profiles?id=eq.${id}`,{method:"DELETE",prefer:"return=minimal"});
         ["todo_","reviews_","trashed_"].forEach(k=>localStorage.removeItem(k+id));
-        showToast("Profil supprimé");loadProfiles();
+        showToast("Profil supprimé");const LAYERS=[{"id": "layer0", "label": "🚪 Ouvrir la porte", "themes": ["ouvrir_porte"], "unlock_pct": 0}, {"id": "layer1", "label": "🌊 Corps & Action", "themes": ["corps", "figement", "securite", "lacher_prise"], "unlock_pct": 50}, {"id": "layer2", "label": "💔 Blessures primaires", "themes": ["abandon", "etre_aime", "limites", "faire_confiance", "trahison"], "unlock_pct": 50}, {"id": "layer3", "label": "🌪 Émotions installées", "themes": ["honte", "culpabilite", "blessure", "epuisement", "effondrement"], "unlock_pct": 60}, {"id": "layer4", "label": "🕊️ Programmes & Identité", "themes": ["liberte", "valeur", "exister", "dissociation"], "unlock_pct": 60}, {"id": "layer5", "label": "🧭 Sens & Reconstruction", "themes": ["sens", "deconditionnement", "reconstruction"], "unlock_pct": 70}];
+loadProfiles();
       }catch(e){showToast("Erreur: "+e.message);}
     }));
   }catch(e){list.innerHTML=`<div style="font-size:13px;color:var(--red-text)">Erreur: ${e.message}</div>`;}
@@ -2433,33 +2434,60 @@ async function loadData(){
 }
 
 /* ===== HOME THEMES ===== */
-function renderHomeThemes(){
+function getThemePct(t){
   const wids=workedIds();
+  const allIds=t.chapters.flatMap(c=>c.ids);
+  const total=allIds.filter(w=>DATA.find(d=>d.text===`Je suis ${w}`)).length;
+  const done=allIds.filter(w=>{const d=DATA.find(x=>x.text===`Je suis ${w}`);return d&&wids.has(d.id);}).length;
+  return total?Math.round((done/total)*100):0;
+}
+
+function isLayerUnlocked(layerIdx){
+  if(layerIdx===0)return true;
+  const prevLayer=LAYERS[layerIdx-1];
+  const prevThemes=prevLayer.themes.map(tid=>SCAN_THEMES.find(t=>t.id===tid)).filter(Boolean);
+  if(!prevThemes.length)return true;
+  const avgPct=prevThemes.reduce((a,t)=>a+getThemePct(t),0)/prevThemes.length;
+  return avgPct>=prevLayer.unlock_pct;
+}
+
+function renderHomeThemes(){
   const grid=document.getElementById("home-themes-grid");
   if(!grid)return;
-  const total_themes=SCAN_THEMES.length;
-  grid.innerHTML=SCAN_THEMES.map((t,i)=>{
-    const allIds=t.chapters.flatMap(c=>c.ids);
-    const total=allIds.filter(w=>DATA.find(d=>d.text===`Je suis ${w}`)).length;
-    const done=allIds.filter(w=>{const d=DATA.find(x=>x.text===`Je suis ${w}`);return d&&wids.has(d.id);}).length;
-    const pct=total?Math.round((done/total)*100):0;
-    // Progressive: first themes bigger, last ones smaller
-    const progress=i/total_themes; // 0 to 1
-    const opacity=Math.max(0.45, 1-progress*0.55);
-    const fontSize=Math.max(11, 13-progress*2);
-    const iconSize=Math.max(15, 20-progress*5);
-    const padding=Math.max(7, 11-progress*4);
-    return`<div class="home-theme-row" data-tid="${t.id}" style="opacity:${opacity.toFixed(2)};padding:${padding.toFixed(0)}px 12px;">
-      <div class="home-theme-icon" style="font-size:${iconSize.toFixed(0)}px;width:${iconSize+4}px;">${t.icon}</div>
-      <div class="home-theme-info">
-        <div class="home-theme-title" style="font-size:${fontSize.toFixed(0)}px;">${t.title}</div>
-      </div>
-      <div class="home-theme-progress">
-        <div class="home-theme-pct" style="font-size:${Math.max(9,fontSize-2).toFixed(0)}px;">${pct}%</div>
-        <div class="home-theme-bar"><div class="home-theme-bar-fill" style="width:${pct}%"></div></div>
-      </div>
-    </div>`;
-  }).join("");
+  let html="";
+  LAYERS.forEach((layer,li)=>{
+    const unlocked=isLayerUnlocked(li);
+    const prevLayer=li>0?LAYERS[li-1]:null;
+    const prevAvg=prevLayer?Math.round(prevLayer.themes.map(tid=>SCAN_THEMES.find(t=>t.id===tid)).filter(Boolean).reduce((a,t)=>a+getThemePct(t),0)/prevLayer.themes.length):100;
+    html+=`<div class="layer-section${unlocked?"":" layer-locked"}">
+      <div class="layer-header">
+        <span class="layer-label">${layer.label}</span>
+        ${!unlocked?`<span class="layer-lock-badge">🔒 ${prevAvg}% / ${prevLayer?.unlock_pct}% requis</span>`:""}
+      </div>`;
+    layer.themes.forEach((tid,ti)=>{
+      const t=SCAN_THEMES.find(x=>x.id===tid);
+      if(!t)return;
+      const pct=getThemePct(t);
+      const totalThemesInLayer=layer.themes.length;
+      const progress=ti/Math.max(1,totalThemesInLayer-1);
+      const opacity=Math.max(0.6,1-progress*0.35);
+      const fontSize=Math.max(11,13-progress*1.5);
+      const iconSize=Math.max(16,20-progress*4);
+      const padding=Math.max(8,11-progress*3);
+      html+=`<div class="home-theme-row" data-tid="${t.id}" style="opacity:${opacity.toFixed(2)};padding:${padding.toFixed(0)}px 12px;margin-bottom:4px;">
+        <div class="home-theme-icon" style="font-size:${iconSize.toFixed(0)}px;width:${(iconSize+4).toFixed(0)}px;">${t.icon}</div>
+        <div class="home-theme-info">
+          <div class="home-theme-title" style="font-size:${fontSize.toFixed(0)}px;">${t.title}</div>
+        </div>
+        <div class="home-theme-progress">
+          <div class="home-theme-pct" style="font-size:${Math.max(9,fontSize-2).toFixed(0)}px;">${pct}%</div>
+          <div class="home-theme-bar"><div class="home-theme-bar-fill" style="width:${pct}%"></div></div>
+        </div>
+      </div>`;
+    });
+    html+="</div>";
+  });
+  grid.innerHTML=html;
   grid.querySelectorAll(".home-theme-row").forEach(row=>{
     row.addEventListener("click",()=>{
       scanThemeId=row.dataset.tid;scanChapterIdx=0;scanChecked.clear();
@@ -2538,8 +2566,13 @@ function renderScan(){
         <div class="scan-chapter-intro">${chapter.intro}</div>
       </div>
       <div class="scan-pills-grid">${itemsHtml}</div>
-      <div class="scan-chapter-footer">
-        <button class="scan-continue-btn" id="scan-continue">${isLast?"Terminer ✓":"Chapitre suivant →"}</button>
+      <div class="scan-journal">
+        <div class="scan-journal-label">Note de session</div>
+        <textarea class="scan-journal-input" id="scan-journal-input" rows="2" placeholder="Ce que tu ressens, ce qui a résonné…"></textarea>
+      </div>
+      <div class="scan-chapter-nav">
+        <button class="scan-chapter-nav-btn" id="scan-prev-ch" ${scanChapterIdx===0?"style='visibility:hidden'":""}>← ${scanChapterIdx>0?theme.chapters[scanChapterIdx-1].title:"—"}</button>
+        <button class="scan-chapter-nav-btn primary" id="scan-next-ch">${isLast?"Terminer ✓":theme.chapters[scanChapterIdx+1].title+" →"}</button>
       </div>
     </div></div>`;
 
@@ -2556,41 +2589,49 @@ function renderScan(){
     });
   });
 
-  // Chapter tabs + back — fresh delegation each render
+  // Back button delegation on sticky header
   const stickyEl=document.getElementById("scan-sticky-header");
-  // Remove old listeners by replacing element
   const newSticky=stickyEl.cloneNode(true);
   stickyEl.parentNode.replaceChild(newSticky,stickyEl);
-  newSticky.addEventListener("click",async e=>{
-    const tab=e.target.closest(".scan-tab");
+  newSticky.addEventListener("click",e=>{
     const back=e.target.closest("[data-back]");
-    if(tab){
-      await saveScanChecked();
-      scanChapterIdx=+tab.dataset.cidx;
-      scanChecked.clear();
-      renderScan();
-      document.getElementById("scan-content").scrollTop=0;
-    } else if(back){
+    if(back){
       if(scanChapterIdx===0){
         scanThemeId=null;
         document.getElementById("scan-sticky-header").innerHTML="";
-        renderScan();
+        showScreen("home-screen");
+        renderHomeThemes();
       } else {
+        saveJournalNote?.();
         scanChapterIdx--;
         renderScan();
-        document.getElementById("scan-content").scrollTop=0;
+        cont.scrollTop=0;
       }
     }
   });
 
-  document.getElementById("scan-continue").addEventListener("click",async()=>{
+  // Save journal note
+  function saveJournalNote(){
+    const note=document.getElementById("scan-journal-input")?.value?.trim();
+    if(!note||!currentProfile)return;
+    try{
+      const key=`journal_${currentProfile.id}`;
+      const entries=JSON.parse(localStorage.getItem(key)||"[]");
+      entries.push({date:new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"}),theme:theme.title,chapter:chapter.title,note});
+      localStorage.setItem(key,JSON.stringify(entries));
+    }catch(e){}
+  }
+
+  document.getElementById("scan-prev-ch")?.addEventListener("click",()=>{
+    saveJournalNote();
+    scanChapterIdx--;renderScan();cont.scrollTop=0;
+  });
+
+  document.getElementById("scan-next-ch")?.addEventListener("click",async()=>{
+    saveJournalNote();
     await saveScanChecked();
     if(isLast){showScanResults(theme);}
-    else{
-      const next=theme.chapters[scanChapterIdx+1];
-      const isPreLast=scanChapterIdx===total-2;
-      showScanTransition(isPreLast,next.title,()=>{scanChapterIdx++;renderScan();cont.scrollTop=0;});
-    }
+    else{scanChapterIdx++;renderScan();cont.scrollTop=0;}
   });
 }
 
