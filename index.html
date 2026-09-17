@@ -2856,7 +2856,8 @@ function renderHomeThemes(){
       const fontSize=Math.max(11,13-progress*1.5);
       const iconSize=Math.max(16,20-progress*4);
       const padding=Math.max(8,11-progress*3);
-      html+=`<div class="home-theme-row" data-tid="${t.id}" style="opacity:${opacity.toFixed(2)};padding:${padding.toFixed(0)}px 12px;margin-bottom:4px;">
+      const isThemeLocked=!unlocked;
+      html+=`<div class="home-theme-row" data-tid="${t.id}" ${isThemeLocked?'data-locked="1"':''} style="opacity:${(isThemeLocked?0.3:opacity).toFixed(2)};padding:${padding.toFixed(0)}px 12px;margin-bottom:4px;${isThemeLocked?'pointer-events:none;cursor:default;':''}">
         <div class="home-theme-icon" style="font-size:${iconSize.toFixed(0)}px;width:${(iconSize+4).toFixed(0)}px;">${t.icon}</div>
         <div class="home-theme-info">
           <div class="home-theme-title" style="font-size:${fontSize.toFixed(0)}px;">${t.title}</div>
@@ -2870,7 +2871,7 @@ function renderHomeThemes(){
     html+="</div>";
   });
   grid.innerHTML=html;
-  grid.querySelectorAll(".home-theme-row").forEach(row=>{
+  grid.querySelectorAll(".home-theme-row:not([data-locked])").forEach(row=>{
     row.addEventListener("click",()=>{
       scanThemeId=row.dataset.tid;scanChapterIdx=0;scanChecked.clear();
       document.getElementById("scan-profile-name").textContent=currentProfile?currentProfile.name:"";
@@ -3035,13 +3036,12 @@ function renderScan(){
         <div class="scan-chapter-intro">${chapter.intro}</div>
       </div>
       <div class="scan-pills-grid">${itemsHtml}</div>
-      <div class="scan-journal">
-        <div class="scan-journal-label">Note de session</div>
-        <textarea class="scan-journal-input" id="scan-journal-input" rows="2" placeholder="Ce que tu ressens, ce qui a résonné…"></textarea>
-      </div>
-      <div class="scan-chapter-nav">
-        <button class="scan-chapter-nav-btn" id="scan-prev-ch" ${scanChapterIdx===0?"style='visibility:hidden'":""}>← ${scanChapterIdx>0?theme.chapters[scanChapterIdx-1].title:"—"}</button>
-        <button class="scan-chapter-nav-btn primary" id="scan-next-ch">${isLast?"Terminer ✓":theme.chapters[scanChapterIdx+1].title+" →"}</button>
+      <div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border);">
+        <textarea id="scan-journal-input" placeholder="Note…" rows="2" style="width:100%;box-sizing:border-box;padding:10px 0;border:none;border-bottom:1px solid var(--border-md);background:transparent;color:var(--text);font-size:13px;font-family:inherit;resize:none;line-height:1.6;outline:none;margin-bottom:1.25rem;"></textarea>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+          <button id="scan-prev-ch" style="font-size:12px;color:var(--text-faint);background:none;border:none;cursor:pointer;padding:0;font-family:inherit;${scanChapterIdx===0?'visibility:hidden':''}"">← ${scanChapterIdx>0?theme.chapters[scanChapterIdx-1].title:""}</button>
+          <button id="scan-next-ch" style="font-size:13px;font-weight:500;color:var(--accent);background:none;border:none;cursor:pointer;padding:0;font-family:inherit;">${isLast?"Terminer ✓":theme.chapters[scanChapterIdx+1].title+" →"}</button>
+        </div>
       </div>
     </div></div>`;
 
@@ -3081,13 +3081,17 @@ function renderScan(){
 
   // Save journal note
   function saveJournalNote(){
-    const note=document.getElementById("scan-journal-input")?.value?.trim();
+    const input=document.getElementById("scan-journal-input");
+    const note=input?.value?.trim();
     if(!note||!currentProfile)return;
     try{
       const key=`journal_${currentProfile.id}`;
       const entries=JSON.parse(localStorage.getItem(key)||"[]");
-      entries.push({date:new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"}),theme:theme.title,chapter:chapter.title,note});
+      const date=new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
+      entries.push({date,title:`${theme.title} — ${chapter.title}`,note,theme:theme.id,chapter:scanChapterIdx});
       localStorage.setItem(key,JSON.stringify(entries));
+      if(input)input.value="";
+      showToast("✓ Note sauvegardée");
     }catch(e){}
   }
 
