@@ -2902,8 +2902,14 @@ function setHomeTab(tab){
     renderJournalInline();
   } else if(tab==="exercises"){
     sub.textContent="";
-    grid.style.display="none";
+    grid.style.display="flex";
+    grid.style.flexDirection="column";
     renderExercisesInline();
+  } else if(tab==="todo"){
+    sub.textContent="";
+    grid.style.display="flex";
+    grid.style.flexDirection="column";
+    renderTodoInline();
   }
 }
 
@@ -2942,10 +2948,59 @@ function renderJournalInline(){
   });
 }
 
+function renderTodoInline(){
+  const grid=document.getElementById("home-themes-grid");
+  const key=`todo_tasks_${currentProfile?.id}`;
+  let tasks=[];
+  try{tasks=JSON.parse(localStorage.getItem(key)||"[]");}catch(e){}
+
+  const taskHtml=tasks.length
+    ?tasks.map((t,i)=>`
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);" data-todo-idx="${i}">
+        <div style="width:16px;height:16px;border-radius:50%;border:1px solid ${t.done?"var(--green-border)":"var(--border-md)"};background:${t.done?"var(--green-border)":"transparent"};flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;">
+          ${t.done?'<i class="ti ti-check" style="font-size:9px;color:#fff;"></i>':""}
+        </div>
+        <span style="flex:1;font-size:13px;${t.done?"text-decoration:line-through;color:var(--text-faint);":""}">${t.text}</span>
+        <span style="font-size:10px;color:var(--text-faint);">${t.date||""}</span>
+      </div>`).join("")
+    :'<div style="font-size:13px;color:var(--text-faint);text-align:center;padding:2rem 0;">Rien à faire.</div>';
+
+  grid.innerHTML=`
+    <div style="display:flex;gap:8px;margin-bottom:1rem;">
+      <input type="text" id="todo-input-inline" placeholder="Ajouter une tâche…" style="flex:1;padding:8px 0;border:none;border-bottom:1px solid var(--border-md);background:transparent;color:var(--text);font-size:13px;font-family:inherit;outline:none;">
+      <button id="todo-add-inline" style="font-size:13px;color:var(--accent);background:none;border:none;cursor:pointer;font-family:inherit;padding:0 4px;">+</button>
+    </div>
+    ${taskHtml}`;
+
+  grid.querySelectorAll("[data-todo-idx]").forEach(row=>{
+    row.addEventListener("click",()=>{
+      const i=+row.dataset.todoIdx;
+      tasks[i].done=!tasks[i].done;
+      try{localStorage.setItem(key,JSON.stringify(tasks));}catch(e){}
+      renderTodoInline();
+    });
+  });
+  document.getElementById("todo-add-inline")?.addEventListener("click",()=>{
+    const input=document.getElementById("todo-input-inline");
+    const text=input.value.trim();
+    if(!text)return;
+    tasks.push({text,done:false,date:new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long"})});
+    try{localStorage.setItem(key,JSON.stringify(tasks));}catch(e){}
+    input.value="";
+    renderTodoInline();
+    showToast("✓ Ajouté");
+  });
+  document.getElementById("todo-input-inline")?.addEventListener("keydown",e=>{
+    if(e.key==="Enter")document.getElementById("todo-add-inline").click();
+  });
+}
+
 function renderExercisesInline(){
   const grid=document.getElementById("home-themes-grid");
   grid.style.display="flex";
   grid.style.flexDirection="column";
+  grid.style.maxHeight="65vh";
+  grid.style.overflowY="auto";
   grid.innerHTML=EXERCISES.map((e,i)=>{
     const opacity=Math.max(0.6,1-(i/EXERCISES.length)*0.35);
     const fontSize=Math.max(12,14-(i/EXERCISES.length)*2);
@@ -3072,7 +3127,7 @@ function renderScan(){
         scanThemeId=null;
         document.getElementById("scan-sticky-header").innerHTML="";
         showScreen("home-screen");
-        renderHomeThemes();
+        setHomeTab("reconnexion");
       } else {
         saveJournalNote?.();
         scanChapterIdx--;
@@ -3182,7 +3237,7 @@ document.getElementById("scan-home-btn")?.addEventListener("click",()=>{
   scanThemeId=null;scanChapterIdx=0;scanChecked.clear();
   document.getElementById("scan-sticky-header").innerHTML="";
   showScreen("home-screen");
-  renderHomeThemes();
+  setHomeTab("reconnexion");
 });
 
 /* ===== DICT ===== */
