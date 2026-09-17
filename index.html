@@ -439,8 +439,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   </div>
   <div class="home-themes-grid" id="home-themes-grid"></div>
   <div class="home-footer">
+    <button class="home-footer-btn" id="home-exercises-btn"><i class="ti ti-dumbbell"></i> Exos</button>
+    <button class="home-footer-btn" id="home-journal-btn"><i class="ti ti-notebook"></i> Journal</button>
+    <button class="home-footer-btn" id="home-todo-btn"><i class="ti ti-check"></i> To-do</button>
     <button class="home-footer-btn" id="home-progress-btn"><i class="ti ti-chart-bar"></i> Stats</button>
-    <button class="home-footer-btn" id="home-switch-btn"><i class="ti ti-switch-horizontal"></i> Changer</button>
+    <button class="home-footer-btn" id="home-switch-btn"><i class="ti ti-switch-horizontal"></i></button>
   </div>
 </div>
 
@@ -498,6 +501,45 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     <div class="session-inner">
       <div class="session-tags" id="scan-tags"><span class="empty-sel">Coche ce qui résonne…</span></div>
       <button class="validate-btn" id="scan-validate-btn" disabled><i class="ti ti-check"></i> Valider</button>
+    </div>
+  </div>
+</div>
+
+<!-- EXERCISES SCREEN -->
+<div class="block-screen" id="exercises-screen">
+  <div class="main-header">
+    <div><div class="brand" style="margin-bottom:2px">REBORN</div><div class="brand-title">Exercices</div></div>
+    <div class="main-header-right">
+      <button class="header-btn" id="exercises-home-btn"><i class="ti ti-arrow-left"></i> Accueil</button>
+    </div>
+  </div>
+  <div class="dict-scroll" id="exercises-content"></div>
+</div>
+
+<!-- JOURNAL SCREEN -->
+<div class="block-screen" id="journal-screen">
+  <div class="main-header">
+    <div><div class="brand" style="margin-bottom:2px">REBORN</div><div class="brand-title">Journal</div></div>
+    <div class="main-header-right">
+      <button class="header-btn" id="journal-home-btn"><i class="ti ti-arrow-left"></i> Accueil</button>
+    </div>
+  </div>
+  <div class="dict-scroll" id="journal-content"></div>
+</div>
+
+<!-- TODO SCREEN -->
+<div class="block-screen" id="todo-screen">
+  <div class="main-header">
+    <div><div class="brand" style="margin-bottom:2px">REBORN</div><div class="brand-title">À faire</div></div>
+    <div class="main-header-right">
+      <button class="header-btn" id="todo-home-btn"><i class="ti ti-arrow-left"></i> Accueil</button>
+    </div>
+  </div>
+  <div class="dict-scroll" id="todo-content"></div>
+  <div class="session-bar">
+    <div class="session-inner">
+      <input type="text" id="todo-input" placeholder="Ajouter une tâche…" style="flex:1;padding:8px 12px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface2);color:var(--text);font-size:13px;font-family:inherit;">
+      <button class="validate-btn" id="todo-add-btn"><i class="ti ti-plus"></i> Ajouter</button>
     </div>
   </div>
 </div>
@@ -2300,6 +2342,8 @@ const SCAN_THEMES=[
     ]
   }
 ];
+const LAYERS=[{"id": "layer0", "label": "🚪 Ouvrir la porte", "themes": ["ouvrir_porte"], "unlock_pct": 0}, {"id": "layer1", "label": "🌊 Corps & Action", "themes": ["corps", "figement", "securite", "lacher_prise"], "unlock_pct": 50}, {"id": "layer2", "label": "💔 Blessures primaires", "themes": ["abandon", "etre_aime", "limites", "faire_confiance", "trahison"], "unlock_pct": 50}, {"id": "layer3", "label": "🌪 Émotions installées", "themes": ["honte", "culpabilite", "blessure", "epuisement", "effondrement"], "unlock_pct": 60}, {"id": "layer4", "label": "🕊️ Programmes & Identité", "themes": ["liberte", "valeur", "exister", "dissociation"], "unlock_pct": 60}, {"id": "layer5", "label": "🧭 Sens & Reconstruction", "themes": ["sens", "deconditionnement", "reconstruction"], "unlock_pct": 70}];
+
 
 function getGroupForCat(cat,role){
   if(role){const isPos=role==="coping";return GROUPS.find(g=>g.cats.includes(cat)&&(isPos?g.polarity==="pos":g.polarity==="neg"))||GROUPS.find(g=>g.cats.includes(cat));}
@@ -2364,7 +2408,344 @@ async function loadProfiles(){
         await sb(`sessions?profile_id=eq.${id}`,{method:"DELETE",prefer:"return=minimal"});
         await sb(`profiles?id=eq.${id}`,{method:"DELETE",prefer:"return=minimal"});
         ["todo_","reviews_","trashed_"].forEach(k=>localStorage.removeItem(k+id));
-        showToast("Profil supprimé");const LAYERS=[{"id": "layer0", "label": "🚪 Ouvrir la porte", "themes": ["ouvrir_porte"], "unlock_pct": 0}, {"id": "layer1", "label": "🌊 Corps & Action", "themes": ["corps", "figement", "securite", "lacher_prise"], "unlock_pct": 50}, {"id": "layer2", "label": "💔 Blessures primaires", "themes": ["abandon", "etre_aime", "limites", "faire_confiance", "trahison"], "unlock_pct": 50}, {"id": "layer3", "label": "🌪 Émotions installées", "themes": ["honte", "culpabilite", "blessure", "epuisement", "effondrement"], "unlock_pct": 60}, {"id": "layer4", "label": "🕊️ Programmes & Identité", "themes": ["liberte", "valeur", "exister", "dissociation"], "unlock_pct": 60}, {"id": "layer5", "label": "🧭 Sens & Reconstruction", "themes": ["sens", "deconditionnement", "reconstruction"], "unlock_pct": 70}];
+        showToast("Profil supprimé");
+
+const EXERCISES=[
+  {
+    id:"introspection_video",
+    title:"Introspection vidéo",
+    icon:"🎥",
+    desc:"Avant tout — te voir tel que tu es vraiment",
+    duration:"15-20 min",
+    parts:[
+      {
+        title:"Qui tu es aujourd hui",
+        intro:"Prends ton téléphone, appuie sur record. Personne d autre ne verra cette vidéo.",
+        questions:[
+          "Comment tu te sens dans ta vie en ce moment — vraiment ?",
+          "T es où niveau confiance sur 10 — et pourquoi ?",
+          "Qu est-ce que tu ne t autorises pas à être ou à faire ?"
+        ]
+      },
+      {
+        title:"Tu parles à demain",
+        intro:"Prends une grande inspiration. Ferme les yeux 10 secondes. Puis regarde la caméra et parle directement à la version de toi dans 3 mois.",
+        questions:[
+          "Ce que tu veux qu il sache.",
+          "Ce que tu veux qu il soit devenu.",
+          "Ce que tu veux qu il ressente."
+        ],
+        note:"Garde cette vidéo précieusement. On la regardera ensemble dans 3 mois."
+      }
+    ]
+  },
+  {
+    id:"mes_proches",
+    title:"Mes proches",
+    icon:"👥",
+    desc:"Comprendre ton environnement pour comprendre qui tu es",
+    duration:"20-30 min",
+    parts:[
+      {
+        title:"Ton entourage proche",
+        intro:"Qui sont les 5 personnes que tu vois le plus souvent ? Amis, collègues, famille, partenaire.",
+        fields:[
+          {label:"Prénom / relation",type:"text",placeholder:"Ex: Thomas — ami d enfance"},
+          {label:"Prénom / relation",type:"text",placeholder:"Ex: Ma mère"},
+          {label:"Prénom / relation",type:"text",placeholder:""},
+          {label:"Prénom / relation",type:"text",placeholder:""},
+          {label:"Prénom / relation",type:"text",placeholder:""}
+        ]
+      },
+      {
+        title:"Ce qu ils t inspirent",
+        intro:"Pour chacun, ce qui te vient directement à l esprit — leur énergie, ambitions, manière de voir le monde.",
+        fields:[
+          {label:"Ce que tu ressens avec cette personne",type:"textarea",placeholder:""},
+          {label:"Ce que tu ressens avec cette personne",type:"textarea",placeholder:""},
+          {label:"Ce que tu ressens avec cette personne",type:"textarea",placeholder:""},
+          {label:"Ce que tu ressens avec cette personne",type:"textarea",placeholder:""},
+          {label:"Ce que tu ressens avec cette personne",type:"textarea",placeholder:""}
+        ]
+      },
+      {
+        title:"Ce qu ils pensent de toi",
+        intro:"Demande à chacun 5 à 10 adjectifs — ce qu ils apprécient et ce qu ils détestent. Le but n est pas de te blesser mais de révéler des parties de toi que tu n aurais jamais écouté.",
+        fields:[
+          {label:"Adjectifs reçus",type:"textarea",placeholder:"Ex: généreux, trop dans sa tête, loyal..."},
+          {label:"Adjectifs reçus",type:"textarea",placeholder:""},
+          {label:"Adjectifs reçus",type:"textarea",placeholder:""},
+          {label:"Adjectifs reçus",type:"textarea",placeholder:""},
+          {label:"Adjectifs reçus",type:"textarea",placeholder:""}
+        ]
+      }
+    ]
+  },
+  {
+    id:"vie_de_reve",
+    title:"Ma vie de rêve",
+    icon:"🌟",
+    desc:"Approfondir la vision — ce que tu veux vraiment",
+    duration:"30-45 min",
+    intro:"Tu as déjà dit à ta future version ce que tu voulais qu il soit. Maintenant on creuse — pas ce qu on t a dit de vouloir, mais ce que toi tu veux vraiment.",
+    spheres:[
+      {icon:"💼",label:"Travail & Mission",questions:["Dans 3 ans, qu est-ce que tu fais comme travail — concrètement ?","Qu est-ce qui te donne de l énergie dans ce que tu fais ?","Qu est-ce qui t en empêche aujourd hui ?","Une chose concrète que tu peux faire cette semaine."]},
+      {icon:"💪",label:"Corps & Santé",questions:["Comment tu te sens physiquement dans ta vie de rêve ?","Qu est-ce que tu veux ressentir dans ton corps ?","Qu est-ce qui t en empêche aujourd hui ?","Une chose concrète que tu peux faire cette semaine."]},
+      {icon:"❤️",label:"Relations & Amour",questions:["Quel type de relations tu veux dans ta vie ?","Comment tu veux te sentir avec les autres ?","Qu est-ce qui t en empêche aujourd hui ?","Une chose concrète que tu peux faire cette semaine."]},
+      {icon:"💰",label:"Finances & Liberté",questions:["De quoi tu as besoin financièrement pour vivre comme tu veux ?","Qu est-ce que l argent représente pour toi vraiment ?","Qu est-ce qui t en empêche aujourd hui ?","Une chose concrète que tu peux faire cette semaine."]},
+      {icon:"🌍",label:"Impact & Sens",questions:["Quel impact tu veux avoir sur les autres, sur le monde ?","Qu est-ce qui compte vraiment pour toi au fond ?","Qu est-ce qui t en empêche aujourd hui ?","Une chose concrète que tu peux faire cette semaine."]},
+      {icon:"🕊️",label:"Liberté & Épanouissement",questions:["À quoi ressemble ta journée idéale dans 3 ans ?","Qu est-ce que tu t autorises à être que tu ne t autorises pas aujourd hui ?","Qu est-ce qui t en empêche aujourd hui ?","Une chose concrète que tu peux faire cette semaine."]}
+    ]
+  }
+];
+
+/* ===== EXERCISES ===== */
+let currentExercise=null,currentExPart=0;
+
+function renderExercises(){
+  const cont=document.getElementById("exercises-content");
+  cont.innerHTML=`
+    <div style="padding:1rem 0 6rem;">
+      <div style="font-size:13px;color:var(--text-muted);margin-bottom:1rem;">Choisis un exercice pour commencer.</div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        ${EXERCISES.map(e=>`
+          <div class="home-theme-row" data-exid="${e.id}" style="padding:14px;">
+            <div style="font-size:24px;width:32px;">${e.icon}</div>
+            <div style="flex:1;">
+              <div style="font-size:13px;font-weight:600;">${e.title}</div>
+              <div style="font-size:11px;color:var(--text-faint);margin-top:2px;">${e.desc}</div>
+            </div>
+            <div style="font-size:10px;color:var(--text-faint);">⏱ ${e.duration}</div>
+          </div>`).join("")}
+      </div>
+    </div>`;
+  cont.querySelectorAll("[data-exid]").forEach(card=>{
+    card.addEventListener("click",()=>{
+      currentExercise=EXERCISES.find(e=>e.id===card.dataset.exid);
+      currentExPart=0;
+      renderExerciseDetail();
+    });
+  });
+}
+
+function renderExerciseDetail(){
+  if(!currentExercise)return;
+  const ex=currentExercise;
+  const cont=document.getElementById("exercises-content");
+  if(ex.id==="vie_de_reve"){
+    renderVieDeReve();return;
+  }
+  const part=ex.parts[currentExPart];
+  const isLast=currentExPart===ex.parts.length-1;
+  const savedKey=`ex_${currentProfile?.id}_${ex.id}_${currentExPart}`;
+  let saved={};
+  try{saved=JSON.parse(localStorage.getItem(savedKey)||"{}");}catch(e){}
+
+  let fieldsHtml="";
+  if(part.questions){
+    fieldsHtml=part.questions.map((q,i)=>`
+      <div style="margin-bottom:1rem;">
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:6px;">${q}</div>
+        <textarea class="scan-journal-input ex-field" data-idx="${i}" rows="2" placeholder="Ta réponse…">${saved[i]||""}</textarea>
+      </div>`).join("");
+  } else if(part.fields){
+    fieldsHtml=part.fields.map((f,i)=>`
+      <div style="margin-bottom:1rem;">
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:6px;">${f.label}</div>
+        ${f.type==="textarea"
+          ?`<textarea class="scan-journal-input ex-field" data-idx="${i}" rows="2" placeholder="${f.placeholder}">${saved[i]||""}</textarea>`
+          :`<input class="scan-journal-input ex-field" data-idx="${i}" type="text" placeholder="${f.placeholder}" value="${saved[i]||""}" style="display:block;">`}
+      </div>`).join("");
+  }
+
+  cont.innerHTML=`
+    <div style="padding:0 0 6rem;">
+      <div class="scan-chapter-top" style="padding:0.75rem 0 0.5rem;margin-bottom:1rem;border-bottom:1px solid var(--border);">
+        <button class="dict-nav-btn" id="ex-back-btn" style="padding:5px 10px;font-size:12px;">← ${currentExPart===0?"Exercices":"Retour"}</button>
+        <div style="text-align:center;">
+          <div style="font-size:12px;font-weight:600;">${ex.icon} ${ex.title}</div>
+          <div style="font-size:10px;color:var(--text-faint);">Partie ${currentExPart+1} / ${ex.parts.length}</div>
+        </div>
+        <div style="width:60px;"></div>
+      </div>
+      <div style="padding:0 1.5rem;">
+        <div style="font-size:15px;font-weight:600;margin-bottom:0.5rem;">${part.title}</div>
+        <div style="font-size:12px;color:var(--text-muted);font-style:italic;margin-bottom:1.5rem;line-height:1.5;">${part.intro}</div>
+        ${fieldsHtml}
+        ${part.note?`<div style="font-size:12px;color:var(--accent);margin-top:1rem;font-style:italic;">${part.note}</div>`:""}
+        <div class="scan-chapter-nav" style="margin-top:2rem;">
+          <div></div>
+          <button class="scan-chapter-nav-btn primary" id="ex-next-btn">${isLast?"Terminer ✓":"Partie suivante →"}</button>
+        </div>
+      </div>
+    </div>`;
+
+  // Save on input
+  cont.querySelectorAll(".ex-field").forEach(f=>{
+    f.addEventListener("input",()=>{
+      const vals={};
+      cont.querySelectorAll(".ex-field").forEach(x=>{vals[x.dataset.idx]=x.value;});
+      try{localStorage.setItem(savedKey,JSON.stringify(vals));}catch(e){}
+    });
+  });
+
+  document.getElementById("ex-back-btn").addEventListener("click",()=>{
+    if(currentExPart===0){currentExercise=null;renderExercises();}
+    else{currentExPart--;renderExerciseDetail();}
+  });
+  document.getElementById("ex-next-btn").addEventListener("click",()=>{
+    if(isLast){currentExercise=null;renderExercises();showToast("✓ Exercice complété");}
+    else{currentExPart++;renderExerciseDetail();}
+  });
+}
+
+function renderVieDeReve(){
+  const ex=currentExercise;
+  const cont=document.getElementById("exercises-content");
+  cont.innerHTML=`
+    <div style="padding:0 0 6rem;">
+      <div class="scan-chapter-top" style="padding:0.75rem 0 0.5rem;margin-bottom:1rem;border-bottom:1px solid var(--border);">
+        <button class="dict-nav-btn" id="vdr-back-btn" style="padding:5px 10px;font-size:12px;">← Exercices</button>
+        <div style="font-size:12px;font-weight:600;">${ex.icon} ${ex.title}</div>
+        <div style="width:60px;"></div>
+      </div>
+      <div style="padding:0 1.5rem;">
+        <div style="font-size:12px;color:var(--text-muted);font-style:italic;margin-bottom:1.5rem;line-height:1.5;">${ex.intro}</div>
+        ${ex.spheres.map((s,si)=>{
+          const savedKey=`ex_${currentProfile?.id}_vie_de_reve_${si}`;
+          let saved={};
+          try{saved=JSON.parse(localStorage.getItem(savedKey)||"{}");}catch(e){}
+          return`<div style="margin-bottom:2rem;">
+            <div style="font-size:13px;font-weight:600;margin-bottom:0.75rem;">${s.icon} ${s.label}</div>
+            ${s.questions.map((q,qi)=>`
+              <div style="margin-bottom:0.75rem;">
+                <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;">${q}</div>
+                <textarea class="scan-journal-input vdr-field" data-si="${si}" data-qi="${qi}" rows="2" placeholder="Ta réponse…">${saved[qi]||""}</textarea>
+              </div>`).join("")}
+          </div>`;
+        }).join("")}
+        <button class="scan-chapter-nav-btn primary" id="vdr-save-btn" style="width:100%;margin-top:1rem;">Sauvegarder ✓</button>
+      </div>
+    </div>`;
+
+  cont.querySelectorAll(".vdr-field").forEach(f=>{
+    f.addEventListener("input",()=>{
+      const si=f.dataset.si;
+      const vals={};
+      cont.querySelectorAll(`.vdr-field[data-si="${si}"]`).forEach(x=>{vals[x.dataset.qi]=x.value;});
+      try{localStorage.setItem(`ex_${currentProfile?.id}_vie_de_reve_${si}`,JSON.stringify(vals));}catch(e){}
+    });
+  });
+  document.getElementById("vdr-back-btn").addEventListener("click",()=>{currentExercise=null;renderExercises();});
+  document.getElementById("vdr-save-btn").addEventListener("click",()=>{showToast("✓ Vision sauvegardée");});
+}
+
+document.getElementById("exercises-home-btn").addEventListener("click",()=>{showScreen("home-screen");renderHomeThemes();});
+document.getElementById("home-exercises-btn").addEventListener("click",()=>{showScreen("exercises-screen");renderExercises();});
+
+/* ===== JOURNAL ===== */
+function renderJournal(){
+  const cont=document.getElementById("journal-content");
+  const key=`journal_${currentProfile?.id}`;
+  let entries=[];
+  try{entries=JSON.parse(localStorage.getItem(key)||"[]");}catch(e){}
+
+  const newEntry=`
+    <div style="margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border);">
+      <div style="font-size:12px;font-weight:600;margin-bottom:8px;">✍️ Nouvelle entrée</div>
+      <input type="text" id="journal-title" placeholder="Titre (optionnel)…" style="width:100%;box-sizing:border-box;padding:8px 12px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface2);color:var(--text);font-size:13px;font-family:inherit;margin-bottom:8px;">
+      <textarea id="journal-text" class="scan-journal-input" rows="4" placeholder="Ce que tu ressens, ce qui a résonné, ce que tu veux retenir…" style="margin-bottom:8px;"></textarea>
+      <button class="scan-chapter-nav-btn primary" id="journal-save-btn" style="width:100%;">Sauvegarder ✓</button>
+    </div>`;
+
+  const pastEntries=entries.length
+    ?entries.slice().reverse().map(e=>`
+      <div style="margin-bottom:1.25rem;padding:12px 14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface);">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+          <div style="font-size:11px;font-weight:600;">${e.title||e.theme||"Entrée libre"}</div>
+          <div style="font-size:10px;color:var(--text-faint);">${e.date}</div>
+        </div>
+        <div style="font-size:12px;color:var(--text-muted);line-height:1.6;white-space:pre-wrap;">${e.note}</div>
+      </div>`).join("")
+    :'<div style="padding:2rem;text-align:center;color:var(--text-faint);font-size:13px;">Aucune entrée pour l instant.</div>';
+
+  cont.innerHTML=`<div style="padding:1rem 0 6rem;">${newEntry}${pastEntries}</div>`;
+
+  document.getElementById("journal-save-btn").addEventListener("click",()=>{
+    const note=document.getElementById("journal-text").value.trim();
+    if(!note)return;
+    const title=document.getElementById("journal-title").value.trim();
+    const entries=[];
+    try{entries.push(...JSON.parse(localStorage.getItem(key)||"[]"));}catch(e){}
+    entries.push({date:new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"}),title,note});
+    try{localStorage.setItem(key,JSON.stringify(entries));}catch(e){}
+    showToast("✓ Entrée sauvegardée");
+    renderJournal();
+  });
+}
+
+document.getElementById("journal-home-btn").addEventListener("click",()=>{showScreen("home-screen");renderHomeThemes();});
+document.getElementById("home-journal-btn").addEventListener("click",()=>{showScreen("journal-screen");renderJournal();});
+
+/* ===== TO-DO ===== */
+function renderTodo(){
+  const cont=document.getElementById("todo-content");
+  const key=`todo_tasks_${currentProfile?.id}`;
+  let tasks=[];
+  try{tasks=JSON.parse(localStorage.getItem(key)||"[]");}catch(e){}
+  
+  if(!tasks.length){
+    cont.innerHTML='<div style="padding:2rem;text-align:center;color:var(--text-faint);font-size:13px;">Aucune tâche pour l instant.</div>';
+    return;
+  }
+
+  cont.innerHTML=`<div style="padding:1rem 0 6rem;display:flex;flex-direction:column;gap:6px;">
+    ${tasks.map((t,i)=>`
+      <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:var(--radius);border:1px solid ${t.done?"var(--green-border)":"var(--border)"};background:var(--surface);cursor:pointer;" data-todo-idx="${i}">
+        <div style="width:18px;height:18px;border-radius:50%;border:1px solid ${t.done?"var(--green-border)":"var(--border-md)"};background:${t.done?"var(--green-border)":"transparent"};flex-shrink:0;display:flex;align-items:center;justify-content:center;">
+          ${t.done?'<i class="ti ti-check" style="font-size:10px;color:#fff;"></i>':""}
+        </div>
+        <span style="flex:1;font-size:13px;${t.done?"text-decoration:line-through;color:var(--text-faint);":""}">${t.text}</span>
+        <button class="id-action-btn todo-del-btn" data-idx="${i}" style="font-size:12px;">🗑</button>
+      </div>`).join("")}
+  </div>`;
+
+  cont.querySelectorAll("[data-todo-idx]").forEach(row=>{
+    row.addEventListener("click",e=>{
+      if(e.target.closest(".todo-del-btn"))return;
+      const idx=+row.dataset.todoIdx;
+      tasks[idx].done=!tasks[idx].done;
+      try{localStorage.setItem(key,JSON.stringify(tasks));}catch(e){}
+      renderTodo();
+    });
+  });
+  cont.querySelectorAll(".todo-del-btn").forEach(btn=>{
+    btn.addEventListener("click",e=>{
+      e.stopPropagation();
+      tasks.splice(+btn.dataset.idx,1);
+      try{localStorage.setItem(key,JSON.stringify(tasks));}catch(e){}
+      renderTodo();
+    });
+  });
+}
+
+document.getElementById("todo-home-btn").addEventListener("click",()=>{showScreen("home-screen");renderHomeThemes();});
+document.getElementById("home-todo-btn").addEventListener("click",()=>{showScreen("todo-screen");renderTodo();});
+document.getElementById("todo-add-btn").addEventListener("click",()=>{
+  const input=document.getElementById("todo-input");
+  const text=input.value.trim();
+  if(!text)return;
+  const key=`todo_tasks_${currentProfile?.id}`;
+  let tasks=[];
+  try{tasks=JSON.parse(localStorage.getItem(key)||"[]");}catch(e){}
+  tasks.push({text,done:false,date:new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long"})});
+  try{localStorage.setItem(key,JSON.stringify(tasks));}catch(e){}
+  input.value="";
+  renderTodo();
+  showToast("✓ Tâche ajoutée");
+});
+document.getElementById("todo-input").addEventListener("keydown",e=>{if(e.key==="Enter")document.getElementById("todo-add-btn").click();});
+
 loadProfiles();
       }catch(e){showToast("Erreur: "+e.message);}
     }));
