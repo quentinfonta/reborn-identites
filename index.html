@@ -2504,24 +2504,25 @@ let currentExercise=null,currentExPart=0;
 
 function renderExercises(){
   const cont=document.getElementById("exercises-content");
-  cont.innerHTML=`
-    <div style="padding:1rem 0 6rem;">
-      <div style="font-size:13px;color:var(--text-muted);margin-bottom:1rem;">Choisis un exercice pour commencer.</div>
-      <div style="display:flex;flex-direction:column;gap:10px;">
-        ${EXERCISES.map(e=>`
-          <div class="home-theme-row" data-exid="${e.id}" style="padding:14px;">
-            <div style="font-size:24px;width:32px;">${e.icon}</div>
-            <div style="flex:1;">
-              <div style="font-size:13px;font-weight:600;">${e.title}</div>
-              <div style="font-size:11px;color:var(--text-faint);margin-top:2px;">${e.desc}</div>
-            </div>
-            <div style="font-size:10px;color:var(--text-faint);">⏱ ${e.duration}</div>
-          </div>`).join("")}
-      </div>
-    </div>`;
-  cont.querySelectorAll("[data-exid]").forEach(card=>{
-    card.addEventListener("click",()=>{
-      currentExercise=EXERCISES.find(e=>e.id===card.dataset.exid);
+  cont.innerHTML=`<div style="padding:0.5rem 0 6rem;">
+    ${EXERCISES.map((e,i)=>{
+      const opacity=Math.max(0.6,1-(i/EXERCISES.length)*0.35);
+      const fontSize=Math.max(12,14-(i/EXERCISES.length)*2);
+      const iconSize=Math.max(16,22-(i/EXERCISES.length)*5);
+      const padding=Math.max(8,12-(i/EXERCISES.length)*3);
+      return`<div class="home-theme-row" data-exid="${e.id}" style="opacity:${opacity.toFixed(2)};padding:${padding.toFixed(0)}px 12px;margin-bottom:4px;">
+        <div style="font-size:${iconSize.toFixed(0)}px;width:${(iconSize+4).toFixed(0)}px;flex-shrink:0;">${e.icon}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:${fontSize.toFixed(0)}px;font-weight:600;">${e.title}</div>
+          <div style="font-size:10px;color:var(--text-faint);margin-top:1px;">${e.duration}</div>
+        </div>
+        <span style="color:var(--text-faint);font-size:12px;flex-shrink:0;">→</span>
+      </div>`;
+    }).join("")}
+  </div>`;
+  cont.querySelectorAll("[data-exid]").forEach(row=>{
+    row.addEventListener("click",()=>{
+      currentExercise=EXERCISES.find(e=>e.id===row.dataset.exid);
       currentExPart=0;
       renderExerciseDetail();
     });
@@ -2532,9 +2533,7 @@ function renderExerciseDetail(){
   if(!currentExercise)return;
   const ex=currentExercise;
   const cont=document.getElementById("exercises-content");
-  if(ex.id==="vie_de_reve"){
-    renderVieDeReve();return;
-  }
+  if(ex.id==="vie_de_reve"){renderVieDeReve();return;}
   const part=ex.parts[currentExPart];
   const isLast=currentExPart===ex.parts.length-1;
   const savedKey=`ex_${currentProfile?.id}_${ex.id}_${currentExPart}`;
@@ -2544,41 +2543,33 @@ function renderExerciseDetail(){
   let fieldsHtml="";
   if(part.questions){
     fieldsHtml=part.questions.map((q,i)=>`
-      <div style="margin-bottom:1rem;">
-        <div style="font-size:12px;color:var(--text-muted);margin-bottom:6px;">${q}</div>
-        <textarea class="scan-journal-input ex-field" data-idx="${i}" rows="2" placeholder="Ta réponse…">${saved[i]||""}</textarea>
+      <div style="margin-bottom:1.75rem;">
+        <div style="font-size:13px;color:var(--text);margin-bottom:0.6rem;line-height:1.5;">${q}</div>
+        <textarea class="scan-journal-input ex-field" data-idx="${i}" rows="3" placeholder="…" style="font-size:13px;line-height:1.6;">${saved[i]||""}</textarea>
       </div>`).join("");
   } else if(part.fields){
     fieldsHtml=part.fields.map((f,i)=>`
-      <div style="margin-bottom:1rem;">
-        <div style="font-size:12px;color:var(--text-muted);margin-bottom:6px;">${f.label}</div>
+      <div style="margin-bottom:1.25rem;">
+        <div style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:5px;">${f.label}</div>
         ${f.type==="textarea"
-          ?`<textarea class="scan-journal-input ex-field" data-idx="${i}" rows="2" placeholder="${f.placeholder}">${saved[i]||""}</textarea>`
-          :`<input class="scan-journal-input ex-field" data-idx="${i}" type="text" placeholder="${f.placeholder}" value="${saved[i]||""}" style="display:block;">`}
+          ?`<textarea class="scan-journal-input ex-field" data-idx="${i}" rows="2" placeholder="${f.placeholder||"…"}" style="font-size:13px;">${saved[i]||""}</textarea>`
+          :`<input class="scan-journal-input ex-field" data-idx="${i}" type="text" placeholder="${f.placeholder||"…"}" value="${saved[i]||""}" style="display:block;font-size:13px;">`}
       </div>`).join("");
   }
 
-  cont.innerHTML=`
-    <div style="padding:0 0 6rem;">
-      <div class="scan-chapter-top" style="padding:0.75rem 0 0.5rem;margin-bottom:1rem;border-bottom:1px solid var(--border);">
-        <button class="dict-nav-btn" id="ex-back-btn" style="padding:5px 10px;font-size:12px;">← ${currentExPart===0?"Exercices":"Retour"}</button>
-        <div style="text-align:center;">
-          <div style="font-size:12px;font-weight:600;">${ex.icon} ${ex.title}</div>
-          <div style="font-size:10px;color:var(--text-faint);">Partie ${currentExPart+1} / ${ex.parts.length}</div>
-        </div>
-        <div style="width:60px;"></div>
-      </div>
-      <div style="padding:0 1.5rem;">
-        <div style="font-size:15px;font-weight:600;margin-bottom:0.5rem;">${part.title}</div>
-        <div style="font-size:12px;color:var(--text-muted);font-style:italic;margin-bottom:1.5rem;line-height:1.5;">${part.intro}</div>
-        ${fieldsHtml}
-        ${part.note?`<div style="font-size:12px;color:var(--accent);margin-top:1rem;font-style:italic;">${part.note}</div>`:""}
-        <div class="scan-chapter-nav" style="margin-top:2rem;">
-          <div></div>
-          <button class="scan-chapter-nav-btn primary" id="ex-next-btn">${isLast?"Terminer ✓":"Partie suivante →"}</button>
-        </div>
-      </div>
-    </div>`;
+  cont.innerHTML=`<div style="padding:2rem 0 6rem;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;">
+      <button class="dict-nav-btn" id="ex-back-btn" style="padding:6px 12px;font-size:12px;">← ${currentExPart===0?"Exercices":"Précédent"}</button>
+      <span style="font-size:11px;color:var(--text-faint);">${currentExPart+1} / ${ex.parts.length}</span>
+    </div>
+    <div style="font-size:18px;font-weight:600;margin-bottom:0.75rem;">${part.title}</div>
+    <div style="font-size:13px;color:var(--text-muted);margin-bottom:2rem;line-height:1.7;font-style:italic;">${part.intro}</div>
+    ${fieldsHtml}
+    ${part.note?`<div style="font-size:12px;color:var(--text-faint);margin-top:1.5rem;font-style:italic;line-height:1.6;">${part.note}</div>`:""}
+    <div style="margin-top:2.5rem;">
+      <button class="scan-chapter-nav-btn primary" id="ex-next-btn" style="width:100%;padding:12px;">${isLast?"Terminer":"Continuer →"}</button>
+    </div>
+  </div>`;
 
   // Save on input
   cont.querySelectorAll(".ex-field").forEach(f=>{
@@ -2650,26 +2641,25 @@ function renderJournal(){
   let entries=[];
   try{entries=JSON.parse(localStorage.getItem(key)||"[]");}catch(e){}
 
-  const newEntry=`
-    <div style="margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border);">
-      <div style="font-size:12px;font-weight:600;margin-bottom:8px;">✍️ Nouvelle entrée</div>
-      <input type="text" id="journal-title" placeholder="Titre (optionnel)…" style="width:100%;box-sizing:border-box;padding:8px 12px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface2);color:var(--text);font-size:13px;font-family:inherit;margin-bottom:8px;">
-      <textarea id="journal-text" class="scan-journal-input" rows="4" placeholder="Ce que tu ressens, ce qui a résonné, ce que tu veux retenir…" style="margin-bottom:8px;"></textarea>
-      <button class="scan-chapter-nav-btn primary" id="journal-save-btn" style="width:100%;">Sauvegarder ✓</button>
-    </div>`;
-
-  const pastEntries=entries.length
+  const past=entries.length
     ?entries.slice().reverse().map(e=>`
-      <div style="margin-bottom:1.25rem;padding:12px 14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface);">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
-          <div style="font-size:11px;font-weight:600;">${e.title||e.theme||"Entrée libre"}</div>
-          <div style="font-size:10px;color:var(--text-faint);">${e.date}</div>
+      <div style="margin-bottom:1.5rem;">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:0.5rem;">
+          <span style="font-size:13px;font-weight:500;">${e.title||"Sans titre"}</span>
+          <span style="font-size:11px;color:var(--text-faint);">${e.date}</span>
         </div>
-        <div style="font-size:12px;color:var(--text-muted);line-height:1.6;white-space:pre-wrap;">${e.note}</div>
+        <div style="font-size:13px;color:var(--text-muted);line-height:1.7;white-space:pre-wrap;">${e.note}</div>
       </div>`).join("")
-    :'<div style="padding:2rem;text-align:center;color:var(--text-faint);font-size:13px;">Aucune entrée pour l instant.</div>';
+    :"";
 
-  cont.innerHTML=`<div style="padding:1rem 0 6rem;">${newEntry}${pastEntries}</div>`;
+  cont.innerHTML=`<div style="padding:2rem 0 6rem;">
+    <input type="text" id="journal-title" placeholder="Titre…" style="width:100%;box-sizing:border-box;padding:10px 14px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:transparent;color:var(--text);font-size:15px;font-weight:500;font-family:inherit;margin-bottom:1rem;">
+    <textarea id="journal-text" class="scan-journal-input" rows="5" placeholder="Ce que tu ressens, ce qui a résonné…" style="font-size:13px;line-height:1.7;margin-bottom:1.25rem;"></textarea>
+    <button class="scan-chapter-nav-btn primary" id="journal-save-btn" style="width:100%;padding:12px;margin-bottom:2.5rem;">Écrire</button>
+    ${past
+      ?`<div style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-bottom:1rem;">Entrées précédentes</div>${past}`
+      :'<div style="font-size:13px;color:var(--text-faint);text-align:center;padding:2rem 0;">Rien encore. Commence à écrire.</div>'}
+  </div>`;
 
   document.getElementById("journal-save-btn").addEventListener("click",()=>{
     const note=document.getElementById("journal-text").value.trim();
@@ -2679,7 +2669,7 @@ function renderJournal(){
     try{entries.push(...JSON.parse(localStorage.getItem(key)||"[]"));}catch(e){}
     entries.push({date:new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"}),title,note});
     try{localStorage.setItem(key,JSON.stringify(entries));}catch(e){}
-    showToast("✓ Entrée sauvegardée");
+    showToast("✓ Sauvegardé");
     renderJournal();
   });
 }
