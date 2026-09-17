@@ -2542,7 +2542,8 @@ function renderExercises(){
 function renderExerciseDetail(){
   if(!currentExercise)return;
   const ex=currentExercise;
-  const cont=document.getElementById("exercises-content");
+  const cont=document.getElementById("home-themes-grid")||document.getElementById("exercises-content");
+  if(!cont)return;
   if(ex.id==="vie_de_reve"){renderVieDeReve();return;}
   const part=ex.parts[currentExPart];
   const isLast=currentExPart===ex.parts.length-1;
@@ -2642,7 +2643,7 @@ function renderVieDeReve(){
 }
 
 document.getElementById("exercises-home-btn").addEventListener("click",()=>{showScreen("home-screen");renderHomeThemes();});
-document.getElementById("home-exercises-btn").addEventListener("click",()=>{showScreen("exercises-screen");renderExercises();});
+
 
 /* ===== JOURNAL ===== */
 function renderJournal(){
@@ -2685,7 +2686,7 @@ function renderJournal(){
 }
 
 document.getElementById("journal-home-btn").addEventListener("click",()=>{showScreen("home-screen");renderHomeThemes();});
-document.getElementById("home-journal-btn").addEventListener("click",()=>{showScreen("journal-screen");renderJournal();});
+
 
 /* ===== TO-DO ===== */
 function renderTodo(){
@@ -2730,7 +2731,7 @@ function renderTodo(){
 }
 
 document.getElementById("todo-home-btn").addEventListener("click",()=>{showScreen("home-screen");renderHomeThemes();});
-document.getElementById("home-todo-btn").addEventListener("click",()=>{showScreen("todo-screen");renderTodo();});
+
 document.getElementById("todo-add-btn").addEventListener("click",()=>{
   const input=document.getElementById("todo-input");
   const text=input.value.trim();
@@ -2961,7 +2962,6 @@ function renderExercisesInline(){
     row.addEventListener("click",()=>{
       currentExercise=EXERCISES.find(e=>e.id===row.dataset.exid);
       currentExPart=0;
-      showScreen("exercises-screen");
       renderExerciseDetail();
     });
   });
@@ -2970,7 +2970,7 @@ function renderExercisesInline(){
 document.getElementById("home-reconnexion-btn").addEventListener("click",()=>setHomeTab("reconnexion"));
 document.getElementById("home-journal-btn").addEventListener("click",()=>setHomeTab("journal"));
 document.getElementById("home-exercises-btn").addEventListener("click",()=>setHomeTab("exercises"));
-document.getElementById("home-todo-btn").addEventListener("click",()=>{showScreen("todo-screen");renderTodo();});
+
 
 /* ===== SCAN CORPOREL ===== */
 function renderScan(){
@@ -3039,11 +3039,11 @@ function renderScan(){
       <div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border);">
         <textarea id="scan-journal-input" placeholder="Note…" rows="2" style="width:100%;box-sizing:border-box;padding:10px 0;border:none;border-bottom:1px solid var(--border-md);background:transparent;color:var(--text);font-size:13px;font-family:inherit;resize:none;line-height:1.6;outline:none;margin-bottom:1.5rem;"></textarea>
         <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
-          <button id="scan-prev-ch" style="${scanChapterIdx===0?'visibility:hidden':''}font-size:12px;color:var(--text-faint);background:none;border:none;cursor:pointer;padding:0;font-family:inherit;">← ${scanChapterIdx>0?theme.chapters[scanChapterIdx-1].title:""}</button>
+          <button id="scan-prev-ch" style="font-size:12px;color:var(--text-faint);background:none;border:none;cursor:pointer;padding:0;font-family:inherit;visibility:${scanChapterIdx===0?'hidden':'visible'};">← Précédent</button>
           <div style="display:flex;gap:3px;background:var(--surface2);border-radius:20px;padding:3px;">
-            ${theme.chapters.map((_,i)=>`<button class="chapter-pill${i===scanChapterIdx?" active":""}" data-cidx="${i}" style="padding:5px 10px;border-radius:20px;border:none;background:${i===scanChapterIdx?"var(--surface)":"transparent"};color:${i===scanChapterIdx?"var(--text)":"var(--text-faint)"};font-size:11px;font-family:inherit;cursor:pointer;white-space:nowrap;font-weight:${i===scanChapterIdx?"500":"400"};">${i+1}</button>`).join("")}
+            ${theme.chapters.map((_,i)=>`<button class="chapter-pill" data-cidx="${i}" style="padding:5px 10px;border-radius:20px;border:none;background:${i===scanChapterIdx?"var(--surface)":"transparent"};color:${i===scanChapterIdx?"var(--text)":"var(--text-faint)"};font-size:11px;font-family:inherit;cursor:pointer;font-weight:${i===scanChapterIdx?"500":"400"};">${i+1}</button>`).join("")}
           </div>
-          <button id="scan-next-ch" style="font-size:12px;font-weight:500;color:var(--accent);background:none;border:none;cursor:pointer;padding:0;font-family:inherit;">${isLast?"Terminer ✓":"→"}</button>
+          <button id="scan-next-ch" style="font-size:12px;font-weight:500;color:var(--accent);background:none;border:none;cursor:pointer;padding:0;font-family:inherit;">${isLast?"Terminer ✓":"Suivant →"}</button>
         </div>
       </div>
     </div></div>`;
