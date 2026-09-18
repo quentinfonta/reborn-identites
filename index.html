@@ -91,7 +91,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .home-global-fill{height:100%;border-radius:2px;background:var(--accent);transition:width 0.6s ease;}
 .home-global-pct{font-size:12px;color:var(--text-faint);}
 .home-themes-grid{width:100%;max-width:560px;display:flex;flex-direction:column;gap:4px;overflow-y:auto;max-height:65vh;min-height:100px;padding-right:2px;}
-.home-theme-row{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--surface);cursor:pointer;transition:all 0.15s;}
+.home-theme-row{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--surface);cursor:pointer;transition:all 0.15s;}
 .home-theme-row:hover{border-color:var(--border-md);background:var(--surface2);}
 .home-theme-icon{font-size:18px;flex-shrink:0;width:24px;text-align:center;}
 .home-theme-info{flex:1;min-width:0;}
@@ -101,7 +101,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .home-theme-pct{font-size:10px;color:var(--text-faint);min-width:26px;text-align:right;}
 .home-theme-bar{width:36px;height:3px;background:var(--surface3);border-radius:2px;overflow:hidden;}
 .home-theme-bar-fill{height:100%;border-radius:2px;background:var(--accent);}
-.home-top-bar{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:560px;margin-bottom:1rem;gap:8px;}
+.home-top-bar{display:flex;align-items:center;justify-content:center;width:100%;max-width:560px;margin-bottom:1.5rem;gap:8px;position:relative;}
 .home-top-nav{display:flex;gap:4px;background:var(--surface2);border-radius:20px;padding:3px;}
 .home-top-btn{padding:6px 12px;border-radius:20px;border:none;background:transparent;color:var(--text-faint);font-size:12px;font-family:inherit;cursor:pointer;white-space:nowrap;transition:all 0.15s;}
 .home-top-btn.active{background:var(--surface);color:var(--text);font-weight:500;}
@@ -382,7 +382,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 
 .home-themes-grid{width:100%;max-width:560px;display:flex;flex-direction:column;gap:4px;overflow-y:auto;max-height:65vh;min-height:100px;padding-right:2px;}
-.home-theme-row{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--surface);cursor:pointer;transition:all 0.15s;}
+.home-theme-row{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--surface);cursor:pointer;transition:all 0.15s;}
 .home-theme-row:hover{border-color:var(--border-md);background:var(--surface2);}
 .home-theme-icon{font-size:18px;flex-shrink:0;width:24px;text-align:center;}
 .home-theme-info{flex:1;min-width:0;}
@@ -444,7 +444,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
       <button class="home-top-btn" id="home-journal-btn">Journal</button>
       <button class="home-top-btn" id="home-exercises-btn">Exercices</button>
     </div>
-    <button class="home-top-btn" id="home-switch-btn"><i class="ti ti-switch-horizontal"></i></button>
+    <button class="home-top-btn" id="home-switch-btn" style="position:absolute;right:0;"><i class="ti ti-switch-horizontal"></i></button>
   </div>
   <div class="home-welcome">
     <div class="home-welcome-name">Bonjour, <span id="home-name"></span> 👋</div>
@@ -2453,20 +2453,20 @@ function renderExerciseDetail(){
   if(part.questions){
     fieldsHtml=part.questions.map((q,i)=>`
       <div style="margin-bottom:1.75rem;">
-        <div style="font-size:13px;color:var(--text);margin-bottom:0.6rem;line-height:1.5;">${q}</div>
-        <textarea class="scan-journal-input ex-field" data-idx="${i}" rows="3" placeholder="…" style="font-size:13px;line-height:1.6;">${saved[i]||""}</textarea>
+        <div style="font-size:13px;color:var(--text-muted);margin-bottom:0.6rem;line-height:1.5;">${q}</div>
+        <textarea data-idx="${i}" rows="3" placeholder="…" class="ex-field" style="width:100%;box-sizing:border-box;padding:10px 0;border:none;border-bottom:1px solid var(--border-md);background:transparent;color:var(--text);font-size:13px;font-family:inherit;resize:none;line-height:1.6;outline:none;">${saved[i]||""}</textarea>
       </div>`).join("");
   } else if(part.fields){
     fieldsHtml=part.fields.map((f,i)=>`
       <div style="margin-bottom:1.25rem;">
         <div style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:5px;">${f.label}</div>
         ${f.type==="textarea"
-          ?`<textarea class="scan-journal-input ex-field" data-idx="${i}" rows="2" placeholder="${f.placeholder||"…"}" style="font-size:13px;">${saved[i]||""}</textarea>`
-          :`<input class="scan-journal-input ex-field" data-idx="${i}" type="text" placeholder="${f.placeholder||"…"}" value="${saved[i]||""}" style="display:block;font-size:13px;">`}
+          ?`<textarea data-idx="${i}" rows="2" placeholder="${f.placeholder||"…"}" class="ex-field" style="width:100%;box-sizing:border-box;padding:8px 0;border:none;border-bottom:1px solid var(--border-md);background:transparent;color:var(--text);font-size:13px;font-family:inherit;resize:none;line-height:1.5;outline:none;">${saved[i]||""}</textarea>`
+          :`<input data-idx="${i}" type="text" placeholder="${f.placeholder||"…"}" value="${saved[i]||""}" class="ex-field" style="width:100%;box-sizing:border-box;padding:8px 0;border:none;border-bottom:1px solid var(--border-md);background:transparent;color:var(--text);font-size:13px;font-family:inherit;outline:none;display:block;">`}
       </div>`).join("");
   }
 
-  cont.innerHTML=`<div style="padding:2rem 0 6rem;">
+  cont.innerHTML=`<div style="padding:1rem 0 6rem;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;">
       <button class="dict-nav-btn" id="ex-back-btn" style="padding:6px 12px;font-size:12px;">← ${currentExPart===0?"Exercices":"Précédent"}</button>
       <span style="font-size:11px;color:var(--text-faint);">${currentExPart+1} / ${ex.parts.length}</span>
@@ -2521,7 +2521,7 @@ function renderVieDeReve(){
             ${s.questions.map((q,qi)=>`
               <div style="margin-bottom:0.75rem;">
                 <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;">${q}</div>
-                <textarea class="scan-journal-input vdr-field" data-si="${si}" data-qi="${qi}" rows="2" placeholder="Ta réponse…">${saved[qi]||""}</textarea>
+                <textarea data-si="${si}" data-qi="${qi}" rows="2" placeholder="Ta réponse…" class="vdr-field" style="width:100%;box-sizing:border-box;padding:8px 0;border:none;border-bottom:1px solid var(--border-md);background:transparent;color:var(--text);font-size:13px;font-family:inherit;resize:none;line-height:1.5;outline:none;">${saved[qi]||""}</textarea>
               </div>`).join("")}
           </div>`;
         }).join("")}
@@ -2565,7 +2565,7 @@ function renderJournal(){
       </div>`}).join("")
     :"";
 
-  cont.innerHTML=`<div style="padding:2rem 0 6rem;">
+  cont.innerHTML=`<div style="padding:1rem 0 6rem;">
     <input type="text" id="journal-title" placeholder="Titre…" style="width:100%;box-sizing:border-box;padding:10px 14px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:transparent;color:var(--text);font-size:15px;font-weight:500;font-family:inherit;margin-bottom:1rem;">
     <textarea id="journal-text" class="scan-journal-input" rows="5" placeholder="Ce que tu ressens, ce qui a résonné…" style="font-size:13px;line-height:1.7;margin-bottom:1.25rem;"></textarea>
     <button class="scan-chapter-nav-btn primary" id="journal-save-btn" style="width:100%;padding:12px;margin-bottom:2.5rem;">Écrire</button>
