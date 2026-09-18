@@ -450,6 +450,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     <div class="home-welcome-name">Bonjour, <span id="home-name"></span> 👋</div>
     <div class="home-welcome-sub" id="home-sub">Qu est-ce qui te pèse le plus en ce moment ?</div>
   </div>
+  <div style="width:100%;max-width:560px;margin-bottom:1rem;">
+    <input type="text" id="home-search" placeholder="Rechercher une identité ou un thème…" style="width:100%;box-sizing:border-box;padding:10px 14px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface2);color:var(--text);font-size:13px;font-family:inherit;outline:none;">
+  </div>
   <div class="home-themes-grid" id="home-themes-grid"></div>
   <div class="home-footer">
     <button class="home-footer-btn" id="home-progress-btn"><i class="ti ti-chart-bar"></i> Stats</button>
@@ -2699,6 +2702,87 @@ function renderHomeThemes(){
 function renderHomeProgress(){renderHomeThemes();}
 
 document.getElementById("home-progress-btn").addEventListener("click",()=>{renderProgress();document.getElementById("progress-overlay").classList.add("show");});
+
+// Search
+let homeSearchQuery="";
+document.getElementById("home-search")?.addEventListener("input",e=>{
+  homeSearchQuery=e.target.value.trim().toLowerCase();
+  if(homeSearchQuery){renderSearchResults();}
+  else{setHomeTab("reconnexion");}
+});
+
+function renderSearchResults(){
+  const grid=document.getElementById("home-themes-grid");
+  const q=homeSearchQuery;
+
+  // Search themes
+  const matchingThemes=SCAN_THEMES.filter(t=>
+    t.title.toLowerCase().includes(q)||
+    t.desc.toLowerCase().includes(q)||
+    t.chapters.some(c=>c.title.toLowerCase().includes(q))
+  );
+
+  // Search identities
+  const matchingIds=DATA.filter(d=>d.text.toLowerCase().includes(q)).slice(0,30);
+
+  let html="";
+
+  if(matchingThemes.length){
+    html+=`<div style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Thèmes</div>`;
+    html+=matchingThemes.map(t=>`
+      <div class="home-theme-row" data-tid="${t.id}" style="margin-bottom:6px;">
+        <div style="font-size:18px;width:24px;flex-shrink:0;">${t.icon}</div>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:600;">${t.title}</div>
+          <div style="font-size:10px;color:var(--text-faint);">${t.desc}</div>
+        </div>
+      </div>`).join("");
+  }
+
+  if(matchingIds.length){
+    html+=`<div style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin:${matchingThemes.length?'1rem':'0'} 0 8px;">Identités (${matchingIds.length})</div>`;
+    const wids=workedIds();
+    html+=matchingIds.map(d=>{
+      const isWorked=wids.has(d.id);
+      const isTodo=todoIds.has(d.id);
+      return`<div class="id-row${isWorked?" worked":isTodo?" todo":""}" data-search-id="${d.id}" style="margin-bottom:4px;">
+        <div class="id-check"><i class="ti ti-check check-icon"></i></div>
+        <span class="id-text">${d.text}</span>
+      </div>`;
+    }).join("");
+  }
+
+  if(!matchingThemes.length&&!matchingIds.length){
+    html=`<div style="font-size:13px;color:var(--text-faint);text-align:center;padding:2rem 0;">Aucun résultat pour "${q}"</div>`;
+  }
+
+  grid.innerHTML=html;
+  grid.style.display="flex";
+  grid.style.flexDirection="column";
+
+  // Theme click
+  grid.querySelectorAll(".home-theme-row[data-tid]").forEach(row=>{
+    row.addEventListener("click",()=>{
+      scanThemeId=row.dataset.tid;scanChapterIdx=0;scanChecked.clear();
+      document.getElementById("scan-profile-name").textContent=currentProfile?currentProfile.name:"";
+      document.getElementById("home-search").value="";
+      homeSearchQuery="";
+      showScreen("scan-screen");
+      renderScan();
+    });
+  });
+
+  // Identity click
+  grid.querySelectorAll("[data-search-id]").forEach(row=>{
+    row.addEventListener("click",e=>{
+      if(e.target.closest(".id-action-btn"))return;
+      const id=+row.dataset.searchId;
+      if(workedIds().has(id))return;
+      if(checked.has(id)){checked.delete(id);row.classList.remove("checked");}
+      else{checked.add(id);row.classList.add("checked");}
+    });
+  });
+}
 document.getElementById("home-switch-btn").addEventListener("click",()=>{currentProfile=null;SESSIONS=[];checked.clear();todoIds.clear();trashedIds.clear();reviewDates={};showScreen("profile-screen");loadProfiles();});
 
 // Home top nav
@@ -2709,14 +2793,20 @@ function setHomeTab(tab){
   const sub=document.getElementById("home-sub");
   if(tab==="reconnexion"){
     sub.textContent="Qu est-ce qui te pèse le plus en ce moment ?";
+    const srch3=document.getElementById("home-search");
+    if(srch3){srch3.style.display="block";srch3.value="";homeSearchQuery="";}
     grid.style.display="flex";
     renderHomeThemes();
   } else if(tab==="journal"){
     sub.textContent="";
+    const srch=document.getElementById("home-search");
+    if(srch){srch.style.display="none";}
     grid.style.display="none";
     renderJournalInline();
   } else if(tab==="exercises"){
     sub.textContent="";
+    const srch2=document.getElementById("home-search");
+    if(srch2){srch2.style.display="none";}
     grid.style.display="flex";
     grid.style.flexDirection="column";
     renderExercisesInline();
