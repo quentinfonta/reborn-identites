@@ -29,11 +29,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 
 /* DESKTOP */
 @media(min-width:768px){
-  .home-screen.show{display:grid;grid-template-columns:260px 1fr;min-height:100vh;}
-  .home-sidebar{display:flex;}
-  .home-main{padding:3rem 4rem;overflow-y:auto;height:100vh;}
+  .home-screen.show{display:grid;grid-template-columns:260px 1fr;min-height:100vh;overflow-y:auto;}
+  .home-sidebar{display:flex;position:sticky;top:0;height:100vh;overflow-y:auto;}
+  .home-main{padding:3rem 4rem;}
   .home-mobile-nav{display:none!important;}
   .home-themes-grid{padding-bottom:3rem;}
+  body{overflow-y:auto;}
 }
 
 /* MOBILE */
@@ -45,7 +46,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   .home-themes-grid{padding-bottom:5rem;}
 }
 
-.home-sidebar{padding:3rem 2.5rem;flex-direction:column;gap:2.5rem;border-right:1px solid var(--border);position:sticky;top:0;height:100vh;overflow-y:auto;}
+.home-sidebar{padding:3rem 2.5rem;flex-direction:column;gap:2.5rem;border-right:1px solid var(--border);}
 .home-sidebar-brand{font-size:11px;letter-spacing:4px;color:var(--text-faint);margin-bottom:0.5rem;}
 .home-sidebar-name{font-size:22px;font-weight:600;line-height:1.2;}
 .home-sidebar-nav{display:flex;flex-direction:column;gap:4px;margin-top:1rem;}
@@ -481,7 +482,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
       <button class="home-sidebar-btn" id="home-exercises-btn">⚡ Exercices</button>
     </div>
     <div class="home-sidebar-footer">
-      <button class="home-footer-btn" id="home-progress-btn"><i class="ti ti-chart-bar"></i> Stats</button>
       <button class="home-footer-btn" id="home-switch-btn"><i class="ti ti-switch-horizontal"></i> Changer de profil</button>
     </div>
   </div>
@@ -2817,7 +2817,7 @@ function renderHomeThemes(){
 }
 function renderHomeProgress(){renderHomeThemes();}
 
-document.getElementById("home-progress-btn").addEventListener("click",()=>{renderProgress();document.getElementById("progress-overlay").classList.add("show");});
+
 
 // Search
 let homeSearchQuery="";
@@ -3388,7 +3388,7 @@ document.querySelectorAll("[data-state]").forEach(btn=>btn.addEventListener("cli
 }));
 document.getElementById("search").addEventListener("input",e=>{query=e.target.value;render();});
 document.getElementById("switch-btn").addEventListener("click",()=>{showScreen("home-screen");renderHomeThemes();});
-document.getElementById("progress-btn").addEventListener("click",()=>{renderProgress();document.getElementById("progress-overlay").classList.add("show");});
+
 
 /* ===== GAME ===== */
 function buildGamePool(size){
