@@ -26,16 +26,38 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .screen.show{display:flex;}
 #profile-screen,#pin-screen{align-items:center;justify-content:center;gap:2rem;}
 .home-screen{display:none;min-height:100vh;}
-.home-screen.show{display:grid;grid-template-columns:280px 1fr;min-height:100vh;}
-.home-sidebar{padding:3rem 2rem;display:flex;flex-direction:column;gap:2rem;border-right:1px solid var(--border);position:sticky;top:0;height:100vh;overflow-y:auto;}
-.home-main{padding:3rem 4rem;overflow-y:auto;height:100vh;}
+
+/* DESKTOP */
+@media(min-width:768px){
+  .home-screen.show{display:grid;grid-template-columns:260px 1fr;min-height:100vh;}
+  .home-sidebar{display:flex;}
+  .home-main{padding:3rem 4rem;overflow-y:auto;height:100vh;}
+  .home-mobile-nav{display:none!important;}
+  .home-themes-grid{padding-bottom:3rem;}
+}
+
+/* MOBILE */
+@media(max-width:767px){
+  .home-screen.show{display:flex;flex-direction:column;align-items:center;padding:1.5rem;min-height:100vh;}
+  .home-sidebar{display:none;}
+  .home-main{padding:0;width:100%;max-width:560px;}
+  .home-mobile-nav{display:flex!important;}
+  .home-themes-grid{padding-bottom:5rem;}
+}
+
+.home-sidebar{padding:3rem 2rem;flex-direction:column;gap:2rem;border-right:1px solid var(--border);position:sticky;top:0;height:100vh;overflow-y:auto;}
 .home-sidebar-brand{font-size:11px;letter-spacing:4px;color:var(--text-faint);margin-bottom:0.5rem;}
-.home-sidebar-name{font-size:24px;font-weight:600;line-height:1.2;}
+.home-sidebar-name{font-size:22px;font-weight:600;line-height:1.2;}
 .home-sidebar-nav{display:flex;flex-direction:column;gap:4px;margin-top:1rem;}
 .home-sidebar-btn{padding:10px 14px;border-radius:var(--radius-lg);border:none;background:transparent;color:var(--text-muted);font-size:14px;font-family:inherit;cursor:pointer;text-align:left;transition:all 0.15s;}
 .home-sidebar-btn:hover{background:var(--surface2);color:var(--text);}
 .home-sidebar-btn.active{background:var(--surface2);color:var(--text);font-weight:500;}
 .home-sidebar-footer{margin-top:auto;display:flex;flex-direction:column;gap:8px;}
+.home-mobile-nav{display:none;justify-content:center;width:100%;margin-bottom:1.5rem;position:relative;}
+.home-mobile-tabs{display:flex;gap:4px;background:var(--surface2);border-radius:20px;padding:3px;}
+.home-mobile-tab{padding:7px 14px;border-radius:20px;border:none;background:transparent;color:var(--text-faint);font-size:12px;font-family:inherit;cursor:pointer;white-space:nowrap;transition:all 0.15s;}
+.home-mobile-tab.active{background:var(--surface);color:var(--text);font-weight:500;}
+.home-mobile-switch{position:absolute;right:0;background:none;border:none;color:var(--text-faint);cursor:pointer;font-size:16px;padding:4px;}
 .block-screen{display:none;overflow-y:auto;height:100vh;}
 .block-screen.show{display:block;}
 
@@ -458,6 +480,15 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
       <button class="home-footer-btn" id="home-progress-btn"><i class="ti ti-chart-bar"></i> Stats</button>
       <button class="home-footer-btn" id="home-switch-btn"><i class="ti ti-switch-horizontal"></i> Changer de profil</button>
     </div>
+  </div>
+  <!-- MOBILE NAV -->
+  <div class="home-mobile-nav">
+    <div class="home-mobile-tabs">
+      <button class="home-mobile-tab active" data-tab="reconnexion">Reconnexion</button>
+      <button class="home-mobile-tab" data-tab="journal">Journal</button>
+      <button class="home-mobile-tab" data-tab="exercises">Exercices</button>
+    </div>
+    <button class="home-mobile-switch" id="home-switch-mobile"><i class="ti ti-switch-horizontal"></i></button>
   </div>
   <!-- MAIN -->
   <div class="home-main">
@@ -2794,18 +2825,30 @@ function renderSearchResults(){
   });
 }
 document.getElementById("home-switch-btn").addEventListener("click",()=>{currentProfile=null;SESSIONS=[];checked.clear();todoIds.clear();trashedIds.clear();reviewDates={};showScreen("profile-screen");loadProfiles();});
+document.getElementById("home-switch-mobile")?.addEventListener("click",()=>{currentProfile=null;SESSIONS=[];checked.clear();todoIds.clear();trashedIds.clear();reviewDates={};showScreen("profile-screen");loadProfiles();});
+
+// Mobile tabs sync with setHomeTab
+document.querySelectorAll(".home-mobile-tab").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll(".home-mobile-tab").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    setHomeTab(btn.dataset.tab);
+  });
+});
 
 // Home top nav
 function setHomeTab(tab){
   document.querySelectorAll(".home-sidebar-btn").forEach(b=>b.classList.remove("active"));
-  document.getElementById("home-"+tab+"-btn").classList.add("active");
+  const sideBtn=document.getElementById("home-"+tab+"-btn");
+  if(sideBtn)sideBtn.classList.add("active");
+  document.querySelectorAll(".home-mobile-tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));
   const grid=document.getElementById("home-themes-grid");
   if(tab==="reconnexion"){
-    sub.textContent="Qu est-ce qui te pèse le plus en ce moment ?";
     document.getElementById("home-sub").textContent="Qu est-ce qui te pèse le plus en ce moment ?";
     const srch3=document.getElementById("home-search");
     if(srch3){srch3.style.display="block";srch3.value="";homeSearchQuery="";}
     grid.style.display="flex";
+    grid.style.flexDirection="column";
     renderHomeThemes();
   } else if(tab==="journal"){
     document.getElementById("home-sub").textContent="Journal";
@@ -2882,7 +2925,7 @@ function renderExercisesInline(){
   const grid=document.getElementById("home-themes-grid");
   grid.style.display="flex";
   grid.style.flexDirection="column";
-  grid.style.maxHeight="65vh";
+  
   grid.style.overflowY="auto";
   grid.innerHTML=EXERCISES.map((e,i)=>{
     const opacity=Math.max(0.6,1-(i/EXERCISES.length)*0.35);
