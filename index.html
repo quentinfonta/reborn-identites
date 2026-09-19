@@ -45,7 +45,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   .home-themes-grid{padding-bottom:5rem;}
 }
 
-.home-sidebar{padding:3rem 2rem;flex-direction:column;gap:2rem;border-right:1px solid var(--border);position:sticky;top:0;height:100vh;overflow-y:auto;}
+.home-sidebar{padding:3rem 2.5rem;flex-direction:column;gap:2.5rem;border-right:1px solid var(--border);position:sticky;top:0;height:100vh;overflow-y:auto;}
 .home-sidebar-brand{font-size:11px;letter-spacing:4px;color:var(--text-faint);margin-bottom:0.5rem;}
 .home-sidebar-name{font-size:22px;font-weight:600;line-height:1.2;}
 .home-sidebar-nav{display:flex;flex-direction:column;gap:4px;margin-top:1rem;}
@@ -53,6 +53,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .home-sidebar-btn:hover{background:var(--surface2);color:var(--text);}
 .home-sidebar-btn.active{background:var(--surface2);color:var(--text);font-weight:500;}
 .home-sidebar-footer{margin-top:auto;display:flex;flex-direction:column;gap:8px;}
+.home-stat-card{flex:1;min-width:120px;padding:1.25rem 1.5rem;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--surface);}
+.home-stat-val{font-size:28px;font-weight:700;margin-bottom:2px;}
+.home-stat-lbl{font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;}
+.home-stat-sub{font-size:12px;color:var(--text-muted);margin-top:4px;}
 .home-mobile-nav{display:none;justify-content:center;width:100%;margin-bottom:1.5rem;position:relative;}
 .home-mobile-tabs{display:flex;gap:4px;background:var(--surface2);border-radius:20px;padding:3px;}
 .home-mobile-tab{padding:7px 14px;border-radius:20px;border:none;background:transparent;color:var(--text-faint);font-size:12px;font-family:inherit;cursor:pointer;white-space:nowrap;transition:all 0.15s;}
@@ -492,7 +496,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   </div>
   <!-- MAIN -->
   <div class="home-main">
-    <div id="home-sub" style="font-size:22px;font-weight:600;margin-bottom:2rem;color:var(--text);">Qu est-ce qui te pèse le plus en ce moment ?</div>
+    <div id="home-stats-bar" style="display:flex;gap:1.5rem;margin-bottom:2.5rem;flex-wrap:wrap;"></div>
+    <div id="home-sub" style="font-size:22px;font-weight:600;margin-bottom:1.5rem;color:var(--text);">Qu est-ce qui te pèse le plus en ce moment ?</div>
     <div style="margin-bottom:2rem;">
       <input type="text" id="home-search" placeholder="Rechercher une identité ou un thème…" style="width:100%;box-sizing:border-box;padding:12px 16px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface2);color:var(--text);font-size:14px;font-family:inherit;outline:none;">
     </div>
@@ -2487,59 +2492,65 @@ function renderExerciseDetail(){
   const cont=document.getElementById("home-themes-grid")||document.getElementById("exercises-content");
   if(!cont)return;
   if(ex.id==="vie_de_reve"){renderVieDeReve();return;}
-  const part=ex.parts[currentExPart];
-  const isLast=currentExPart===ex.parts.length-1;
-  const savedKey=`ex_${currentProfile?.id}_${ex.id}_${currentExPart}`;
-  let saved={};
-  try{saved=JSON.parse(localStorage.getItem(savedKey)||"{}");}catch(e){}
 
-  let fieldsHtml="";
-  if(part.questions){
-    fieldsHtml=part.questions.map((q,i)=>`
-      <div style="margin-bottom:1.75rem;">
-        <div style="font-size:13px;color:var(--text-muted);margin-bottom:0.6rem;line-height:1.5;">${q}</div>
-        <textarea data-idx="${i}" rows="3" placeholder="…" class="ex-field" style="width:100%;box-sizing:border-box;padding:10px 0;border:none;border-bottom:1px solid var(--border-md);background:transparent;color:var(--text);font-size:13px;font-family:inherit;resize:none;line-height:1.6;outline:none;">${saved[i]||""}</textarea>
-      </div>`).join("");
-  } else if(part.fields){
-    fieldsHtml=part.fields.map((f,i)=>`
-      <div style="margin-bottom:1.25rem;">
-        <div style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:5px;">${f.label}</div>
-        ${f.type==="textarea"
-          ?`<textarea data-idx="${i}" rows="2" placeholder="${f.placeholder||"…"}" class="ex-field" style="width:100%;box-sizing:border-box;padding:8px 0;border:none;border-bottom:1px solid var(--border-md);background:transparent;color:var(--text);font-size:13px;font-family:inherit;resize:none;line-height:1.5;outline:none;">${saved[i]||""}</textarea>`
-          :`<input data-idx="${i}" type="text" placeholder="${f.placeholder||"…"}" value="${saved[i]||""}" class="ex-field" style="width:100%;box-sizing:border-box;padding:8px 0;border:none;border-bottom:1px solid var(--border-md);background:transparent;color:var(--text);font-size:13px;font-family:inherit;outline:none;display:block;">`}
-      </div>`).join("");
-  }
+  // Build ALL parts at once
+  let allHtml="";
+  ex.parts.forEach((part,pi)=>{
+    const savedKey=`ex_${currentProfile?.id}_${ex.id}_${pi}`;
+    let saved={};
+    try{saved=JSON.parse(localStorage.getItem(savedKey)||"{}");}catch(e){}
 
-  cont.innerHTML=`<div style="padding:1rem 0 6rem;">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;">
-      <button class="dict-nav-btn" id="ex-back-btn" style="padding:6px 12px;font-size:12px;">← ${currentExPart===0?"Exercices":"Précédent"}</button>
-      <span style="font-size:11px;color:var(--text-faint);">${currentExPart+1} / ${ex.parts.length}</span>
+    let fieldsHtml="";
+    if(part.questions){
+      fieldsHtml=part.questions.map((q,i)=>`
+        <div style="margin-bottom:1.75rem;">
+          <div style="font-size:13px;color:var(--text-muted);margin-bottom:0.6rem;line-height:1.5;">${q}</div>
+          <textarea data-pidx="${pi}" data-idx="${i}" rows="3" placeholder="…" class="ex-field" style="width:100%;box-sizing:border-box;padding:10px 0;border:none;border-bottom:1px solid var(--border-md);background:transparent;color:var(--text);font-size:13px;font-family:inherit;resize:none;line-height:1.6;outline:none;">${saved[i]||""}</textarea>
+        </div>`).join("");
+    } else if(part.fields){
+      fieldsHtml=part.fields.map((f,i)=>`
+        <div style="margin-bottom:1.25rem;">
+          <div style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:5px;">${f.label}</div>
+          ${f.type==="textarea"
+            ?`<textarea data-pidx="${pi}" data-idx="${i}" placeholder="${f.placeholder||"…"}" rows="2" class="ex-field" style="width:100%;box-sizing:border-box;padding:8px 0;border:none;border-bottom:1px solid var(--border-md);background:transparent;color:var(--text);font-size:13px;font-family:inherit;resize:none;line-height:1.5;outline:none;">${saved[i]||""}</textarea>`
+            :`<input data-pidx="${pi}" data-idx="${i}" type="text" placeholder="${f.placeholder||"…"}" value="${saved[i]||""}" class="ex-field" style="width:100%;box-sizing:border-box;padding:8px 0;border:none;border-bottom:1px solid var(--border-md);background:transparent;color:var(--text);font-size:13px;font-family:inherit;outline:none;display:block;">`}
+        </div>`).join("");
+    }
+
+    allHtml+=`
+      <div style="margin-bottom:3rem;padding-bottom:2rem;${pi<ex.parts.length-1?"border-bottom:1px solid var(--border);":""}">
+        <div style="font-size:16px;font-weight:600;margin-bottom:0.5rem;">${part.title}</div>
+        <div style="font-size:13px;color:var(--text-muted);margin-bottom:1.5rem;line-height:1.7;font-style:italic;">${part.intro}</div>
+        ${fieldsHtml}
+        ${part.note?`<div style="font-size:12px;color:var(--text-faint);margin-top:1rem;font-style:italic;">${part.note}</div>`:""}
+      </div>`;
+  });
+
+  cont.innerHTML=`<div style="padding:1rem 0 4rem;">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:2rem;">
+      <button id="ex-back-btn" style="font-size:12px;color:var(--text-faint);background:none;border:none;cursor:pointer;padding:0;font-family:inherit;">← Exercices</button>
+      <span style="font-size:18px;font-weight:600;">${ex.icon} ${ex.title}</span>
     </div>
-    <div style="font-size:18px;font-weight:600;margin-bottom:0.75rem;">${part.title}</div>
-    <div style="font-size:13px;color:var(--text-muted);margin-bottom:2rem;line-height:1.7;font-style:italic;">${part.intro}</div>
-    ${fieldsHtml}
-    ${part.note?`<div style="font-size:12px;color:var(--text-faint);margin-top:1.5rem;font-style:italic;line-height:1.6;">${part.note}</div>`:""}
-    <div style="margin-top:2.5rem;">
-      <button class="scan-chapter-nav-btn primary" id="ex-next-btn" style="width:100%;padding:12px;">${isLast?"Terminer":"Continuer →"}</button>
-    </div>
+    ${allHtml}
+    <button id="ex-save-btn" style="width:100%;padding:12px 20px;border-radius:var(--radius-lg);border:1px solid var(--accent);background:transparent;color:var(--accent);font-size:14px;font-family:inherit;cursor:pointer;">Sauvegarder ✓</button>
   </div>`;
 
-  // Save on input
-  cont.querySelectorAll(".ex-field").forEach(f=>{
-    f.addEventListener("input",()=>{
+  // Save on input per part
+  cont.querySelectorAll(".ex-field").forEach(field=>{
+    field.addEventListener("input",()=>{
+      const pi=field.dataset.pidx;
+      const savedKey=`ex_${currentProfile?.id}_${ex.id}_${pi}`;
       const vals={};
-      cont.querySelectorAll(".ex-field").forEach(x=>{vals[x.dataset.idx]=x.value;});
+      cont.querySelectorAll(`.ex-field[data-pidx="${pi}"]`).forEach(x=>{vals[x.dataset.idx]=x.value;});
       try{localStorage.setItem(savedKey,JSON.stringify(vals));}catch(e){}
     });
   });
 
-  document.getElementById("ex-back-btn").addEventListener("click",()=>{
-    if(currentExPart===0){currentExercise=null;renderExercisesInline();}
-    else{currentExPart--;renderExerciseDetail();}
+  document.getElementById("ex-back-btn")?.addEventListener("click",()=>{
+    currentExercise=null;renderExercisesInline();
   });
-  document.getElementById("ex-next-btn").addEventListener("click",()=>{
-    if(isLast){currentExercise=null;renderExercisesInline();showToast("✓ Exercice complété");}
-    else{currentExPart++;renderExerciseDetail();}
+  document.getElementById("ex-save-btn")?.addEventListener("click",()=>{
+    showToast("✓ Sauvegardé");
   });
 }
 
@@ -2665,6 +2676,7 @@ async function enterProfile(id,name){
   await loadData();
   showScreen("home-screen");
   setHomeTab("reconnexion");
+  renderHomeStats();
 }
 
 async function loadData(){
@@ -2690,6 +2702,69 @@ function isLayerUnlocked(layerIdx){
   if(!prevThemes.length)return true;
   const avgPct=prevThemes.reduce((a,t)=>a+getThemePct(t),0)/prevThemes.length;
   return avgPct>=prevLayer.unlock_pct;
+}
+
+function renderHomeStats(){
+  const bar=document.getElementById("home-stats-bar");
+  if(!bar)return;
+  const wids=workedIds();
+  const total=DATA.length;
+  const done=wids.size;
+  const pct=total?Math.round((done/total)*100):0;
+
+  // Streak — count consecutive days with sessions
+  const dates=[...new Set(SESSIONS.map(s=>s.date))].sort();
+  let streak=0;
+  if(dates.length){
+    const today=new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
+    const yesterday=new Date(Date.now()-86400000).toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
+    let d=new Date();
+    while(true){
+      const label=d.toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
+      if(dates.includes(label)){streak++;d=new Date(d-86400000);}
+      else break;
+    }
+  }
+
+  // Next unlock
+  let nextUnlock=null;
+  for(let i=1;i<LAYERS.length;i++){
+    if(!isLayerUnlocked(i)){
+      const prevLayer=LAYERS[i-1];
+      const prevThemes=prevLayer.themes.map(tid=>SCAN_THEMES.find(t=>t.id===tid)).filter(Boolean);
+      const avgPct=prevThemes.length?Math.round(prevThemes.reduce((a,t)=>a+getThemePct(t),0)/prevThemes.length):0;
+      nextUnlock={label:LAYERS[i].label,current:avgPct,required:prevLayer.unlock_pct};
+      break;
+    }
+  }
+
+  // Themes completed
+  const themesCompleted=SCAN_THEMES.filter(t=>getThemePct(t)>=80).length;
+
+  bar.innerHTML=`
+    <div class="home-stat-card">
+      <div class="home-stat-val" style="color:var(--accent);">${done}</div>
+      <div class="home-stat-lbl">Identités travaillées</div>
+      <div class="home-stat-sub">${pct}% de la base</div>
+    </div>
+    <div class="home-stat-card">
+      <div class="home-stat-val" style="color:var(--green-text);">${streak}</div>
+      <div class="home-stat-lbl">Jours consécutifs</div>
+      <div class="home-stat-sub">${streak>0?"Continue comme ça 🔥":"Commence aujourd hui"}</div>
+    </div>
+    <div class="home-stat-card">
+      <div class="home-stat-val" style="color:var(--purple-text);">${themesCompleted}</div>
+      <div class="home-stat-lbl">Thèmes complétés</div>
+      <div class="home-stat-sub">sur ${SCAN_THEMES.length} disponibles</div>
+    </div>
+    ${nextUnlock?`<div class="home-stat-card">
+      <div style="font-size:12px;color:var(--text-faint);margin-bottom:6px;">Prochain débloquage</div>
+      <div style="font-size:13px;font-weight:500;margin-bottom:8px;">${nextUnlock.label}</div>
+      <div style="height:4px;background:var(--surface3);border-radius:2px;overflow:hidden;">
+        <div style="height:100%;width:${nextUnlock.current}%;background:var(--accent);border-radius:2px;transition:width 0.5s;"></div>
+      </div>
+      <div style="font-size:11px;color:var(--text-faint);margin-top:4px;">${nextUnlock.current}% / ${nextUnlock.required}% requis</div>
+    </div>`:""}`;
 }
 
 function renderHomeThemes(){
@@ -2849,6 +2924,7 @@ function setHomeTab(tab){
     if(srch3){srch3.style.display="block";srch3.value="";homeSearchQuery="";}
     grid.style.display="flex";
     grid.style.flexDirection="column";
+    renderHomeStats();
     renderHomeThemes();
   } else if(tab==="journal"){
     document.getElementById("home-sub").textContent="Journal";
@@ -2883,7 +2959,7 @@ function renderJournalInline(){
           <span style="font-size:12px;font-weight:500;">${e.title||"Sans titre"}</span>
           <div style="display:flex;align-items:center;gap:8px;">
             <span style="font-size:10px;color:var(--text-faint);">${e.date}</span>
-            <button data-del2-idx="${realIdx2}" style="font-size:11px;color:var(--text-faint);background:none;border:none;cursor:pointer;padding:2px 4px;">✕</button>
+            <button data-del-idx="${realIdx2}" style="font-size:11px;color:var(--text-faint);background:none;border:none;cursor:pointer;padding:2px 4px;">✕</button>
           </div>
         </div>
         <div style="font-size:12px;color:var(--text-muted);line-height:1.5;white-space:pre-wrap;">${e.note}</div>
@@ -2922,6 +2998,8 @@ function renderJournalInline(){
 
 
 function renderExercisesInline(){
+  currentExercise=null;
+  currentExPart=0;
   const grid=document.getElementById("home-themes-grid");
   grid.style.display="flex";
   grid.style.flexDirection="column";
