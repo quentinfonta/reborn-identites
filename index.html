@@ -19,7 +19,7 @@
   --l1:#ff4d2e;--l2:#ff8c42;--l3:#f5c842;--l4:#7ab8d4;--l5:#555560;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}html,body{overflow-x:hidden;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 
 /* SCREENS */
 .screen{display:none;min-height:100vh;padding:2rem 1.5rem 5rem;flex-direction:column;}
@@ -29,9 +29,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 
 /* DESKTOP */
 @media(min-width:768px){
-  .home-screen.show{display:grid;grid-template-columns:260px 1fr;min-height:100vh;}
+  html,body{height:100%;overflow-y:auto;}
+  .home-screen.show{display:grid;grid-template-columns:260px 1fr;min-height:100vh;align-items:start;}
   .home-sidebar{display:flex;position:sticky;top:0;height:100vh;overflow-y:auto;}
-  .home-main{padding:3rem 4rem;}
+  .home-main{padding:3rem 4rem;min-height:100vh;}
   .home-mobile-nav{display:none!important;}
   .home-themes-grid{padding-bottom:3rem;}
 }
@@ -126,7 +127,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .home-global-fill{height:100%;border-radius:2px;background:var(--accent);transition:width 0.6s ease;}
 .home-global-pct{font-size:12px;color:var(--text-faint);}
 .home-themes-grid{width:100%;max-width:560px;display:flex;flex-direction:column;gap:4px;overflow-y:auto;max-height:65vh;min-height:100px;padding-right:2px;}
-.home-theme-row{display:flex;align-items:center;gap:16px;padding:18px 20px;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--surface);cursor:pointer;transition:all 0.15s;}
+.home-theme-row{display:flex;align-items:center;gap:16px;padding:20px 22px;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--surface);cursor:pointer;transition:all 0.15s;}
 .home-theme-row:hover{border-color:var(--border-md);background:var(--surface2);transform:translateX(2px);}
 .home-theme-icon{font-size:18px;flex-shrink:0;width:24px;text-align:center;}
 .home-theme-info{flex:1;min-width:0;}
@@ -413,7 +414,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 
 .home-themes-grid{width:100%;max-width:560px;display:flex;flex-direction:column;gap:4px;overflow-y:auto;max-height:65vh;min-height:100px;padding-right:2px;}
-.home-theme-row{display:flex;align-items:center;gap:16px;padding:18px 20px;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--surface);cursor:pointer;transition:all 0.15s;}
+.home-theme-row{display:flex;align-items:center;gap:16px;padding:20px 22px;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--surface);cursor:pointer;transition:all 0.15s;}
 .home-theme-row:hover{border-color:var(--border-md);background:var(--surface2);transform:translateX(2px);}
 .home-theme-icon{font-size:18px;flex-shrink:0;width:24px;text-align:center;}
 .home-theme-info{flex:1;min-width:0;}
@@ -3148,25 +3149,31 @@ function renderScan(){
     });
   });
 
-  // Back button delegation on sticky header
+  // Back button delegation on sticky header AND scan-content
   const stickyEl=document.getElementById("scan-sticky-header");
   const newSticky=stickyEl.cloneNode(true);
   stickyEl.parentNode.replaceChild(newSticky,stickyEl);
-  newSticky.addEventListener("click",e=>{
-    const back=e.target.closest("[data-back]");
-    if(back){
-      if(scanChapterIdx===0){
-        scanThemeId=null;
-        document.getElementById("scan-sticky-header").innerHTML="";
-        showScreen("home-screen");
-        setHomeTab("reconnexion");
-      } else {
-        saveJournalNote?.();
-        scanChapterIdx--;
-        renderScan();
-        cont.scrollTop=0;
-      }
+
+  function handleBack(){
+    if(scanChapterIdx===0){
+      scanThemeId=null;
+      document.getElementById("scan-sticky-header").innerHTML="";
+      showScreen("home-screen");
+      setHomeTab("reconnexion");
+    } else {
+      saveJournalNote?.();
+      scanChapterIdx--;
+      renderScan();
+      cont.scrollTop=0;
     }
+  }
+
+  newSticky.addEventListener("click",e=>{
+    if(e.target.closest("[data-back]"))handleBack();
+  });
+
+  cont.addEventListener("click",e=>{
+    if(e.target.closest("[data-back]"))handleBack();
   });
 
   // Save journal note
