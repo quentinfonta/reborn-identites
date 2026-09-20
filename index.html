@@ -19,7 +19,7 @@
   --l1:#ff4d2e;--l2:#ff8c42;--l3:#f5c842;--l4:#7ab8d4;--l5:#555560;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}html,body{overflow-x:hidden;}
 
 /* SCREENS */
 .screen{display:none;min-height:100vh;padding:2rem 1.5rem 5rem;flex-direction:column;}
@@ -29,12 +29,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 
 /* DESKTOP */
 @media(min-width:768px){
-  .home-screen.show{display:grid;grid-template-columns:260px 1fr;min-height:100vh;overflow-y:auto;}
+  .home-screen.show{display:grid;grid-template-columns:260px 1fr;min-height:100vh;}
   .home-sidebar{display:flex;position:sticky;top:0;height:100vh;overflow-y:auto;}
   .home-main{padding:3rem 4rem;}
   .home-mobile-nav{display:none!important;}
   .home-themes-grid{padding-bottom:3rem;}
-  body{overflow-y:auto;}
 }
 
 /* MOBILE */
@@ -442,6 +441,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
         <input type="text" class="txt-input" id="new-pin" placeholder="PIN (4 chiffres)" maxlength="4" style="width:140px;flex:none;"/>
       </div>
       <div class="pin-hint">Le code PIN protège l accès.</div>
+      <input type="text" class="txt-input" id="new-code" placeholder="Code d accès REBORN…" style="margin-top:6px;"/>
       <div id="create-err" style="font-size:13px;color:var(--red-text);min-height:16px;"></div>
       <button class="green-btn" id="create-btn" style="align-self:flex-end">Créer</button>
     </div>
@@ -2426,10 +2426,10 @@ async function loadProfiles(){
     if(!profiles||!profiles.length){list.innerHTML='<div style="font-size:13px;color:var(--text-faint);font-style:italic">Aucun profil — crée-en un</div>';return;}
     list.innerHTML=profiles.map(p=>{
       const ini=p.name.slice(0,2).toUpperCase();
-      return`<div class="profile-item" data-id="${p.id}" data-name="${p.name}" data-hash="${p.pin_hash}" style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--surface);cursor:pointer;">
+      return`<div class="profile-item" data-id="${p.id}" data-name="${p.name}" data-hash="${p.pin_hash}">
         <div class="profile-avatar">${ini}</div>
-        <div style="flex:1;font-size:14px;font-weight:500;">${p.name}</div>
-        <button class="profile-delete-btn" data-id="${p.id}" data-name="${p.name}" style="font-size:11px;color:var(--text-faint);background:none;border:none;cursor:pointer;padding:4px;">✕</button>
+        <div class="profile-name">${p.name}</div>
+        <button class="profile-delete-btn" data-id="${p.id}" data-name="${p.name}">✕</button>
       </div>`;
     }).join("");
     list.querySelectorAll(".profile-item").forEach(item=>item.addEventListener("click",e=>{
@@ -2650,12 +2650,15 @@ document.getElementById("journal-home-btn").addEventListener("click",()=>{showSc
 
 
 document.getElementById("pin-back").addEventListener("click",()=>{pinTarget=null;pinVal="";showScreen("profile-screen");});
+const CREATION_CODE="REBORN2024";
 document.getElementById("create-btn").addEventListener("click",async()=>{
   const name=document.getElementById("new-name").value.trim();
   const pin=document.getElementById("new-pin").value.trim();
+  const code=document.getElementById("new-code").value.trim();
   const errEl=document.getElementById("create-err");errEl.textContent="";
   if(!name){errEl.textContent="Entre un prénom.";return;}
   if(!/^\d{4}$/.test(pin)){errEl.textContent="PIN: 4 chiffres.";return;}
+  if(code!==CREATION_CODE){errEl.textContent="Code d accès invalide.";return;}
   const btn=document.getElementById("create-btn");btn.textContent="…";btn.disabled=true;
   try{
     const pin_hash=await hashPin(pin);
@@ -2827,43 +2830,45 @@ document.getElementById("home-search")?.addEventListener("input",e=>{
   else{setHomeTab("reconnexion");}
 });
 
+let searchChecked=new Set();
+
 function renderSearchResults(){
   const grid=document.getElementById("home-themes-grid");
   const q=homeSearchQuery;
 
-  // Search themes
   const matchingThemes=SCAN_THEMES.filter(t=>
     t.title.toLowerCase().includes(q)||
     t.desc.toLowerCase().includes(q)||
     t.chapters.some(c=>c.title.toLowerCase().includes(q))
   );
 
-  // Search identities
-  const matchingIds=DATA.filter(d=>d.text.toLowerCase().includes(q)).slice(0,30);
+  const matchingIds=DATA.filter(d=>d.text.toLowerCase().includes(q)).slice(0,40);
+  const wids=workedIds();
 
   let html="";
 
   if(matchingThemes.length){
-    html+=`<div style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Thèmes</div>`;
+    html+=`<div style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">Thèmes</div>`;
     html+=matchingThemes.map(t=>`
-      <div class="home-theme-row" data-tid="${t.id}" style="margin-bottom:6px;">
+      <div class="home-theme-row" data-tid="${t.id}" style="margin-bottom:8px;">
         <div style="font-size:18px;width:24px;flex-shrink:0;">${t.icon}</div>
         <div style="flex:1;">
           <div style="font-size:13px;font-weight:600;">${t.title}</div>
           <div style="font-size:10px;color:var(--text-faint);">${t.desc}</div>
         </div>
+        <span style="font-size:11px;color:var(--text-faint);">→</span>
       </div>`).join("");
   }
 
   if(matchingIds.length){
-    html+=`<div style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin:${matchingThemes.length?'1rem':'0'} 0 8px;">Identités (${matchingIds.length})</div>`;
-    const wids=workedIds();
+    html+=`<div style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin:${matchingThemes.length?"1.5rem":"0"} 0 10px;">Identités — ${matchingIds.length} résultat${matchingIds.length>1?"s":""}</div>`;
     html+=matchingIds.map(d=>{
       const isWorked=wids.has(d.id);
-      const isTodo=todoIds.has(d.id);
-      return`<div class="id-row${isWorked?" worked":isTodo?" todo":""}" data-search-id="${d.id}" style="margin-bottom:4px;">
+      const isChecked=searchChecked.has(d.id);
+      return`<div class="id-row${isWorked?" worked":isChecked?" checked":""}" data-search-id="${d.id}" style="margin-bottom:4px;">
         <div class="id-check"><i class="ti ti-check check-icon"></i></div>
         <span class="id-text">${d.text}</span>
+        <span style="font-size:10px;color:var(--text-faint);flex-shrink:0;">${d.cat}</span>
       </div>`;
     }).join("");
   }
@@ -2872,7 +2877,14 @@ function renderSearchResults(){
     html=`<div style="font-size:13px;color:var(--text-faint);text-align:center;padding:2rem 0;">Aucun résultat pour "${q}"</div>`;
   }
 
-  grid.innerHTML=html;
+  // Validate bar if identities checked
+  const validBar=searchChecked.size?`
+    <div style="position:sticky;bottom:0;background:var(--bg);padding:1rem 0;border-top:1px solid var(--border);margin-top:1rem;display:flex;align-items:center;justify-content:space-between;gap:12px;">
+      <span style="font-size:13px;color:var(--text-muted);">${searchChecked.size} identité${searchChecked.size>1?"s":""} sélectionnée${searchChecked.size>1?"s":""}</span>
+      <button id="search-validate-btn" style="padding:8px 20px;border-radius:var(--radius-lg);border:1px solid var(--green-border);background:var(--green-bg);color:var(--green-text);font-size:13px;font-family:inherit;cursor:pointer;">Valider ✓</button>
+    </div>`:"";
+
+  grid.innerHTML=html+validBar;
   grid.style.display="flex";
   grid.style.flexDirection="column";
 
@@ -2882,21 +2894,37 @@ function renderSearchResults(){
       scanThemeId=row.dataset.tid;scanChapterIdx=0;scanChecked.clear();
       document.getElementById("scan-profile-name").textContent=currentProfile?currentProfile.name:"";
       document.getElementById("home-search").value="";
-      homeSearchQuery="";
-      showScreen("scan-screen");
-      renderScan();
+      homeSearchQuery="";searchChecked.clear();
+      showScreen("scan-screen");renderScan();
     });
   });
 
-  // Identity click
+  // Identity click — toggle searchChecked
   grid.querySelectorAll("[data-search-id]").forEach(row=>{
     row.addEventListener("click",e=>{
-      if(e.target.closest(".id-action-btn"))return;
       const id=+row.dataset.searchId;
-      if(workedIds().has(id))return;
-      if(checked.has(id)){checked.delete(id);row.classList.remove("checked");}
-      else{checked.add(id);row.classList.add("checked");}
+      if(wids.has(id))return;
+      if(searchChecked.has(id)){searchChecked.delete(id);row.classList.remove("checked");}
+      else{searchChecked.add(id);row.classList.add("checked");}
+      renderSearchResults();
     });
+  });
+
+  // Validate
+  document.getElementById("search-validate-btn")?.addEventListener("click",async()=>{
+    if(!searchChecked.size)return;
+    const newIds=[...searchChecked].filter(id=>!workedIds().has(id));
+    if(!newIds.length){searchChecked.clear();renderSearchResults();return;}
+    const date=new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
+    try{
+      const r=await sb("sessions",{method:"POST",body:{profile_id:currentProfile.id,date,ids:newIds},prefer:"return=representation"});
+      if(r&&r[0])SESSIONS.push({id:r[0].id,date,ids:newIds});
+      newIds.forEach(id=>scheduleReview(id,reviewDates[id]?reviewDates[id].reviewCount+1:0));
+      searchChecked.clear();
+      showToast(`✓ ${newIds.length} validée${newIds.length>1?"s":""}`);
+      renderSearchResults();
+      renderHomeStats();
+    }catch(e){showToast("Erreur sauvegarde");}
   });
 }
 document.getElementById("home-switch-btn").addEventListener("click",()=>{currentProfile=null;SESSIONS=[];checked.clear();todoIds.clear();trashedIds.clear();reviewDates={};showScreen("profile-screen");loadProfiles();});
