@@ -19,22 +19,20 @@
   --l1:#ff4d2e;--l2:#ff8c42;--l3:#f5c842;--l4:#7ab8d4;--l5:#555560;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);}
 
 /* SCREENS */
 .screen{display:none;min-height:100vh;padding:2rem 1.5rem 5rem;flex-direction:column;}
 .screen.show{display:flex;}
 #profile-screen,#pin-screen{align-items:center;justify-content:center;gap:2rem;}
-.home-screen{display:none;min-height:100vh;}
+.home-screen{display:none;}
 
 /* DESKTOP */
 @media(min-width:768px){
-  html,body{height:100%;overflow-y:auto;}
-  .home-screen.show{display:grid;grid-template-columns:260px 1fr;min-height:100vh;align-items:start;}
-  .home-sidebar{display:flex;position:sticky;top:0;height:100vh;overflow-y:auto;}
-  .home-main{padding:3rem 4rem;min-height:100vh;}
+  .home-screen.show{display:grid;grid-template-columns:260px 1fr;}
+  .home-sidebar{display:flex;position:sticky;top:0;height:100vh;}
+  .home-main{padding:3rem 4rem;}
   .home-mobile-nav{display:none!important;}
-  .home-themes-grid{padding-bottom:3rem;}
 }
 
 /* MOBILE */
@@ -43,7 +41,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   .home-sidebar{display:none;}
   .home-main{padding:0;width:100%;max-width:560px;}
   .home-mobile-nav{display:flex!important;}
-  .home-themes-grid{padding-bottom:5rem;}
+  .home-themes-grid{width:100%;display:flex;flex-direction:column;gap:0;padding-bottom:5rem;}
+.layer-section{margin-bottom:3rem;}
+.layer-locked{opacity:0.4;pointer-events:none;}
+.layer-header{display:flex;align-items:center;gap:10px;padding:0.75rem 0;margin-bottom:1.25rem;border-bottom:1px solid var(--border);}
+.layer-label{font-size:13px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;}
+.layer-lock-badge{font-size:11px;color:var(--text-faint);margin-left:auto;border:1px solid var(--border);padding:3px 8px;border-radius:10px;}
+.home-theme-row+.home-theme-row{margin-top:12px;}
 }
 
 .home-sidebar{padding:3rem 2.5rem;flex-direction:column;gap:2.5rem;border-right:1px solid var(--border);}
