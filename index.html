@@ -32,7 +32,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);}
 @media(min-width:768px){
   .home-screen.show{display:block;min-height:100vh;}
   .home-sidebar{display:flex;position:fixed;top:0;left:0;width:260px;height:100vh;overflow-y:auto;z-index:10;background:var(--bg);border-right:1px solid var(--border);}
-  .home-main{padding:3rem 4rem;margin-left:260px;}
+  .home-main{padding:4rem 5rem;margin-left:260px;}
   .home-mobile-nav{display:none!important;}
 }
 
@@ -43,12 +43,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);}
   .home-main{padding:0;width:100%;max-width:560px;}
   .home-mobile-nav{display:flex!important;}
   .home-themes-grid{width:100%;display:flex;flex-direction:column;gap:0;padding-bottom:5rem;}
-.layer-section{margin-bottom:3rem;}
+.layer-section{margin-bottom:4rem;}
 .layer-locked{opacity:0.4;pointer-events:none;}
-.layer-header{display:flex;align-items:center;gap:10px;padding:0.75rem 0;margin-bottom:1.25rem;border-bottom:1px solid var(--border);}
+.layer-header{display:flex;align-items:center;gap:10px;padding:1rem 0;margin-bottom:1.5rem;border-bottom:1px solid var(--border);}
 .layer-label{font-size:13px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;}
 .layer-lock-badge{font-size:11px;color:var(--text-faint);margin-left:auto;border:1px solid var(--border);padding:3px 8px;border-radius:10px;}
-.home-theme-row+.home-theme-row{margin-top:12px;}
+.home-theme-row+.home-theme-row{margin-top:16px;}
 }
 
 .home-sidebar{padding:3rem 2.5rem;flex-direction:column;gap:2.5rem;border-right:1px solid var(--border);}
@@ -133,7 +133,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);}
 .home-global-fill{height:100%;border-radius:2px;background:var(--accent);transition:width 0.6s ease;}
 .home-global-pct{font-size:12px;color:var(--text-faint);}
 .home-themes-grid{width:100%;max-width:560px;display:flex;flex-direction:column;gap:4px;overflow-y:auto;max-height:65vh;min-height:100px;padding-right:2px;}
-.home-theme-row{display:flex;align-items:center;gap:16px;padding:20px 22px;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--surface);cursor:pointer;transition:all 0.15s;}
+.home-theme-row{display:flex;align-items:center;gap:16px;padding:22px 24px;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--surface);cursor:pointer;transition:all 0.15s;}
 .home-theme-row:hover{border-color:var(--border-md);background:var(--surface2);transform:translateX(2px);}
 .home-theme-icon{font-size:18px;flex-shrink:0;width:24px;text-align:center;}
 .home-theme-info{flex:1;min-width:0;}
@@ -420,7 +420,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 
 .home-themes-grid{width:100%;max-width:560px;display:flex;flex-direction:column;gap:4px;overflow-y:auto;max-height:65vh;min-height:100px;padding-right:2px;}
-.home-theme-row{display:flex;align-items:center;gap:16px;padding:20px 22px;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--surface);cursor:pointer;transition:all 0.15s;}
+.home-theme-row{display:flex;align-items:center;gap:16px;padding:22px 24px;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--surface);cursor:pointer;transition:all 0.15s;}
 .home-theme-row:hover{border-color:var(--border-md);background:var(--surface2);transform:translateX(2px);}
 .home-theme-icon{font-size:18px;flex-shrink:0;width:24px;text-align:center;}
 .home-theme-info{flex:1;min-width:0;}
@@ -487,6 +487,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);}
       <button class="home-sidebar-btn active" id="home-reconnexion-btn">🌀 Reconnexion</button>
       <button class="home-sidebar-btn" id="home-journal-btn">📓 Journal</button>
       <button class="home-sidebar-btn" id="home-exercises-btn">⚡ Exercices</button>
+      <button class="home-sidebar-btn" id="home-history-btn">📅 Historique</button>
     </div>
     <div class="home-sidebar-footer">
       <button class="home-footer-btn" id="home-switch-btn"><i class="ti ti-switch-horizontal"></i> Changer de profil</button>
@@ -498,6 +499,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);}
       <button class="home-mobile-tab active" data-tab="reconnexion">Reconnexion</button>
       <button class="home-mobile-tab" data-tab="journal">Journal</button>
       <button class="home-mobile-tab" data-tab="exercises">Exercices</button>
+      <button class="home-mobile-tab" data-tab="history">Historique</button>
     </div>
     <button class="home-mobile-switch" id="home-switch-mobile"><i class="ti ti-switch-horizontal"></i></button>
   </div>
@@ -2687,6 +2689,7 @@ async function enterProfile(id,name){
   showScreen("home-screen");
   setHomeTab("reconnexion");
   renderHomeStats();
+  setTimeout(checkInactivity,1000);
 }
 
 async function loadData(){
@@ -2989,23 +2992,30 @@ function renderJournalInline(){
   const past=entries.length
     ?entries.slice().reverse().map((e,ri)=>{
       const realIdx2=entries.length-1-ri;
-      return`<div style="padding:0.75rem 0;border-bottom:1px solid var(--border);">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
-          <span style="font-size:12px;font-weight:500;">${e.title||"Sans titre"}</span>
-          <div style="display:flex;align-items:center;gap:8px;">
-            <span style="font-size:10px;color:var(--text-faint);">${e.date}</span>
-            <button data-del-idx="${realIdx2}" style="font-size:11px;color:var(--text-faint);background:none;border:none;cursor:pointer;padding:2px 4px;">✕</button>
+      return`<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem 1.5rem;margin-bottom:1rem;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;">
+          <span style="font-size:14px;font-weight:600;">${e.title||"Sans titre"}</span>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-size:11px;color:var(--text-faint);">${e.date}</span>
+            <button data-del-idx="${realIdx2}" style="font-size:11px;color:var(--text-faint);background:none;border:none;cursor:pointer;padding:2px 6px;border-radius:4px;">✕</button>
           </div>
         </div>
-        <div style="font-size:12px;color:var(--text-muted);line-height:1.5;white-space:pre-wrap;">${e.note}</div>
+        <div style="font-size:13px;color:var(--text-muted);line-height:1.7;white-space:pre-wrap;">${e.note}</div>
       </div>`;
     }).join("")
     :"";
   grid.innerHTML=`
-    <input type="text" id="journal-title-inline" placeholder="Titre…" style="width:100%;box-sizing:border-box;padding:10px 0;border:none;border-bottom:1px solid var(--border-md);background:transparent;color:var(--text);font-size:15px;font-weight:500;font-family:inherit;margin-bottom:0.75rem;outline:none;">
-    <textarea id="journal-text-inline" style="width:100%;box-sizing:border-box;padding:10px 0;border:none;border-bottom:1px solid var(--border-md);background:transparent;color:var(--text);font-size:13px;font-family:inherit;resize:none;line-height:1.7;margin-bottom:1rem;outline:none;" rows="4" placeholder="Ce que tu ressens, ce qui a résonné…"></textarea>
-    <button id="journal-save-inline" style="width:100%;padding:10px;border-radius:var(--radius-lg);border:1px solid var(--accent);background:transparent;color:var(--accent);font-size:13px;font-family:inherit;cursor:pointer;margin-bottom:2rem;">Écrire</button>
-    ${past||'<div style="font-size:12px;color:var(--text-faint);text-align:center;padding:1rem 0;">Rien encore.</div>'}`;
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem 2rem;margin-bottom:2rem;">
+      <div style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:1rem;">✏️ Nouvelle entrée</div>
+      <input type="text" id="journal-title-inline" placeholder="Titre de ton entrée…" style="width:100%;box-sizing:border-box;padding:0;border:none;border-bottom:2px solid var(--border-md);background:transparent;color:var(--text);font-size:18px;font-weight:600;font-family:inherit;margin-bottom:1.25rem;outline:none;transition:border-color 0.2s;" onfocus="this.style.borderBottomColor='var(--accent)'" onblur="this.style.borderBottomColor='var(--border-md)'">
+      <textarea id="journal-text-inline" style="width:100%;box-sizing:border-box;padding:0;border:none;background:transparent;color:var(--text);font-size:14px;font-family:inherit;resize:none;line-height:1.9;outline:none;" rows="5" placeholder="Ce que tu ressens, ce qui a résonné, ce que tu veux retenir…"></textarea>
+      <div style="display:flex;justify-content:flex-end;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);">
+        <button id="journal-save-inline" style="padding:8px 24px;border-radius:var(--radius-lg);border:1px solid var(--accent);background:transparent;color:var(--accent);font-size:13px;font-family:inherit;cursor:pointer;">Écrire →</button>
+      </div>
+    </div>
+    ${past
+      ?`<div style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-bottom:1.5rem;">Entrées précédentes</div>${past}`
+      :'<div style="font-size:13px;color:var(--text-faint);text-align:center;padding:2rem 0;font-style:italic;">Rien encore. Commence à écrire.</div>'}`;
   document.getElementById("journal-save-inline").addEventListener("click",()=>{
     const note=document.getElementById("journal-text-inline").value.trim();
     if(!note)return;
@@ -3064,6 +3074,65 @@ function renderExercisesInline(){
 document.getElementById("home-reconnexion-btn").addEventListener("click",()=>setHomeTab("reconnexion"));
 document.getElementById("home-journal-btn").addEventListener("click",()=>setHomeTab("journal"));
 document.getElementById("home-exercises-btn").addEventListener("click",()=>setHomeTab("exercises"));
+document.getElementById("home-history-btn")?.addEventListener("click",()=>setHomeTab("history"));
+
+function renderHistoryInline(){
+  const grid=document.getElementById("home-themes-grid");
+  if(!SESSIONS.length){
+    grid.innerHTML='<div style="font-size:13px;color:var(--text-faint);text-align:center;padding:3rem 0;font-style:italic;">Aucune session pour l instant.</div>';
+    return;
+  }
+  // Group by date
+  const byDate={};
+  SESSIONS.forEach(s=>{
+    if(!byDate[s.date])byDate[s.date]=[];
+    byDate[s.date].push(...s.ids);
+  });
+  const dates=Object.keys(byDate).sort((a,b)=>{
+    const parse=d=>{const[day,,month,,year]=d.split(' ');const months={janvier:0,février:1,mars:2,avril:3,mai:4,juin:5,juillet:6,août:7,septembre:8,octobre:9,novembre:10,décembre:11};return new Date(year,months[month],day);};
+    return parse(b)-parse(a);
+  });
+  grid.innerHTML=dates.map(date=>{
+    const ids=byDate[date];
+    const items=ids.map(id=>DATA.find(d=>d.id===id)).filter(Boolean);
+    return`<div style="margin-bottom:2rem;">
+      <div style="font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:0.75rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);">📅 ${date} — ${items.length} identité${items.length>1?"s":""}</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;">
+        ${items.map(d=>`<span style="font-size:12px;padding:4px 10px;border-radius:20px;background:var(--green-bg);color:var(--green-text);border:1px solid var(--green-border);">${d.text}</span>`).join("")}
+      </div>
+    </div>`;
+  }).join("");
+}
+
+// Inactivity notification
+function checkInactivity(){
+  if(!SESSIONS.length)return;
+  const lastDate=SESSIONS[SESSIONS.length-1].date;
+  const months={janvier:0,février:1,mars:2,avril:3,mai:4,juin:5,juillet:6,août:7,septembre:8,octobre:9,novembre:10,décembre:11};
+  const parts=lastDate.split(' ');
+  const last=new Date(parts[2],months[parts[1]],parts[0]);
+  const diffDays=Math.floor((Date.now()-last.getTime())/86400000);
+  if(diffDays<1)return;
+  const msgs={
+    1:"Tu n as pas travaillé hier — reprends là où tu t es arrêté.",
+    2:"2 jours sans reconnexion. Ton cerveau attend.",
+    3:"3 jours. L habitude se construit dans la régularité.",
+    7:"Une semaine. Ce que tu ne traverses pas reste.",
+  };
+  const msg=msgs[diffDays]||`${diffDays} jours sans reconnexion. Il est temps de revenir.`;
+  showInactivityBanner(msg);
+}
+
+function showInactivityBanner(msg){
+  const existing=document.getElementById("inactivity-banner");
+  if(existing)return;
+  const banner=document.createElement("div");
+  banner.id="inactivity-banner";
+  banner.style.cssText="position:fixed;top:0;left:260px;right:0;background:var(--surface2);border-bottom:1px solid var(--border-md);padding:12px 2rem;display:flex;align-items:center;justify-content:space-between;gap:12px;z-index:500;";
+  banner.innerHTML=`<span style="font-size:13px;color:var(--text-muted);">⏰ ${msg}</span><button onclick="this.parentNode.remove()" style="font-size:11px;color:var(--text-faint);background:none;border:none;cursor:pointer;padding:4px 8px;">✕</button>`;
+  document.body.appendChild(banner);
+  setTimeout(()=>banner.remove(),8000);
+}
 
 
 /* ===== SCAN CORPOREL ===== */
@@ -3763,3 +3832,6 @@ loadProfiles();
 </script>
 </body>
 </html>
+,{id:12555,text:'Je suis métastasé',cat:'Honte',depth:4,role:'source'},
+{id:12556,text:'Je suis entouré',cat:'Abandon',depth:2,role:'coping'},
+{id:12557,text:'Je suis endeuillé',cat:'Blessure',depth:3,role:'source'}
