@@ -22,9 +22,9 @@
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);}
 
 /* SCREENS */
-.screen{display:none;min-height:100vh;padding:2rem 1.5rem 5rem;flex-direction:column;}
+.screen{display:none;height:100vh;padding:2rem 1.5rem;flex-direction:column;overflow:hidden;}
 .screen.show{display:flex;}
-#profile-screen,#pin-screen{align-items:center;justify-content:center;gap:2rem;}
+#profile-screen,#pin-screen{align-items:center;justify-content:center;gap:2rem;height:100vh;overflow:hidden;}
 .auth-wrap{width:100%;max-width:400px;display:flex;flex-direction:column;align-items:center;}
 .home-screen{display:none;}
 
@@ -74,7 +74,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);}
 /* PROFILE */
 .brand{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);}
 .screen-title{font-size:26px;font-weight:600;text-align:center;}
-.profile-box{background:var(--surface);border:1px solid var(--border-md);border-radius:var(--radius-lg);padding:2rem;width:100%;max-width:440px;}
+.profile-box{background:var(--surface);border:1px solid var(--border-md);border-radius:var(--radius-lg);padding:2rem;width:100%;max-width:440px;max-height:85vh;overflow-y:auto;}
 .box-label{font-size:11px;font-weight:500;color:var(--text-faint);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:1rem;}
 .profile-list{display:flex;flex-direction:column;gap:8px;margin-bottom:1.25rem;max-height:320px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
 .profile-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--surface2);cursor:pointer;transition:all 0.15s;}
