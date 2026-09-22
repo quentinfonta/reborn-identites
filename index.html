@@ -132,7 +132,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);}
 .home-global-track{width:100%;height:4px;background:var(--surface3);border-radius:2px;overflow:hidden;}
 .home-global-fill{height:100%;border-radius:2px;background:var(--accent);transition:width 0.6s ease;}
 .home-global-pct{font-size:12px;color:var(--text-faint);}
-.home-themes-grid{width:100%;max-width:560px;display:flex;flex-direction:column;gap:4px;overflow-y:auto;max-height:65vh;min-height:100px;padding-right:2px;}
+
 .home-theme-row{display:flex;align-items:center;gap:16px;padding:22px 24px;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--surface);cursor:pointer;transition:all 0.15s;}
 .home-theme-row:hover{border-color:var(--border-md);background:var(--surface2);transform:translateX(2px);}
 .home-theme-icon{font-size:18px;flex-shrink:0;width:24px;text-align:center;}
@@ -419,7 +419,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);}
 .shake{animation:shake 0.35s ease;}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 
-.home-themes-grid{width:100%;max-width:560px;display:flex;flex-direction:column;gap:4px;overflow-y:auto;max-height:65vh;min-height:100px;padding-right:2px;}
+
 .home-theme-row{display:flex;align-items:center;gap:16px;padding:22px 24px;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--surface);cursor:pointer;transition:all 0.15s;}
 .home-theme-row:hover{border-color:var(--border-md);background:var(--surface2);transform:translateX(2px);}
 .home-theme-icon{font-size:18px;flex-shrink:0;width:24px;text-align:center;}
@@ -2008,7 +2008,8 @@ const DEFAULT_DATA = [
   {id:12554,text:'Je suis fléchi',cat:'Honte',depth:2,role:'source'},
   {id:12555,text:'Je suis métastasé',cat:'Honte',depth:4,role:'source'},
   {id:12556,text:'Je suis entouré',cat:'Abandon',depth:2,role:'coping'},
-  {id:12557,text:'Je suis endeuillé',cat:'Blessure',depth:3,role:'source'}
+  {id:12557,text:'Je suis endeuillé',cat:'Blessure',depth:3,role:'source'},
+  {id:12558,text:'Je suis réfuté',cat:'Trahison',depth:3,role:'source'}
 ];
 const GROUPS=[
   {id:"figement",label:"① Figement",subtitle:"Corps bloqué, paralysé, incapable d agir",desc:"corps bloqué, paralysé, incapable d agir",cats:["Figement"],polarity:"neg"},
@@ -3052,7 +3053,7 @@ function renderExercisesInline(){
   grid.style.display="flex";
   grid.style.flexDirection="column";
   
-  grid.style.overflowY="auto";
+  grid.style.overflowY="visible";
   grid.innerHTML=EXERCISES.map((e,i)=>{
     const opacity=Math.max(0.6,1-(i/EXERCISES.length)*0.35);
     const fontSize=Math.max(12,14-(i/EXERCISES.length)*2);
