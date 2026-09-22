@@ -30,9 +30,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);}
 
 /* DESKTOP */
 @media(min-width:768px){
-  .home-screen.show{display:block;min-height:100vh;}
+  .home-screen.show{display:block;}
   .home-sidebar{display:flex;position:fixed;top:0;left:0;width:260px;height:100vh;overflow-y:auto;z-index:10;background:var(--bg);border-right:1px solid var(--border);}
-  .home-main{padding:4rem 5rem;margin-left:260px;}
+  .home-main{padding:4rem 5rem;margin-left:260px;min-height:100vh;}
   .home-mobile-nav{display:none!important;}
 }
 
@@ -2005,7 +2005,10 @@ const DEFAULT_DATA = [
   {id:12551,text:'Je suis disponible',cat:'Engagement',depth:3,role:'coping'},
   {id:12552,text:'Je suis détourné',cat:'Honte',depth:3,role:'source'},
   {id:12553,text:'Je suis baissé',cat:'Honte',depth:2,role:'source'},
-  {id:12554,text:'Je suis fléchi',cat:'Honte',depth:2,role:'source'}
+  {id:12554,text:'Je suis fléchi',cat:'Honte',depth:2,role:'source'},
+  {id:12555,text:'Je suis métastasé',cat:'Honte',depth:4,role:'source'},
+  {id:12556,text:'Je suis entouré',cat:'Abandon',depth:2,role:'coping'},
+  {id:12557,text:'Je suis endeuillé',cat:'Blessure',depth:3,role:'source'}
 ];
 const GROUPS=[
   {id:"figement",label:"① Figement",subtitle:"Corps bloqué, paralysé, incapable d agir",desc:"corps bloqué, paralysé, incapable d agir",cats:["Figement"],polarity:"neg"},
@@ -2805,7 +2808,7 @@ function renderHomeThemes(){
       const iconSize=Math.max(16,20-progress*4);
       const padding=Math.max(8,11-progress*3);
       const isThemeLocked=!unlocked;
-      html+=`<div class="home-theme-row" data-tid="${t.id}" ${isThemeLocked?'data-locked="1"':''} style="opacity:${(isThemeLocked?0.3:opacity).toFixed(2)};padding:${padding.toFixed(0)}px 12px;margin-bottom:4px;${isThemeLocked?'pointer-events:none;cursor:default;':''}">
+      html+=`<div class="home-theme-row" data-tid="${t.id}" ${isThemeLocked?'data-locked="1"':''} style="opacity:${(isThemeLocked?0.3:opacity).toFixed(2)};padding:${Math.max(14,padding).toFixed(0)}px 16px;margin-bottom:14px;${isThemeLocked?'pointer-events:none;cursor:default;':''}">
         <div class="home-theme-icon" style="font-size:${iconSize.toFixed(0)}px;width:${(iconSize+4).toFixed(0)}px;">${t.icon}</div>
         <div class="home-theme-info">
           <div class="home-theme-title" style="font-size:${fontSize.toFixed(0)}px;">${t.title}</div>
@@ -3832,6 +3835,3 @@ loadProfiles();
 </script>
 </body>
 </html>
-,{id:12555,text:'Je suis métastasé',cat:'Honte',depth:4,role:'source'},
-{id:12556,text:'Je suis entouré',cat:'Abandon',depth:2,role:'coping'},
-{id:12557,text:'Je suis endeuillé',cat:'Blessure',depth:3,role:'source'}
