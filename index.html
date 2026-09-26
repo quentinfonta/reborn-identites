@@ -488,6 +488,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);}
       <button class="home-sidebar-btn" id="home-journal-btn">📓 Journal</button>
       <button class="home-sidebar-btn" id="home-exercises-btn">⚡ Exercices</button>
       <button class="home-sidebar-btn" id="home-history-btn">📅 Historique</button>
+      <button class="home-sidebar-btn" id="home-diagnostic-btn">🔍 Diagnostic</button>
     </div>
     <div class="home-sidebar-footer">
       <button class="home-footer-btn" id="home-switch-btn"><i class="ti ti-switch-horizontal"></i> Changer de profil</button>
@@ -500,6 +501,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);}
       <button class="home-mobile-tab" data-tab="journal">Journal</button>
       <button class="home-mobile-tab" data-tab="exercises">Exercices</button>
       <button class="home-mobile-tab" data-tab="history">Historique</button>
+      <button class="home-mobile-tab" data-tab="diagnostic">Diagnostic</button>
     </div>
     <button class="home-mobile-switch" id="home-switch-mobile"><i class="ti ti-switch-horizontal"></i></button>
   </div>
@@ -2024,7 +2026,10 @@ const DEFAULT_DATA = [
   {id:12570,text:'Je suis flottant',cat:'Confusion',depth:1,role:'source'},
   {id:12571,text:'Je suis emmêlé',cat:'Confusion',depth:2,role:'source'},
   {id:12572,text:'Je suis fatigué',cat:'Épuisement',depth:1,role:'source'},
-  {id:12573,text:'Je suis discerné',cat:'Existence',depth:2,role:'coping'}
+  {id:12573,text:'Je suis discerné',cat:'Existence',depth:2,role:'coping'},
+  {id:12574,text:'Je suis infériorisé',cat:'Humiliation',depth:3,role:'source'},
+  {id:12575,text:'Je suis sous-estimé',cat:'Humiliation',depth:2,role:'source'},
+  {id:12576,text:'Je suis défavorisé',cat:'Injustice',depth:2,role:'source'}
 ];
 const GROUPS=[
   {id:"figement",label:"① Figement",subtitle:"Corps bloqué, paralysé, incapable d agir",desc:"corps bloqué, paralysé, incapable d agir",cats:["Figement"],polarity:"neg"},
@@ -3035,7 +3040,88 @@ function setHomeTab(tab){
     grid.style.display="flex";
     grid.style.flexDirection="column";
     renderHistoryInline();
+  } else if(tab==="diagnostic"){
+    document.getElementById("home-sub").textContent="Diagnostic";
+    const srch5=document.getElementById("home-search");
+    if(srch5){srch5.style.display="none";}
+    grid.style.display="flex";
+    grid.style.flexDirection="column";
+    renderDiagnosticInline();
   }
+}
+
+function renderDiagnosticInline(){
+  const grid=document.getElementById("home-themes-grid");
+  grid.innerHTML=`
+    <div style="margin-bottom:1.5rem;">
+      <p style="font-size:14px;color:var(--text-muted);margin-bottom:1.25rem;line-height:1.6;">Décris une situation, une émotion, un blocage. L'outil va chercher dans les ${DATA.length} identités du dictionnaire celles qui correspondent.</p>
+      <textarea id="diag-input" placeholder="Ex : je me sens pas considéré par mon entourage, j'ai l'impression d'être toujours mis de côté…" style="width:100%;box-sizing:border-box;padding:14px 16px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface2);color:var(--text);font-size:14px;font-family:inherit;outline:none;resize:vertical;min-height:100px;line-height:1.6;"></textarea>
+      <button id="diag-btn" style="margin-top:0.75rem;padding:10px 20px;border-radius:var(--radius-lg);border:none;background:var(--accent);color:#fff;font-size:14px;font-weight:500;font-family:inherit;cursor:pointer;">Analyser</button>
+    </div>
+    <div id="diag-results"></div>`;
+
+  document.getElementById("diag-btn").addEventListener("click",()=>{
+    const query=(document.getElementById("diag-input").value||"").toLowerCase().trim();
+    if(!query){return;}
+    const results=document.getElementById("diag-results");
+
+    // Tokenise la saisie
+    const stopwords=new Set(["je","me","le","la","les","de","du","des","un","une","et","en","que","qui","est","il","elle","on","au","aux","par","pas","plus","sur","dans","avec","pour","son","sa","ses","mon","ma","mes","je","tu","nous","vous","ils","elles","tout","très","si","car","mais","ou","ni","donc","or","c","d","l","j","m","y","n","s","qu"]);
+    const tokens=query.split(/\s+/).filter(t=>t.length>2&&!stopwords.has(t));
+
+    if(!tokens.length){results.innerHTML=`<p style="color:var(--text-muted);font-size:14px;">Essaie avec plus de mots.</p>`;return;}
+
+    // Score chaque identité
+    const scored=DATA.map(d=>{
+      const haystack=(d.text+" "+d.cat).toLowerCase();
+      let score=0;
+      tokens.forEach(tok=>{
+        if(haystack.includes(tok))score+=2;
+        else{
+          // partiel : le token contient ou est contenu dans un mot du haystack
+          const words=haystack.split(/\s+/);
+          words.forEach(w=>{if(w.includes(tok)||tok.includes(w))score+=1;});
+        }
+      });
+      return{...d,score};
+    }).filter(d=>d.score>0).sort((a,b)=>b.score-a.score||a.depth-b.depth);
+
+    if(!scored.length){
+      results.innerHTML=`<p style="color:var(--text-muted);font-size:14px;">Aucune identité trouvée. Essaie d'autres mots.</p>`;
+      return;
+    }
+
+    // Grouper par polarity (source vs coping)
+    const sources=scored.filter(d=>d.role==="source"||d.role==="verdict").slice(0,20);
+    const copings=scored.filter(d=>d.role==="coping").slice(0,10);
+
+    function pillsHtml(list){
+      return list.map(d=>{
+        const neg=d.role==="source"||d.role==="verdict";
+        const bg=neg?"var(--red-bg,#fef2f2)":"var(--green-bg)";
+        const col=neg?"var(--red-text,#b91c1c)":"var(--green-text)";
+        const border=neg?"var(--red-border,#fecaca)":"var(--green-border)";
+        return`<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:6px;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-size:12px;padding:2px 8px;border-radius:20px;background:${bg};color:${col};border:1px solid ${border};">${d.text.replace("Je suis ","")}</span>
+            <span style="font-size:11px;color:var(--text-faint);">${d.cat}</span>
+          </div>
+          <span style="font-size:11px;color:var(--text-faint);">profondeur ${d.depth}</span>
+        </div>`;
+      }).join("");
+    }
+
+    let html="";
+    if(sources.length){
+      html+=`<div style="font-size:12px;font-weight:600;color:var(--text-faint);letter-spacing:1px;text-transform:uppercase;margin-bottom:0.75rem;">Identités blessées (${sources.length})</div>`;
+      html+=pillsHtml(sources);
+    }
+    if(copings.length){
+      html+=`<div style="font-size:12px;font-weight:600;color:var(--text-faint);letter-spacing:1px;text-transform:uppercase;margin:1.25rem 0 0.75rem;">Mécanismes / coping (${copings.length})</div>`;
+      html+=pillsHtml(copings);
+    }
+    results.innerHTML=html;
+  });
 }
 
 const JOURNAL_QUESTIONS=[
