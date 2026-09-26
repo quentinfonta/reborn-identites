@@ -2511,12 +2511,19 @@ function renderExercises(){
   });
 }
 
+function getExDoneKey(exId){return`ex_done_${currentProfile?.id}_${exId}`;}
+function isExDone(exId){return localStorage.getItem(getExDoneKey(exId))==="1";}
+function markExDone(exId){try{localStorage.setItem(getExDoneKey(exId),"1");}catch(e){}}
+
 function renderExerciseDetail(){
   if(!currentExercise)return;
   const ex=currentExercise;
   const cont=document.getElementById("home-themes-grid")||document.getElementById("exercises-content");
   if(!cont)return;
   if(ex.id==="vie_de_reve"){renderVieDeReve();return;}
+
+  const isVideo=ex.id==="introspection_video";
+  const done=isExDone(ex.id);
 
   // Build ALL parts at once
   let allHtml="";
@@ -2527,11 +2534,20 @@ function renderExerciseDetail(){
 
     let fieldsHtml="";
     if(part.questions){
-      fieldsHtml=part.questions.map((q,i)=>`
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem 1.5rem;margin-bottom:1.25rem;">
-          <div style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-bottom:0.75rem;">✏️ ${q}</div>
-          <textarea data-pidx="${pi}" data-idx="${i}" rows="3" placeholder="Ta réponse…" class="ex-field" style="width:100%;box-sizing:border-box;padding:0;border:none;background:transparent;color:var(--text);font-size:14px;font-family:inherit;resize:none;line-height:1.8;outline:none;">${saved[i]||""}</textarea>
-        </div>`).join("");
+      if(isVideo){
+        // Read-only: just display questions as a numbered list
+        fieldsHtml=part.questions.map((q,i)=>`
+          <div style="display:flex;gap:12px;padding:1rem 1.25rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:0.75rem;">
+            <span style="font-size:12px;color:var(--text-faint);font-weight:600;min-width:18px;">${i+1}.</span>
+            <span style="font-size:14px;color:var(--text);line-height:1.6;">${q}</span>
+          </div>`).join("");
+      } else {
+        fieldsHtml=part.questions.map((q,i)=>`
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem 1.5rem;margin-bottom:1.25rem;">
+            <div style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-bottom:0.75rem;">✏️ ${q}</div>
+            <textarea data-pidx="${pi}" data-idx="${i}" rows="3" placeholder="Ta réponse…" class="ex-field" style="width:100%;box-sizing:border-box;padding:0;border:none;background:transparent;color:var(--text);font-size:14px;font-family:inherit;resize:none;line-height:1.8;outline:none;">${saved[i]||""}</textarea>
+          </div>`).join("");
+      }
     } else if(part.fields){
       fieldsHtml=part.fields.map((f,i)=>`
         <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem 1.5rem;margin-bottom:1rem;">
@@ -2551,31 +2567,46 @@ function renderExerciseDetail(){
       </div>`;
   });
 
+  const btnLabel=done?"✓ Exercice complété":"Marquer comme fait";
+  const btnStyle=done
+    ?`width:100%;padding:12px 20px;border-radius:var(--radius-lg);border:1px solid var(--green-border);background:var(--green-bg);color:var(--green-text);font-size:14px;font-family:inherit;cursor:default;`
+    :`width:100%;padding:12px 20px;border-radius:var(--radius-lg);border:1px solid var(--accent);background:transparent;color:var(--accent);font-size:14px;font-family:inherit;cursor:pointer;`;
+
   cont.innerHTML=`<div style="padding:1rem 0 4rem;">
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:2rem;">
       <button id="ex-back-btn" style="font-size:12px;color:var(--text-faint);background:none;border:none;cursor:pointer;padding:0;font-family:inherit;">← Exercices</button>
       <span style="font-size:18px;font-weight:600;">${ex.icon} ${ex.title}</span>
     </div>
     ${allHtml}
-    <button id="ex-save-btn" style="width:100%;padding:12px 20px;border-radius:var(--radius-lg);border:1px solid var(--accent);background:transparent;color:var(--accent);font-size:14px;font-family:inherit;cursor:pointer;">Sauvegarder ✓</button>
+    <button id="ex-done-btn" style="${btnStyle}">${btnLabel}</button>
+    ${!isVideo?`<button id="ex-save-btn" style="width:100%;margin-top:10px;padding:10px 20px;border-radius:var(--radius-lg);border:1px solid var(--border);background:transparent;color:var(--text-muted);font-size:13px;font-family:inherit;cursor:pointer;">Sauvegarder les notes</button>`:""}
   </div>`;
 
-  // Save on input per part
-  cont.querySelectorAll(".ex-field").forEach(field=>{
-    field.addEventListener("input",()=>{
-      const pi=field.dataset.pidx;
-      const savedKey=`ex_${currentProfile?.id}_${ex.id}_${pi}`;
-      const vals={};
-      cont.querySelectorAll(`.ex-field[data-pidx="${pi}"]`).forEach(x=>{vals[x.dataset.idx]=x.value;});
-      try{localStorage.setItem(savedKey,JSON.stringify(vals));}catch(e){}
+  // Save on input per part (only for non-video)
+  if(!isVideo){
+    cont.querySelectorAll(".ex-field").forEach(field=>{
+      field.addEventListener("input",()=>{
+        const pi=field.dataset.pidx;
+        const savedKey=`ex_${currentProfile?.id}_${ex.id}_${pi}`;
+        const vals={};
+        cont.querySelectorAll(`.ex-field[data-pidx="${pi}"]`).forEach(x=>{vals[x.dataset.idx]=x.value;});
+        try{localStorage.setItem(savedKey,JSON.stringify(vals));}catch(e){}
+      });
     });
-  });
+    document.getElementById("ex-save-btn")?.addEventListener("click",()=>{
+      showToast("✓ Notes sauvegardées");
+    });
+  }
 
   document.getElementById("ex-back-btn")?.addEventListener("click",()=>{
     currentExercise=null;renderExercisesInline();
   });
-  document.getElementById("ex-save-btn")?.addEventListener("click",()=>{
-    showToast("✓ Sauvegardé");
+  document.getElementById("ex-done-btn")?.addEventListener("click",()=>{
+    if(!done){
+      markExDone(ex.id);
+      showToast("✓ Exercice complété !");
+      currentExercise=null;renderExercisesInline();
+    }
   });
 }
 
@@ -3004,61 +3035,131 @@ function setHomeTab(tab){
   }
 }
 
-function renderJournalInline(){
+const JOURNAL_QUESTIONS=[
+  {id:"q1",label:"Ce qui m'a le plus impacté émotionnellement aujourd'hui",emoji:"👍🏻 / 👎🏻",placeholder:"Et où est-ce que je l'ai senti dans mon corps ?"},
+  {id:"q2",label:"Ce que je ressens physiquement en me replongeant dans ce moment",emoji:"🫁",placeholder:"On décrit cette émotion au maximum…"},
+  {id:"q3",label:"La pensée la plus forte qui émerge quand je reste dans ce ressenti",emoji:"💭",placeholder:"Décrire avec le plus de mots possible…"},
+  {id:"q4",label:"Ce qui m'a donné de l'énergie aujourd'hui",emoji:"⚡",placeholder:"Même brièvement…"},
+  {id:"q5",label:"Ce qui m'a épuisé",emoji:"🪫",placeholder:"Au contraire…"}
+];
+
+function renderJournalInline(mode){
   const grid=document.getElementById("home-themes-grid");
   grid.style.display="flex";
   grid.style.flexDirection="column";
   const key=`journal_${currentProfile?.id}`;
   let entries=[];
   try{entries=JSON.parse(localStorage.getItem(key)||"[]");}catch(e){}
-  const past=entries.length
-    ?entries.slice().reverse().map((e,ri)=>{
-      const realIdx2=entries.length-1-ri;
-      return`<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem 1.5rem;margin-bottom:1rem;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;">
-          <span style="font-size:14px;font-weight:600;">${e.title||"Sans titre"}</span>
-          <div style="display:flex;align-items:center;gap:10px;">
-            <span style="font-size:11px;color:var(--text-faint);">${e.date}</span>
-            <button data-del-idx="${realIdx2}" style="font-size:11px;color:var(--text-faint);background:none;border:none;cursor:pointer;padding:2px 6px;border-radius:4px;">✕</button>
-          </div>
-        </div>
-        <div style="font-size:13px;color:var(--text-muted);line-height:1.7;white-space:pre-wrap;">${e.note}</div>
-      </div>`;
-    }).join("")
-    :"";
-  grid.innerHTML=`
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem 2rem;margin-bottom:2rem;">
-      <div style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:1rem;">✏️ Nouvelle entrée</div>
-      <input type="text" id="journal-title-inline" placeholder="Titre de ton entrée…" style="width:100%;box-sizing:border-box;padding:0;border:none;border-bottom:2px solid var(--border-md);background:transparent;color:var(--text);font-size:18px;font-weight:600;font-family:inherit;margin-bottom:1.25rem;outline:none;transition:border-color 0.2s;" onfocus="this.style.borderBottomColor='var(--accent)'" onblur="this.style.borderBottomColor='var(--border-md)'">
-      <textarea id="journal-text-inline" style="width:100%;box-sizing:border-box;padding:0;border:none;background:transparent;color:var(--text);font-size:14px;font-family:inherit;resize:none;line-height:1.9;outline:none;" rows="5" placeholder="Ce que tu ressens, ce qui a résonné, ce que tu veux retenir…"></textarea>
-      <div style="display:flex;justify-content:flex-end;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);">
-        <button id="journal-save-inline" style="padding:8px 24px;border-radius:var(--radius-lg);border:1px solid var(--accent);background:transparent;color:var(--accent);font-size:13px;font-family:inherit;cursor:pointer;">Écrire →</button>
+
+  if(mode==="new"){
+    // New guided entry form
+    const questionsHtml=JOURNAL_QUESTIONS.map((q,i)=>`
+      <div style="margin-bottom:1.5rem;">
+        <div style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-bottom:0.5rem;">${i+1}. ${q.label} ${q.emoji}</div>
+        <textarea id="jq_${q.id}" rows="3" placeholder="${q.placeholder}" style="width:100%;box-sizing:border-box;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius-lg);background:var(--surface);color:var(--text);font-size:14px;font-family:inherit;resize:none;line-height:1.8;outline:none;transition:border-color 0.2s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+      </div>`).join("");
+    grid.innerHTML=`
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:2rem;">
+        <button id="journal-list-btn" style="font-size:12px;color:var(--text-faint);background:none;border:none;cursor:pointer;padding:0;font-family:inherit;">← Journal</button>
+        <span style="font-size:16px;font-weight:600;">📓 Nouvelle entrée</span>
       </div>
-    </div>
-    ${past
-      ?`<div style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-bottom:1.5rem;">Entrées précédentes</div>${past}`
-      :'<div style="font-size:13px;color:var(--text-faint);text-align:center;padding:2rem 0;font-style:italic;">Rien encore. Commence à écrire.</div>'}`;
-  document.getElementById("journal-save-inline").addEventListener("click",()=>{
-    const note=document.getElementById("journal-text-inline").value.trim();
-    if(!note)return;
-    const title=document.getElementById("journal-title-inline").value.trim();
-    const entries=[];
-    try{entries.push(...JSON.parse(localStorage.getItem(key)||"[]"));}catch(e){}
-    entries.push({date:new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"}),title,note});
-    try{localStorage.setItem(key,JSON.stringify(entries));}catch(e){}
-    showToast("✓ Sauvegardé");
-    renderJournalInline();
-  });
-  document.querySelectorAll("[data-del-idx]").forEach(btn=>{
-    btn.addEventListener("click",e=>{
-      e.stopPropagation();
-      const idx=+btn.dataset.delIdx;
+      <div style="font-size:12px;color:var(--text-faint);margin-bottom:1.5rem;">${new Date().toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long",year:"numeric"})}</div>
+      ${questionsHtml}
+      <div style="display:flex;gap:10px;margin-top:0.5rem;">
+        <button id="journal-list-btn2" style="flex:1;padding:11px 20px;border-radius:var(--radius-lg);border:1px solid var(--border);background:transparent;color:var(--text-muted);font-size:13px;font-family:inherit;cursor:pointer;">Annuler</button>
+        <button id="journal-save-guided" style="flex:2;padding:11px 20px;border-radius:var(--radius-lg);border:1px solid var(--accent);background:transparent;color:var(--accent);font-size:13px;font-family:inherit;cursor:pointer;">Sauvegarder →</button>
+      </div>`;
+    document.getElementById("journal-list-btn")?.addEventListener("click",()=>renderJournalInline());
+    document.getElementById("journal-list-btn2")?.addEventListener("click",()=>renderJournalInline());
+    document.getElementById("journal-save-guided")?.addEventListener("click",()=>{
+      const answers={};
+      let hasContent=false;
+      JOURNAL_QUESTIONS.forEach(q=>{
+        const val=document.getElementById(`jq_${q.id}`)?.value.trim()||"";
+        answers[q.id]=val;
+        if(val)hasContent=true;
+      });
+      if(!hasContent)return;
+      const ents=[];
+      try{ents.push(...JSON.parse(localStorage.getItem(key)||"[]"));}catch(e){}
+      ents.push({
+        date:new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"}),
+        title:new Date().toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"}),
+        answers,
+        type:"guided"
+      });
+      try{localStorage.setItem(key,JSON.stringify(ents));}catch(e){}
+      showToast("✓ Entrée sauvegardée");
+      renderJournalInline();
+    });
+    return;
+  }
+
+  // Entry detail view
+  if(typeof mode==="number"){
+    const e=entries[mode];
+    if(!e)return renderJournalInline();
+    let bodyHtml="";
+    if(e.type==="guided"&&e.answers){
+      bodyHtml=JOURNAL_QUESTIONS.map((q,i)=>{
+        const val=e.answers[q.id];
+        if(!val)return"";
+        return`<div style="margin-bottom:1.25rem;">
+          <div style="font-size:10px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">${i+1}. ${q.label}</div>
+          <div style="font-size:14px;color:var(--text);line-height:1.7;white-space:pre-wrap;">${val}</div>
+        </div>`;
+      }).join("");
+    } else {
+      bodyHtml=`<div style="font-size:14px;color:var(--text);line-height:1.7;white-space:pre-wrap;">${e.note||""}</div>`;
+    }
+    grid.innerHTML=`
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:2rem;">
+        <button id="journal-list-btn" style="font-size:12px;color:var(--text-faint);background:none;border:none;cursor:pointer;padding:0;font-family:inherit;">← Journal</button>
+        <span style="font-size:14px;font-weight:600;">${e.title||e.date}</span>
+        <span style="font-size:11px;color:var(--text-faint);margin-left:auto;">${e.date}</span>
+      </div>
+      ${bodyHtml}
+      <div style="margin-top:2rem;padding-top:1rem;border-top:1px solid var(--border);">
+        <button data-del-idx="${mode}" style="font-size:12px;color:var(--text-faint);background:none;border:none;cursor:pointer;padding:0;font-family:inherit;">Supprimer cette entrée</button>
+      </div>`;
+    document.getElementById("journal-list-btn")?.addEventListener("click",()=>renderJournalInline());
+    grid.querySelector("[data-del-idx]")?.addEventListener("click",()=>{
       let ents=[];
       try{ents=JSON.parse(localStorage.getItem(key)||"[]");}catch(e){}
-      ents.splice(idx,1);
+      ents.splice(mode,1);
       try{localStorage.setItem(key,JSON.stringify(ents));}catch(e){}
       renderJournalInline();
     });
+    return;
+  }
+
+  // List view (default)
+  const past=entries.length
+    ?entries.slice().reverse().map((e,ri)=>{
+      const realIdx=entries.length-1-ri;
+      const preview=e.type==="guided"&&e.answers
+        ?Object.values(e.answers).find(v=>v)||""
+        :e.note||"";
+      return`<div data-entry-idx="${realIdx}" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.1rem 1.4rem;margin-bottom:0.75rem;cursor:pointer;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem;">
+          <span style="font-size:14px;font-weight:600;">${e.title||e.date}</span>
+          <span style="font-size:11px;color:var(--text-faint);">${e.date}</span>
+        </div>
+        <div style="font-size:12px;color:var(--text-muted);line-height:1.5;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">${preview}</div>
+      </div>`;
+    }).join("")
+    :"";
+
+  grid.innerHTML=`
+    <div style="display:flex;justify-content:flex-end;margin-bottom:1.5rem;">
+      <button id="journal-new-btn" style="padding:8px 20px;border-radius:var(--radius-lg);border:1px solid var(--accent);background:transparent;color:var(--accent);font-size:13px;font-family:inherit;cursor:pointer;">+ Nouvelle entrée</button>
+    </div>
+    ${past
+      ?past
+      :'<div style="font-size:13px;color:var(--text-faint);text-align:center;padding:3rem 0;font-style:italic;">Aucune entrée pour l instant.<br>Commence à écrire.</div>'}`;
+  document.getElementById("journal-new-btn")?.addEventListener("click",()=>renderJournalInline("new"));
+  grid.querySelectorAll("[data-entry-idx]").forEach(row=>{
+    row.addEventListener("click",()=>renderJournalInline(+row.dataset.entryIdx));
   });
 }
 
@@ -3072,16 +3173,27 @@ function renderExercisesInline(){
   grid.style.flexDirection="column";
   
   grid.style.overflowY="visible";
-  grid.innerHTML=EXERCISES.map((e,i)=>{
-    const opacity=Math.max(0.6,1-(i/EXERCISES.length)*0.35);
+  const doneCount=EXERCISES.filter(e=>isExDone(e.id)).length;
+  const progressPct=EXERCISES.length?Math.round(doneCount/EXERCISES.length*100):0;
+  grid.innerHTML=`<div style="margin-bottom:1.5rem;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+      <span style="font-size:11px;color:var(--text-faint);">${doneCount} / ${EXERCISES.length} complété${doneCount>1?"s":""}</span>
+      <span style="font-size:11px;color:var(--text-faint);">${progressPct}%</span>
+    </div>
+    <div style="height:3px;background:var(--border);border-radius:2px;overflow:hidden;">
+      <div style="height:100%;width:${progressPct}%;background:var(--accent);border-radius:2px;transition:width 0.4s;"></div>
+    </div>
+  </div>`+EXERCISES.map((e,i)=>{
+    const done=isExDone(e.id);
+    const opacity=done?1:Math.max(0.6,1-(i/EXERCISES.length)*0.35);
     const fontSize=Math.max(12,14-(i/EXERCISES.length)*2);
-    return`<div class="home-theme-row" data-exid="${e.id}" style="opacity:${opacity.toFixed(2)};margin-bottom:4px;">
-      <div style="font-size:18px;width:26px;flex-shrink:0;">${e.icon}</div>
+    return`<div class="home-theme-row" data-exid="${e.id}" style="opacity:${opacity.toFixed(2)};margin-bottom:4px;${done?"background:var(--green-bg);border-color:var(--green-border);":""}">
+      <div style="font-size:18px;width:26px;flex-shrink:0;">${done?"✓":e.icon}</div>
       <div style="flex:1;min-width:0;">
-        <div style="font-size:${fontSize.toFixed(0)}px;font-weight:600;">${e.title}</div>
-        <div style="font-size:10px;color:var(--text-faint);">${e.duration}</div>
+        <div style="font-size:${fontSize.toFixed(0)}px;font-weight:600;${done?"color:var(--green-text);":""}">${e.title}</div>
+        <div style="font-size:10px;color:var(--text-faint);">${done?"Complété":e.duration}</div>
       </div>
-      <span style="color:var(--text-faint);font-size:12px;">→</span>
+      <span style="color:var(--text-faint);font-size:12px;">${done?"":"→"}</span>
     </div>`;
   }).join("");
   grid.querySelectorAll("[data-exid]").forEach(row=>{
@@ -3808,6 +3920,261 @@ const EXERCISES=[
       {icon:"🌍",label:"Impact & Sens",questions:["Quel impact tu veux avoir sur les autres, sur le monde ?","Qu est-ce qui compte vraiment pour toi au fond ?","Qu est-ce qui t en empêche aujourd hui ?","Une chose concrète que tu peux faire cette semaine."]},
       {icon:"🕊️",label:"Liberté & Épanouissement",questions:["À quoi ressemble ta journée idéale dans 3 ans ?","Qu est-ce que tu t autorises à être que tu ne t autorises pas aujourd hui ?","Qu est-ce qui t en empêche aujourd hui ?","Une chose concrète que tu peux faire cette semaine."]}
     ]
+  },
+  {
+    id:"cadre_de_vie",
+    title:"Cadre de vie",
+    icon:"🏠",
+    desc:"Ton lieu de vie — choisi ou subi ?",
+    duration:"15 min",
+    parts:[{
+      title:"État des lieux",
+      intro:"Pas de jugement. Juste ce qui est.",
+      fields:[
+        {label:"Ton lieu de vie est choisi ou subi ? Pourquoi ?",type:"textarea",placeholder:""},
+        {label:"Si quelqu un entrait chez toi aujourd hui, que comprendrait-il de ta vie ?",type:"textarea",placeholder:""},
+        {label:"À quoi ressemblerait ton cadre idéal ? Quels sont les blocages à ça ?",type:"textarea",placeholder:""},
+        {label:"Qu est-ce que cette situation dit de toi, vue de l extérieur ?",type:"textarea",placeholder:""}
+      ]
+    }]
+  },
+  {
+    id:"liberte",
+    title:"Liberté",
+    icon:"🗝️",
+    desc:"Liberté ressentie vs liberté réelle",
+    duration:"15 min",
+    parts:[{
+      title:"Liberté objective vs ressentie",
+      intro:"Deux questions, une honnêteté.",
+      fields:[
+        {label:"Sur 10 — à quel point tu te sens libre ? Et à quel point tu l es objectivement ?",type:"textarea",placeholder:"Ex: je me sens à 3/10 mais objectivement je suis à 7/10"},
+        {label:"Où est-ce que tu te racontes une histoire plutôt que de prendre une décision ?",type:"textarea",placeholder:""},
+        {label:"Si tu avais la liberté totale demain, que ferais-tu — concrètement ?",type:"textarea",placeholder:""},
+        {label:"Qu est-ce que cette situation dit de toi, vue de l extérieur ?",type:"textarea",placeholder:""}
+      ]
+    }]
+  },
+  {
+    id:"finances",
+    title:"Sécurité financière",
+    icon:"💶",
+    desc:"Ta réalité matérielle, sans se mentir",
+    duration:"15 min",
+    parts:[{
+      title:"L argent tel qu il est",
+      intro:"Ce n est pas un jugement — c est une information.",
+      fields:[
+        {label:"Ton revenu est stable ou fluctuant ? Combien de mois tu pourrais tenir si rien ne change ?",type:"textarea",placeholder:""},
+        {label:"Te sens-tu en sécurité financièrement ? Pourquoi oui ou non ?",type:"textarea",placeholder:""},
+        {label:"Quelles émotions et blocages autour de l argent ?",type:"textarea",placeholder:"Ex: honte, peur de manquer, sentiment de ne pas mériter..."},
+        {label:"Qu est-ce que cette situation dit de toi, vue de l extérieur ?",type:"textarea",placeholder:""}
+      ]
+    }]
+  },
+  {
+    id:"quotidien",
+    title:"Quotidien & structure",
+    icon:"📅",
+    desc:"Tes journées — intentionnelles ou subies ?",
+    duration:"15 min",
+    parts:[{
+      title:"Une journée honnête",
+      intro:"Décris vraiment — pas ce que tu voudrais faire.",
+      fields:[
+        {label:"À quoi ressemblent tes matinées, après-midis, soirées ?",type:"textarea",placeholder:""},
+        {label:"Tes journées sont intentionnelles ou subies ? Combien d heures sur le téléphone ?",type:"textarea",placeholder:""},
+        {label:"Si quelqu un observait ta journée entière, dirait-il que tu te respectes ?",type:"textarea",placeholder:""},
+        {label:"Qu est-ce que cette situation dit de toi, vue de l extérieur ?",type:"textarea",placeholder:""}
+      ]
+    }]
+  },
+  {
+    id:"actions_impact",
+    title:"Actions à fort impact",
+    icon:"⚡",
+    desc:"Ce qui fait vraiment avancer — vs ce que tu fais",
+    duration:"15 min",
+    parts:[{
+      title:"L essentiel vs le reste",
+      intro:"Honnêteté totale sur ce que tu fais vraiment.",
+      fields:[
+        {label:"Quelle est ta plus grande peur à l action ? Qu est-ce que tu as peur de découvrir ?",type:"textarea",placeholder:""},
+        {label:"Quelles actions ont réellement un impact sur ta situation ? Combien de fois tu les fais ?",type:"textarea",placeholder:""},
+        {label:"Ce que tu fais à la place — et ce que tu évites systématiquement de faire ?",type:"textarea",placeholder:""},
+        {label:"Qu est-ce que cette situation dit de toi, vue de l extérieur ?",type:"textarea",placeholder:""}
+      ]
+    }]
+  },
+  {
+    id:"procrastination",
+    title:"Procrastination",
+    icon:"⏳",
+    desc:"Ce que tu repousses — et pourquoi",
+    duration:"10 min",
+    parts:[{
+      title:"Ce que tu évites",
+      intro:"Nommer, c est déjà la moitié du travail.",
+      fields:[
+        {label:"Quelles sont les actions importantes que tu repousses ? Depuis combien de temps ?",type:"textarea",placeholder:""},
+        {label:"Que ressens-tu juste avant de devoir les faire ? Quelle excuse revient ?",type:"textarea",placeholder:""},
+        {label:"Ce que tu risques si tu les fais — et si tu continues à ne pas les faire ?",type:"textarea",placeholder:""},
+        {label:"Qu est-ce que cette situation dit de toi, vue de l extérieur ?",type:"textarea",placeholder:""}
+      ]
+    }]
+  },
+  {
+    id:"dopamine",
+    title:"Dopamine & fuites",
+    icon:"📱",
+    desc:"Ce que tu consommes pour fuir",
+    duration:"10 min",
+    parts:[{
+      title:"Tes fuites",
+      intro:"Sans jugement — juste observer.",
+      fields:[
+        {label:"Temps sur les écrans ? Types de contenus ? Tu utilises ça pour fuir quoi ?",type:"textarea",placeholder:""},
+        {label:"Ressenti avant et après ces moments de fuite ?",type:"textarea",placeholder:""},
+        {label:"Que se passe-t-il quand tu es seul, sans distraction, sans téléphone ?",type:"textarea",placeholder:""},
+        {label:"Qu est-ce que cette situation dit de toi, vue de l extérieur ?",type:"textarea",placeholder:""}
+      ]
+    }]
+  },
+  {
+    id:"corps_nourriture",
+    title:"Corps & nourriture",
+    icon:"🥗",
+    desc:"Ton rapport au corps et à l alimentation",
+    duration:"10 min",
+    parts:[{
+      title:"Ce que ton corps te dit",
+      intro:"Le corps ne ment pas.",
+      fields:[
+        {label:"Faim réelle ou émotionnelle ? Compulsions ? Ressenti après les repas ?",type:"textarea",placeholder:""},
+        {label:"Ton corps est allié ou frein dans ton quotidien ?",type:"textarea",placeholder:""},
+        {label:"Si ton corps pouvait parler, qu est-ce qu il dirait sur ton rapport à lui ?",type:"textarea",placeholder:""},
+        {label:"Qu est-ce que cette situation dit de toi, vue de l extérieur ?",type:"textarea",placeholder:""}
+      ]
+    }]
+  },
+  {
+    id:"sommeil",
+    title:"Sommeil",
+    icon:"🌙",
+    desc:"La qualité de ta récupération",
+    duration:"10 min",
+    parts:[{
+      title:"Ton sommeil honnête",
+      intro:"Tout se joue souvent là.",
+      fields:[
+        {label:"Heure de coucher et lever. Ton sommeil est réparateur ou non ?",type:"textarea",placeholder:""},
+        {label:"Téléphone avant de dormir ? Réveils nocturnes ? Fatigué au réveil ?",type:"textarea",placeholder:""},
+        {label:"Quel impact ton sommeil a sur ton énergie et ton état mental ?",type:"textarea",placeholder:""},
+        {label:"Quelles identités pourraient changer ce quotidien ?",type:"textarea",placeholder:""}
+      ]
+    }]
+  },
+  {
+    id:"sport_energie",
+    title:"Sport & énergie",
+    icon:"💪",
+    desc:"Ton rapport au mouvement et à l énergie",
+    duration:"10 min",
+    parts:[{
+      title:"Corps en mouvement",
+      intro:"Ce n est pas qu une question de sport.",
+      fields:[
+        {label:"Activité physique ? Quelle fréquence ? Niveau d énergie global ?",type:"textarea",placeholder:""},
+        {label:"Ton ressenti après une séance. Corps allié ou frein ?",type:"textarea",placeholder:""},
+        {label:"Collectif ou individuel — et pourquoi ? Qu est-ce que ça dit de toi ?",type:"textarea",placeholder:""},
+        {label:"Quels sont les blocages à progresser ou mieux faire ?",type:"textarea",placeholder:""}
+      ]
+    }]
+  },
+  {
+    id:"emotions",
+    title:"Émotions",
+    icon:"🌊",
+    desc:"Tes émotions dominantes et leur origine",
+    duration:"15 min",
+    parts:[{
+      title:"Ce que tu ressens vraiment",
+      intro:"Affronter ou fuir — tout est là.",
+      fields:[
+        {label:"Quelles sont tes émotions dominantes au quotidien ?",type:"textarea",placeholder:""},
+        {label:"Tu es dans l affrontement ou la fuite ? Que fais-tu quand elles apparaissent ?",type:"textarea",placeholder:""},
+        {label:"À quoi font-elles référence ? Quand sont-elles apparues pour la première fois ?",type:"textarea",placeholder:""},
+        {label:"Quelles identités peut-on associer à tout cela ?",type:"textarea",placeholder:""}
+      ]
+    }]
+  },
+  {
+    id:"estime",
+    title:"Estime & dialogue intérieur",
+    icon:"🪞",
+    desc:"Comment tu te parles — et ce que tu te mérites",
+    duration:"15 min",
+    parts:[{
+      title:"Ce que tu te dis",
+      intro:"Parlerais-tu à un ami comme tu te parles à toi-même ?",
+      fields:[
+        {label:"Quel est ton dialogue intérieur ? Tu respectes les décisions que tu te donnes ?",type:"textarea",placeholder:""},
+        {label:"As-tu confiance en toi ? Que te dis-tu quand tu échoues ?",type:"textarea",placeholder:""},
+        {label:"As-tu l impression d être assez ? Qu est-ce que tu penses mériter comme vie ?",type:"textarea",placeholder:""},
+        {label:"Quelles identités ressortent de tout ça ?",type:"textarea",placeholder:""}
+      ]
+    }]
+  },
+  {
+    id:"relations",
+    title:"Relations & liens",
+    icon:"🤝",
+    desc:"Ton entourage — nourrissant ou confortable ?",
+    duration:"15 min",
+    parts:[{
+      title:"Tes liens",
+      intro:"Les personnes autour de toi te font grandir ou te font stagner ?",
+      fields:[
+        {label:"Tu te sens seul ? As-tu des relations nourrissantes ou juste confortables ?",type:"textarea",placeholder:""},
+        {label:"Tu arrives à te montrer tel que tu es ? Tu dis ce que tu penses — à qui, dans quelles situations ?",type:"textarea",placeholder:""},
+        {label:"As-tu peur du rejet ? Tu t adaptes — dans quelles situations ?",type:"textarea",placeholder:""},
+        {label:"Quelles émotions et identités ressortent de tout ça ?",type:"textarea",placeholder:""}
+      ]
+    }]
+  },
+  {
+    id:"sens_presence",
+    title:"Sens & présence",
+    icon:"✨",
+    desc:"Tu vis ou tu attends que ta vie passe ?",
+    duration:"15 min",
+    parts:[{
+      title:"Ta présence à ta propre vie",
+      intro:"Vivre demande des efforts. L attendre aussi — mais différemment.",
+      fields:[
+        {label:"Tu te sens existant ? Présent ? Ou tu passes beaucoup de temps dans ta tête ?",type:"textarea",placeholder:""},
+        {label:"Tu fantasmes une autre vie ? À quel moment tu t es senti le plus vivant ?",type:"textarea",placeholder:""},
+        {label:"Ton quotidien est-il conforme à la vie que tu veux ? Qu est-ce qui manque ?",type:"textarea",placeholder:""},
+        {label:"Quelles identités peut-on en tirer ?",type:"textarea",placeholder:""}
+      ]
+    }]
+  },
+  {
+    id:"peur_centrale",
+    title:"Peur centrale",
+    icon:"🔥",
+    desc:"Ta peur la plus profonde — celle qui gouverne tout",
+    duration:"15 min",
+    parts:[{
+      title:"La peur qui gouverne",
+      intro:"Tout le reste tourne autour d elle.",
+      fields:[
+        {label:"Quelle est ta plus grande peur à l action — vraiment ?",type:"textarea",placeholder:""},
+        {label:"Qu est-ce que tu as peur de découvrir sur toi-même ?",type:"textarea",placeholder:""},
+        {label:"De quoi tu te protèges pour survivre ? Quel besoin tu as peur de manquer ?",type:"textarea",placeholder:""},
+        {label:"Quelles sont tes limites ? Qu est-ce que cette situation dit de toi ?",type:"textarea",placeholder:""}
+      ]
+    }]
   }
 ];
 
