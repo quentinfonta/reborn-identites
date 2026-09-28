@@ -3111,9 +3111,28 @@ function adminRenderRessentis(){
       <span style="width:6px;height:6px;border-radius:50%;background:${col};flex-shrink:0;"></span>
       <span style="flex:1;font-size:14px;${worked?"color:var(--green-text)":""}">${d.text}</span>
       <span style="font-size:11px;color:var(--text-faint);flex-shrink:0;">${d.cat}</span>
-      ${adminRessentiClient?`<button onclick="adminValidateId(${d.id},'${adminRessentiClient}')" style="padding:4px 10px;border-radius:var(--radius);border:1px solid ${worked?"var(--green-border)":"var(--border-md)"};background:${worked?"var(--green-bg)":"transparent"};color:${worked?"var(--green-text)":"var(--text-faint)"};font-size:11px;font-family:inherit;cursor:pointer;flex-shrink:0;">${worked?"✓ Fait":"+ Valider"}</button>`:""}
+      ${adminRessentiClient?`
+        <button onclick="adminTogglePin(${d.id},'${adminRessentiClient}',this)" style="padding:4px 8px;border-radius:var(--radius);border:1px solid var(--border-md);background:transparent;font-size:13px;cursor:pointer;flex-shrink:0;opacity:${adminIsPinned(d.id,adminRessentiClient)?1:0.3};transition:opacity 0.2s;" title="Épingler pour ce client">📌</button>
+        <button onclick="adminValidateId(${d.id},'${adminRessentiClient}')" style="padding:4px 10px;border-radius:var(--radius);border:1px solid ${worked?"var(--green-border)":"var(--border-md)"};background:${worked?"var(--green-bg)":"transparent"};color:${worked?"var(--green-text)":"var(--text-faint)"};font-size:11px;font-family:inherit;cursor:pointer;flex-shrink:0;">${worked?"✓ Fait":"+ Valider"}</button>`:""}
     </div>`;
   }).join("");
+}
+
+function adminGetPinned(profileId){
+  try{const s=localStorage.getItem("pinned_"+profileId);return s?new Set(JSON.parse(s).map(Number)):new Set();}catch(e){return new Set();}
+}
+function adminSavePinned(profileId,set){
+  try{localStorage.setItem("pinned_"+profileId,JSON.stringify([...set]));}catch(e){}
+}
+function adminIsPinned(idNum,profileId){
+  return adminGetPinned(profileId).has(idNum);
+}
+function adminTogglePin(idNum,profileId,btn){
+  const pins=adminGetPinned(profileId);
+  if(pins.has(idNum)){pins.delete(idNum);btn.style.opacity="0.3";}
+  else{pins.add(idNum);btn.style.opacity="1";}
+  adminSavePinned(profileId,pins);
+  showToast(pins.has(idNum)?"📌 Épinglé":"Retiré des priorités");
 }
 
 async function adminValidateId(idNum, profileId){
