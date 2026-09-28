@@ -393,6 +393,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
 .scan-pill:hover{border-color:var(--border-strong);color:var(--text);}
 .scan-pill.checked{border-color:var(--accent);background:var(--accent);color:#fff;font-weight:500;}
 .scan-pill.worked{border-color:var(--green-border);background:var(--green-bg);color:var(--green-text);cursor:default;}
+.scan-pill.pinned{border-color:var(--gold-border)!important;}
 .scan-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0.75rem 1.5rem 0.5rem;}
 .scan-tabs{display:flex;gap:6px;overflow-x:auto;padding:0.25rem 1.5rem 0.75rem;border-bottom:1px solid var(--border);scrollbar-width:none;}
 .scan-sticky-header{position:sticky;top:0;z-index:20;background:var(--bg);}
@@ -2583,14 +2584,28 @@ async function togglePin(id){
   if(pinnedSideBtn){
     pinnedSideBtn.textContent=pinnedIds.size>0?`📌 Épinglés (${pinnedIds.size})`:"📌 Épinglés";
   }
+  // Mettre à jour l'icône 📌 dans la vue scan sans tout re-render
+  document.querySelectorAll("[data-pin-scan]").forEach(el=>{
+    const elId=+el.dataset.pinScan;
+    el.style.opacity=pinnedIds.has(elId)?1:0.25;
+    el.title=pinnedIds.has(elId)?"Désépingler":"Épingler";
+    const pill=el.closest(".scan-pill");
+    if(pill){
+      if(pinnedIds.has(elId))pill.classList.add("pinned");
+      else pill.classList.remove("pinned");
+    }
+  });
   // Si on est sur l'onglet épinglés, refresh directement
   const activeMobile=document.querySelector(".home-mobile-tab.active");
   const activeSide=document.querySelector(".home-sidebar-btn.active");
   if((activeMobile&&activeMobile.dataset.tab==="pinned")||(activeSide&&activeSide.id==="home-pinned-btn")){
     renderPinnedTab();
-  } else {
-    renderHomeThemes();
   }
+  // Update badge
+  const pinnedMobileBtn2=document.querySelector(".home-mobile-tab[data-tab='pinned']");
+  if(pinnedMobileBtn2){pinnedMobileBtn2.textContent=pinnedIds.size>0?`📌 Épinglés (${pinnedIds.size})`:"📌 Épinglés";}
+  const pinnedSideBtn2=document.getElementById("home-pinned-btn");
+  if(pinnedSideBtn2){pinnedSideBtn2.textContent=pinnedIds.size>0?`📌 Épinglés (${pinnedIds.size})`:"📌 Épinglés";}
   showToast(pinnedIds.has(id)?"📌 Épinglé":"✓ Désépinglé");
 }
 function showToast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2500);}
@@ -4066,9 +4081,12 @@ function renderScan(){
   let itemsHtml=items.map(w=>{
     const d=DATA.find(x=>x.text===`Je suis ${w}`);
     if(!d)return"";
-    const isWorked=wids.has(d.id),isChecked=scanChecked.has(d.id);
-    let cls="scan-pill"+(isWorked?" worked":isChecked?" checked":"");
-    return`<div class="${cls}" data-scan-id="${d.id}">${d.text}</div>`;
+    const isWorked=wids.has(d.id),isChecked=scanChecked.has(d.id),isPinned=pinnedIds.has(d.id);
+    let cls="scan-pill"+(isWorked?" worked":isChecked?" checked":"")+(isPinned?" pinned":"");
+    return`<div class="${cls}" data-scan-id="${d.id}" style="display:inline-flex;align-items:center;gap:5px;">
+      <span class="scan-pill-text">${d.text}</span>
+      <span class="scan-pill-pin" data-pin-scan="${d.id}" title="${isPinned?"Désépingler":"Épingler"}" style="font-size:11px;opacity:${isPinned?1:0.25};cursor:pointer;flex-shrink:0;transition:opacity 0.15s;" onclick="event.stopPropagation();togglePin(${d.id});">📌</span>
+    </div>`;
   }).join("");
 
   cont.innerHTML=`
