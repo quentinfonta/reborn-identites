@@ -517,6 +517,57 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
   </div>
 </div>
 
+<!-- ADMIN SCREEN -->
+<div class="block-screen" id="admin-screen" style="overflow-y:auto;background:var(--bg);">
+  <div style="padding:1.25rem 2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--surface);position:sticky;top:0;z-index:10;">
+    <div>
+      <div style="font-size:11px;letter-spacing:4px;color:var(--text-faint);">REBORN</div>
+      <div style="font-size:16px;font-weight:600;">Dashboard Admin</div>
+    </div>
+    <button id="admin-logout-btn" style="font-size:12px;color:var(--text-muted);cursor:pointer;padding:6px 12px;border-radius:var(--radius);border:1px solid var(--border);background:none;font-family:inherit;">← Retour profils</button>
+  </div>
+  <div style="display:flex;gap:4px;padding:1.25rem 2rem 0;">
+    <button class="admin-nav-tab active" data-atab="clients" style="padding:8px 16px;border-radius:var(--radius-lg);border:none;background:var(--surface2);color:var(--text);font-size:14px;font-family:inherit;cursor:pointer;font-weight:500;">👥 Clients</button>
+    <button class="admin-nav-tab" data-atab="diagnostics" style="padding:8px 16px;border-radius:var(--radius-lg);border:none;background:transparent;color:var(--text-muted);font-size:14px;font-family:inherit;cursor:pointer;font-weight:500;">🔍 Diagnostics</button>
+    <button class="admin-nav-tab" data-atab="search" style="padding:8px 16px;border-radius:var(--radius-lg);border:none;background:transparent;color:var(--text-muted);font-size:14px;font-family:inherit;cursor:pointer;font-weight:500;">🏷️ Recherche identité</button>
+  </div>
+  <div style="padding:1.5rem 2rem 4rem;">
+    <div id="admin-stat-row" style="display:flex;gap:1rem;margin-bottom:2rem;flex-wrap:wrap;"></div>
+    <div id="admin-tab-clients">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border-bottom:1px solid var(--border);">
+          <div style="font-size:14px;font-weight:600;">Tous les clients</div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <input type="text" id="admin-clients-search" placeholder="Rechercher…" style="padding:8px 12px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface2);color:var(--text);font-size:13px;font-family:inherit;outline:none;width:200px;">
+            <button id="admin-export-clients" style="padding:8px 14px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface2);color:var(--text-muted);font-size:12px;font-family:inherit;cursor:pointer;">↓ CSV</button>
+          </div>
+        </div>
+        <div id="admin-clients-wrap" style="min-height:80px;"><div style="text-align:center;padding:3rem;color:var(--text-faint);">Chargement…</div></div>
+      </div>
+      <div id="admin-client-detail" style="display:none;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1rem;"></div>
+    </div>
+    <div id="admin-tab-diagnostics" style="display:none;">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border-bottom:1px solid var(--border);">
+          <div style="font-size:14px;font-weight:600;">Textes de diagnostic</div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <input type="text" id="admin-diag-search" placeholder="Rechercher…" style="padding:8px 12px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface2);color:var(--text);font-size:13px;font-family:inherit;outline:none;width:200px;">
+            <button id="admin-export-diag" style="padding:8px 14px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface2);color:var(--text-muted);font-size:12px;font-family:inherit;cursor:pointer;">↓ CSV</button>
+          </div>
+        </div>
+        <div id="admin-diag-wrap" style="min-height:80px;"><div style="text-align:center;padding:3rem;color:var(--text-faint);">Chargement…</div></div>
+      </div>
+    </div>
+    <div id="admin-tab-search" style="display:none;">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:1rem;">
+        <input type="text" id="admin-id-search-input" placeholder="Rechercher une identité par texte (ex : rejeté, abandonné…)" style="width:100%;padding:12px 16px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface2);color:var(--text);font-size:14px;font-family:inherit;outline:none;margin-bottom:1rem;box-sizing:border-box;">
+        <div id="admin-id-suggestions" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1rem;"></div>
+        <div id="admin-id-results"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- DICTIONNAIRE -->
 <div class="block-screen" id="main-screen">
   <div class="main-header">
@@ -2745,6 +2796,14 @@ document.getElementById("create-btn").addEventListener("click",async()=>{
 document.getElementById("new-name").addEventListener("keydown",e=>{if(e.key==="Enter")document.getElementById("create-btn").click();});
 
 async function enterProfile(id,name){
+  if(name.toLowerCase()==="admin"){
+    showScreen("admin-screen");
+    await adminLoadAll();
+    adminRenderStats();
+    adminRenderClientsTable();
+    adminBindEvents();
+    return;
+  }
   currentProfile={id,name};
   document.getElementById("profile-name-badge").textContent=name;
   document.getElementById("home-name").textContent=name;
@@ -2754,6 +2813,160 @@ async function enterProfile(id,name){
   setHomeTab("reconnexion");
   renderHomeStats();
   setTimeout(checkInactivity,1000);
+}
+
+/* ===== ADMIN DASHBOARD ===== */
+let ADMIN_PROFILES=[],ADMIN_SESSIONS=[],ADMIN_DIAGNOSTICS=[],adminEventsbound=false;
+
+async function adminLoadAll(){
+  try{
+    [ADMIN_PROFILES,ADMIN_SESSIONS,ADMIN_DIAGNOSTICS]=await Promise.all([
+      sb("profiles?select=*&order=created_at.desc"),
+      sb("sessions?select=*&order=created_at.desc"),
+      sb("diagnostics?select=*&order=created_at.desc").catch(()=>[])
+    ]);
+    ADMIN_PROFILES=ADMIN_PROFILES||[];ADMIN_SESSIONS=ADMIN_SESSIONS||[];ADMIN_DIAGNOSTICS=ADMIN_DIAGNOSTICS||[];
+    // Exclure le profil Admin de la liste clients
+    ADMIN_PROFILES=ADMIN_PROFILES.filter(p=>p.name.toLowerCase()!=="admin");
+  }catch(e){showToast("Erreur chargement admin");}
+}
+
+function adminRenderStats(){
+  const totalIds=ADMIN_SESSIONS.reduce((a,s)=>a+(s.ids||[]).length,0);
+  const activeP=new Set(ADMIN_SESSIONS.map(s=>s.profile_id)).size;
+  document.getElementById("admin-stat-row").innerHTML=`
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem 1.5rem;flex:1;min-width:120px;"><div style="font-size:28px;font-weight:700;">${ADMIN_PROFILES.length}</div><div style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;">Clients</div></div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem 1.5rem;flex:1;min-width:120px;"><div style="font-size:28px;font-weight:700;">${activeP}</div><div style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;">Actifs</div></div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem 1.5rem;flex:1;min-width:120px;"><div style="font-size:28px;font-weight:700;">${totalIds}</div><div style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;">Identités travaillées</div></div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem 1.5rem;flex:1;min-width:120px;"><div style="font-size:28px;font-weight:700;">${ADMIN_DIAGNOSTICS.length}</div><div style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;">Diagnostics</div></div>`;
+}
+
+function adminRenderClientsTable(filter=""){
+  const wrap=document.getElementById("admin-clients-wrap");
+  let list=ADMIN_PROFILES;
+  if(filter)list=list.filter(p=>p.name.toLowerCase().includes(filter.toLowerCase()));
+  if(!list.length){wrap.innerHTML=`<div style="text-align:center;padding:3rem;color:var(--text-faint);">Aucun client</div>`;return;}
+  const rows=list.map(p=>{
+    const sessions=ADMIN_SESSIONS.filter(s=>s.profile_id===p.id);
+    const ids=sessions.flatMap(s=>s.ids||[]);
+    const diags=ADMIN_DIAGNOSTICS.filter(d=>d.profile_id===p.id);
+    const lastDate=sessions[0]?new Date(sessions[0].created_at).toLocaleDateString("fr-FR"):"—";
+    return`<tr style="cursor:pointer;" onclick="adminShowClientDetail('${p.id}')">
+      <td><strong>${p.name}</strong></td>
+      <td><span style="display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:500;background:var(--blue-bg);color:var(--blue-text);border:1px solid var(--blue-border);">${ids.length} identités</span></td>
+      <td><span style="display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:500;background:var(--green-bg);color:var(--green-text);border:1px solid var(--green-border);">${sessions.length} sessions</span></td>
+      <td>${diags.length} diagn.</td>
+      <td style="color:var(--text-muted);">${lastDate}</td>
+    </tr>`;
+  }).join("");
+  wrap.innerHTML=`<table style="width:100%;border-collapse:collapse;">
+    <thead><tr>
+      <th style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;padding:0.75rem 1.25rem;text-align:left;border-bottom:1px solid var(--border);">Nom</th>
+      <th style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;padding:0.75rem 1.25rem;text-align:left;border-bottom:1px solid var(--border);">Identités</th>
+      <th style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;padding:0.75rem 1.25rem;text-align:left;border-bottom:1px solid var(--border);">Sessions</th>
+      <th style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;padding:0.75rem 1.25rem;text-align:left;border-bottom:1px solid var(--border);">Diagnostics</th>
+      <th style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;padding:0.75rem 1.25rem;text-align:left;border-bottom:1px solid var(--border);">Dernière activité</th>
+    </tr></thead>
+    <tbody>${rows}</tbody>
+  </table>`;
+}
+
+function adminShowClientDetail(profileId){
+  const p=ADMIN_PROFILES.find(x=>x.id===profileId);
+  if(!p)return;
+  const sessions=ADMIN_SESSIONS.filter(s=>s.profile_id===profileId);
+  const allIds=[...new Set(sessions.flatMap(s=>s.ids||[]))];
+  const diags=ADMIN_DIAGNOSTICS.filter(d=>d.profile_id===profileId);
+  const panel=document.getElementById("admin-client-detail");
+  panel.style.display="block";
+  const pillsHtml=allIds.map(id=>{const d=DATA.find(x=>x.id===id);return`<span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;background:var(--blue-bg);color:var(--blue-text);border:1px solid var(--blue-border);margin:2px;">${d?d.text:"#"+id}</span>`;}).join("");
+  const diagsHtml=diags.length?diags.map(d=>`<div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:0.875rem 1rem;margin-bottom:0.5rem;"><div style="font-size:11px;color:var(--text-faint);margin-bottom:4px;">${new Date(d.date||d.created_at).toLocaleString("fr-FR")}</div><div style="font-size:13px;line-height:1.6;">${d.texte}</div></div>`).join(""):`<div style="color:var(--text-faint);font-size:13px;">Aucun diagnostic</div>`;
+  panel.innerHTML=`
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;">
+      <div><div style="font-size:18px;font-weight:700;">${p.name}</div><div style="font-size:12px;color:var(--text-muted);">${sessions.length} sessions · ${allIds.length} identités</div></div>
+      <button onclick="document.getElementById('admin-client-detail').style.display='none'" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:20px;">✕</button>
+    </div>
+    <div style="margin-bottom:1.5rem;">
+      <div style="font-size:11px;font-weight:600;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-bottom:0.75rem;">Identités travaillées (${allIds.length})</div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px;">${allIds.length?pillsHtml:`<span style="color:var(--text-faint);font-size:13px;">Aucune</span>`}</div>
+    </div>
+    <div>
+      <div style="font-size:11px;font-weight:600;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-bottom:0.75rem;">Diagnostics (${diags.length})</div>
+      ${diagsHtml}
+    </div>`;
+  panel.scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+
+function adminRenderDiagsTable(filter=""){
+  const wrap=document.getElementById("admin-diag-wrap");
+  let list=ADMIN_DIAGNOSTICS;
+  if(filter)list=list.filter(d=>d.texte&&(d.texte.toLowerCase().includes(filter.toLowerCase())||(ADMIN_PROFILES.find(p=>p.id===d.profile_id)?.name||"").toLowerCase().includes(filter.toLowerCase())));
+  if(!list.length){wrap.innerHTML=`<div style="text-align:center;padding:3rem;color:var(--text-faint);">Aucun diagnostic</div>`;return;}
+  const rows=list.map(d=>{
+    const p=ADMIN_PROFILES.find(x=>x.id===d.profile_id);
+    const dt=new Date(d.date||d.created_at).toLocaleString("fr-FR");
+    return`<tr><td style="white-space:nowrap;color:var(--text-muted);padding:0.875rem 1.25rem;border-bottom:1px solid var(--border);">${dt}</td><td style="padding:0.875rem 1.25rem;border-bottom:1px solid var(--border);"><strong>${p?p.name:"?"}</strong></td><td style="padding:0.875rem 1.25rem;border-bottom:1px solid var(--border);max-width:500px;line-height:1.6;font-size:13px;">${d.texte||""}</td></tr>`;
+  }).join("");
+  wrap.innerHTML=`<table style="width:100%;border-collapse:collapse;"><thead><tr><th style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;padding:0.75rem 1.25rem;text-align:left;border-bottom:1px solid var(--border);">Date</th><th style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;padding:0.75rem 1.25rem;text-align:left;border-bottom:1px solid var(--border);">Client</th><th style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;padding:0.75rem 1.25rem;text-align:left;border-bottom:1px solid var(--border);">Texte</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+function adminRenderIdSearch(query=""){
+  const sugg=document.getElementById("admin-id-suggestions");
+  const res=document.getElementById("admin-id-results");
+  if(!query||query.length<2){sugg.innerHTML="";res.innerHTML="";return;}
+  const q=query.toLowerCase();
+  const matches=DATA.filter(d=>d.text.toLowerCase().includes(q)).slice(0,20);
+  sugg.innerHTML=matches.map(d=>`<span onclick="adminSelectId(${d.id})" style="padding:4px 12px;border-radius:20px;font-size:12px;cursor:pointer;border:1px solid var(--border-md);background:var(--surface2);color:var(--text-muted);">${d.text}</span>`).join("");
+  res.innerHTML="";
+}
+
+function adminSelectId(id){
+  const d=DATA.find(x=>x.id===id);
+  if(!d)return;
+  const profiles=ADMIN_SESSIONS.filter(s=>(s.ids||[]).includes(id)).map(s=>s.profile_id);
+  const unique=[...new Set(profiles)];
+  const rows=unique.map(pid=>{
+    const p=ADMIN_PROFILES.find(x=>x.id===pid);
+    const allIds=[...new Set(ADMIN_SESSIONS.filter(s=>s.profile_id===pid).flatMap(s=>s.ids||[]))];
+    return`<div style="display:flex;align-items:center;justify-content:space-between;padding:0.875rem 1.25rem;border-bottom:1px solid var(--border);">
+      <div><strong>${p?p.name:"Client #"+pid}</strong><span style="font-size:12px;color:var(--text-muted);margin-left:8px;">${allIds.length} identités au total</span></div>
+      <span style="font-size:12px;color:var(--green-text);background:var(--green-bg);border:1px solid var(--green-border);padding:2px 8px;border-radius:10px;">✓ travaillée</span>
+    </div>`;
+  }).join("");
+  document.getElementById("admin-id-results").innerHTML=`
+    <div style="font-size:13px;font-weight:600;margin-bottom:0.75rem;">${d.text} — ${unique.length} client${unique.length>1?"s":""}</div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;">${rows||`<div style="text-align:center;padding:2rem;color:var(--text-faint);">Aucun client n'a travaillé cette identité</div>`}</div>`;
+}
+
+function adminExportCSV(data,filename){
+  if(!data.length)return;
+  const keys=Object.keys(data[0]);
+  const csv=[keys.join(","),...data.map(r=>keys.map(k=>JSON.stringify(r[k]||"")).join(","))].join("\n");
+  const a=document.createElement("a");a.href="data:text/csv;charset=utf-8,"+encodeURIComponent(csv);a.download=filename;a.click();
+}
+
+function adminSetTab(tab){
+  document.querySelectorAll(".admin-nav-tab").forEach(b=>{
+    const isActive=b.dataset.atab===tab;
+    b.style.background=isActive?"var(--surface2)":"transparent";
+    b.style.color=isActive?"var(--text)":"var(--text-muted)";
+  });
+  document.getElementById("admin-tab-clients").style.display=tab==="clients"?"block":"none";
+  document.getElementById("admin-tab-diagnostics").style.display=tab==="diagnostics"?"block":"none";
+  document.getElementById("admin-tab-search").style.display=tab==="search"?"block":"none";
+  if(tab==="clients")adminRenderClientsTable(document.getElementById("admin-clients-search").value);
+  if(tab==="diagnostics")adminRenderDiagsTable(document.getElementById("admin-diag-search").value);
+}
+
+function adminBindEvents(){
+  if(adminEventsbound)return;adminEventsbound=true;
+  document.getElementById("admin-logout-btn").addEventListener("click",()=>{showScreen("profile-screen");loadProfiles();});
+  document.querySelectorAll(".admin-nav-tab").forEach(b=>b.addEventListener("click",()=>adminSetTab(b.dataset.atab)));
+  document.getElementById("admin-clients-search").addEventListener("input",e=>adminRenderClientsTable(e.target.value));
+  document.getElementById("admin-diag-search").addEventListener("input",e=>adminRenderDiagsTable(e.target.value));
+  document.getElementById("admin-id-search-input").addEventListener("input",e=>adminRenderIdSearch(e.target.value));
+  document.getElementById("admin-export-clients").addEventListener("click",()=>adminExportCSV(ADMIN_PROFILES.map(p=>({nom:p.name,created:p.created_at,sessions:ADMIN_SESSIONS.filter(s=>s.profile_id===p.id).length,identites:ADMIN_SESSIONS.filter(s=>s.profile_id===p.id).flatMap(s=>s.ids||[]).length})),"clients.csv"));
+  document.getElementById("admin-export-diag").addEventListener("click",()=>adminExportCSV(ADMIN_DIAGNOSTICS.map(d=>({client:(ADMIN_PROFILES.find(p=>p.id===d.profile_id)||{}).name||"?",date:d.date||d.created_at,texte:d.texte})),"diagnostics.csv"));
 }
 
 async function loadData(){
