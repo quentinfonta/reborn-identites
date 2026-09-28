@@ -4,6 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>REBORN — Dictionnaire des Identités</title>
+<!-- PWA -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="REBORN">
+<meta name="theme-color" content="#0a0a0a">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230a0a0a'/%3E%3Ctext x='50' y='68' font-size='52' text-anchor='middle' fill='%23c8b89a' font-family='serif' font-weight='bold'%3ER%3C/text%3E%3C/svg%3E">
+<link rel="manifest" id="pwa-manifest">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
 <style>
 :root{
@@ -486,6 +493,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
     </div>
     <div class="home-sidebar-nav">
       <button class="home-sidebar-btn active" id="home-reconnexion-btn">🌀 Reconnexion</button>
+      <button class="home-sidebar-btn" id="home-pinned-btn">📌 Épinglés</button>
       <button class="home-sidebar-btn" id="home-journal-btn">📓 Journal</button>
       <button class="home-sidebar-btn" id="home-exercises-btn">⚡ Exercices</button>
       <button class="home-sidebar-btn" id="home-history-btn">📅 Historique</button>
@@ -499,6 +507,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
   <div class="home-mobile-nav">
     <div class="home-mobile-tabs">
       <button class="home-mobile-tab active" data-tab="reconnexion">Reconnexion</button>
+      <button class="home-mobile-tab" data-tab="pinned">📌 Épinglés</button>
       <button class="home-mobile-tab" data-tab="journal">Journal</button>
       <button class="home-mobile-tab" data-tab="exercises">Exercices</button>
       <button class="home-mobile-tab" data-tab="history">Historique</button>
@@ -770,6 +779,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
 
 const SB_URL="https://bxtsgyrgqdfeawpwuqqq.supabase.co";
 const SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ4dHNneXJncWRmZWF3cHd1cXFxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2MDY2MDgsImV4cCI6MjA5NTE4MjYwOH0.7iPDWlV6CXfDgQkQgIQvSvA7tx-LbdhNXXOHfTq0M3I";
+
+// PWA manifest inline
+(function(){
+  const m={name:"REBORN — Dictionnaire des Identités",short_name:"REBORN",start_url:".",display:"standalone",background_color:"#0a0a0a",theme_color:"#0a0a0a",orientation:"portrait",icons:[{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230a0a0a'/%3E%3Ctext x='50' y='68' font-size='52' text-anchor='middle' fill='%23c8b89a' font-family='serif' font-weight='bold'%3ER%3C/text%3E%3C/svg%3E",sizes:"192x192",type:"image/svg+xml"},{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230a0a0a'/%3E%3Ctext x='50' y='68' font-size='52' text-anchor='middle' fill='%23c8b89a' font-family='serif' font-weight='bold'%3ER%3C/text%3E%3C/svg%3E",sizes:"512x512",type:"image/svg+xml"}]};
+  const blob=new Blob([JSON.stringify(m)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  document.getElementById("pwa-manifest").href=url;
+})();
 const LEVEL_COLORS=["", "#ff4d2e", "#ff8c42", "#f5c842", "#7ab8d4", "#555560"];
 const LEVEL_NAMES=["Tous", "Corps", "Ressenti", "Émotion", "Relation", "Abstrait"];
 
@@ -2539,8 +2556,43 @@ function markIntegrated(id){delete reviewDates[id];saveReviews();}
 function saveTodo(){try{localStorage.setItem("todo_"+currentProfile.id,JSON.stringify([...todoIds]));}catch(e){}}
 function saveReviews(){try{localStorage.setItem("reviews_"+currentProfile.id,JSON.stringify(reviewDates));}catch(e){}}
 function saveTrashed(){try{localStorage.setItem("trashed_"+currentProfile.id,JSON.stringify([...trashedIds]));}catch(e){}}
-function savePinned(){try{localStorage.setItem("pinned_"+currentProfile.id,JSON.stringify([...pinnedIds]));}catch(e){}}
-function togglePin(id){if(pinnedIds.has(id)){pinnedIds.delete(id);}else{pinnedIds.add(id);}savePinned();renderHomeThemes();}
+async function savePinned(){
+  // Sync Supabase : on supprime tout puis on réinsère (simple et fiable)
+  try{
+    await fetch(SB_URL+"/rest/v1/pins?profile_id=eq."+currentProfile.id,{method:"DELETE",headers:{"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY}});
+    if(pinnedIds.size>0){
+      const rows=[...pinnedIds].map(id=>({profile_id:currentProfile.id,identity_id:id}));
+      await fetch(SB_URL+"/rest/v1/pins",{method:"POST",headers:{"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"application/json","Prefer":"return=minimal"},body:JSON.stringify(rows)});
+    }
+  }catch(e){}
+}
+async function togglePin(id){
+  if(pinnedIds.has(id)){
+    pinnedIds.delete(id);
+    try{await fetch(SB_URL+"/rest/v1/pins?profile_id=eq."+currentProfile.id+"&identity_id=eq."+id,{method:"DELETE",headers:{"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY}});}catch(e){}
+  }else{
+    pinnedIds.add(id);
+    try{await fetch(SB_URL+"/rest/v1/pins",{method:"POST",headers:{"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"application/json","Prefer":"return=minimal"},body:JSON.stringify({profile_id:currentProfile.id,identity_id:id})});}catch(e){}
+  }
+  // Update badge count on pinned tab
+  const pinnedMobileBtn=document.querySelector(".home-mobile-tab[data-tab='pinned']");
+  if(pinnedMobileBtn){
+    pinnedMobileBtn.textContent=pinnedIds.size>0?`📌 Épinglés (${pinnedIds.size})`:"📌 Épinglés";
+  }
+  const pinnedSideBtn=document.getElementById("home-pinned-btn");
+  if(pinnedSideBtn){
+    pinnedSideBtn.textContent=pinnedIds.size>0?`📌 Épinglés (${pinnedIds.size})`:"📌 Épinglés";
+  }
+  // Si on est sur l'onglet épinglés, refresh directement
+  const activeMobile=document.querySelector(".home-mobile-tab.active");
+  const activeSide=document.querySelector(".home-sidebar-btn.active");
+  if((activeMobile&&activeMobile.dataset.tab==="pinned")||(activeSide&&activeSide.id==="home-pinned-btn")){
+    renderPinnedTab();
+  } else {
+    renderHomeThemes();
+  }
+  showToast(pinnedIds.has(id)?"📌 Épinglé":"✓ Désépinglé");
+}
 function showToast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2500);}
 
 function showScreen(id){
@@ -3078,7 +3130,8 @@ function adminInitRessentis(){
   adminRenderRessentis();
 }
 
-function adminRenderRessentis(){
+async function adminRenderRessentis(){
+  if(adminRessentiClient&&!ADMIN_PINS_CACHE[adminRessentiClient])await adminLoadPins(adminRessentiClient);
   const res=document.getElementById("admin-ressenti-results");
   const countEl=document.getElementById("admin-triggers-count");
   if(adminSelectedTriggers.size===0){
@@ -3118,21 +3171,32 @@ function adminRenderRessentis(){
   }).join("");
 }
 
-function adminGetPinned(profileId){
-  try{const s=localStorage.getItem("pinned_"+profileId);return s?new Set(JSON.parse(s).map(Number)):new Set();}catch(e){return new Set();}
-}
-function adminSavePinned(profileId,set){
-  try{localStorage.setItem("pinned_"+profileId,JSON.stringify([...set]));}catch(e){}
+// Cache épingles admin : profileId -> Set
+const ADMIN_PINS_CACHE={};
+async function adminLoadPins(profileId){
+  if(ADMIN_PINS_CACHE[profileId])return;
+  try{
+    const rows=await sb("pins?profile_id=eq."+profileId+"&select=identity_id");
+    ADMIN_PINS_CACHE[profileId]=new Set((rows||[]).map(r=>r.identity_id));
+  }catch(e){ADMIN_PINS_CACHE[profileId]=new Set();}
 }
 function adminIsPinned(idNum,profileId){
-  return adminGetPinned(profileId).has(idNum);
+  return !!(ADMIN_PINS_CACHE[profileId]&&ADMIN_PINS_CACHE[profileId].has(idNum));
 }
-function adminTogglePin(idNum,profileId,btn){
-  const pins=adminGetPinned(profileId);
-  if(pins.has(idNum)){pins.delete(idNum);btn.style.opacity="0.3";}
-  else{pins.add(idNum);btn.style.opacity="1";}
-  adminSavePinned(profileId,pins);
-  showToast(pins.has(idNum)?"📌 Épinglé":"Retiré des priorités");
+async function adminTogglePin(idNum,profileId,btn){
+  if(!ADMIN_PINS_CACHE[profileId])await adminLoadPins(profileId);
+  const pins=ADMIN_PINS_CACHE[profileId];
+  if(pins.has(idNum)){
+    pins.delete(idNum);
+    btn.style.opacity="0.3";
+    try{await fetch(SB_URL+"/rest/v1/pins?profile_id=eq."+profileId+"&identity_id=eq."+idNum,{method:"DELETE",headers:{"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY}});}catch(e){}
+    showToast("Retiré des priorités");
+  }else{
+    pins.add(idNum);
+    btn.style.opacity="1";
+    try{await fetch(SB_URL+"/rest/v1/pins",{method:"POST",headers:{"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"application/json","Prefer":"return=minimal"},body:JSON.stringify({profile_id:profileId,identity_id:idNum})});}catch(e){}
+    showToast("📌 Épinglé");
+  }
 }
 
 async function adminValidateId(idNum, profileId){
@@ -3172,7 +3236,12 @@ async function loadData(){
   try{const s=localStorage.getItem("todo_"+currentProfile.id);if(s)JSON.parse(s).map(Number).forEach(id=>todoIds.add(id));}catch(e){}
   try{const s=localStorage.getItem("reviews_"+currentProfile.id);if(s)reviewDates=JSON.parse(s)||{};}catch(e){reviewDates={};}
   try{const s=localStorage.getItem("trashed_"+currentProfile.id);if(s)JSON.parse(s).map(Number).forEach(id=>trashedIds.add(id));}catch(e){}
-  try{const s=localStorage.getItem("pinned_"+currentProfile.id);if(s)JSON.parse(s).map(Number).forEach(id=>pinnedIds.add(id));}catch(e){}
+  try{const pins=await sb("pins?profile_id=eq."+currentProfile.id+"&select=identity_id");(pins||[]).forEach(p=>pinnedIds.add(p.identity_id));}catch(e){}
+  // Update pinned tab badges after load
+  const pinnedMobileBtn=document.querySelector(".home-mobile-tab[data-tab='pinned']");
+  if(pinnedMobileBtn){pinnedMobileBtn.textContent=pinnedIds.size>0?`📌 Épinglés (${pinnedIds.size})`:"📌 Épinglés";}
+  const pinnedSideBtn=document.getElementById("home-pinned-btn");
+  if(pinnedSideBtn){pinnedSideBtn.textContent=pinnedIds.size>0?`📌 Épinglés (${pinnedIds.size})`:"📌 Épinglés";}
 }
 
 /* ===== HOME THEMES ===== */
@@ -3500,7 +3569,54 @@ function setHomeTab(tab){
     grid.style.display="flex";
     grid.style.flexDirection="column";
     renderDiagnosticInline();
+  } else if(tab==="pinned"){
+    document.getElementById("home-sub").textContent="Identités épinglées";
+    const srch6=document.getElementById("home-search");
+    if(srch6){srch6.style.display="none";}
+    grid.style.display="flex";
+    grid.style.flexDirection="column";
+    renderPinnedTab();
   }
+}
+
+function renderPinnedTab(){
+  const grid=document.getElementById("home-themes-grid");
+  if(pinnedIds.size===0){
+    grid.innerHTML=`<div style="text-align:center;padding:3rem 1rem;color:var(--text-muted);">
+      <div style="font-size:2.5rem;margin-bottom:1rem;">📌</div>
+      <div style="font-size:1rem;font-weight:500;margin-bottom:0.5rem;">Aucune identité épinglée</div>
+      <div style="font-size:0.85rem;color:var(--text-faint);">Utilise l'icône 📌 sur une identité pour l'épingler ici</div>
+    </div>`;
+    return;
+  }
+  const pins=[...pinnedIds].map(id=>DATA.find(d=>d.id===id)).filter(Boolean);
+  const catMap={};
+  pins.forEach(d=>{
+    if(!catMap[d.cat])catMap[d.cat]=[];
+    catMap[d.cat].push(d);
+  });
+  const depthColor=id=>{const c=["","var(--l1)","var(--l2)","var(--l3)","var(--l4)","var(--l5)"];return c[id]||"var(--text-muted)";};
+  let html=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
+    <span style="color:var(--text-muted);font-size:0.85rem;">${pins.length} identité${pins.length>1?"s":""} épinglée${pins.length>1?"s":""}</span>
+    <button onclick="if(confirm('Désépingler toutes les identités ?')){[...pinnedIds].forEach(id=>{fetch(SB_URL+'/rest/v1/pins?profile_id=eq.'+currentProfile.id+'&identity_id=eq.'+id,{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}}).catch(()=>{})});pinnedIds.clear();renderPinnedTab();}" style="font-size:0.75rem;background:var(--red-bg);border:1px solid var(--red-border);color:var(--red-text);border-radius:6px;padding:4px 10px;cursor:pointer;">Tout désépingler</button>
+  </div>`;
+  Object.entries(catMap).forEach(([cat,items])=>{
+    html+=`<div style="margin-bottom:1.2rem;">
+      <div style="font-size:0.72rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-faint);margin-bottom:0.5rem;padding:0 2px;">${cat}</div>`;
+    items.forEach(d=>{
+      const isChecked=checked.has(d.id);
+      const isTodo=todoIds.has(d.id);
+      html+=`<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--surface);border:1px solid ${isChecked?"var(--green-border)":isTodo?"var(--gold-border)":"var(--border)"};border-radius:var(--radius);margin-bottom:6px;">
+        <span style="width:6px;height:6px;border-radius:50%;background:${depthColor(d.depth)};flex-shrink:0;"></span>
+        <span style="flex:1;font-size:0.9rem;${isChecked?"color:var(--green-text);":""}${isTodo?"color:var(--gold-text);":""}">${d.text}</span>
+        <span style="font-size:0.7rem;color:var(--text-faint);background:var(--surface2);padding:2px 6px;border-radius:4px;">${d.role==="source"?"source":d.role==="coping"?"coping":"verdict"}</span>
+        ${isChecked?`<span style="font-size:0.75rem;color:var(--green-text);">✓</span>`:`<button onclick="checked.add(${d.id});saveChecked();renderPinnedTab();" style="font-size:0.72rem;background:var(--green-bg);border:1px solid var(--green-border);color:var(--green-text);border-radius:5px;padding:3px 8px;cursor:pointer;flex-shrink:0;">Valider</button>`}
+        <button onclick="pinnedIds.delete(${d.id});fetch(SB_URL+'/rest/v1/pins?profile_id=eq.'+currentProfile.id+'&identity_id=eq.${d.id}',{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}}).catch(()=>{});renderPinnedTab();" style="background:none;border:none;cursor:pointer;font-size:0.9rem;opacity:0.5;flex-shrink:0;" title="Désépingler">📌</button>
+      </div>`;
+    });
+    html+=`</div>`;
+  });
+  grid.innerHTML=html;
 }
 
 // Table de synonymes pour le diagnostic
@@ -3844,6 +3960,7 @@ function renderExercisesInline(){
 }
 
 document.getElementById("home-reconnexion-btn").addEventListener("click",()=>setHomeTab("reconnexion"));
+document.getElementById("home-pinned-btn")?.addEventListener("click",()=>setHomeTab("pinned"));
 document.getElementById("home-journal-btn").addEventListener("click",()=>setHomeTab("journal"));
 document.getElementById("home-exercises-btn").addEventListener("click",()=>setHomeTab("exercises"));
 document.getElementById("home-history-btn")?.addEventListener("click",()=>setHomeTab("history"));
