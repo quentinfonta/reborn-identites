@@ -19,7 +19,7 @@
   --l1:#ff4d2e;--l2:#ff8c42;--l3:#f5c842;--l4:#7ab8d4;--l5:#555560;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;}
 
 /* SCREENS */
 .screen{display:none;height:100vh;padding:2rem 1.5rem;flex-direction:column;overflow:hidden;}
@@ -63,8 +63,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);}
 .home-stat-val{font-size:28px;font-weight:700;margin-bottom:2px;}
 .home-stat-lbl{font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;}
 .home-stat-sub{font-size:12px;color:var(--text-muted);margin-top:4px;}
-.home-mobile-nav{display:none;justify-content:center;width:100%;margin-bottom:1.5rem;position:relative;}
-.home-mobile-tabs{display:flex;gap:4px;background:var(--surface2);border-radius:20px;padding:3px;}
+.home-mobile-nav{display:none;width:100%;margin-bottom:1.5rem;position:relative;overflow:hidden;}
+.home-mobile-tabs{display:flex;gap:4px;background:var(--surface2);border-radius:20px;padding:3px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;white-space:nowrap;}
+.home-mobile-tabs::-webkit-scrollbar{display:none;}
 .home-mobile-tab{padding:7px 14px;border-radius:20px;border:none;background:transparent;color:var(--text-faint);font-size:12px;font-family:inherit;cursor:pointer;white-space:nowrap;transition:all 0.15s;}
 .home-mobile-tab.active{background:var(--surface);color:var(--text);font-weight:500;}
 .home-mobile-switch{position:absolute;right:0;background:none;border:none;color:var(--text-faint);cursor:pointer;font-size:16px;padding:4px;}
@@ -2029,7 +2030,13 @@ const DEFAULT_DATA = [
   {id:12573,text:'Je suis discerné',cat:'Existence',depth:2,role:'coping'},
   {id:12574,text:'Je suis infériorisé',cat:'Humiliation',depth:3,role:'source'},
   {id:12575,text:'Je suis sous-estimé',cat:'Humiliation',depth:2,role:'source'},
-  {id:12576,text:'Je suis défavorisé',cat:'Injustice',depth:2,role:'source'}
+  {id:12576,text:'Je suis défavorisé',cat:'Injustice',depth:2,role:'source'},
+  {id:12577,text:'Je suis assisté',cat:'Dépendance',depth:2,role:'source'},
+  {id:12578,text:'Je suis infantilisé',cat:'Humiliation',depth:3,role:'source'},
+  {id:12579,text:'Je suis diminué',cat:'Humiliation',depth:2,role:'source'},
+  {id:12580,text:'Je suis soumis',cat:'Dépendance',depth:2,role:'coping'},
+  {id:12581,text:'Je suis résigné',cat:'Dépendance',depth:3,role:'coping'},
+  {id:12582,text:'Je suis effacé',cat:'Dépendance',depth:2,role:'coping'}
 ];
 const GROUPS=[
   {id:"figement",label:"① Figement",subtitle:"Corps bloqué, paralysé, incapable d agir",desc:"corps bloqué, paralysé, incapable d agir",cats:["Figement"],polarity:"neg"},
@@ -2427,7 +2434,7 @@ function rand(){return crypto.getRandomValues(new Uint32Array(1))[0]/0xFFFFFFFF;
 function shuffle(arr){const a=[...arr];for(let r=0;r<3;r++)for(let i=a.length-1;i>0;i--){const j=Math.floor(rand()*(i+1));[a[i],a[j]]=[a[j],a[i]];;}return a;}
 
 let DATA=[...DEFAULT_DATA];
-let currentProfile=null,SESSIONS=[],checked=new Set(),todoIds=new Set(),reviewDates={},trashedIds=new Set();
+let currentProfile=null,SESSIONS=[],checked=new Set(),todoIds=new Set(),reviewDates={},trashedIds=new Set(),pinnedIds=new Set();
 let stateFilter="all",levelFilter=0,polarityFilter="all",query="";
 let dictLevelIdx=1;
 let scanThemeId=null,scanChapterIdx=0,scanChecked=new Set();
@@ -2442,6 +2449,8 @@ function markIntegrated(id){delete reviewDates[id];saveReviews();}
 function saveTodo(){try{localStorage.setItem("todo_"+currentProfile.id,JSON.stringify([...todoIds]));}catch(e){}}
 function saveReviews(){try{localStorage.setItem("reviews_"+currentProfile.id,JSON.stringify(reviewDates));}catch(e){}}
 function saveTrashed(){try{localStorage.setItem("trashed_"+currentProfile.id,JSON.stringify([...trashedIds]));}catch(e){}}
+function savePinned(){try{localStorage.setItem("pinned_"+currentProfile.id,JSON.stringify([...pinnedIds]));}catch(e){}}
+function togglePin(id){if(pinnedIds.has(id)){pinnedIds.delete(id);}else{pinnedIds.add(id);}savePinned();renderHomeThemes();}
 function showToast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2500);}
 
 function showScreen(id){
@@ -2739,7 +2748,7 @@ async function enterProfile(id,name){
   currentProfile={id,name};
   document.getElementById("profile-name-badge").textContent=name;
   document.getElementById("home-name").textContent=name;
-  checked.clear();todoIds.clear();reviewDates={};trashedIds.clear();scanChecked.clear();
+  checked.clear();todoIds.clear();reviewDates={};trashedIds.clear();scanChecked.clear();pinnedIds.clear();
   await loadData();
   showScreen("home-screen");
   setHomeTab("reconnexion");
@@ -2752,6 +2761,7 @@ async function loadData(){
   try{const s=localStorage.getItem("todo_"+currentProfile.id);if(s)JSON.parse(s).map(Number).forEach(id=>todoIds.add(id));}catch(e){}
   try{const s=localStorage.getItem("reviews_"+currentProfile.id);if(s)reviewDates=JSON.parse(s)||{};}catch(e){reviewDates={};}
   try{const s=localStorage.getItem("trashed_"+currentProfile.id);if(s)JSON.parse(s).map(Number).forEach(id=>trashedIds.add(id));}catch(e){}
+  try{const s=localStorage.getItem("pinned_"+currentProfile.id);if(s)JSON.parse(s).map(Number).forEach(id=>pinnedIds.add(id));}catch(e){}
 }
 
 /* ===== HOME THEMES ===== */
@@ -2835,11 +2845,31 @@ function renderHomeStats(){
     </div>`:""}`;
 }
 
+function renderPinnedSection(){
+  if(pinnedIds.size===0)return"";
+  const wids=workedIds();
+  const pins=[...pinnedIds].map(id=>DATA.find(d=>d.id===id)).filter(Boolean);
+  const rows=pins.map(d=>{
+    const isWorked=wids.has(d.id);
+    return`<div class="id-row pinned-row${isWorked?" worked":""}" data-pin-id="${d.id}" style="margin-bottom:4px;cursor:default;">
+      <div class="id-check">${isWorked?'<i class="ti ti-check check-icon"></i>':''}</div>
+      <span class="id-text">${d.text}</span>
+      <button class="pin-remove-btn" data-pin-rm="${d.id}" title="Retirer" style="background:none;border:none;cursor:pointer;color:var(--text-faint);font-size:14px;padding:2px 4px;flex-shrink:0;opacity:0.6;">📌</button>
+    </div>`;
+  }).join("");
+  return`<div id="pinned-section" style="margin-bottom:2.5rem;">
+    <div style="font-size:11px;font-weight:600;color:var(--text-faint);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:1rem;display:flex;align-items:center;gap:8px;">
+      📌 Identités à travailler <span style="font-size:11px;font-weight:400;color:var(--text-faint);background:var(--surface2);padding:2px 8px;border-radius:10px;">${pins.length}</span>
+    </div>
+    <div>${rows}</div>
+  </div>`;
+}
+
 function renderHomeThemes(){
   const grid=document.getElementById("home-themes-grid");
   if(!grid){console.error("home-themes-grid not found");return;}
   console.log("renderHomeThemes called, LAYERS:",LAYERS?.length,"SCAN_THEMES:",SCAN_THEMES?.length);
-  let html="";
+  let html=renderPinnedSection();
   LAYERS.forEach((layer,li)=>{
     const unlocked=isLayerUnlocked(li);
     const prevLayer=li>0?LAYERS[li-1]:null;
@@ -2874,6 +2904,16 @@ function renderHomeThemes(){
     html+="</div>";
   });
   grid.innerHTML=html;
+  // Unpin buttons
+  grid.querySelectorAll("[data-pin-rm]").forEach(btn=>{
+    btn.addEventListener("click",(e)=>{
+      e.stopPropagation();
+      const id=+btn.dataset.pinRm;
+      pinnedIds.delete(id);
+      savePinned();
+      renderHomeThemes();
+    });
+  });
   grid.querySelectorAll(".home-theme-row:not([data-locked])").forEach(row=>{
     row.addEventListener("click",()=>{
       scanThemeId=row.dataset.tid;scanChapterIdx=0;scanChecked.clear();
@@ -2930,10 +2970,12 @@ function renderSearchResults(){
     html+=matchingIds.map(d=>{
       const isWorked=wids.has(d.id);
       const isChecked=searchChecked.has(d.id);
+      const isPinned=pinnedIds.has(d.id);
       return`<div class="id-row${isWorked?" worked":isChecked?" checked":""}" data-search-id="${d.id}" style="margin-bottom:4px;">
         <div class="id-check"><i class="ti ti-check check-icon"></i></div>
         <span class="id-text">${d.text}</span>
-        <span style="font-size:10px;color:var(--text-faint);flex-shrink:0;">${d.cat}</span>
+        <span style="font-size:10px;color:var(--text-faint);flex-shrink:0;margin-right:4px;">${d.cat}</span>
+        <button class="pin-btn" data-pin-id="${d.id}" title="${isPinned?"Retirer des priorités":"Épingler à travailler"}" style="background:none;border:none;cursor:pointer;font-size:13px;padding:2px 2px;flex-shrink:0;opacity:${isPinned?1:0.3};transition:opacity 0.15s;" onclick="event.stopPropagation();togglePin(${d.id});renderSearchResults();">📌</button>
       </div>`;
     }).join("");
   }
@@ -2992,8 +3034,8 @@ function renderSearchResults(){
     }catch(e){showToast("Erreur sauvegarde");}
   });
 }
-document.getElementById("home-switch-btn").addEventListener("click",()=>{currentProfile=null;SESSIONS=[];checked.clear();todoIds.clear();trashedIds.clear();reviewDates={};showScreen("profile-screen");loadProfiles();});
-document.getElementById("home-switch-mobile")?.addEventListener("click",()=>{currentProfile=null;SESSIONS=[];checked.clear();todoIds.clear();trashedIds.clear();reviewDates={};showScreen("profile-screen");loadProfiles();});
+document.getElementById("home-switch-btn").addEventListener("click",()=>{currentProfile=null;SESSIONS=[];checked.clear();todoIds.clear();trashedIds.clear();pinnedIds.clear();reviewDates={};showScreen("profile-screen");loadProfiles();});
+document.getElementById("home-switch-mobile")?.addEventListener("click",()=>{currentProfile=null;SESSIONS=[];checked.clear();todoIds.clear();trashedIds.clear();pinnedIds.clear();reviewDates={};showScreen("profile-screen");loadProfiles();});
 
 // Mobile tabs sync with setHomeTab
 document.querySelectorAll(".home-mobile-tab").forEach(btn=>{
@@ -3050,12 +3092,72 @@ function setHomeTab(tab){
   }
 }
 
+// Table de synonymes pour le diagnostic
+const DIAG_SYNONYMS={
+  "indifférence":["ignoré","invisible","transparent","effacé","oublié","inexistant","absent","exclu"],
+  "indifferent":["ignoré","invisible","transparent","effacé","oublié"],
+  "rejet":["rejeté","abandonné","exclu","écarté","mis de côté","non accepté"],
+  "abandon":["abandonné","délaissé","seul","isolé","livré à moi-même"],
+  "colère":["en colère","rageur","frustré","révolté","agacé","irrité"],
+  "honte":["honteux","humilié","dévalorisé","inférieur","nul","raté"],
+  "peur":["effrayé","terrorisé","paniqué","angoissé","anxieux","apeuré"],
+  "tristesse":["triste","mélancolique","déprimé","abattu","effondré"],
+  "solitude":["seul","isolé","incompris","abandonné","invisible"],
+  "confiance":["méfiant","trahi","manipulé","dupé","floué"],
+  "trahison":["trahi","manipulé","trompé","floué","dupé","abusé"],
+  "culpabilité":["coupable","responsable","fautif","autopuni"],
+  "perfectionnisme":["imparfait","insuffisant","pas assez bien","raté","décevant"],
+  "controle":["contrôlé","dominé","écrasé","manipulé","opprimé"],
+  "inutile":["inutile","inutilisé","superflu","sans valeur","à l écart"],
+  "nul":["incapable","incompétent","raté","mauvais","insuffisant"],
+  "jugement":["jugé","critiqué","condamné","pointé du doigt","stigmatisé"],
+  "comparison":["comparé","dépassé","inférieur","moins bien","jaloux"],
+  "jalousie":["jaloux","envieux","frustré","inférieur"],
+  "anxiété":["anxieux","angoissé","stressé","tendu","crispé","paniqué"],
+  "stress":["stressé","débordé","sous pression","épuisé","tendu"],
+  "épuisement":["épuisé","vidé","à bout","fatigué","usé"],
+  "fatigue":["fatigué","épuisé","vidé","usé","exténué"],
+  "blocage":["bloqué","figé","paralysé","immobile","incapable"],
+  "procrastination":["procrastinateur","bloqué","paralysé","incapable de passer à l action"],
+  "echec":["raté","échoué","perdant","insuffisant","incapable"],
+  "argent":["pauvre","endetté","précaire","financièrement bloqué","manque"],
+  "famille":["contrôlé","jugé","enfermé","conditionné","programmé"],
+  "relation":["rejeté","abandonné","trahi","incompris","seul"],
+  "amour":["non aimé","rejeté","abandonné","non choisi","seul"],
+  "corps":["honte corporelle","complexé","mal dans ma peau","dégoûté"],
+  "violence":["blessé","traumatisé","victime","abusé","violé"],
+};
+
+let diagChecked=new Set();
+
+function diagScore(d,tokens,expandedTokens){
+  const haystack=(d.text+" "+d.cat).toLowerCase()
+    .normalize("NFD").replace(/[̀-ͯ]/g,"");
+  let score=0;
+  // tokens originaux
+  tokens.forEach(tok=>{
+    const t=tok.normalize("NFD").replace(/[̀-ͯ]/g,"");
+    if(haystack.includes(t))score+=3;
+    else{
+      const words=haystack.split(/\s+/);
+      words.forEach(w=>{if(w.includes(t)||t.includes(w))score+=1;});
+    }
+  });
+  // tokens étendus via synonymes
+  expandedTokens.forEach(tok=>{
+    const t=tok.normalize("NFD").replace(/[̀-ͯ]/g,"");
+    if(haystack.includes(t))score+=1;
+  });
+  return score;
+}
+
 function renderDiagnosticInline(){
+  diagChecked=new Set();
   const grid=document.getElementById("home-themes-grid");
   grid.innerHTML=`
     <div style="margin-bottom:1.5rem;">
-      <p style="font-size:14px;color:var(--text-muted);margin-bottom:1.25rem;line-height:1.6;">Décris une situation, une émotion, un blocage. L'outil va chercher dans les ${DATA.length} identités du dictionnaire celles qui correspondent.</p>
-      <textarea id="diag-input" placeholder="Ex : je me sens pas considéré par mon entourage, j'ai l'impression d'être toujours mis de côté…" style="width:100%;box-sizing:border-box;padding:14px 16px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface2);color:var(--text);font-size:14px;font-family:inherit;outline:none;resize:vertical;min-height:100px;line-height:1.6;"></textarea>
+      <p style="font-size:14px;color:var(--text-muted);margin-bottom:1.25rem;line-height:1.6;">Décris une situation, une émotion, un blocage. L'outil cherche dans les ${DATA.length} identités du dictionnaire.</p>
+      <textarea id="diag-input" placeholder="Ex : indifférence, rejet, je me sens pas considéré…" style="width:100%;box-sizing:border-box;padding:14px 16px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface2);color:var(--text);font-size:14px;font-family:inherit;outline:none;resize:vertical;min-height:80px;line-height:1.6;"></textarea>
       <button id="diag-btn" style="margin-top:0.75rem;padding:10px 20px;border-radius:var(--radius-lg);border:none;background:var(--accent);color:#fff;font-size:14px;font-weight:500;font-family:inherit;cursor:pointer;">Analyser</button>
     </div>
     <div id="diag-results"></div>`;
@@ -3063,64 +3165,100 @@ function renderDiagnosticInline(){
   document.getElementById("diag-btn").addEventListener("click",()=>{
     const query=(document.getElementById("diag-input").value||"").toLowerCase().trim();
     if(!query){return;}
+    diagChecked=new Set();
     const results=document.getElementById("diag-results");
 
-    // Tokenise la saisie
-    const stopwords=new Set(["je","me","le","la","les","de","du","des","un","une","et","en","que","qui","est","il","elle","on","au","aux","par","pas","plus","sur","dans","avec","pour","son","sa","ses","mon","ma","mes","je","tu","nous","vous","ils","elles","tout","très","si","car","mais","ou","ni","donc","or","c","d","l","j","m","y","n","s","qu"]);
-    const tokens=query.split(/\s+/).filter(t=>t.length>2&&!stopwords.has(t));
+    // Sauvegarde silencieuse du texte
+    try{sb("diagnostics",{method:"POST",body:{profile_id:currentProfile.id,date:new Date().toISOString(),texte:query}});}catch(e){}
 
-    if(!tokens.length){results.innerHTML=`<p style="color:var(--text-muted);font-size:14px;">Essaie avec plus de mots.</p>`;return;}
+    const stopwords=new Set(["je","me","le","la","les","de","du","des","un","une","et","en","que","qui","est","il","elle","on","au","aux","par","pas","plus","sur","dans","avec","pour","son","sa","ses","mon","ma","mes","tu","nous","vous","ils","elles","tout","très","si","car","mais","ou","ni","donc","or","c","d","l","j","m","y","n","s","qu","ca","ça","ne","se"]);
+    const tokens=query.split(/[\s,;.!?]+/).filter(t=>t.length>=2&&!stopwords.has(t));
 
-    // Score chaque identité
-    const scored=DATA.map(d=>{
-      const haystack=(d.text+" "+d.cat).toLowerCase();
-      let score=0;
-      tokens.forEach(tok=>{
-        if(haystack.includes(tok))score+=2;
-        else{
-          // partiel : le token contient ou est contenu dans un mot du haystack
-          const words=haystack.split(/\s+/);
-          words.forEach(w=>{if(w.includes(tok)||tok.includes(w))score+=1;});
+    if(!tokens.length){results.innerHTML=`<p style="color:var(--text-muted);font-size:14px;">Essaie avec d'autres mots.</p>`;return;}
+
+    // Expansion via synonymes
+    const expandedTokens=[];
+    tokens.forEach(tok=>{
+      const norm=tok.normalize("NFD").replace(/[̀-ͯ]/g,"");
+      Object.keys(DIAG_SYNONYMS).forEach(key=>{
+        const kn=key.normalize("NFD").replace(/[̀-ͯ]/g,"");
+        if(kn.includes(norm)||norm.includes(kn)){
+          DIAG_SYNONYMS[key].forEach(syn=>expandedTokens.push(syn.toLowerCase()));
         }
       });
-      return{...d,score};
-    }).filter(d=>d.score>0).sort((a,b)=>b.score-a.score||a.depth-b.depth);
+    });
+
+    const scored=DATA.map(d=>({...d,score:diagScore(d,tokens,expandedTokens)}))
+      .filter(d=>d.score>0)
+      .sort((a,b)=>b.score-a.score||a.depth-b.depth);
 
     if(!scored.length){
-      results.innerHTML=`<p style="color:var(--text-muted);font-size:14px;">Aucune identité trouvée. Essaie d'autres mots.</p>`;
+      results.innerHTML=`<p style="color:var(--text-muted);font-size:14px;">Aucune identité trouvée. Essaie d'autres mots (ex : rejet, colère, honte…).</p>`;
       return;
     }
 
-    // Grouper par polarity (source vs coping)
-    const sources=scored.filter(d=>d.role==="source"||d.role==="verdict").slice(0,20);
-    const copings=scored.filter(d=>d.role==="coping").slice(0,10);
+    const wids=workedIds();
+    const sources=scored.filter(d=>d.role==="source"||d.role==="verdict").slice(0,25);
+    const copings=scored.filter(d=>d.role==="coping").slice(0,12);
 
-    function pillsHtml(list){
-      return list.map(d=>{
-        const neg=d.role==="source"||d.role==="verdict";
-        const bg=neg?"var(--red-bg,#fef2f2)":"var(--green-bg)";
-        const col=neg?"var(--red-text,#b91c1c)":"var(--green-text)";
-        const border=neg?"var(--red-border,#fecaca)":"var(--green-border)";
-        return`<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:6px;">
-          <div style="display:flex;align-items:center;gap:10px;">
-            <span style="font-size:12px;padding:2px 8px;border-radius:20px;background:${bg};color:${col};border:1px solid ${border};">${d.text.replace("Je suis ","")}</span>
-            <span style="font-size:11px;color:var(--text-faint);">${d.cat}</span>
-          </div>
-          <span style="font-size:11px;color:var(--text-faint);">profondeur ${d.depth}</span>
-        </div>`;
-      }).join("");
+    function rowHtml(d){
+      const neg=d.role==="source"||d.role==="verdict";
+      const bg=neg?"var(--red-bg,#fef2f2)":"var(--green-bg)";
+      const col=neg?"var(--red-text,#b91c1c)":"var(--green-text)";
+      const border=neg?"var(--red-border,#fecaca)":"var(--green-border)";
+      const done=wids.has(d.id);
+      const chk=diagChecked.has(d.id);
+      const isPinned=pinnedIds.has(d.id);
+      return`<label style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:6px;cursor:${done?"default":"pointer"};" data-id="${d.id}">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <input type="checkbox" data-id="${d.id}" ${chk?"checked":""} ${done?"disabled":""} style="accent-color:var(--accent);width:15px;height:15px;flex-shrink:0;">
+          <span style="font-size:12px;padding:2px 8px;border-radius:20px;background:${bg};color:${col};border:1px solid ${border};">${d.text.replace("Je suis ","")}</span>
+          <span style="font-size:11px;color:var(--text-faint);">${d.cat}</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;">
+          ${done?`<span style="font-size:11px;color:var(--green-text);background:var(--green-bg);border:1px solid var(--green-border);padding:2px 7px;border-radius:10px;">✓ fait</span>`:`<span style="font-size:11px;color:var(--text-faint);">profondeur ${d.depth}</span>`}
+          <button class="diag-pin-btn" data-diag-pin="${d.id}" title="${isPinned?"Retirer":"Épingler"}" style="background:none;border:none;cursor:pointer;font-size:13px;padding:2px;opacity:${isPinned?1:0.3};" onclick="event.preventDefault();event.stopPropagation();togglePin(${d.id});this.style.opacity=pinnedIds.has(${d.id})?1:0.3;">📌</button>
+        </div>
+      </label>`;
     }
 
     let html="";
     if(sources.length){
       html+=`<div style="font-size:12px;font-weight:600;color:var(--text-faint);letter-spacing:1px;text-transform:uppercase;margin-bottom:0.75rem;">Identités blessées (${sources.length})</div>`;
-      html+=pillsHtml(sources);
+      html+=sources.map(rowHtml).join("");
     }
     if(copings.length){
       html+=`<div style="font-size:12px;font-weight:600;color:var(--text-faint);letter-spacing:1px;text-transform:uppercase;margin:1.25rem 0 0.75rem;">Mécanismes / coping (${copings.length})</div>`;
-      html+=pillsHtml(copings);
+      html+=copings.map(rowHtml).join("");
     }
+    html+=`<button id="diag-validate-btn" style="margin-top:1.25rem;padding:11px 22px;border-radius:var(--radius-lg);border:none;background:var(--accent);color:#fff;font-size:14px;font-weight:500;font-family:inherit;cursor:pointer;display:none;">✓ Valider les identités sélectionnées</button>`;
     results.innerHTML=html;
+
+    // Checkboxes
+    results.querySelectorAll("input[type=checkbox]").forEach(cb=>{
+      cb.addEventListener("change",()=>{
+        const id=Number(cb.dataset.id);
+        if(cb.checked)diagChecked.add(id); else diagChecked.delete(id);
+        const btn=document.getElementById("diag-validate-btn");
+        if(btn)btn.style.display=diagChecked.size>0?"block":"none";
+      });
+    });
+
+    // Bouton valider
+    document.getElementById("diag-validate-btn")?.addEventListener("click",async()=>{
+      const newIds=[...diagChecked].filter(id=>!workedIds().has(id));
+      if(!newIds.length){showToast("Aucune nouvelle identité à valider");return;}
+      const date=new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
+      try{
+        const r=await sb("sessions",{method:"POST",body:{profile_id:currentProfile.id,date,ids:newIds},prefer:"return=representation"});
+        if(r&&r[0])SESSIONS.push({id:r[0].id,date,ids:newIds});
+        diagChecked.clear();
+        showToast(`✓ ${newIds.length} identité${newIds.length>1?"s":""} validée${newIds.length>1?"s":""}`);
+        renderHomeStats();
+        // Rafraîchir les résultats pour afficher les badges "fait"
+        document.getElementById("diag-btn").click();
+      }catch(e){showToast("Erreur sauvegarde");}
+    });
   });
 }
 
