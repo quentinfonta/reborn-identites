@@ -530,6 +530,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
     <button class="admin-nav-tab active" data-atab="clients" style="padding:8px 16px;border-radius:var(--radius-lg);border:none;background:var(--surface2);color:var(--text);font-size:14px;font-family:inherit;cursor:pointer;font-weight:500;">👥 Clients</button>
     <button class="admin-nav-tab" data-atab="diagnostics" style="padding:8px 16px;border-radius:var(--radius-lg);border:none;background:transparent;color:var(--text-muted);font-size:14px;font-family:inherit;cursor:pointer;font-weight:500;">🔍 Diagnostics</button>
     <button class="admin-nav-tab" data-atab="search" style="padding:8px 16px;border-radius:var(--radius-lg);border:none;background:transparent;color:var(--text-muted);font-size:14px;font-family:inherit;cursor:pointer;font-weight:500;">🏷️ Recherche identité</button>
+    <button class="admin-nav-tab" data-atab="ressentis" style="padding:8px 16px;border-radius:var(--radius-lg);border:none;background:transparent;color:var(--text-muted);font-size:14px;font-family:inherit;cursor:pointer;font-weight:500;">💬 Par ressenti</button>
   </div>
   <div style="padding:1.5rem 2rem 4rem;">
     <div id="admin-stat-row" style="display:flex;gap:1rem;margin-bottom:2rem;flex-wrap:wrap;"></div>
@@ -565,6 +566,44 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
         <div id="admin-id-results"></div>
       </div>
     </div>
+
+    <!-- TAB RESSENTIS -->
+    <div id="admin-tab-ressentis" style="display:none;">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:1rem;">
+        <div style="font-size:13px;color:var(--text-muted);margin-bottom:1.25rem;">Sélectionne ce que le client exprime. Les identités correspondantes apparaissent en dessous.</div>
+
+        <!-- Sélection client -->
+        <div style="margin-bottom:1.5rem;">
+          <div style="font-size:11px;font-weight:600;color:var(--text-faint);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px;">Client</div>
+          <select id="admin-ressenti-client" style="padding:10px 14px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface2);color:var(--text);font-size:14px;font-family:inherit;outline:none;width:100%;max-width:300px;">
+            <option value="">— Aucun (juste explorer) —</option>
+          </select>
+        </div>
+
+        <!-- Déclencheurs -->
+        <div style="font-size:11px;font-weight:600;color:var(--text-faint);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;">Ce que la personne exprime</div>
+        <div id="admin-triggers-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;margin-bottom:1.5rem;"></div>
+
+        <div style="display:flex;gap:8px;margin-bottom:1.5rem;align-items:center;">
+          <button id="admin-triggers-clear" style="padding:8px 16px;border-radius:var(--radius);border:1px solid var(--border-md);background:transparent;color:var(--text-muted);font-size:13px;font-family:inherit;cursor:pointer;">Tout désélectionner</button>
+          <div id="admin-triggers-count" style="font-size:13px;color:var(--text-faint);"></div>
+        </div>
+
+        <!-- Filtre profondeur -->
+        <div style="display:flex;gap:8px;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center;">
+          <span style="font-size:11px;font-weight:600;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;">Profondeur</span>
+          <button class="admin-depth-btn active" data-depth="0" style="padding:6px 14px;border-radius:20px;border:1px solid var(--border-md);background:var(--surface2);color:var(--text);font-size:12px;font-family:inherit;cursor:pointer;">Toutes</button>
+          <button class="admin-depth-btn" data-depth="1" style="padding:6px 14px;border-radius:20px;border:1px solid var(--l1);background:transparent;color:var(--l1);font-size:12px;font-family:inherit;cursor:pointer;">Niveau 1</button>
+          <button class="admin-depth-btn" data-depth="2" style="padding:6px 14px;border-radius:20px;border:1px solid var(--l2);background:transparent;color:var(--l2);font-size:12px;font-family:inherit;cursor:pointer;">Niveau 2</button>
+          <button class="admin-depth-btn" data-depth="3" style="padding:6px 14px;border-radius:20px;border:1px solid var(--l3);background:transparent;color:var(--l3);font-size:12px;font-family:inherit;cursor:pointer;">Niveau 3</button>
+          <button class="admin-depth-btn" data-depth="4" style="padding:6px 14px;border-radius:20px;border:1px solid var(--l4);background:transparent;color:var(--l4);font-size:12px;font-family:inherit;cursor:pointer;">Niveaux 4-5</button>
+        </div>
+
+        <!-- Résultats -->
+        <div id="admin-ressenti-results" style="display:flex;flex-direction:column;gap:4px;max-height:500px;overflow-y:auto;"></div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -2961,8 +3000,141 @@ function adminSetTab(tab){
   document.getElementById("admin-tab-clients").style.display=tab==="clients"?"block":"none";
   document.getElementById("admin-tab-diagnostics").style.display=tab==="diagnostics"?"block":"none";
   document.getElementById("admin-tab-search").style.display=tab==="search"?"block":"none";
+  document.getElementById("admin-tab-ressentis").style.display=tab==="ressentis"?"block":"none";
   if(tab==="clients")adminRenderClientsTable(document.getElementById("admin-clients-search").value);
   if(tab==="diagnostics")adminRenderDiagsTable(document.getElementById("admin-diag-search").value);
+  if(tab==="ressentis")adminInitRessentis();
+}
+
+/* ===== ADMIN RESSENTIS ===== */
+const TRIGGERS=[
+  {id:"seul",label:"Je me sens seul / incompris",icon:"🫥",cats:["Isolement","Abandon"]},
+  {id:"honte",label:"J'ai honte de moi",icon:"😔",cats:["Honte","Humiliation","Culpabilité"]},
+  {id:"nulvalue",label:"Je ne vaux rien",icon:"⬇️",cats:["Honte","Existence","Effondrement"]},
+  {id:"controle",label:"On me contrôle / j'étouffe",icon:"🔒",cats:["Contrôle","Conditionnement"]},
+  {id:"epuise",label:"Je suis épuisé / à bout",icon:"😮‍💨",cats:["Épuisement","Usure","Effondrement"]},
+  {id:"perdu",label:"Je ne sais plus qui je suis",icon:"🌀",cats:["Confusion","Dissociation","Existence"]},
+  {id:"trahi",label:"J'ai été trahi / blessé",icon:"💔",cats:["Trahison","Blessure","Violation"]},
+  {id:"fige",label:"Je me sens figé / paralysé",icon:"🧊",cats:["Figement","Rigidité"]},
+  {id:"perdu2",label:"J'ai tout perdu / rien ne tient",icon:"🌊",cats:["Perte","Effondrement","Abandon"]},
+  {id:"engage",label:"Je m'engage mais ça ne sert à rien",icon:"🔁",cats:["Engagement","Usure","Épuisement"]},
+  {id:"ferme",label:"Je ne peux pas m'ouvrir aux autres",icon:"🚪",cats:["Ouverture","Isolement","Contrôle"]},
+  {id:"injuste",label:"C'est injuste / on m'a mal traité",icon:"⚖️",cats:["Injustice","Trahison","Violation"]},
+  {id:"depend",label:"Je dépends des autres",icon:"🪢",cats:["Dépendance","Conditionnement","Abandon"]},
+  {id:"puni",label:"Je suis puni / fautif",icon:"👊",cats:["Culpabilité","Violation","Honte"]},
+  {id:"invisible",label:"Je n'existe pas / on m'ignore",icon:"👻",cats:["Isolement","Existence","Honte"]},
+  {id:"abandon",label:"On m'a abandonné / laissé tomber",icon:"🚶",cats:["Abandon","Trahison","Blessure"]},
+  {id:"coupable",label:"Je me sens toujours coupable",icon:"😣",cats:["Culpabilité","Conditionnement","Honte"]},
+  {id:"violence",label:"J'ai subi de la violence / violation",icon:"⚡",cats:["Violation","Blessure","Trahison"]},
+];
+
+let adminSelectedTriggers=new Set();
+let adminRessentiDepth=0;
+let adminRessentiClient="";
+let adminRessentisInited=false;
+
+function adminInitRessentis(){
+  // Peupler le select client
+  const sel=document.getElementById("admin-ressenti-client");
+  if(sel.options.length===1){
+    ADMIN_PROFILES.forEach(p=>{
+      const o=document.createElement("option");
+      o.value=p.id;o.textContent=p.name;
+      sel.appendChild(o);
+    });
+  }
+  // Rendre les triggers
+  const grid=document.getElementById("admin-triggers-grid");
+  if(!adminRessentisInited){
+    grid.innerHTML=TRIGGERS.map(t=>`
+      <button class="admin-trigger-btn" data-tid="${t.id}" style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface2);color:var(--text-muted);font-size:13px;font-family:inherit;cursor:pointer;text-align:left;transition:all 0.15s;">
+        <span style="font-size:18px;flex-shrink:0;">${t.icon}</span>
+        <span>${t.label}</span>
+      </button>`).join("");
+    grid.querySelectorAll(".admin-trigger-btn").forEach(btn=>{
+      btn.addEventListener("click",()=>{
+        const tid=btn.dataset.tid;
+        if(adminSelectedTriggers.has(tid)){adminSelectedTriggers.delete(tid);btn.style.background="var(--surface2)";btn.style.color="var(--text-muted)";btn.style.borderColor="var(--border-md)";}
+        else{adminSelectedTriggers.add(tid);btn.style.background="var(--gold-bg)";btn.style.color="var(--gold-text)";btn.style.borderColor="var(--gold-border)";}
+        adminRenderRessentis();
+      });
+    });
+    document.getElementById("admin-triggers-clear").addEventListener("click",()=>{
+      adminSelectedTriggers.clear();
+      grid.querySelectorAll(".admin-trigger-btn").forEach(b=>{b.style.background="var(--surface2)";b.style.color="var(--text-muted)";b.style.borderColor="var(--border-md)";});
+      adminRenderRessentis();
+    });
+    document.getElementById("admin-ressenti-client").addEventListener("change",e=>{adminRessentiClient=e.target.value;adminRenderRessentis();});
+    document.querySelectorAll(".admin-depth-btn").forEach(b=>{
+      b.addEventListener("click",()=>{
+        adminRessentiDepth=+b.dataset.depth;
+        document.querySelectorAll(".admin-depth-btn").forEach(x=>{x.style.background="transparent";x.style.fontWeight="400";});
+        b.style.background="var(--surface3)";b.style.fontWeight="600";
+        adminRenderRessentis();
+      });
+    });
+    adminRessentisInited=true;
+  }
+  adminRenderRessentis();
+}
+
+function adminRenderRessentis(){
+  const res=document.getElementById("admin-ressenti-results");
+  const countEl=document.getElementById("admin-triggers-count");
+  if(adminSelectedTriggers.size===0){
+    res.innerHTML=`<div style="text-align:center;padding:2rem;color:var(--text-faint);font-size:14px;">Sélectionne ce que la personne exprime pour voir les identités correspondantes.</div>`;
+    countEl.textContent="";
+    return;
+  }
+  // Collecter les catégories ciblées
+  const targetCats=new Set();
+  TRIGGERS.filter(t=>adminSelectedTriggers.has(t.id)).forEach(t=>t.cats.forEach(c=>targetCats.add(c)));
+  // Filtrer DATA
+  let results=DATA.filter(d=>targetCats.has(d.cat));
+  if(adminRessentiDepth>0){
+    if(adminRessentiDepth===4)results=results.filter(d=>d.depth>=4);
+    else results=results.filter(d=>d.depth===adminRessentiDepth);
+  }
+  // Trier par profondeur puis alphabétique
+  results.sort((a,b)=>a.depth-b.depth||a.text.localeCompare(b.text));
+  // Identités déjà travaillées par le client sélectionné
+  let clientWorked=new Set();
+  if(adminRessentiClient){
+    ADMIN_SESSIONS.filter(s=>s.profile_id===adminRessentiClient).forEach(s=>(s.ids||[]).forEach(id=>clientWorked.add(id)));
+  }
+  countEl.textContent=`${results.length} identité${results.length>1?"s":""}`;
+  const depthColors=["","var(--l1)","var(--l2)","var(--l3)","var(--l4)","var(--l5)"];
+  res.innerHTML=results.map(d=>{
+    const worked=clientWorked.has(d.id);
+    const col=depthColors[Math.min(d.depth,5)]||"var(--text-muted)";
+    return`<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:var(--radius);background:${worked?"var(--green-bg)":"var(--surface2)"};border:1px solid ${worked?"var(--green-border)":"var(--border)"};margin-bottom:4px;">
+      <span style="width:6px;height:6px;border-radius:50%;background:${col};flex-shrink:0;"></span>
+      <span style="flex:1;font-size:14px;${worked?"color:var(--green-text)":""}">${d.text}</span>
+      <span style="font-size:11px;color:var(--text-faint);flex-shrink:0;">${d.cat}</span>
+      ${adminRessentiClient?`<button onclick="adminValidateId(${d.id},'${adminRessentiClient}')" style="padding:4px 10px;border-radius:var(--radius);border:1px solid ${worked?"var(--green-border)":"var(--border-md)"};background:${worked?"var(--green-bg)":"transparent"};color:${worked?"var(--green-text)":"var(--text-faint)"};font-size:11px;font-family:inherit;cursor:pointer;flex-shrink:0;">${worked?"✓ Fait":"+ Valider"}</button>`:""}
+    </div>`;
+  }).join("");
+}
+
+async function adminValidateId(idNum, profileId){
+  // Créer une session d'une identité pour ce client
+  try{
+    const today=new Date().toISOString().slice(0,10);
+    // Chercher une session existante du jour
+    let daySessions=ADMIN_SESSIONS.filter(s=>s.profile_id===profileId&&(s.date||"").slice(0,10)===today);
+    if(daySessions.length>0){
+      const sess=daySessions[0];
+      const newIds=[...new Set([...(sess.ids||[]),idNum])];
+      await fetch(SB_URL+"/rest/v1/sessions?id=eq."+sess.id,{method:"PATCH",headers:{"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"application/json"},body:JSON.stringify({ids:newIds})});
+      sess.ids=newIds;
+    }else{
+      const res=await fetch(SB_URL+"/rest/v1/sessions",{method:"POST",headers:{"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"application/json","Prefer":"return=representation"},body:JSON.stringify({profile_id:profileId,date:today,ids:[idNum]})});
+      const r=await res.json();
+      if(r&&r[0])ADMIN_SESSIONS.push({id:r[0].id,profile_id:profileId,date:today,ids:[idNum]});
+    }
+    adminRenderRessentis();
+    showToast("Identité validée ✓");
+  }catch(e){showToast("Erreur: "+e.message);}
 }
 
 function adminBindEvents(){
