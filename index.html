@@ -2796,12 +2796,16 @@ document.getElementById("create-btn").addEventListener("click",async()=>{
 document.getElementById("new-name").addEventListener("keydown",e=>{if(e.key==="Enter")document.getElementById("create-btn").click();});
 
 async function enterProfile(id,name){
-  if(name.toLowerCase()==="admin"){
+  if(name.trim().toLowerCase()==="admin"){
     showScreen("admin-screen");
-    await adminLoadAll();
-    adminRenderStats();
-    adminRenderClientsTable();
-    adminBindEvents();
+    try{
+      await adminLoadAll();
+      adminRenderStats();
+      adminRenderClientsTable();
+      adminBindEvents();
+    }catch(err){
+      document.getElementById("admin-stat-row").innerHTML=`<div style="color:var(--red-text);padding:1rem;">Erreur dashboard: ${err.message}</div>`;
+    }
     return;
   }
   currentProfile={id,name};
@@ -2832,13 +2836,16 @@ async function adminLoadAll(){
 }
 
 function adminRenderStats(){
-  const totalIds=ADMIN_SESSIONS.reduce((a,s)=>a+(s.ids||[]).length,0);
-  const activeP=new Set(ADMIN_SESSIONS.map(s=>s.profile_id)).size;
-  document.getElementById("admin-stat-row").innerHTML=`
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem 1.5rem;flex:1;min-width:120px;"><div style="font-size:28px;font-weight:700;">${ADMIN_PROFILES.length}</div><div style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;">Clients</div></div>
+  const totalIds=(ADMIN_SESSIONS||[]).reduce((a,s)=>a+(s.ids||[]).length,0);
+  const activeP=new Set((ADMIN_SESSIONS||[]).map(s=>s.profile_id)).size;
+  const diagCount=(ADMIN_DIAGNOSTICS||[]).length;
+  const el=document.getElementById("admin-stat-row");
+  if(!el)return;
+  el.innerHTML=`
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem 1.5rem;flex:1;min-width:120px;"><div style="font-size:28px;font-weight:700;">${(ADMIN_PROFILES||[]).length}</div><div style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;">Clients</div></div>
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem 1.5rem;flex:1;min-width:120px;"><div style="font-size:28px;font-weight:700;">${activeP}</div><div style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;">Actifs</div></div>
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem 1.5rem;flex:1;min-width:120px;"><div style="font-size:28px;font-weight:700;">${totalIds}</div><div style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;">Identités travaillées</div></div>
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem 1.5rem;flex:1;min-width:120px;"><div style="font-size:28px;font-weight:700;">${ADMIN_DIAGNOSTICS.length}</div><div style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;">Diagnostics</div></div>`;
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem 1.5rem;flex:1;min-width:120px;"><div style="font-size:28px;font-weight:700;">${diagCount}</div><div style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;">Diagnostics</div></div>`;
 }
 
 function adminRenderClientsTable(filter=""){
