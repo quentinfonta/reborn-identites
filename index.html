@@ -937,6 +937,7 @@ const DEFAULT_DATA = [
   {id:2021,text:'Je suis asservi',cat:'Contrôle',depth:5,role:'source'},
   {id:2022,text:'Je suis subjugué',cat:'Contrôle',depth:5,role:'source'},
   {id:2023,text:'Je suis assujetti',cat:'Contrôle',depth:5,role:'source'},
+  {id:19001,text:'Je suis seul',cat:'Isolement',depth:2,role:'source'},
   {id:1010,text:'Je suis isolé',cat:'Isolement',depth:3,role:'verdict'},
   {id:1011,text:'Je suis séparé',cat:'Isolement',depth:3,role:'verdict'},
   {id:1013,text:'Je suis fermé',cat:'Isolement',depth:3,role:'source'},
@@ -2567,6 +2568,28 @@ async function savePinned(){
     }
   }catch(e){}
 }
+async function unvalidateId(id){
+  const session=SESSIONS.find(s=>s.ids.includes(id));
+  if(!session)return;
+  try{
+    if(session.ids.length===1){
+      await sb(`sessions?id=eq.${session.id}`,{method:"DELETE",prefer:"return=minimal"});
+      SESSIONS=SESSIONS.filter(s=>s.id!==session.id);
+    } else {
+      const newIds=session.ids.filter(i=>i!==id);
+      await sb(`sessions?id=eq.${session.id}`,{method:"PATCH",body:{ids:newIds},prefer:"return=minimal"});
+      session.ids=newIds;
+    }
+    showToast("↩ Identité retirée");
+    renderHomeThemes();
+    // refresh les vues ouvertes
+    const activeMobile=document.querySelector(".home-mobile-tab.active");
+    const activeSide=document.querySelector(".home-sidebar-btn.active");
+    if((activeMobile&&activeMobile.dataset.tab==="pinned")||(activeSide&&activeSide.id==="home-pinned-btn"))renderPinnedTab();
+    // refresh scan si ouvert
+    if(document.getElementById("scan-screen")?.classList.contains("show"))renderScan();
+  }catch(e){showToast("Erreur: "+e.message);}
+}
 async function togglePin(id){
   if(pinnedIds.has(id)){
     pinnedIds.delete(id);
@@ -2920,7 +2943,7 @@ async function enterProfile(id,name){
   checked.clear();todoIds.clear();reviewDates={};trashedIds.clear();scanChecked.clear();pinnedIds.clear();
   await loadData();
   showScreen("home-screen");
-  setHomeTab("reconnexion");
+  setHomeTab("pinned");
   renderHomeStats();
   setTimeout(checkInactivity,1000);
 }
@@ -3470,7 +3493,10 @@ function renderSearchResults(){
         <div class="id-check"><i class="ti ti-check check-icon"></i></div>
         <span class="id-text">${d.text}</span>
         <span style="font-size:10px;color:var(--text-faint);flex-shrink:0;margin-right:4px;">${d.cat}</span>
-        <button class="pin-btn" data-pin-id="${d.id}" title="${isPinned?"Retirer des priorités":"Épingler à travailler"}" style="background:none;border:none;cursor:pointer;font-size:13px;padding:2px 2px;flex-shrink:0;opacity:${isPinned?1:0.3};transition:opacity 0.15s;" onclick="event.stopPropagation();togglePin(${d.id});renderSearchResults();">📌</button>
+        ${isWorked
+          ? `<button title="Retirer la validation" onclick="event.stopPropagation();unvalidateId(${d.id});" style="background:none;border:none;cursor:pointer;font-size:12px;color:var(--red-text);opacity:0.6;flex-shrink:0;padding:2px 4px;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.6">↩</button>`
+          : `<button class="pin-btn" data-pin-id="${d.id}" title="${isPinned?"Désépingler":"Épingler"}" style="background:none;border:none;cursor:pointer;font-size:13px;padding:2px 2px;flex-shrink:0;opacity:${isPinned?1:0.3};transition:opacity 0.15s;" onclick="event.stopPropagation();togglePin(${d.id});renderSearchResults();">📌</button>`
+        }
       </div>`;
     }).join("");
   }
@@ -3599,8 +3625,12 @@ function renderPinnedTab(){
   if(pinnedIds.size===0){
     grid.innerHTML=`<div style="text-align:center;padding:3rem 1rem;color:var(--text-muted);">
       <div style="font-size:2.5rem;margin-bottom:1rem;">📌</div>
-      <div style="font-size:1rem;font-weight:500;margin-bottom:0.5rem;">Aucune identité épinglée</div>
-      <div style="font-size:0.85rem;color:var(--text-faint);">Utilise l'icône 📌 sur une identité pour l'épingler ici</div>
+      <div style="font-size:1rem;font-weight:500;margin-bottom:0.75rem;">Aucune identité épinglée</div>
+      <div style="font-size:0.85rem;color:var(--text-faint);margin-bottom:1.5rem;line-height:1.6;">Épingle les identités que tu travailles activement<br>pour les retrouver ici à chaque connexion.</div>
+      <div style="display:flex;flex-direction:column;gap:10px;max-width:260px;margin:0 auto;">
+        <button onclick="setHomeTab('reconnexion')" style="padding:10px 20px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text);font-size:0.85rem;font-family:inherit;cursor:pointer;">🔁 Aller en Reconnexion</button>
+        <button onclick="setHomeTab('scan')" style="padding:10px 20px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text);font-size:0.85rem;font-family:inherit;cursor:pointer;">🔍 Scanner des identités</button>
+      </div>
     </div>`;
     return;
   }
@@ -3618,14 +3648,18 @@ function renderPinnedTab(){
   Object.entries(catMap).forEach(([cat,items])=>{
     html+=`<div style="margin-bottom:1.2rem;">
       <div style="font-size:0.72rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-faint);margin-bottom:0.5rem;padding:0 2px;">${cat}</div>`;
+    const widsPin=workedIds();
     items.forEach(d=>{
-      const isChecked=checked.has(d.id);
+      const isWorked=widsPin.has(d.id);
       const isTodo=todoIds.has(d.id);
-      html+=`<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--surface);border:1px solid ${isChecked?"var(--green-border)":isTodo?"var(--gold-border)":"var(--border)"};border-radius:var(--radius);margin-bottom:6px;">
+      html+=`<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--surface);border:1px solid ${isWorked?"var(--green-border)":isTodo?"var(--gold-border)":"var(--border)"};border-radius:var(--radius);margin-bottom:6px;">
         <span style="width:6px;height:6px;border-radius:50%;background:${depthColor(d.depth)};flex-shrink:0;"></span>
-        <span style="flex:1;font-size:0.9rem;${isChecked?"color:var(--green-text);":""}${isTodo?"color:var(--gold-text);":""}">${d.text}</span>
+        <span style="flex:1;font-size:0.9rem;${isWorked?"color:var(--green-text);":""}${isTodo?"color:var(--gold-text);":""}">${d.text}</span>
         <span style="font-size:0.7rem;color:var(--text-faint);background:var(--surface2);padding:2px 6px;border-radius:4px;">${d.role==="source"?"source":d.role==="coping"?"coping":"verdict"}</span>
-        ${isChecked?`<span style="font-size:0.75rem;color:var(--green-text);">✓</span>`:`<button onclick="checked.add(${d.id});saveChecked();renderPinnedTab();" style="font-size:0.72rem;background:var(--green-bg);border:1px solid var(--green-border);color:var(--green-text);border-radius:5px;padding:3px 8px;cursor:pointer;flex-shrink:0;">Valider</button>`}
+        ${isWorked
+          ? `<button onclick="unvalidateId(${d.id});" title="Retirer la validation" style="font-size:0.72rem;background:var(--red-bg);border:1px solid var(--red-border);color:var(--red-text);border-radius:5px;padding:3px 8px;cursor:pointer;flex-shrink:0;">↩ Retirer</button>`
+          : `<button onclick="checked.add(${d.id});saveChecked();renderPinnedTab();" style="font-size:0.72rem;background:var(--green-bg);border:1px solid var(--green-border);color:var(--green-text);border-radius:5px;padding:3px 8px;cursor:pointer;flex-shrink:0;">✓ Valider</button>`
+        }
         <button onclick="pinnedIds.delete(${d.id});fetch(SB_URL+'/rest/v1/pins?profile_id=eq.'+currentProfile.id+'&identity_id=eq.${d.id}',{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}}).catch(()=>{});renderPinnedTab();" style="background:none;border:none;cursor:pointer;font-size:0.9rem;opacity:0.5;flex-shrink:0;" title="Désépingler">📌</button>
       </div>`;
     });
@@ -3642,9 +3676,10 @@ const DIAG_SYNONYMS={
   "abandon":["abandonné","délaissé","seul","isolé","livré à moi-même"],
   "colère":["en colère","rageur","frustré","révolté","agacé","irrité"],
   "honte":["honteux","humilié","dévalorisé","inférieur","nul","raté"],
-  "peur":["effrayé","terrorisé","paniqué","angoissé","anxieux","apeuré"],
+  "peur":["effrayé","terrorisé","paniqué","angoissé","anxieux","apeuré","craintif","tétanisé","alarmé"],
   "tristesse":["triste","mélancolique","déprimé","abattu","effondré"],
-  "solitude":["seul","isolé","incompris","abandonné","invisible"],
+  "seul":["seul","isolé","incompris","abandonné","délaissé","invisible","esseulé","livré"],
+  "solitude":["seul","isolé","incompris","abandonné","invisible","esseulé","délaissé"],
   "confiance":["méfiant","trahi","manipulé","dupé","floué"],
   "trahison":["trahi","manipulé","trompé","floué","dupé","abusé"],
   "culpabilité":["coupable","responsable","fautif","autopuni"],
@@ -3740,39 +3775,75 @@ function renderDiagnosticInline(){
     }
 
     const wids=workedIds();
-    const sources=scored.filter(d=>d.role==="source"||d.role==="verdict").slice(0,25);
-    const copings=scored.filter(d=>d.role==="coping").slice(0,12);
 
-    function rowHtml(d){
+    // Séparer travaillées / non travaillées
+    const notDone=scored.filter(d=>!wids.has(d.id));
+    const done=scored.filter(d=>wids.has(d.id));
+
+    // Trier par rôle : source → verdict → coping
+    const roleOrder={source:0,verdict:1,coping:2};
+    const sortByRole=(a,b)=>(roleOrder[a.role]??3)-(roleOrder[b.role]??3)||b.score-a.score||a.depth-b.depth;
+
+    const sourcesNew=notDone.filter(d=>d.role==="source").sort(sortByRole).slice(0,15);
+    const verdictsNew=notDone.filter(d=>d.role==="verdict").sort(sortByRole).slice(0,8);
+    const copingsNew=notDone.filter(d=>d.role==="coping").sort(sortByRole).slice(0,10);
+    const doneItems=done.slice(0,8);
+
+    const totalNew=sourcesNew.length+verdictsNew.length+copingsNew.length;
+
+    function rowHtml(d,faded=false){
       const neg=d.role==="source"||d.role==="verdict";
-      const bg=neg?"var(--red-bg,#fef2f2)":"var(--green-bg)";
-      const col=neg?"var(--red-text,#b91c1c)":"var(--green-text)";
-      const border=neg?"var(--red-border,#fecaca)":"var(--green-border)";
-      const done=wids.has(d.id);
+      const bg=neg?"var(--red-bg)":"var(--green-bg)";
+      const col=neg?"var(--red-text)":"var(--green-text)";
+      const border=neg?"var(--red-border)":"var(--green-border)";
+      const isDone=wids.has(d.id);
       const chk=diagChecked.has(d.id);
       const isPinned=pinnedIds.has(d.id);
-      return`<label style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:6px;cursor:${done?"default":"pointer"};" data-id="${d.id}">
-        <div style="display:flex;align-items:center;gap:10px;">
-          <input type="checkbox" data-id="${d.id}" ${chk?"checked":""} ${done?"disabled":""} style="accent-color:var(--accent);width:15px;height:15px;flex-shrink:0;">
-          <span style="font-size:12px;padding:2px 8px;border-radius:20px;background:${bg};color:${col};border:1px solid ${border};">${d.text.replace("Je suis ","")}</span>
-          <span style="font-size:11px;color:var(--text-faint);">${d.cat}</span>
+      const roleLabel=d.role==="source"?"blessure":d.role==="verdict"?"verdict":"coping";
+      return`<label style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--surface);border:1px solid ${isDone?"var(--green-border)":faded?"var(--border)":"var(--border)"};border-radius:var(--radius-lg);margin-bottom:6px;cursor:${isDone?"default":"pointer"};opacity:${faded?0.5:1};" data-id="${d.id}">
+        <div style="display:flex;align-items:center;gap:10px;min-width:0;">
+          <input type="checkbox" data-id="${d.id}" ${chk?"checked":""} ${isDone?"disabled":""} style="accent-color:var(--accent);width:15px;height:15px;flex-shrink:0;">
+          <span style="font-size:12px;padding:2px 8px;border-radius:20px;background:${bg};color:${col};border:1px solid ${border};white-space:nowrap;">${d.text.replace("Je suis ","")}</span>
+          <span style="font-size:11px;color:var(--text-faint);white-space:nowrap;">${d.cat}</span>
         </div>
-        <div style="display:flex;align-items:center;gap:6px;">
-          ${done?`<span style="font-size:11px;color:var(--green-text);background:var(--green-bg);border:1px solid var(--green-border);padding:2px 7px;border-radius:10px;">✓ fait</span>`:`<span style="font-size:11px;color:var(--text-faint);">profondeur ${d.depth}</span>`}
-          <button class="diag-pin-btn" data-diag-pin="${d.id}" title="${isPinned?"Retirer":"Épingler"}" style="background:none;border:none;cursor:pointer;font-size:13px;padding:2px;opacity:${isPinned?1:0.3};" onclick="event.preventDefault();event.stopPropagation();togglePin(${d.id});this.style.opacity=pinnedIds.has(${d.id})?1:0.3;">📌</button>
+        <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
+          ${isDone
+            ? `<button onclick="event.preventDefault();event.stopPropagation();unvalidateId(${d.id});" title="Retirer la validation" style="font-size:11px;background:var(--red-bg);border:1px solid var(--red-border);color:var(--red-text);padding:2px 8px;border-radius:10px;cursor:pointer;font-family:inherit;">↩</button>`
+            : `<span style="font-size:11px;color:var(--text-faint);">p${d.depth}</span>`
+          }
+          <button data-diag-pin="${d.id}" title="${isPinned?"Désépingler":"Épingler"}" style="background:none;border:none;cursor:pointer;font-size:14px;padding:2px;opacity:${isPinned?1:0.25};transition:opacity 0.15s;" onclick="event.preventDefault();event.stopPropagation();togglePin(${d.id});this.style.opacity=pinnedIds.has(${d.id})?1:0.25;this.title=pinnedIds.has(${d.id})?'Désépingler':'Épingler';">📌</button>
         </div>
       </label>`;
     }
 
+    function sectionHtml(title,items,faded=false){
+      if(!items.length)return"";
+      return`<div style="margin-bottom:1.25rem;">
+        <div style="font-size:11px;font-weight:600;color:var(--text-faint);letter-spacing:1px;text-transform:uppercase;margin-bottom:0.6rem;">${title} (${items.length})</div>
+        ${items.map(d=>rowHtml(d,faded)).join("")}
+      </div>`;
+    }
+
     let html="";
-    if(sources.length){
-      html+=`<div style="font-size:12px;font-weight:600;color:var(--text-faint);letter-spacing:1px;text-transform:uppercase;margin-bottom:0.75rem;">Identités blessées (${sources.length})</div>`;
-      html+=sources.map(rowHtml).join("");
+
+    // Feedback si peu de résultats
+    if(totalNew<=2){
+      html+=`<div style="padding:10px 14px;background:var(--gold-bg);border:1px solid var(--gold-border);border-radius:var(--radius-lg);margin-bottom:1rem;font-size:13px;color:var(--gold-text);line-height:1.5;">
+        Peu de résultats. Essaie des mots plus directs : <em>rejet, honte, peur, colère, abandon, trahison, contrôle, épuisement…</em>
+      </div>`;
     }
-    if(copings.length){
-      html+=`<div style="font-size:12px;font-weight:600;color:var(--text-faint);letter-spacing:1px;text-transform:uppercase;margin:1.25rem 0 0.75rem;">Mécanismes / coping (${copings.length})</div>`;
-      html+=copings.map(rowHtml).join("");
+
+    html+=sectionHtml("Blessures",sourcesNew);
+    html+=sectionHtml("Verdicts profonds",verdictsNew);
+    html+=sectionHtml("Mécanismes de protection",copingsNew);
+
+    if(doneItems.length){
+      html+=`<div style="margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--border);">
+        <div style="font-size:11px;font-weight:600;color:var(--text-faint);letter-spacing:1px;text-transform:uppercase;margin-bottom:0.6rem;">Déjà travaillées (${doneItems.length})</div>
+        ${doneItems.map(d=>rowHtml(d,true)).join("")}
+      </div>`;
     }
+
     html+=`<button id="diag-validate-btn" style="margin-top:1.25rem;padding:11px 22px;border-radius:var(--radius-lg);border:none;background:var(--accent);color:#fff;font-size:14px;font-weight:500;font-family:inherit;cursor:pointer;display:none;">✓ Valider les identités sélectionnées</button>`;
     results.innerHTML=html;
 
@@ -4085,7 +4156,10 @@ function renderScan(){
     let cls="scan-pill"+(isWorked?" worked":isChecked?" checked":"")+(isPinned?" pinned":"");
     return`<div class="${cls}" data-scan-id="${d.id}" style="display:inline-flex;align-items:center;gap:5px;">
       <span class="scan-pill-text">${d.text}</span>
-      <span class="scan-pill-pin" data-pin-scan="${d.id}" title="${isPinned?"Désépingler":"Épingler"}" style="font-size:11px;opacity:${isPinned?1:0.25};cursor:pointer;flex-shrink:0;transition:opacity 0.15s;" onclick="event.stopPropagation();togglePin(${d.id});">📌</span>
+      ${isWorked
+        ? `<span title="Retirer la validation" style="font-size:11px;opacity:0.5;cursor:pointer;flex-shrink:0;transition:opacity 0.15s;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.5" onclick="event.stopPropagation();unvalidateId(${d.id});">↩</span>`
+        : `<span class="scan-pill-pin" data-pin-scan="${d.id}" title="${isPinned?"Désépingler":"Épingler"}" style="font-size:11px;opacity:${isPinned?1:0.25};cursor:pointer;flex-shrink:0;transition:opacity 0.15s;" onclick="event.stopPropagation();togglePin(${d.id});">📌</span>`
+      }
     </div>`;
   }).join("");
 
@@ -4318,7 +4392,12 @@ function render(){
       html+=`<div class="${cls}" data-id="${d.id}">
         <div class="id-check"><i class="ti ti-check check-icon"></i></div>
         <span class="id-text">${d.text}</span>
-        <div class="id-actions"><button class="id-action-btn todo-btn" data-id="${d.id}">🔖</button><button class="id-action-btn trash-btn" data-id="${d.id}">🗑</button></div>
+        <div class="id-actions">
+          ${isWorked
+            ? `<button class="id-action-btn unvalidate-btn" data-id="${d.id}" title="Retirer la validation" style="font-size:11px;color:var(--red-text);opacity:0.7;">↩</button>`
+            : `<button class="id-action-btn todo-btn" data-id="${d.id}">🔖</button><button class="id-action-btn trash-btn" data-id="${d.id}">🗑</button>`
+          }
+        </div>
       </div>`;
     });
     html+="</div></div>";
@@ -4353,6 +4432,10 @@ function render(){
       }catch(e){showToast("Erreur");}
     });
   });
+  scroll.querySelectorAll(".unvalidate-btn").forEach(btn=>btn.addEventListener("click",async e=>{
+    e.stopPropagation();const id=+btn.dataset.id;
+    await unvalidateId(id);render();
+  }));
   scroll.querySelectorAll(".todo-btn").forEach(btn=>btn.addEventListener("click",e=>{
     e.stopPropagation();const id=+btn.dataset.id;
     if(workedIds().has(id))return;
