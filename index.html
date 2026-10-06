@@ -3713,11 +3713,47 @@ function setHomeTab(tab){
   }
 }
 
-async function proposerIdentite(texte){
-  const saisi=prompt("Proposer une identité :",texte||"Je suis ");
-  if(!saisi||!saisi.trim())return;
-  const t=saisi.trim();
+function showProposalForm(){
+  const f=document.getElementById("proposal-form");
+  if(!f)return;
+  f.style.display=f.style.display==="none"?"block":"none";
+  if(f.style.display==="block"){
+    const inp=document.getElementById("proposal-input");
+    if(inp){inp.focus();if(inp.value==="Je suis ")inp.setSelectionRange(8,8);}
+  }
+}
+
+async function submitProposal(){
+  const inp=document.getElementById("proposal-input");
+  if(!inp)return;
+  const t=inp.value.trim();
+  if(!t){showToast("⚠️ Entrez une identité");return;}
   if(!t.toLowerCase().startsWith("je suis ")){showToast("⚠️ Format : Je suis [participe passé]");return;}
+  if(t.toLowerCase()==="je suis "){showToast("⚠️ Complétez l'identité");return;}
+  try{
+    await fetch(SB_URL+"/rest/v1/identity_proposals",{
+      method:"POST",
+      headers:{"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"application/json","Prefer":"return=minimal"},
+      body:JSON.stringify({text:t,profile_id:currentProfile?.id||null,status:"pending"})
+    });
+    showToast("✓ Proposition envoyée !");
+    inp.value="Je suis ";
+    document.getElementById("proposal-form").style.display="none";
+  }catch(e){showToast("Erreur lors de l'envoi");}
+}
+
+async function proposerIdentite(texte){
+  const f=document.getElementById("proposal-form");
+  if(f){
+    const inp=document.getElementById("proposal-input");
+    if(inp&&texte)inp.value=texte;
+    f.style.display="block";
+    if(inp){inp.focus();inp.setSelectionRange(inp.value.length,inp.value.length);}
+    return;
+  }
+  // fallback si le formulaire n'existe pas dans le DOM
+  const t=(texte||"Je suis ").trim();
+  if(!t.toLowerCase().startsWith("je suis ")||t.toLowerCase()==="je suis ")return;
   try{
     await fetch(SB_URL+"/rest/v1/identity_proposals",{
       method:"POST",
@@ -3767,6 +3803,18 @@ function renderPinnedTab(){
       <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:0.9rem;opacity:0.5;">🔍</span>
     </div>
     <div id="pinned-search-results" style="background:var(--surface2);border:1px solid var(--border);border-top:none;border-radius:0 0 var(--radius) var(--radius);max-height:280px;overflow-y:auto;"></div>
+    <div style="text-align:right;margin-top:6px;">
+      <button onclick="showProposalForm()" style="font-size:0.75rem;background:none;border:none;color:var(--text-faint);cursor:pointer;text-decoration:underline;padding:2px 0;">✏️ Proposer une identité</button>
+    </div>
+    <div id="proposal-form" style="display:none;margin-top:8px;background:var(--surface2);border:1px solid var(--border-md);border-radius:var(--radius);padding:10px 12px;">
+      <div style="font-size:0.78rem;color:var(--text-faint);margin-bottom:6px;">Format : <em>Je suis [participe passé]</em></div>
+      <div style="display:flex;gap:8px;">
+        <input id="proposal-input" type="text" placeholder="Je suis …" value="Je suis "
+          style="flex:1;padding:8px 10px;background:var(--surface);border:1px solid var(--border-md);border-radius:6px;color:var(--text);font-size:0.85rem;font-family:inherit;outline:none;"/>
+        <button onclick="submitProposal()" style="padding:8px 14px;background:var(--surface);border:1px solid var(--border-md);border-radius:6px;color:var(--text);font-size:0.82rem;font-family:inherit;cursor:pointer;white-space:nowrap;">Envoyer</button>
+        <button onclick="document.getElementById('proposal-form').style.display='none';" style="padding:8px 10px;background:none;border:none;color:var(--text-faint);font-size:0.9rem;cursor:pointer;">✕</button>
+      </div>
+    </div>
   </div>`;
 
   if(pinnedIds.size===0){
