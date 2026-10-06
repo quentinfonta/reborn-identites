@@ -541,6 +541,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
     <button class="admin-nav-tab" data-atab="diagnostics" style="padding:8px 16px;border-radius:var(--radius-lg);border:none;background:transparent;color:var(--text-muted);font-size:14px;font-family:inherit;cursor:pointer;font-weight:500;">🔍 Diagnostics</button>
     <button class="admin-nav-tab" data-atab="search" style="padding:8px 16px;border-radius:var(--radius-lg);border:none;background:transparent;color:var(--text-muted);font-size:14px;font-family:inherit;cursor:pointer;font-weight:500;">🏷️ Recherche identité</button>
     <button class="admin-nav-tab" data-atab="ressentis" style="padding:8px 16px;border-radius:var(--radius-lg);border:none;background:transparent;color:var(--text-muted);font-size:14px;font-family:inherit;cursor:pointer;font-weight:500;">💬 Par ressenti</button>
+    <button class="admin-nav-tab" data-atab="propositions" style="padding:8px 16px;border-radius:var(--radius-lg);border:none;background:transparent;color:var(--text-muted);font-size:14px;font-family:inherit;cursor:pointer;font-weight:500;">✏️ Propositions</button>
   </div>
   <div style="padding:1.5rem 2rem 4rem;">
     <div id="admin-stat-row" style="display:flex;gap:1rem;margin-bottom:2rem;flex-wrap:wrap;"></div>
@@ -574,6 +575,17 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
         <input type="text" id="admin-id-search-input" placeholder="Rechercher une identité par texte (ex : rejeté, abandonné…)" style="width:100%;padding:12px 16px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface2);color:var(--text);font-size:14px;font-family:inherit;outline:none;margin-bottom:1rem;box-sizing:border-box;">
         <div id="admin-id-suggestions" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1rem;"></div>
         <div id="admin-id-results"></div>
+      </div>
+    </div>
+
+    <!-- TAB PROPOSITIONS -->
+    <div id="admin-tab-propositions" style="display:none;">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:1rem;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;">
+          <div style="font-size:13px;color:var(--text-muted);">Identités proposées par les clients. Valide pour les ajouter au dictionnaire global.</div>
+          <button onclick="adminLoadPropositions()" style="padding:6px 12px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface2);color:var(--text-muted);font-size:12px;font-family:inherit;cursor:pointer;">↺ Actualiser</button>
+        </div>
+        <div id="admin-propositions-wrap"><div style="text-align:center;padding:3rem;color:var(--text-faint);">Chargement…</div></div>
       </div>
     </div>
 
@@ -1310,6 +1322,21 @@ const DEFAULT_DATA = [
   {id:1172,text:'Je suis imprégné',cat:'Honte',depth:4,role:'verdict'},
   {id:411,text:'Je suis rongé',cat:'Honte',depth:3,role:'verdict'},
   {id:412,text:'Je suis pourri',cat:'Honte',depth:5,role:'verdict'},
+  {id:19002,text:'Je suis reproché',cat:'Culpabilité',depth:2,role:'source'},
+  {id:19003,text:'Je suis sacralisé',cat:'Violation',depth:4,role:'coping'},
+  {id:19004,text:'Je suis cadré',cat:'Contrôle',depth:2,role:'coping'},
+  {id:19005,text:'Je suis concerné',cat:'Indifférence',depth:1,role:'source'},
+  {id:19006,text:'Je suis omis',cat:'Abandon',depth:2,role:'source'},
+  {id:19007,text:'Je suis affranchi',cat:'Contrôle',depth:3,role:'coping'},
+  {id:19008,text:'Je suis autorisé',cat:'Contrôle',depth:2,role:'coping'},
+  {id:19009,text:'Je suis justifié',cat:'Culpabilité',depth:3,role:'coping'},
+  {id:19010,text:'Je suis défendu',cat:'Abandon',depth:3,role:'coping'},
+  {id:19011,text:'Je suis enlacé',cat:'Affection',depth:2,role:'coping'},
+  {id:19012,text:'Je suis étreint',cat:'Affection',depth:2,role:'coping'},
+  {id:19013,text:'Je suis prioritaire',cat:'Abandon',depth:2,role:'coping'},
+  {id:19014,text:'Je suis consulté',cat:'Existence',depth:2,role:'coping'},
+  {id:19015,text:'Je suis convié',cat:'Abandon',depth:2,role:'coping'},
+  {id:19016,text:'Je suis perçu',cat:'Trahison',depth:2,role:'source'},
   {id:5001,text:'Je suis blâmé',cat:'Culpabilité',depth:3,role:'source'},
   {id:103,text:'Je suis damné',cat:'Culpabilité',depth:5,role:'source'},
   {id:104,text:'Je suis maudit',cat:'Culpabilité',depth:5,role:'source'},
@@ -3091,9 +3118,67 @@ function adminSetTab(tab){
   document.getElementById("admin-tab-diagnostics").style.display=tab==="diagnostics"?"block":"none";
   document.getElementById("admin-tab-search").style.display=tab==="search"?"block":"none";
   document.getElementById("admin-tab-ressentis").style.display=tab==="ressentis"?"block":"none";
+  document.getElementById("admin-tab-propositions").style.display=tab==="propositions"?"block":"none";
   if(tab==="clients")adminRenderClientsTable(document.getElementById("admin-clients-search").value);
   if(tab==="diagnostics")adminRenderDiagsTable(document.getElementById("admin-diag-search").value);
   if(tab==="ressentis")adminInitRessentis();
+  if(tab==="propositions")adminLoadPropositions();
+}
+
+/* ===== ADMIN PROPOSITIONS ===== */
+async function adminLoadPropositions(){
+  const wrap=document.getElementById("admin-propositions-wrap");
+  wrap.innerHTML=`<div style="text-align:center;padding:2rem;color:var(--text-faint);">Chargement…</div>`;
+  try{
+    const res=await fetch(SB_URL+"/rest/v1/identity_proposals?order=created_at.desc&select=*,profiles(name)",{
+      headers:{"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY}
+    });
+    const rows=await res.json();
+    if(!rows||!rows.length){wrap.innerHTML=`<div style="text-align:center;padding:3rem;color:var(--text-faint);">Aucune proposition pour l'instant.</div>`;return;}
+    const CATS=[...new Set(DATA.map(d=>d.cat))].sort();
+    wrap.innerHTML=rows.map(r=>`
+      <div id="prop-${r.id}" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px;flex-wrap:wrap;">
+        <span style="flex:1;font-size:0.95rem;font-weight:500;">${r.text}</span>
+        <span style="font-size:0.72rem;color:var(--text-faint);background:var(--surface);padding:2px 8px;border-radius:4px;">${r.profiles?.name||"?"}</span>
+        <select id="prop-cat-${r.id}" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border-md);background:var(--surface);color:var(--text);font-size:0.8rem;font-family:inherit;outline:none;">
+          ${CATS.map(c=>`<option value="${c}">${c}</option>`).join("")}
+        </select>
+        <select id="prop-role-${r.id}" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border-md);background:var(--surface);color:var(--text);font-size:0.8rem;font-family:inherit;outline:none;">
+          <option value="source">source</option>
+          <option value="coping">coping</option>
+          <option value="verdict">verdict</option>
+        </select>
+        <select id="prop-depth-${r.id}" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border-md);background:var(--surface);color:var(--text);font-size:0.8rem;font-family:inherit;outline:none;">
+          <option value="1">depth 1</option><option value="2">depth 2</option><option value="3" selected>depth 3</option><option value="4">depth 4</option><option value="5">depth 5</option>
+        </select>
+        <button onclick="adminRejectProposal(${r.id})" style="padding:4px 10px;border-radius:6px;border:1px solid var(--red-border);background:var(--red-bg);color:var(--red-text);font-size:0.75rem;font-family:inherit;cursor:pointer;">✕ Rejeter</button>
+        <button onclick="adminValidateProposal(${r.id},'${r.text.replace(/'/g,"\\'")}'" + ")" style="padding:4px 10px;border-radius:6px;border:1px solid var(--green-border);background:var(--green-bg);color:var(--green-text);font-size:0.75rem;font-family:inherit;cursor:pointer;">✓ Valider</button>
+      </div>`).join("");
+  }catch(e){wrap.innerHTML=`<div style="text-align:center;padding:2rem;color:var(--red-text);">Erreur : table identity_proposals manquante ou inaccessible.</div>`;}
+}
+
+async function adminValidateProposal(id,text){
+  const cat=document.getElementById("prop-cat-"+id)?.value||"Blessure";
+  const role=document.getElementById("prop-role-"+id)?.value||"source";
+  const depth=parseInt(document.getElementById("prop-depth-"+id)?.value)||3;
+  // Marquer comme validé en base
+  await fetch(SB_URL+"/rest/v1/identity_proposals?id=eq."+id,{
+    method:"PATCH",headers:{"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"application/json"},
+    body:JSON.stringify({status:"validated",cat,role,depth})
+  }).catch(()=>{});
+  // Feedback visuel
+  const el=document.getElementById("prop-"+id);
+  if(el)el.style.opacity="0.4";
+  showToast("✓ Validée — pense à ajouter '"+text+"' au DATA dans le code");
+}
+
+async function adminRejectProposal(id){
+  await fetch(SB_URL+"/rest/v1/identity_proposals?id=eq."+id,{
+    method:"PATCH",headers:{"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"application/json"},
+    body:JSON.stringify({status:"rejected"})
+  }).catch(()=>{});
+  const el=document.getElementById("prop-"+id);
+  if(el)el.remove();
 }
 
 /* ===== ADMIN RESSENTIS ===== */
@@ -3620,18 +3705,73 @@ function setHomeTab(tab){
   }
 }
 
+async function proposerIdentite(texte){
+  const saisi=prompt("Proposer une identité :",texte||"Je suis ");
+  if(!saisi||!saisi.trim())return;
+  const t=saisi.trim();
+  if(!t.toLowerCase().startsWith("je suis ")){showToast("⚠️ Format : Je suis [participe passé]");return;}
+  try{
+    await fetch(SB_URL+"/rest/v1/identity_proposals",{
+      method:"POST",
+      headers:{"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"application/json","Prefer":"return=minimal"},
+      body:JSON.stringify({text:t,profile_id:currentProfile?.id||null,status:"pending"})
+    });
+    showToast("✓ Proposition envoyée !");
+  }catch(e){showToast("Erreur lors de l'envoi");}
+}
+
+function renderPinnedSearch(query){
+  const q=query.trim().toLowerCase();
+  const res=document.getElementById("pinned-search-results");
+  if(!res)return;
+  if(!q){res.innerHTML="";return;}
+  const wids=workedIds();
+  const matches=DATA.filter(d=>{
+    if(pinnedIds.has(d.id))return false;
+    return d.text.toLowerCase().includes(q);
+  }).slice(0,12);
+  if(!matches.length){
+    res.innerHTML=`<div style="padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;">
+      <span style="font-size:0.85rem;color:var(--text-faint);">Aucun résultat pour "${q}"</span>
+      <button onclick="proposerIdentite('Je suis ${q}')" style="padding:4px 12px;border-radius:6px;border:1px solid var(--border-md);background:var(--surface);color:var(--text-muted);font-size:0.78rem;font-family:inherit;cursor:pointer;flex-shrink:0;">✏️ Proposer cette identité</button>
+    </div>`;
+    return;
+  }
+  res.innerHTML=matches.map(d=>{
+    const isWorked=wids.has(d.id);
+    return `<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--surface2);border-bottom:1px solid var(--border);">
+      <span style="flex:1;font-size:0.88rem;${isWorked?"color:var(--green-text);":""}">${d.text}</span>
+      <span style="font-size:0.7rem;color:var(--text-faint);background:var(--surface);padding:2px 6px;border-radius:4px;flex-shrink:0;">${d.cat}</span>
+      <button onclick="pinnedIds.add(${d.id});fetch(SB_URL+'/rest/v1/pins',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({profile_id:currentProfile.id,identity_id:${d.id}})}).catch(()=>{});document.getElementById('pinned-search-input').value='';document.getElementById('pinned-search-results').innerHTML='';renderPinnedTab();"
+        style="font-size:0.72rem;background:var(--surface);border:1px solid var(--border-md);color:var(--text);border-radius:5px;padding:3px 8px;cursor:pointer;flex-shrink:0;">📌 Épingler</button>
+    </div>`;
+  }).join("");
+}
+
 function renderPinnedTab(){
   const grid=document.getElementById("home-themes-grid");
+
+  const searchBar=`<div style="margin-bottom:1.2rem;">
+    <div style="position:relative;">
+      <input id="pinned-search-input" type="text" placeholder="Rechercher une identité à épingler…"
+        style="width:100%;box-sizing:border-box;padding:10px 14px;padding-left:36px;background:var(--surface);border:1px solid var(--border-md);border-radius:var(--radius);color:var(--text);font-size:0.88rem;font-family:inherit;outline:none;"
+        oninput="renderPinnedSearch(this.value)" autocomplete="off"/>
+      <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:0.9rem;opacity:0.5;">🔍</span>
+    </div>
+    <div id="pinned-search-results" style="background:var(--surface2);border:1px solid var(--border);border-top:none;border-radius:0 0 var(--radius) var(--radius);max-height:280px;overflow-y:auto;"></div>
+  </div>`;
+
   if(pinnedIds.size===0){
-    grid.innerHTML=`<div style="text-align:center;padding:3rem 1rem;color:var(--text-muted);">
+    grid.innerHTML=searchBar+`<div style="text-align:center;padding:2rem 1rem;color:var(--text-muted);">
       <div style="font-size:2.5rem;margin-bottom:1rem;">📌</div>
       <div style="font-size:1rem;font-weight:500;margin-bottom:0.75rem;">Aucune identité épinglée</div>
-      <div style="font-size:0.85rem;color:var(--text-faint);margin-bottom:1.5rem;line-height:1.6;">Épingle les identités que tu travailles activement<br>pour les retrouver ici à chaque connexion.</div>
+      <div style="font-size:0.85rem;color:var(--text-faint);margin-bottom:1.5rem;line-height:1.6;">Recherche ci-dessus ou explore les thèmes.</div>
       <div style="display:flex;flex-direction:column;gap:10px;max-width:260px;margin:0 auto;">
         <button onclick="setHomeTab('reconnexion')" style="padding:10px 20px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text);font-size:0.85rem;font-family:inherit;cursor:pointer;">🔁 Aller en Reconnexion</button>
-        <button onclick="setHomeTab('scan')" style="padding:10px 20px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text);font-size:0.85rem;font-family:inherit;cursor:pointer;">🔍 Scanner des identités</button>
+        <button onclick="showScreen('scan-screen');renderScan();" style="padding:10px 20px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text);font-size:0.85rem;font-family:inherit;cursor:pointer;">🔍 Scanner des identités</button>
       </div>
     </div>`;
+    setTimeout(()=>{const inp=document.getElementById("pinned-search-input");if(inp)inp.focus();},50);
     return;
   }
   const pins=[...pinnedIds].map(id=>DATA.find(d=>d.id===id)).filter(Boolean);
@@ -3665,7 +3805,9 @@ function renderPinnedTab(){
     });
     html+=`</div>`;
   });
-  grid.innerHTML=html;
+  grid.innerHTML=searchBar+html;
+  const inp=document.getElementById("pinned-search-input");
+  if(inp)inp.addEventListener("input",function(){renderPinnedSearch(this.value);});
 }
 
 // Table de synonymes pour le diagnostic
