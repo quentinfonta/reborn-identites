@@ -31,7 +31,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
 /* SCREENS */
 .screen{display:none;height:100vh;padding:2rem 1.5rem;flex-direction:column;overflow:hidden;}
 .screen.show{display:flex;}
-#profile-screen,#pin-screen{align-items:center;justify-content:center;gap:2rem;height:100vh;overflow:hidden;}
+#profile-screen{align-items:center;justify-content:flex-start;padding:2rem 1.5rem;height:100vh;overflow-y:auto;}
+#pin-screen{align-items:center;justify-content:center;gap:2rem;height:100vh;overflow:hidden;}
 .auth-wrap{width:100%;max-width:400px;display:flex;flex-direction:column;align-items:center;}
 .home-screen{display:none;}
 
@@ -82,17 +83,29 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
 /* PROFILE */
 .brand{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);}
 .screen-title{font-size:26px;font-weight:600;text-align:center;}
-.profile-box{background:var(--surface);border:1px solid var(--border-md);border-radius:var(--radius-lg);padding:2rem;width:100%;max-width:440px;max-height:85vh;overflow-y:auto;}
+.profile-wrap{width:100%;max-width:840px;display:flex;flex-direction:column;align-items:center;gap:2rem;padding-top:1rem;padding-bottom:3rem;}
+.profile-search-row{width:100%;position:relative;}
+.profile-search-row input{width:100%;padding:11px 14px 11px 38px;background:var(--surface);border:1px solid var(--border-md);border-radius:var(--radius);color:var(--text);font-size:0.9rem;font-family:inherit;outline:none;}
+.profile-search-row input:focus{border-color:var(--border-strong);}
+.profile-search-row .search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);opacity:0.4;pointer-events:none;}
+.profile-columns{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start;}
+@media(max-width:600px){.profile-columns{grid-template-columns:1fr;}}
+.profile-section{background:var(--surface);border:1px solid var(--border-md);border-radius:var(--radius-lg);padding:1.5rem;}
 .box-label{font-size:11px;font-weight:500;color:var(--text-faint);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:1rem;}
+.profile-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-bottom:0.5rem;}
+.profile-card{position:relative;display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px 10px;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--surface2);cursor:pointer;transition:all 0.15s;text-align:center;}
+.profile-card:hover{border-color:var(--border-strong);background:var(--surface3);}
+.profile-avatar{width:42px;height:42px;border-radius:50%;background:var(--gold-bg);border:1px solid var(--gold-border);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600;color:var(--gold-text);flex-shrink:0;}
+.profile-name{font-size:13px;font-weight:500;line-height:1.3;word-break:break-word;}
+.profile-meta{font-size:11px;color:var(--text-faint);}
+.profile-delete-btn{position:absolute;top:6px;right:6px;background:none;border:none;cursor:pointer;font-size:11px;padding:3px;opacity:0;transition:opacity 0.15s;line-height:1;color:var(--text-faint);}
+.profile-card:hover .profile-delete-btn{opacity:0.6;}
+.profile-delete-btn:hover{opacity:1!important;}
+/* keep old list style for fallback */
 .profile-list{display:flex;flex-direction:column;gap:8px;margin-bottom:1.25rem;max-height:320px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
 .profile-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--surface2);cursor:pointer;transition:all 0.15s;}
 .profile-item:hover{border-color:var(--border-strong);background:var(--surface3);}
-.profile-item:hover{border-color:var(--border-md);}
-.profile-avatar{width:32px;height:32px;border-radius:50%;background:var(--gold-bg);border:1px solid var(--gold-border);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--gold-text);flex-shrink:0;}
-.profile-name{font-size:14px;font-weight:500;flex:1;}
-.profile-meta{font-size:11px;color:var(--text-faint);}
-.profile-delete-btn{background:none;border:none;cursor:pointer;font-size:13px;padding:4px;opacity:0.3;transition:opacity 0.15s;flex-shrink:0;}
-.profile-delete-btn:hover{opacity:1;}
+.profile-box{background:var(--surface);border:1px solid var(--border-md);border-radius:var(--radius-lg);padding:2rem;width:100%;max-width:440px;max-height:85vh;overflow-y:auto;}
 .divider{display:flex;align-items:center;gap:10px;margin:1rem 0;color:var(--text-faint);font-size:12px;}
 .divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border);}
 .new-profile-form{display:flex;flex-direction:column;gap:8px;}
@@ -444,22 +457,38 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
 <body>
 <!-- PROFILE -->
 <div class="screen show" id="profile-screen">
-  <div class="brand">REBORN</div>
-  <div><div class="screen-title">Dictionnaire des identités</div><div style="font-size:14px;color:var(--text-muted);text-align:center;margin-top:8px">Choisis ton profil</div></div>
-  <div class="profile-box">
-    <div class="box-label">Profils existants</div>
-    <div class="profile-list" id="profile-list"><span class="spinner"></span></div>
-    <div class="divider">ou</div>
-    <div class="new-profile-form">
-      <div class="box-label" style="margin-bottom:0.5rem">Créer un profil</div>
-      <div class="input-row">
-        <input type="text" class="txt-input" id="new-name" placeholder="Prénom…"/>
-        <input type="text" class="txt-input" id="new-pin" placeholder="PIN (4 chiffres)" maxlength="4" style="width:140px;flex:none;"/>
+  <div class="profile-wrap">
+    <div style="text-align:center;">
+      <div class="brand" style="margin-bottom:0.5rem;">REBORN</div>
+      <div class="screen-title">Choisir un profil</div>
+    </div>
+    <div class="profile-search-row">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="profile-search" placeholder="Rechercher un profil…" oninput="filterProfiles(this.value)" autocomplete="off"/>
+    </div>
+    <div class="profile-columns">
+      <!-- Profils existants -->
+      <div class="profile-section">
+        <div class="box-label">Profils existants</div>
+        <div id="profile-grid-wrap">
+          <div class="profile-grid" id="profile-list"><span class="spinner"></span></div>
+          <div id="profile-empty" style="display:none;font-size:13px;color:var(--text-faint);font-style:italic;padding:4px 0;">Aucun profil trouvé</div>
+        </div>
       </div>
-      <div class="pin-hint">Le code PIN protège l accès.</div>
-      <input type="text" class="txt-input" id="new-code" placeholder="Code d accès REBORN…" style="margin-top:6px;"/>
-      <div id="create-err" style="font-size:13px;color:var(--red-text);min-height:16px;"></div>
-      <button class="green-btn" id="create-btn" style="align-self:flex-end">Créer</button>
+      <!-- Créer un profil -->
+      <div class="profile-section">
+        <div class="box-label" style="margin-bottom:1rem;">Créer un profil</div>
+        <div class="new-profile-form">
+          <div class="input-row">
+            <input type="text" class="txt-input" id="new-name" placeholder="Prénom…"/>
+            <input type="text" class="txt-input" id="new-pin" placeholder="PIN (4 chiffres)" maxlength="4" style="width:130px;flex:none;"/>
+          </div>
+          <div class="pin-hint">Le code PIN protège l accès.</div>
+          <input type="text" class="txt-input" id="new-code" placeholder="Code d accès REBORN…" style="margin-top:6px;"/>
+          <div id="create-err" style="font-size:13px;color:var(--red-text);min-height:16px;"></div>
+          <button class="green-btn" id="create-btn" style="align-self:flex-end">Créer</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -2691,41 +2720,73 @@ function showScreen(id){
 }
 
 /* ===== PROFILES ===== */
+let _allProfiles=[];
+
 async function loadProfiles(){
   const list=document.getElementById("profile-list");
+  if(!list)return;
   list.innerHTML='<span class="spinner"></span>';
   try{
-    const profiles=await sb("profiles?select=*&order=created_at.asc");
-    if(!profiles||!profiles.length){list.innerHTML='<div style="font-size:13px;color:var(--text-faint);font-style:italic">Aucun profil — crée-en un</div>';return;}
-    list.innerHTML=profiles.map(p=>{
-      const ini=p.name.slice(0,2).toUpperCase();
-      return`<div class="profile-item" data-id="${p.id}" data-name="${p.name}" data-hash="${p.pin_hash}">
-        <div class="profile-avatar">${ini}</div>
-        <div class="profile-name">${p.name}</div>
-        <button class="profile-delete-btn" data-id="${p.id}" data-name="${p.name}">✕</button>
-      </div>`;
-    }).join("");
-    list.querySelectorAll(".profile-item").forEach(item=>item.addEventListener("click",e=>{
-      if(e.target.closest(".profile-delete-btn"))return;
-      openPin(item.dataset.id,item.dataset.name,item.dataset.hash);
-    }));
-    list.querySelectorAll(".profile-delete-btn").forEach(btn=>btn.addEventListener("click",async e=>{
-      e.stopPropagation();
-      const id=btn.dataset.id,name=btn.dataset.name;
-      const hash=btn.closest(".profile-item").dataset.hash;
-      const pin=prompt(`PIN pour supprimer "${name}" :`);
-      if(!pin)return;
-      if(await hashPin(pin)!==hash){showToast("PIN incorrect");return;}
-      if(!confirm(`Supprimer "${name}" définitivement ?`))return;
-      try{
-        await sb(`sessions?profile_id=eq.${id}`,{method:"DELETE",prefer:"return=minimal"});
-        await sb(`profiles?id=eq.${id}`,{method:"DELETE",prefer:"return=minimal"});
-        ["todo_","reviews_","trashed_"].forEach(k=>localStorage.removeItem(k+id));
-        showToast("Profil supprimé");
-        loadProfiles();
-      }catch(e){showToast("Erreur: "+e.message);}
-    }));
+    const profiles=await sb("profiles?select=*&order=name.asc");
+    _allProfiles=profiles||[];
+    renderProfileGrid(_allProfiles);
   }catch(e){list.innerHTML=`<div style="color:var(--red-text);font-size:13px;">Erreur: ${e.message}</div>`;}
+}
+
+function renderProfileGrid(profiles){
+  const list=document.getElementById("profile-list");
+  const empty=document.getElementById("profile-empty");
+  if(!list)return;
+  if(!profiles||!profiles.length){
+    list.innerHTML="";
+    if(empty)empty.style.display="block";
+    return;
+  }
+  if(empty)empty.style.display="none";
+  // Color palette for avatars (cycles)
+  const palettes=[
+    {bg:"var(--gold-bg)",border:"var(--gold-border)",text:"var(--gold-text)"},
+    {bg:"var(--blue-bg)",border:"var(--blue-border)",text:"var(--blue-text)"},
+    {bg:"var(--green-bg)",border:"var(--green-border)",text:"var(--green-text)"},
+    {bg:"var(--purple-bg)",border:"var(--purple-border)",text:"var(--purple-text)"},
+    {bg:"var(--red-bg)",border:"var(--red-border)",text:"var(--red-text)"},
+  ];
+  list.innerHTML=profiles.map((p,i)=>{
+    const pal=palettes[i%palettes.length];
+    const ini=p.name.slice(0,2).toUpperCase();
+    return`<div class="profile-card" data-id="${p.id}" data-name="${p.name}" data-hash="${p.pin_hash}">
+      <button class="profile-delete-btn" data-id="${p.id}" data-name="${p.name}" title="Supprimer">✕</button>
+      <div class="profile-avatar" style="background:${pal.bg};border-color:${pal.border};color:${pal.text};width:42px;height:42px;font-size:15px;">${ini}</div>
+      <div class="profile-name">${p.name}</div>
+    </div>`;
+  }).join("");
+  list.querySelectorAll(".profile-card").forEach(card=>card.addEventListener("click",e=>{
+    if(e.target.closest(".profile-delete-btn"))return;
+    openPin(card.dataset.id,card.dataset.name,card.dataset.hash);
+  }));
+  list.querySelectorAll(".profile-delete-btn").forEach(btn=>btn.addEventListener("click",async e=>{
+    e.stopPropagation();
+    const id=btn.dataset.id,name=btn.dataset.name;
+    const card=btn.closest(".profile-card");
+    const hash=card.dataset.hash;
+    const pin=prompt(`PIN pour supprimer "${name}" :`);
+    if(!pin)return;
+    if(await hashPin(pin)!==hash){showToast("PIN incorrect");return;}
+    if(!confirm(`Supprimer "${name}" définitivement ?`))return;
+    try{
+      await sb(`sessions?profile_id=eq.${id}`,{method:"DELETE",prefer:"return=minimal"});
+      await sb(`profiles?id=eq.${id}`,{method:"DELETE",prefer:"return=minimal"});
+      ["todo_","reviews_","trashed_"].forEach(k=>localStorage.removeItem(k+id));
+      showToast("Profil supprimé");
+      loadProfiles();
+    }catch(e){showToast("Erreur: "+e.message);}
+  }));
+}
+
+function filterProfiles(q){
+  const query=q.trim().toLowerCase();
+  if(!query){renderProfileGrid(_allProfiles);return;}
+  renderProfileGrid(_allProfiles.filter(p=>p.name.toLowerCase().includes(query)));
 }
 
 /* ===== EXERCISES ===== */
@@ -3753,14 +3814,24 @@ async function submitProposal(){
   if(!t){showToast("⚠️ Entrez une identité");return;}
   if(!t.toLowerCase().startsWith("je suis ")){showToast("⚠️ Format : Je suis [participe passé]");return;}
   if(t.toLowerCase()==="je suis "){showToast("⚠️ Complétez l'identité");return;}
+  const cat=document.getElementById("proposal-cat")?.value||null;
+  const role=document.getElementById("proposal-role")?.value||null;
+  const depthRaw=document.getElementById("proposal-depth")?.value;
+  const depth=depthRaw?parseInt(depthRaw):null;
+  const payload={text:t,profile_id:currentProfile?.id||null,status:"pending"};
+  if(cat)payload.cat=cat;
+  if(role)payload.role=role;
+  if(depth)payload.depth=depth;
   try{
     await fetch(SB_URL+"/rest/v1/identity_proposals",{
       method:"POST",
       headers:{"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"application/json","Prefer":"return=minimal"},
-      body:JSON.stringify({text:t,profile_id:currentProfile?.id||null,status:"pending"})
+      body:JSON.stringify(payload)
     });
     showToast("✓ Proposition envoyée !");
     inp.value="Je suis ";
+    const catEl=document.getElementById("proposal-cat");const roleEl=document.getElementById("proposal-role");const depEl=document.getElementById("proposal-depth");
+    if(catEl)catEl.value="";if(roleEl)roleEl.value="";if(depEl)depEl.value="";
     document.getElementById("proposal-form").style.display="none";
   }catch(e){showToast("Erreur lors de l'envoi");}
 }
@@ -3829,13 +3900,45 @@ function renderPinnedTab(){
     <div style="text-align:right;margin-top:6px;">
       <button onclick="showProposalForm()" style="font-size:0.75rem;background:none;border:none;color:var(--text-faint);cursor:pointer;text-decoration:underline;padding:2px 0;">✏️ Proposer une identité</button>
     </div>
-    <div id="proposal-form" style="display:none;margin-top:8px;background:var(--surface2);border:1px solid var(--border-md);border-radius:var(--radius);padding:10px 12px;">
-      <div style="font-size:0.78rem;color:var(--text-faint);margin-bottom:6px;">Format : <em>Je suis [participe passé]</em></div>
-      <div style="display:flex;gap:8px;">
+    <div id="proposal-form" style="display:none;margin-top:8px;background:var(--surface2);border:1px solid var(--border-md);border-radius:var(--radius);padding:12px 14px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <span style="font-size:0.78rem;color:var(--text-faint);">Format : <em>Je suis [participe passé]</em></span>
+        <button onclick="document.getElementById('proposal-form').style.display='none';" style="padding:4px 8px;background:none;border:none;color:var(--text-faint);font-size:0.9rem;cursor:pointer;">✕</button>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:8px;">
         <input id="proposal-input" type="text" placeholder="Je suis …" value="Je suis "
           style="flex:1;padding:8px 10px;background:var(--surface);border:1px solid var(--border-md);border-radius:6px;color:var(--text);font-size:0.85rem;font-family:inherit;outline:none;"/>
-        <button onclick="submitProposal()" style="padding:8px 14px;background:var(--surface);border:1px solid var(--border-md);border-radius:6px;color:var(--text);font-size:0.82rem;font-family:inherit;cursor:pointer;white-space:nowrap;">Envoyer</button>
-        <button onclick="document.getElementById('proposal-form').style.display='none';" style="padding:8px 10px;background:none;border:none;color:var(--text-faint);font-size:0.9rem;cursor:pointer;">✕</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:8px;">
+        <select id="proposal-cat" style="padding:7px 8px;background:var(--surface);border:1px solid var(--border-md);border-radius:6px;color:var(--text);font-size:0.78rem;font-family:inherit;cursor:pointer;width:100%;">
+          <option value="">— Catégorie —</option>
+          <option>Abandon</option><option>Affection</option><option>Blessure</option>
+          <option>Conditionnement</option><option>Confusion</option><option>Contrôle</option>
+          <option>Culpabilité</option><option>Dissociation</option><option>Dépendance</option>
+          <option>Effondrement</option><option>Engagement</option><option>Existence</option>
+          <option>Figement</option><option>Honte</option><option>Humiliation</option>
+          <option>Indifférence</option><option>Injustice</option><option>Isolement</option>
+          <option>Ouverture</option><option>Perte</option><option>Rigidité</option>
+          <option>Trahison</option><option>Usure</option><option>Violation</option>
+          <option>Épuisement</option>
+        </select>
+        <select id="proposal-role" style="padding:7px 8px;background:var(--surface);border:1px solid var(--border-md);border-radius:6px;color:var(--text);font-size:0.78rem;font-family:inherit;cursor:pointer;width:100%;">
+          <option value="">— Rôle —</option>
+          <option value="source">Source</option>
+          <option value="coping">Coping</option>
+          <option value="verdict">Verdict</option>
+        </select>
+        <select id="proposal-depth" style="padding:7px 8px;background:var(--surface);border:1px solid var(--border-md);border-radius:6px;color:var(--text);font-size:0.78rem;font-family:inherit;cursor:pointer;width:100%;">
+          <option value="">— Profondeur —</option>
+          <option value="1">1 — Surface</option>
+          <option value="2">2 — Modéré</option>
+          <option value="3">3 — Profond</option>
+          <option value="4">4 — Racine</option>
+          <option value="5">5 — Noyau</option>
+        </select>
+      </div>
+      <div style="text-align:right;">
+        <button onclick="submitProposal()" style="padding:8px 20px;background:var(--surface);border:1px solid var(--border-md);border-radius:6px;color:var(--text);font-size:0.82rem;font-family:inherit;cursor:pointer;">Envoyer</button>
       </div>
     </div>
   </div>`;
@@ -3877,7 +3980,7 @@ function renderPinnedTab(){
         <span style="font-size:0.7rem;color:var(--text-faint);background:var(--surface2);padding:2px 6px;border-radius:4px;">${d.role==="source"?"source":d.role==="coping"?"coping":"verdict"}</span>
         ${isWorked
           ? `<button onclick="unvalidateId(${d.id});" title="Retirer la validation" style="font-size:0.72rem;background:var(--red-bg);border:1px solid var(--red-border);color:var(--red-text);border-radius:5px;padding:3px 8px;cursor:pointer;flex-shrink:0;">↩ Retirer</button>`
-          : `<button onclick="checked.add(${d.id});saveChecked();renderPinnedTab();" style="font-size:0.72rem;background:var(--green-bg);border:1px solid var(--green-border);color:var(--green-text);border-radius:5px;padding:3px 8px;cursor:pointer;flex-shrink:0;">✓ Valider</button>`
+          : `<button onclick="validateFromDico(${d.id}).then(()=>renderPinnedTab());" style="font-size:0.72rem;background:var(--green-bg);border:1px solid var(--green-border);color:var(--green-text);border-radius:5px;padding:3px 8px;cursor:pointer;flex-shrink:0;">✓ Valider</button>`
         }
         <button onclick="pinnedIds.delete(${d.id});fetch(SB_URL+'/rest/v1/pins?profile_id=eq.'+currentProfile.id+'&identity_id=eq.${d.id}',{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}}).catch(()=>{});renderPinnedTab();" style="background:none;border:none;cursor:pointer;font-size:0.9rem;opacity:0.5;flex-shrink:0;" title="Désépingler">📌</button>
       </div>`;
@@ -4386,10 +4489,32 @@ function dicoRow(d,wids,depthColor,depthLabel){
     <span style="font-size:0.7rem;color:${depthColor(d.depth)};flex-shrink:0;width:14px;text-align:center;">${depthLabel(d.depth)}</span>
     <span style="flex:1;font-size:0.85rem;${isWorked?"color:var(--green-text);":""}">${d.text}</span>
     <span style="font-size:0.62rem;color:var(--text-faint);background:var(--surface2);padding:1px 5px;border-radius:3px;flex-shrink:0;">${d.role}</span>
+    ${isWorked
+      ? `<button onclick="unvalidateId(${d.id});" style="font-size:0.65rem;background:var(--red-bg);border:1px solid var(--red-border);color:var(--red-text);border-radius:4px;padding:2px 7px;cursor:pointer;flex-shrink:0;">↩</button>`
+      : `<button onclick="validateFromDico(${d.id});" style="font-size:0.65rem;background:var(--green-bg);border:1px solid var(--green-border);color:var(--green-text);border-radius:4px;padding:2px 7px;cursor:pointer;flex-shrink:0;">✓</button>`
+    }
     <button onclick="togglePin(${d.id});renderDicoBody();"
       style="background:none;border:none;cursor:pointer;font-size:0.85rem;opacity:${isPinned?1:0.25};flex-shrink:0;padding:0 2px;"
       title="${isPinned?"Désépingler":"Épingler"}">📌</button>
   </div>`;
+}
+
+async function validateFromDico(id){
+  if(!currentProfile)return;
+  const date=new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
+  try{
+    const existing=SESSIONS.find(s=>s.date===date);
+    if(existing&&!existing.ids.includes(id)){
+      const newIds=[...existing.ids,id];
+      await sb(`sessions?id=eq.${existing.id}`,{method:"PATCH",body:{ids:newIds},prefer:"return=minimal"});
+      existing.ids=newIds;
+    } else if(!existing){
+      const r=await sb("sessions",{method:"POST",body:{profile_id:currentProfile.id,date,ids:[id]},prefer:"return=representation"});
+      if(r&&r[0])SESSIONS.push({id:r[0].id,date,ids:[id]});
+    }
+    renderHomeThemes();
+    renderDicoBody();
+  }catch(e){showToast("Erreur lors de la validation");}
 }
 
 function renderHistoryInline(){
