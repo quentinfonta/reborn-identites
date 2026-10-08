@@ -4274,65 +4274,122 @@ document.getElementById("home-history-btn")?.addEventListener("click",()=>setHom
 document.getElementById("home-diagnostic-btn")?.addEventListener("click",()=>setHomeTab("diagnostic"));
 document.getElementById("home-dictionnaire-btn")?.addEventListener("click",()=>setHomeTab("dictionnaire"));
 
+let dicoSort="alpha"; // "alpha" | "cat" | "depth"
+let dicoShowWorked=false;
+
 function renderDictionnaireInline(){
   const grid=document.getElementById("home-themes-grid");
-  const wids=workedIds();
-  const depthColor=d=>{const c=["","var(--l1)","var(--l2)","var(--l3)","var(--l4)","var(--l5)"];return c[d]||"var(--text-muted)";};
-
-  // Barre de recherche dico
-  let html=`<div style="margin-bottom:1rem;position:relative;">
-    <input id="dico-search" type="text" placeholder="Filtrer les identités…"
-      style="width:100%;box-sizing:border-box;padding:9px 14px;padding-left:34px;background:var(--surface);border:1px solid var(--border-md);border-radius:var(--radius);color:var(--text);font-size:0.85rem;font-family:inherit;outline:none;"
-      oninput="renderDicoFilter(this.value)" autocomplete="off"/>
-    <span style="position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:0.85rem;opacity:0.4;">🔍</span>
+  const html=`
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:1rem;flex-wrap:wrap;">
+    <div style="position:relative;flex:1;min-width:140px;">
+      <input id="dico-search" type="text" placeholder="Filtrer…"
+        style="width:100%;box-sizing:border-box;padding:8px 12px;padding-left:30px;background:var(--surface);border:1px solid var(--border-md);border-radius:var(--radius);color:var(--text);font-size:0.83rem;font-family:inherit;outline:none;"
+        oninput="renderDicoBody()" autocomplete="off"/>
+      <span style="position:absolute;left:9px;top:50%;transform:translateY(-50%);font-size:0.8rem;opacity:0.4;">🔍</span>
+    </div>
+    <div style="display:flex;gap:4px;background:var(--surface2);border-radius:20px;padding:3px;">
+      <button id="dico-sort-alpha" onclick="dicoSort='alpha';updateDicoSortBtns();renderDicoBody();"
+        style="padding:5px 12px;border-radius:20px;border:none;font-size:0.75rem;font-family:inherit;cursor:pointer;background:var(--surface);color:var(--text);font-weight:500;">A→Z</button>
+      <button id="dico-sort-cat" onclick="dicoSort='cat';updateDicoSortBtns();renderDicoBody();"
+        style="padding:5px 12px;border-radius:20px;border:none;font-size:0.75rem;font-family:inherit;cursor:pointer;background:transparent;color:var(--text-faint);">Catégorie</button>
+      <button id="dico-sort-depth" onclick="dicoSort='depth';updateDicoSortBtns();renderDicoBody();"
+        style="padding:5px 12px;border-radius:20px;border:none;font-size:0.75rem;font-family:inherit;cursor:pointer;background:transparent;color:var(--text-faint);">Profondeur</button>
+    </div>
+    <label style="display:flex;align-items:center;gap:5px;font-size:0.75rem;color:var(--text-faint);cursor:pointer;white-space:nowrap;">
+      <input type="checkbox" id="dico-show-worked" onchange="dicoShowWorked=this.checked;renderDicoBody();"
+        style="accent-color:var(--green-text);width:14px;height:14px;cursor:pointer;"/>
+      Afficher validées
+    </label>
   </div>
   <div id="dico-body"></div>`;
   grid.innerHTML=html;
-  renderDicoFilter("");
+  renderDicoBody();
 }
 
-function renderDicoFilter(query){
+function updateDicoSortBtns(){
+  ["alpha","cat","depth"].forEach(s=>{
+    const btn=document.getElementById("dico-sort-"+s);
+    if(!btn)return;
+    const active=dicoSort===s;
+    btn.style.background=active?"var(--surface)":"transparent";
+    btn.style.color=active?"var(--text)":"var(--text-faint)";
+    btn.style.fontWeight=active?"500":"normal";
+  });
+}
+
+function renderDicoBody(){
   const body=document.getElementById("dico-body");
   if(!body)return;
   const wids=workedIds();
-  const q=query.trim().toLowerCase();
+  const q=(document.getElementById("dico-search")?.value||"").trim().toLowerCase();
   const depthColor=d=>{const c=["","var(--l1)","var(--l2)","var(--l3)","var(--l4)","var(--l5)"];return c[d]||"var(--text-muted)";};
+  const depthLabel=d=>["","①","②","③","④","⑤"][d]||d;
 
-  const filtered=q?DATA.filter(d=>d.text.toLowerCase().includes(q)||d.cat.toLowerCase().includes(q)):DATA;
-
-  // Grouper par catégorie
-  const catMap={};
-  filtered.forEach(d=>{
-    if(!catMap[d.cat])catMap[d.cat]=[];
-    catMap[d.cat].push(d);
+  let filtered=DATA.filter(d=>{
+    if(!dicoShowWorked&&wids.has(d.id))return false;
+    if(!q)return true;
+    return d.text.toLowerCase().includes(q)||d.cat.toLowerCase().includes(q);
   });
-  const cats=Object.keys(catMap).sort();
 
-  if(!cats.length){
+  if(!filtered.length){
     body.innerHTML=`<div style="text-align:center;padding:2rem;color:var(--text-faint);font-size:0.85rem;">Aucun résultat.</div>`;
     return;
   }
 
   let html="";
-  cats.forEach(cat=>{
-    html+=`<div style="margin-bottom:1.2rem;">
-      <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-faint);margin-bottom:0.4rem;padding:0 2px;">${cat}</div>`;
-    catMap[cat].forEach(d=>{
-      const isWorked=wids.has(d.id);
-      const isPinned=pinnedIds.has(d.id);
-      html+=`<div style="display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:var(--radius);border:1px solid ${isWorked?"var(--green-border)":"var(--border)"};background:var(--surface);margin-bottom:4px;">
-        <span style="width:5px;height:5px;border-radius:50%;background:${depthColor(d.depth)};flex-shrink:0;"></span>
-        <span style="flex:1;font-size:0.85rem;${isWorked?"color:var(--green-text);":""}">${d.text}</span>
-        <span style="font-size:0.65rem;color:var(--text-faint);background:var(--surface2);padding:1px 5px;border-radius:3px;flex-shrink:0;">${d.role}</span>
-        <button onclick="togglePin(${d.id});renderDicoFilter(document.getElementById('dico-search')?.value||'');"
-          style="background:none;border:none;cursor:pointer;font-size:0.85rem;opacity:${isPinned?1:0.25};flex-shrink:0;padding:0 2px;"
-          title="${isPinned?"Désépingler":"Épingler"}">📌</button>
-        ${isWorked?`<span style="font-size:0.7rem;background:var(--green-bg);border:1px solid var(--green-border);color:var(--green-text);border-radius:4px;padding:1px 5px;flex-shrink:0;">✓</span>`:""}
-      </div>`;
+
+  if(dicoSort==="alpha"){
+    filtered.sort((a,b)=>a.text.localeCompare(b.text,"fr"));
+    // grouper par première lettre
+    const letterMap={};
+    filtered.forEach(d=>{
+      const letter=d.text.replace(/^je suis /i,"").charAt(0).toUpperCase();
+      if(!letterMap[letter])letterMap[letter]=[];
+      letterMap[letter].push(d);
     });
-    html+=`</div>`;
-  });
+    Object.keys(letterMap).sort().forEach(letter=>{
+      html+=`<div style="margin-bottom:1.2rem;">
+        <div style="font-size:0.68rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-faint);margin-bottom:0.4rem;padding:0 2px;">${letter}</div>`;
+      letterMap[letter].forEach(d=>{html+=dicoRow(d,wids,depthColor,depthLabel);});
+      html+=`</div>`;
+    });
+  } else if(dicoSort==="cat"){
+    const catMap={};
+    filtered.forEach(d=>{if(!catMap[d.cat])catMap[d.cat]=[];catMap[d.cat].push(d);});
+    Object.keys(catMap).sort().forEach(cat=>{
+      catMap[cat].sort((a,b)=>a.depth-b.depth);
+      html+=`<div style="margin-bottom:1.2rem;">
+        <div style="font-size:0.68rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-faint);margin-bottom:0.4rem;padding:0 2px;">${cat}</div>`;
+      catMap[cat].forEach(d=>{html+=dicoRow(d,wids,depthColor,depthLabel);});
+      html+=`</div>`;
+    });
+  } else {
+    // tri par profondeur
+    for(let depth=1;depth<=5;depth++){
+      const items=filtered.filter(d=>d.depth===depth).sort((a,b)=>a.cat.localeCompare(b.cat)||a.text.localeCompare(b.text));
+      if(!items.length)continue;
+      const col=depthColor(depth);
+      html+=`<div style="margin-bottom:1.2rem;">
+        <div style="font-size:0.68rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:${col};margin-bottom:0.4rem;padding:0 2px;">Profondeur ${depth}</div>`;
+      items.forEach(d=>{html+=dicoRow(d,wids,depthColor,depthLabel);});
+      html+=`</div>`;
+    }
+  }
+
   body.innerHTML=html;
+}
+
+function dicoRow(d,wids,depthColor,depthLabel){
+  const isWorked=wids.has(d.id);
+  const isPinned=pinnedIds.has(d.id);
+  return `<div style="display:flex;align-items:center;gap:7px;padding:6px 10px;border-radius:var(--radius);border:1px solid ${isWorked?"var(--green-border)":"var(--border)"};background:var(--surface);margin-bottom:3px;">
+    <span style="font-size:0.7rem;color:${depthColor(d.depth)};flex-shrink:0;width:14px;text-align:center;">${depthLabel(d.depth)}</span>
+    <span style="flex:1;font-size:0.85rem;${isWorked?"color:var(--green-text);":""}">${d.text}</span>
+    <span style="font-size:0.62rem;color:var(--text-faint);background:var(--surface2);padding:1px 5px;border-radius:3px;flex-shrink:0;">${d.role}</span>
+    <button onclick="togglePin(${d.id});renderDicoBody();"
+      style="background:none;border:none;cursor:pointer;font-size:0.85rem;opacity:${isPinned?1:0.25};flex-shrink:0;padding:0 2px;"
+      title="${isPinned?"Désépingler":"Épingler"}">📌</button>
+  </div>`;
 }
 
 function renderHistoryInline(){
