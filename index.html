@@ -499,6 +499,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
       <button class="home-sidebar-btn" id="home-exercises-btn">⚡ Exercices</button>
       <button class="home-sidebar-btn" id="home-history-btn">📅 Historique</button>
       <button class="home-sidebar-btn" id="home-diagnostic-btn">🔍 Diagnostic</button>
+      <button class="home-sidebar-btn" id="home-dictionnaire-btn">📖 Dictionnaire</button>
     </div>
     <div class="home-sidebar-footer">
       <button class="home-footer-btn" id="home-switch-btn"><i class="ti ti-switch-horizontal"></i> Changer de profil</button>
@@ -513,6 +514,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
       <button class="home-mobile-tab" data-tab="exercises">Exercices</button>
       <button class="home-mobile-tab" data-tab="history">Historique</button>
       <button class="home-mobile-tab" data-tab="diagnostic">Diagnostic</button>
+      <button class="home-mobile-tab" data-tab="dictionnaire">📖 Dico</button>
     </div>
     <button class="home-mobile-switch" id="home-switch-mobile"><i class="ti ti-switch-horizontal"></i></button>
   </div>
@@ -1345,6 +1347,20 @@ const DEFAULT_DATA = [
   {id:19022,text:'Je suis revenu',cat:'Abandon',depth:3,role:'coping'},
   {id:19023,text:'Je suis traversé',cat:'Effondrement',depth:4,role:'coping'},
   {id:19024,text:'Je suis surpassé',cat:'Effondrement',depth:4,role:'coping'},
+  {id:19025,text:'Je suis surpris',cat:'Confusion',depth:1,role:'source'},
+  {id:19026,text:'Je suis stupéfait',cat:'Confusion',depth:2,role:'source'},
+  {id:19027,text:'Je suis subjugué',cat:'Dissociation',depth:3,role:'source'},
+  {id:19028,text:'Je suis régalé',cat:'Affection',depth:2,role:'coping'},
+  {id:19029,text:'Je suis tari',cat:'Épuisement',depth:3,role:'verdict'},
+  {id:19030,text:'Je suis annulé',cat:'Existence',depth:4,role:'verdict'},
+  {id:19031,text:'Je suis relaxé',cat:'Épuisement',depth:2,role:'coping'},
+  {id:19032,text:'Je suis massacré',cat:'Blessure',depth:2,role:'source'},
+  {id:19033,text:'Je suis positionné',cat:'Contrôle',depth:2,role:'coping'},
+  {id:19034,text:'Je suis employé',cat:'Engagement',depth:2,role:'coping'},
+  {id:19035,text:'Je suis provoqué',cat:'Blessure',depth:2,role:'source'},
+  {id:19036,text:'Je suis vampirisé',cat:'Épuisement',depth:3,role:'source'},
+  {id:19037,text:'Je suis ponctionné',cat:'Épuisement',depth:3,role:'source'},
+  {id:19038,text:'Je suis siphonné',cat:'Épuisement',depth:3,role:'source'},
   {id:5001,text:'Je suis blâmé',cat:'Culpabilité',depth:3,role:'source'},
   {id:103,text:'Je suis damné',cat:'Culpabilité',depth:5,role:'source'},
   {id:104,text:'Je suis maudit',cat:'Culpabilité',depth:5,role:'source'},
@@ -3710,6 +3726,13 @@ function setHomeTab(tab){
     grid.style.display="flex";
     grid.style.flexDirection="column";
     renderPinnedTab();
+  } else if(tab==="dictionnaire"){
+    document.getElementById("home-sub").textContent="Dictionnaire des identités";
+    const srch7=document.getElementById("home-search");
+    if(srch7){srch7.style.display="none";}
+    grid.style.display="flex";
+    grid.style.flexDirection="column";
+    renderDictionnaireInline();
   }
 }
 
@@ -4249,6 +4272,68 @@ document.getElementById("home-journal-btn").addEventListener("click",()=>setHome
 document.getElementById("home-exercises-btn").addEventListener("click",()=>setHomeTab("exercises"));
 document.getElementById("home-history-btn")?.addEventListener("click",()=>setHomeTab("history"));
 document.getElementById("home-diagnostic-btn")?.addEventListener("click",()=>setHomeTab("diagnostic"));
+document.getElementById("home-dictionnaire-btn")?.addEventListener("click",()=>setHomeTab("dictionnaire"));
+
+function renderDictionnaireInline(){
+  const grid=document.getElementById("home-themes-grid");
+  const wids=workedIds();
+  const depthColor=d=>{const c=["","var(--l1)","var(--l2)","var(--l3)","var(--l4)","var(--l5)"];return c[d]||"var(--text-muted)";};
+
+  // Barre de recherche dico
+  let html=`<div style="margin-bottom:1rem;position:relative;">
+    <input id="dico-search" type="text" placeholder="Filtrer les identités…"
+      style="width:100%;box-sizing:border-box;padding:9px 14px;padding-left:34px;background:var(--surface);border:1px solid var(--border-md);border-radius:var(--radius);color:var(--text);font-size:0.85rem;font-family:inherit;outline:none;"
+      oninput="renderDicoFilter(this.value)" autocomplete="off"/>
+    <span style="position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:0.85rem;opacity:0.4;">🔍</span>
+  </div>
+  <div id="dico-body"></div>`;
+  grid.innerHTML=html;
+  renderDicoFilter("");
+}
+
+function renderDicoFilter(query){
+  const body=document.getElementById("dico-body");
+  if(!body)return;
+  const wids=workedIds();
+  const q=query.trim().toLowerCase();
+  const depthColor=d=>{const c=["","var(--l1)","var(--l2)","var(--l3)","var(--l4)","var(--l5)"];return c[d]||"var(--text-muted)";};
+
+  const filtered=q?DATA.filter(d=>d.text.toLowerCase().includes(q)||d.cat.toLowerCase().includes(q)):DATA;
+
+  // Grouper par catégorie
+  const catMap={};
+  filtered.forEach(d=>{
+    if(!catMap[d.cat])catMap[d.cat]=[];
+    catMap[d.cat].push(d);
+  });
+  const cats=Object.keys(catMap).sort();
+
+  if(!cats.length){
+    body.innerHTML=`<div style="text-align:center;padding:2rem;color:var(--text-faint);font-size:0.85rem;">Aucun résultat.</div>`;
+    return;
+  }
+
+  let html="";
+  cats.forEach(cat=>{
+    html+=`<div style="margin-bottom:1.2rem;">
+      <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-faint);margin-bottom:0.4rem;padding:0 2px;">${cat}</div>`;
+    catMap[cat].forEach(d=>{
+      const isWorked=wids.has(d.id);
+      const isPinned=pinnedIds.has(d.id);
+      html+=`<div style="display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:var(--radius);border:1px solid ${isWorked?"var(--green-border)":"var(--border)"};background:var(--surface);margin-bottom:4px;">
+        <span style="width:5px;height:5px;border-radius:50%;background:${depthColor(d.depth)};flex-shrink:0;"></span>
+        <span style="flex:1;font-size:0.85rem;${isWorked?"color:var(--green-text);":""}">${d.text}</span>
+        <span style="font-size:0.65rem;color:var(--text-faint);background:var(--surface2);padding:1px 5px;border-radius:3px;flex-shrink:0;">${d.role}</span>
+        <button onclick="togglePin(${d.id});renderDicoFilter(document.getElementById('dico-search')?.value||'');"
+          style="background:none;border:none;cursor:pointer;font-size:0.85rem;opacity:${isPinned?1:0.25};flex-shrink:0;padding:0 2px;"
+          title="${isPinned?"Désépingler":"Épingler"}">📌</button>
+        ${isWorked?`<span style="font-size:0.7rem;background:var(--green-bg);border:1px solid var(--green-border);color:var(--green-text);border-radius:4px;padding:1px 5px;flex-shrink:0;">✓</span>`:""}
+      </div>`;
+    });
+    html+=`</div>`;
+  });
+  body.innerHTML=html;
+}
 
 function renderHistoryInline(){
   const grid=document.getElementById("home-themes-grid");
