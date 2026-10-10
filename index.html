@@ -452,6 +452,44 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
 .home-theme-pct{font-size:10px;color:var(--text-faint);min-width:26px;text-align:right;}
 .home-theme-bar{width:36px;height:3px;background:var(--surface3);border-radius:2px;overflow:hidden;}
 .home-theme-bar-fill{height:100%;border-radius:2px;background:var(--accent);}
+
+/* ONBOARDING */
+#onboarding-screen{align-items:center;justify-content:center;padding:2rem 1.5rem;height:100vh;overflow-y:auto;}
+.onb-wrap{width:100%;max-width:480px;display:flex;flex-direction:column;gap:1.5rem;}
+.onb-progress{width:100%;height:3px;background:var(--surface3);border-radius:2px;overflow:hidden;}
+.onb-progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width 0.4s ease;}
+.onb-step{font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;}
+.onb-question{font-size:1.25rem;font-weight:600;line-height:1.4;}
+.onb-choices{display:flex;flex-direction:column;gap:10px;}
+.onb-choice{padding:16px 20px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);cursor:pointer;font-size:0.95rem;font-family:inherit;color:var(--text);text-align:left;transition:all 0.15s;line-height:1.4;}
+.onb-choice:hover{border-color:var(--accent);background:var(--surface2);}
+.onb-choice.selected{border-color:var(--accent);background:rgba(200,184,154,0.08);color:var(--accent);}
+.onb-skip{font-size:12px;color:var(--text-faint);background:none;border:none;cursor:pointer;text-decoration:underline;padding:4px 0;font-family:inherit;}
+
+/* OBJECTIFS sur l'accueil */
+.home-objectives{display:flex;flex-direction:column;gap:8px;margin-bottom:1.5rem;}
+.home-obj-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface);font-size:13px;}
+.home-obj-emoji{font-size:16px;flex-shrink:0;}
+.home-obj-label{flex:1;font-weight:500;}
+.home-obj-rank{font-size:10px;color:var(--text-faint);background:var(--surface2);padding:2px 7px;border-radius:10px;flex-shrink:0;}
+
+/* RECAP objectifs */
+.onb-obj-card{display:flex;align-items:center;gap:12px;padding:14px 18px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);cursor:grab;user-select:none;}
+.onb-obj-card.priority-1{border-color:var(--accent);background:rgba(200,184,154,0.06);}
+.onb-obj-handle{font-size:14px;color:var(--text-faint);flex-shrink:0;}
+.onb-obj-emoji{font-size:20px;flex-shrink:0;}
+.onb-obj-label{flex:1;font-size:0.95rem;font-weight:500;}
+.onb-obj-rank-badge{font-size:10px;font-weight:600;color:var(--accent);background:rgba(200,184,154,0.12);border:1px solid rgba(200,184,154,0.3);padding:2px 8px;border-radius:10px;flex-shrink:0;}
+
+/* IRT PROTOCOL */
+#irt-screen{overflow-y:auto;height:100vh;background:var(--bg);}
+.irt-tool-card{padding:14px 16px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);margin-bottom:10px;display:flex;align-items:center;gap:14px;}
+.irt-tool-icon{font-size:22px;flex-shrink:0;}
+.irt-tool-info{flex:1;}
+.irt-tool-name{font-size:14px;font-weight:600;margin-bottom:2px;}
+.irt-tool-desc{font-size:12px;color:var(--text-muted);}
+.irt-tool-link{font-size:12px;color:var(--accent);text-decoration:none;border:1px solid rgba(200,184,154,0.3);padding:4px 10px;border-radius:8px;white-space:nowrap;flex-shrink:0;}
+.irt-tool-link:hover{background:rgba(200,184,154,0.06);}
 </style>
 </head>
 <body>
@@ -513,6 +551,35 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
   </div>
 </div>
 
+<!-- ONBOARDING -->
+<div class="screen" id="onboarding-screen">
+  <div class="onb-wrap">
+    <div style="text-align:center;margin-bottom:0.5rem;">
+      <div class="brand">REBORN</div>
+    </div>
+    <div class="onb-progress"><div class="onb-progress-fill" id="onb-progress-fill" style="width:12.5%;"></div></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <div class="onb-step" id="onb-step-label">Question 1 / 8</div>
+      <button class="onb-skip" onclick="skipOnboarding()">Passer →</button>
+    </div>
+    <div class="onb-question" id="onb-question-text"></div>
+    <div class="onb-choices" id="onb-choices"></div>
+  </div>
+</div>
+
+<!-- ONBOARDING RECAP -->
+<div class="screen" id="onboarding-recap-screen">
+  <div class="onb-wrap">
+    <div style="text-align:center;margin-bottom:0.5rem;"><div class="brand">REBORN</div></div>
+    <div style="text-align:center;">
+      <div style="font-size:1.4rem;font-weight:700;margin-bottom:0.5rem;">Voilà ce qu'on a identifié</div>
+      <div style="font-size:0.88rem;color:var(--text-muted);line-height:1.5;">Ce sont tes priorités de travail. Tu peux les réordonner selon ce qui compte le plus pour toi.</div>
+    </div>
+    <div id="onb-objectives-list" style="display:flex;flex-direction:column;gap:10px;"></div>
+    <button id="onb-confirm-btn" style="padding:14px 24px;border-radius:var(--radius-lg);border:1px solid var(--accent);background:transparent;color:var(--accent);font-size:1rem;font-weight:600;font-family:inherit;cursor:pointer;margin-top:0.5rem;">Commencer →</button>
+  </div>
+</div>
+
 <!-- HOME -->
 <div class="home-screen" id="home-screen">
   <!-- SIDEBAR -->
@@ -520,6 +587,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
     <div>
       <div class="home-sidebar-brand">REBORN</div>
       <div class="home-sidebar-name">Bonjour, <span id="home-name"></span> 👋</div>
+      <div id="home-objectives-wrap" style="margin-top:0.75rem;"></div>
     </div>
     <div class="home-sidebar-nav">
       <button class="home-sidebar-btn active" id="home-pinned-btn" style="font-weight:600;color:var(--accent);">→ Commencer par là</button>
@@ -530,6 +598,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
       <div style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-faint);padding:12px 14px 4px;">Travail</div>
       <button class="home-sidebar-btn" id="home-exercises-btn">⚡ Exercices</button>
       <button class="home-sidebar-btn" id="home-journal-btn">📓 Journal</button>
+      <button class="home-sidebar-btn" id="home-irt-btn">🎧 Séance IRT</button>
     </div>
     <div class="home-sidebar-footer">
       <button class="home-sidebar-btn" id="home-history-btn" style="font-size:12px;color:var(--text-faint);opacity:0.7;">📅 Historique</button>
@@ -545,6 +614,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
       <button class="home-mobile-tab" data-tab="dictionnaire">📖 Dico</button>
       <button class="home-mobile-tab" data-tab="exercises">⚡ Exercices</button>
       <button class="home-mobile-tab" data-tab="journal">Journal</button>
+      <button class="home-mobile-tab" data-tab="irt">🎧 IRT</button>
       <button class="home-mobile-tab" data-tab="history" style="opacity:0.6;">📅 Historique</button>
     </div>
     <button class="home-mobile-switch" id="home-switch-mobile"><i class="ti ti-switch-horizontal"></i></button>
@@ -552,6 +622,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
   <!-- MAIN -->
   <div class="home-main">
     <div id="home-stats-bar" style="display:flex;gap:1.5rem;margin-bottom:2.5rem;flex-wrap:wrap;"></div>
+    <div id="home-objectives-accueil" style="margin-bottom:1.5rem;"></div>
     <div id="home-sub" style="font-size:22px;font-weight:600;margin-bottom:1.5rem;color:var(--text);">Qu est-ce qui te pèse le plus en ce moment ?</div>
     <div style="margin-bottom:2rem;">
       <input type="text" id="home-search" placeholder="Rechercher une identité ou un thème…" style="width:100%;box-sizing:border-box;padding:12px 16px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface2);color:var(--text);font-size:14px;font-family:inherit;outline:none;">
@@ -740,6 +811,134 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
     </div>
   </div>
   <div class="dict-scroll" id="journal-content"></div>
+</div>
+
+<!-- IRT SCREEN -->
+<div class="block-screen" id="irt-screen">
+  <div class="main-header">
+    <div>
+      <div class="brand" style="margin-bottom:2px">REBORN</div>
+      <div class="brand-title">Protocole IRT</div>
+    </div>
+    <div class="main-header-right">
+      <button class="header-btn" id="irt-home-btn"><i class="ti ti-arrow-left"></i> Accueil</button>
+    </div>
+  </div>
+  <div class="dict-scroll" style="padding:1.5rem;max-width:600px;margin:0 auto;padding-bottom:5rem;">
+
+    <!-- INTRO -->
+    <div style="margin-bottom:2rem;">
+      <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:0.5rem;">Formation</div>
+      <div style="font-size:1.4rem;font-weight:700;margin-bottom:0.75rem;line-height:1.3;">Séance de désintensification émotionnelle</div>
+      <div style="font-size:0.87rem;color:var(--text-muted);line-height:1.7;">Cette page décrit comment mener une séance IRT — une approche de désintensification émotionnelle inspirée de l'EMDR, adaptée au travail sur les identités. Elle n'est pas un outil clinique : c'est un protocole de travail personnel.</div>
+      <div style="margin-top:0.75rem;padding:10px 14px;border-radius:var(--radius);border:1px solid rgba(200,184,154,0.2);background:rgba(200,184,154,0.04);font-size:12px;color:var(--text-muted);line-height:1.6;">
+        🎧 <strong style="color:var(--text);">Matériel requis :</strong> casque ou écouteurs stéréo — la stimulation bilatérale n'est efficace qu'en stéréo.
+      </div>
+    </div>
+
+    <div style="height:1px;background:var(--border);margin-bottom:2rem;"></div>
+
+    <!-- OUTILS -->
+    <div style="margin-bottom:2rem;">
+      <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-faint);margin-bottom:1rem;">Outils de stimulation bilatérale</div>
+      <div style="font-size:12px;color:var(--text-muted);margin-bottom:1rem;line-height:1.6;">Avant de commencer la séance, ouvre l'un de ces outils dans un autre onglet et lance la stimulation. Laisse-le tourner en arrière-plan pendant les cycles de travail.</div>
+      <div class="irt-tool-card">
+        <div class="irt-tool-icon">🎧</div>
+        <div class="irt-tool-info">
+          <div class="irt-tool-name">EMDR Tappers</div>
+          <div class="irt-tool-desc">Sons alternés gauche/droite — le plus simple à paramétrer. Recommandé.</div>
+        </div>
+        <a href="https://app.emdrtappers.com" target="_blank" class="irt-tool-link">Ouvrir →</a>
+      </div>
+      <div class="irt-tool-card">
+        <div class="irt-tool-icon">👁️</div>
+        <div class="irt-tool-info">
+          <div class="irt-tool-name">EyeMove BLS</div>
+          <div class="irt-tool-desc">Alternative — suivi oculaire ou sons binauraux selon préférence.</div>
+        </div>
+        <a href="https://eyemove.app/bls" target="_blank" class="irt-tool-link">Ouvrir →</a>
+      </div>
+    </div>
+
+    <div style="height:1px;background:var(--border);margin-bottom:2rem;"></div>
+
+    <!-- STRUCTURE -->
+    <div style="margin-bottom:2rem;">
+      <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-faint);margin-bottom:1rem;">Structure d'une séance</div>
+
+      <!-- ÉTAPE 1 -->
+      <div style="display:flex;gap:14px;margin-bottom:1.5rem;">
+        <div style="flex-shrink:0;width:32px;height:32px;border-radius:50%;border:1px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--accent);">1</div>
+        <div style="flex:1;">
+          <div style="font-size:14px;font-weight:700;margin-bottom:4px;">Reconnexion corporelle <span style="font-size:12px;color:var(--text-faint);font-weight:400;">— 5 min, sans stimulation</span></div>
+          <div style="font-size:13px;color:var(--text-muted);line-height:1.7;">Installe-toi confortablement. Ferme les yeux. Fais descendre ton attention dans ton corps, des pieds jusqu'à la tête. Remarque les zones de tension, d'inconfort ou d'engourdissement — sans chercher à changer quoi que ce soit. C'est juste un état des lieux.<br><br>Prends environ 5 minutes. Pas de minuteur nécessaire — c'est au ressenti.</div>
+        </div>
+      </div>
+
+      <!-- ÉTAPE 2 -->
+      <div style="display:flex;gap:14px;margin-bottom:1.5rem;">
+        <div style="flex-shrink:0;width:32px;height:32px;border-radius:50%;border:1px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--accent);">2</div>
+        <div style="flex:1;">
+          <div style="font-size:14px;font-weight:700;margin-bottom:4px;">Boucle de travail <span style="font-size:12px;color:var(--text-faint);font-weight:400;">— identité par identité</span></div>
+          <div style="font-size:13px;color:var(--text-muted);line-height:1.7;margin-bottom:1rem;">Pour chaque identité à traiter, on répète la même boucle :</div>
+
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div style="padding:12px 14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface);">
+              <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-faint);margin-bottom:4px;">A — Nommer l'identité</div>
+              <div style="font-size:13px;color:var(--text-muted);line-height:1.6;">Identifie l'identité à travailler (ex : <em>Je suis indigne d'être aimé</em>). Garde-la présente à l'esprit pendant toute la boucle.</div>
+            </div>
+            <div style="padding:12px 14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface);">
+              <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-faint);margin-bottom:4px;">B — SUDS de départ (0–10)</div>
+              <div style="font-size:13px;color:var(--text-muted);line-height:1.6;">Évalue l'intensité émotionnelle de cette identité en ce moment, sur une échelle de 0 (aucune charge) à 10 (intensité maximale). Note-la.</div>
+            </div>
+            <div style="padding:12px 14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface);">
+              <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-faint);margin-bottom:4px;">C — Cycles de stimulation (1 min chacun)</div>
+              <div style="font-size:13px;color:var(--text-muted);line-height:1.6;">Lance la stimulation bilatérale. Tiens l'identité dans ton esprit sans essayer de l'analyser. Laisse ce qui vient, venir. Chaque cycle dure environ 1 minute. Tu peux faire autant de cycles que nécessaire — en général 3 à 6 par identité.<br><br>Entre chaque cycle : respire, note ce qui a changé ou émergé, et reprends si l'intensité est encore élevée.</div>
+            </div>
+            <div style="padding:12px 14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface);">
+              <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-faint);margin-bottom:4px;">D — SUDS final</div>
+              <div style="font-size:13px;color:var(--text-muted);line-height:1.6;">Réévalue l'intensité une fois les cycles terminés. L'objectif n'est pas de descendre à 0 en une séance — une baisse de 2 à 4 points est déjà significative.</div>
+            </div>
+          </div>
+
+          <div style="margin-top:1rem;font-size:13px;color:var(--text-muted);line-height:1.6;">Passe ensuite à l'identité suivante et recommence la boucle.</div>
+        </div>
+      </div>
+
+      <!-- ÉTAPE 3 -->
+      <div style="display:flex;gap:14px;margin-bottom:1.5rem;">
+        <div style="flex-shrink:0;width:32px;height:32px;border-radius:50%;border:1px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--accent);">3</div>
+        <div style="flex:1;">
+          <div style="font-size:14px;font-weight:700;margin-bottom:4px;">Mini-bilan <span style="font-size:12px;color:var(--text-faint);font-weight:400;">— 5 min</span></div>
+          <div style="font-size:13px;color:var(--text-muted);line-height:1.7;">Avant de fermer : note rapidement dans ton journal ce qui a bougé, ce qui a émergé, les images ou sensations qui sont apparues. Cette étape n'est pas obligatoire mais elle aide à ancrer le travail et à tracer ce qui évolue dans le temps.</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="height:1px;background:var(--border);margin-bottom:2rem;"></div>
+
+    <!-- POINTS DE VIGILANCE -->
+    <div style="margin-bottom:2rem;">
+      <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-faint);margin-bottom:1rem;">Points de vigilance</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;gap:10px;font-size:13px;color:var(--text-muted);line-height:1.6;"><span style="flex-shrink:0;">⚠️</span><span>Ce protocole est un <strong style="color:var(--text);">outil de désintensification émotionnelle inspiré de l'EMDR</strong>, pas de l'EMDR clinique. Il n'est pas un substitut à un accompagnement thérapeutique.</span></div>
+        <div style="display:flex;gap:10px;font-size:13px;color:var(--text-muted);line-height:1.6;"><span style="flex-shrink:0;">⚠️</span><span>Si une identité fait remonter quelque chose de très intense (trauma fort, dissociation), arrête la stimulation et reviens à ta respiration. Tu n'es pas obligé de tout traverser en une séance.</span></div>
+        <div style="display:flex;gap:10px;font-size:13px;color:var(--text-muted);line-height:1.6;"><span style="flex-shrink:0;">💡</span><span>Le travail s'intègre entre les séances, pas pendant. Il est normal de ressentir une fatigue légère après. Prends le temps de récupérer.</span></div>
+      </div>
+    </div>
+
+    <div style="height:1px;background:var(--border);margin-bottom:2rem;"></div>
+
+    <!-- LIEN VERS LE JOURNAL -->
+    <div style="padding:16px 18px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);display:flex;align-items:center;justify-content:space-between;gap:12px;">
+      <div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:2px;">Après la séance</div>
+        <div style="font-size:12px;color:var(--text-muted);">Note ce qui a émergé dans ton journal</div>
+      </div>
+      <button onclick="document.getElementById('irt-screen').classList.remove('show');showScreen('home-screen');setHomeTab('journal');" style="padding:8px 14px;border-radius:var(--radius);border:1px solid var(--border-md);background:transparent;color:var(--text);font-size:13px;font-family:inherit;cursor:pointer;white-space:nowrap;">📓 Journal →</button>
+    </div>
+
+  </div>
 </div>
 
 <!-- SESSION FORMAT -->
@@ -2720,6 +2919,191 @@ async function togglePin(id){
 }
 function showToast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2500);}
 
+/* ===== ONBOARDING ===== */
+const ONBOARDING_QUESTIONS=[
+  {id:"q1",question:"Qu'est-ce qui t'a amené ici ?",choices:[
+    {label:"Je me sens bloqué sans savoir pourquoi",topics:["Figement","Confusion","Dissociation"]},
+    {label:"Je veux agir mais j'y arrive pas",topics:["Figement","Rigidité","Conditionnement"]},
+    {label:"Je me perds dans le regard des autres",topics:["Honte","Humiliation","Dépendance"]}
+  ]},
+  {id:"q2",question:"Dans quel domaine tu souffres le plus ?",choices:[
+    {label:"Ma vie pro / mes projets",topics:["Figement","Rigidité","Épuisement"]},
+    {label:"Mes relations et ma solitude",topics:["Isolement","Abandon","Affection"]},
+    {label:"Mon rapport à moi-même",topics:["Honte","Culpabilité","Existence"]}
+  ]},
+  {id:"q3",question:"Sous pression, tu…",choices:[
+    {label:"Fuis ou procrastines",topics:["Figement","Conditionnement","Rigidité"]},
+    {label:"Cherches à plaire pour éviter le conflit",topics:["Dépendance","Culpabilité","Honte"]},
+    {label:"T'en veux et tu te critiques",topics:["Honte","Culpabilité","Humiliation"]}
+  ]},
+  {id:"q4",question:"La voix dans ta tête qui revient le plus ?",choices:[
+    {label:"\"Je suis pas à la hauteur\"",topics:["Honte","Humiliation","Existence"]},
+    {label:"\"Je vais déranger si je demande\"",topics:["Culpabilité","Dépendance","Violation"]},
+    {label:"\"Ça sert à rien d'essayer\"",topics:["Figement","Effondrement","Perte"]}
+  ]},
+  {id:"q5",question:"Ce qui te coûte le plus d'énergie ?",choices:[
+    {label:"Satisfaire tout le monde",topics:["Dépendance","Culpabilité","Épuisement"]},
+    {label:"Me mettre en mouvement",topics:["Figement","Rigidité","Conditionnement"]},
+    {label:"Faire confiance aux autres",topics:["Trahison","Injustice","Isolement"]}
+  ]},
+  {id:"q6",question:"Ta plus grande peur ?",choices:[
+    {label:"Échouer et perdre la face",topics:["Honte","Humiliation","Rigidité"]},
+    {label:"Être rejeté ou abandonné",topics:["Abandon","Isolement","Affection"]},
+    {label:"Perdre le contrôle",topics:["Contrôle","Rigidité","Figement"]}
+  ]},
+  {id:"q7",question:"Ce que tu veux vraiment changer ?",choices:[
+    {label:"Passer à l'action enfin",topics:["Figement","Conditionnement","Rigidité"]},
+    {label:"Me libérer du regard des autres",topics:["Honte","Humiliation","Dépendance"]},
+    {label:"Trouver ce qui me fait vibrer",topics:["Confusion","Existence","Perte"]}
+  ]},
+  {id:"q8",question:"Si tu changes vraiment, tu as peur de…",choices:[
+    {label:"Décevoir ceux qui comptent sur toi",topics:["Culpabilité","Dépendance","Trahison"]},
+    {label:"Ne plus savoir qui tu es",topics:["Dissociation","Existence","Confusion"]},
+    {label:"Que ça dure pas",topics:["Figement","Effondrement","Conditionnement"]}
+  ]}
+];
+
+const OBJECTIVES_MAP=[
+  {id:"action",label:"Passer à l'action",emoji:"🎯",topics:["Figement","Rigidité","Conditionnement","Épuisement"]},
+  {id:"regard",label:"Me libérer du regard des autres",emoji:"🔓",topics:["Honte","Humiliation","Dépendance","Culpabilité"]},
+  {id:"relations",label:"Sortir de la solitude",emoji:"🤝",topics:["Isolement","Abandon","Affection","Trahison"]},
+  {id:"valeur",label:"Reconnaître ma valeur",emoji:"💎",topics:["Honte","Existence","Humiliation","Perte"]},
+  {id:"energie",label:"Retrouver de l'énergie",emoji:"⚡",topics:["Épuisement","Usure","Contrôle","Effondrement"]},
+  {id:"clarte",label:"Trouver ma direction",emoji:"🧭",topics:["Confusion","Existence","Dissociation","Perte"]}
+];
+
+let onbStep=0,onbAnswers=[],onbSelectedObjectives=[];
+
+function startOnboarding(){
+  onbStep=0;onbAnswers=[];
+  showScreen("onboarding-screen");
+  renderOnbQuestion();
+}
+
+function renderOnbQuestion(){
+  const q=ONBOARDING_QUESTIONS[onbStep];
+  const pct=((onbStep+1)/ONBOARDING_QUESTIONS.length*100).toFixed(0);
+  document.getElementById("onb-progress-fill").style.width=pct+"%";
+  document.getElementById("onb-step-label").textContent=`Question ${onbStep+1} / ${ONBOARDING_QUESTIONS.length}`;
+  document.getElementById("onb-question-text").textContent=q.question;
+  document.getElementById("onb-choices").innerHTML=q.choices.map((c,i)=>
+    `<button class="onb-choice" onclick="selectOnbChoice(${i})">${c.label}</button>`
+  ).join("");
+}
+
+function selectOnbChoice(idx){
+  const q=ONBOARDING_QUESTIONS[onbStep];
+  onbAnswers.push({q:q.id,topics:q.choices[idx].topics});
+  document.querySelectorAll(".onb-choice").forEach((b,i)=>{b.classList.toggle("selected",i===idx);b.style.pointerEvents="none";});
+  setTimeout(()=>{
+    onbStep++;
+    if(onbStep>=ONBOARDING_QUESTIONS.length){showOnbRecap();}
+    else{renderOnbQuestion();}
+  },350);
+}
+
+function skipOnboarding(){
+  currentProfile.objectives=[];
+  currentProfile.priorityTopics=[];
+  showScreen("home-screen");
+  setHomeTab("pinned");
+  renderHomeStats();
+}
+
+function showOnbRecap(){
+  const topicCount={};
+  onbAnswers.forEach(a=>a.topics.forEach(t=>{topicCount[t]=(topicCount[t]||0)+1;}));
+  const scored=OBJECTIVES_MAP.map(obj=>{
+    const score=obj.topics.reduce((s,t)=>s+(topicCount[t]||0),0);
+    return{...obj,score};
+  }).sort((a,b)=>b.score-a.score);
+  onbSelectedObjectives=scored.slice(0,3).map(o=>({...o}));
+  renderOnbRecap();
+  showScreen("onboarding-recap-screen");
+}
+
+function renderOnbRecap(){
+  const list=document.getElementById("onb-objectives-list");
+  list.innerHTML=onbSelectedObjectives.map((obj,i)=>`
+    <div class="onb-obj-card${i===0?" priority-1":""}" data-idx="${i}">
+      <span class="onb-obj-emoji">${obj.emoji}</span>
+      <span class="onb-obj-label">${obj.label}</span>
+      <div style="display:flex;gap:6px;align-items:center;">
+        ${i>0?`<button onclick="moveObj(${i},-1)" style="background:none;border:none;cursor:pointer;color:var(--text-faint);font-size:14px;padding:2px;">↑</button>`:""}
+        ${i<onbSelectedObjectives.length-1?`<button onclick="moveObj(${i},1)" style="background:none;border:none;cursor:pointer;color:var(--text-faint);font-size:14px;padding:2px;">↓</button>`:""}
+        ${i===0?`<span class="onb-obj-rank-badge">Priorité 1</span>`:`<span style="font-size:10px;color:var(--text-faint);">Priorité ${i+1}</span>`}
+      </div>
+    </div>`).join("");
+}
+
+function moveObj(idx,dir){
+  const newIdx=idx+dir;
+  if(newIdx<0||newIdx>=onbSelectedObjectives.length)return;
+  [onbSelectedObjectives[idx],onbSelectedObjectives[newIdx]]=[onbSelectedObjectives[newIdx],onbSelectedObjectives[idx]];
+  renderOnbRecap();
+}
+
+async function confirmOnboarding(){
+  const priorityTopics=[];
+  onbSelectedObjectives.forEach(obj=>obj.topics.forEach(t=>{if(!priorityTopics.includes(t))priorityTopics.push(t);}));
+  currentProfile.objectives=onbSelectedObjectives.map(o=>({id:o.id,label:o.label,emoji:o.emoji}));
+  currentProfile.priorityTopics=priorityTopics;
+  try{localStorage.setItem("onb_"+currentProfile.id,JSON.stringify({objectives:currentProfile.objectives,priorityTopics}));}catch(e){}
+  try{await sb("profiles?id=eq."+currentProfile.id,{method:"PATCH",body:{topics:priorityTopics},prefer:"return=minimal"});}catch(e){}
+  showScreen("home-screen");
+  setHomeTab("pinned");
+  renderHomeStats();
+  renderHomeObjectives();
+}
+
+function loadOnboarding(){
+  try{
+    const saved=localStorage.getItem("onb_"+currentProfile.id);
+    if(saved){
+      const data=JSON.parse(saved);
+      currentProfile.objectives=data.objectives||[];
+      currentProfile.priorityTopics=data.priorityTopics||[];
+    } else {
+      currentProfile.objectives=[];
+      currentProfile.priorityTopics=[];
+    }
+  }catch(e){currentProfile.objectives=[];currentProfile.priorityTopics=[];}
+}
+
+function renderHomeObjectives(){
+  const el=document.getElementById("home-objectives-wrap");
+  if(el){
+    const objs=currentProfile.objectives||[];
+    if(objs.length===0){el.innerHTML="";}
+    else{
+      el.innerHTML=`<div class="home-objectives">${objs.map((o,i)=>`
+        <div class="home-obj-item">
+          <span class="home-obj-emoji">${o.emoji}</span>
+          <span class="home-obj-label">${o.label}</span>
+          <span class="home-obj-rank">Priorité ${i+1}</span>
+        </div>`).join("")}</div>`;
+    }
+  }
+  const el2=document.getElementById("home-objectives-accueil");
+  if(el2){
+    const objs=currentProfile.objectives||[];
+    if(objs.length>0){
+      el2.innerHTML=`<div style="margin-bottom:1rem;">
+        <div style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-bottom:0.75rem;">Tes objectifs</div>
+        <div class="home-objectives">${objs.map((o,i)=>`
+          <div class="home-obj-item">
+            <span class="home-obj-emoji">${o.emoji}</span>
+            <span class="home-obj-label">${o.label}</span>
+            ${i===0?`<span class="home-obj-rank" style="background:rgba(200,184,154,0.15);color:var(--accent);border:1px solid rgba(200,184,154,0.3);">Principal</span>`:`<span class="home-obj-rank">N°${i+1}</span>`}
+          </div>`).join("")}
+        </div>
+      </div>`;
+    } else {
+      el2.innerHTML="";
+    }
+  }
+}
+
 function showScreen(id){
   document.querySelectorAll(".screen,.home-screen,.block-screen").forEach(el=>el.classList.remove("show"));
   const el=document.getElementById(id);
@@ -3017,6 +3401,24 @@ function renderJournal(){
 document.getElementById("journal-home-btn").addEventListener("click",()=>{showScreen("home-screen");renderHomeThemes();});
 
 
+/* ===== IRT PROTOCOL ===== */
+
+function openIrtScreen(){
+  document.getElementById("irt-screen").classList.add("show");
+  document.getElementById("irt-screen").scrollTop=0;
+}
+
+document.getElementById("irt-home-btn").addEventListener("click",()=>{
+  document.getElementById("irt-screen").classList.remove("show");
+  showScreen("home-screen");
+  renderHomeThemes();
+});
+
+document.getElementById("home-irt-btn")?.addEventListener("click",()=>{
+  openIrtScreen();
+});
+
+
 /* ===== TO-DO ===== */
 
 
@@ -3061,9 +3463,16 @@ async function enterProfile(id,name){
   document.getElementById("home-name").textContent=name;
   checked.clear();todoIds.clear();reviewDates={};trashedIds.clear();scanChecked.clear();pinnedIds.clear();
   await loadData();
-  showScreen("home-screen");
-  setHomeTab("pinned");
-  renderHomeStats();
+  loadOnboarding();
+  const hasOnboarding=currentProfile.objectives&&currentProfile.objectives.length>0;
+  if(!hasOnboarding){
+    startOnboarding();
+  } else {
+    showScreen("home-screen");
+    setHomeTab("pinned");
+    renderHomeStats();
+    renderHomeObjectives();
+  }
   setTimeout(checkInactivity,1000);
 }
 
@@ -3801,6 +4210,9 @@ function setHomeTab(tab){
     grid.style.display="flex";
     grid.style.flexDirection="column";
     renderDictionnaireInline();
+  } else if(tab==="irt"){
+    // IRT ouvre en block-screen plein écran
+    openIrtScreen();
   }
 }
 
@@ -4376,6 +4788,7 @@ function renderExercisesInline(){
   });
 }
 
+document.getElementById("onb-confirm-btn")?.addEventListener("click",confirmOnboarding);
 document.getElementById("home-reconnexion-btn").addEventListener("click",()=>setHomeTab("reconnexion"));
 document.getElementById("home-pinned-btn")?.addEventListener("click",()=>setHomeTab("pinned"));
 document.getElementById("home-journal-btn").addEventListener("click",()=>setHomeTab("journal"));
@@ -4446,7 +4859,22 @@ function renderDicoBody(){
     return;
   }
 
+  // Priorité : topics prioritaires du profil
+  const priorityTopics=(currentProfile&&currentProfile.priorityTopics)||[];
+  const isPriorityCat=d=>priorityTopics.includes(d.cat);
+
   let html="";
+
+  // Si tri alpha ou depth et des priorityTopics existent, afficher un bloc prioritaires en tête
+  if(priorityTopics.length>0&&dicoSort!=="cat"){
+    const priorityItems=filtered.filter(d=>isPriorityCat(d));
+    if(priorityItems.length>0){
+      html+=`<div style="margin-bottom:1.5rem;">
+        <div style="font-size:0.68rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);margin-bottom:0.5rem;padding:0 2px;display:flex;align-items:center;gap:6px;">⭐ Prioritaires <span style="font-size:9px;font-weight:400;color:var(--text-faint);">(selon tes objectifs)</span></div>`;
+      priorityItems.sort((a,b)=>a.text.localeCompare(b.text,"fr")).forEach(d=>{html+=dicoRow(d,wids,depthColor,depthLabel,true);});
+      html+=`</div><div style="height:1px;background:var(--border);margin-bottom:1.5rem;"></div>`;
+    }
+  }
 
   if(dicoSort==="alpha"){
     filtered.sort((a,b)=>a.text.localeCompare(b.text,"fr"));
@@ -4466,10 +4894,18 @@ function renderDicoBody(){
   } else if(dicoSort==="cat"){
     const catMap={};
     filtered.forEach(d=>{if(!catMap[d.cat])catMap[d.cat]=[];catMap[d.cat].push(d);});
-    Object.keys(catMap).sort().forEach(cat=>{
+    // Trier : catégories prioritaires en premier, puis alphabétique
+    const sortedCats=Object.keys(catMap).sort((a,b)=>{
+      const pa=priorityTopics.includes(a)?0:1;
+      const pb=priorityTopics.includes(b)?0:1;
+      if(pa!==pb)return pa-pb;
+      return a.localeCompare(b,"fr");
+    });
+    sortedCats.forEach(cat=>{
       catMap[cat].sort((a,b)=>a.depth-b.depth);
+      const isPriority=priorityTopics.includes(cat);
       html+=`<div style="margin-bottom:1.2rem;">
-        <div style="font-size:0.68rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-faint);margin-bottom:0.4rem;padding:0 2px;">${cat}</div>`;
+        <div style="font-size:0.68rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:${isPriority?"var(--accent)":"var(--text-faint)"};margin-bottom:0.4rem;padding:0 2px;">${cat}${isPriority?' <span style="font-size:9px;background:rgba(200,184,154,0.12);border:1px solid rgba(200,184,154,0.3);color:var(--accent);padding:1px 5px;border-radius:4px;vertical-align:middle;margin-left:4px;">⭐ Prioritaire</span>':""}</div>`;
       catMap[cat].forEach(d=>{html+=dicoRow(d,wids,depthColor,depthLabel);});
       html+=`</div>`;
     });
@@ -4489,12 +4925,15 @@ function renderDicoBody(){
   body.innerHTML=html;
 }
 
-function dicoRow(d,wids,depthColor,depthLabel){
+function dicoRow(d,wids,depthColor,depthLabel,showPriorityBadge){
   const isWorked=wids.has(d.id);
   const isPinned=pinnedIds.has(d.id);
-  return `<div style="display:flex;align-items:center;gap:7px;padding:6px 10px;border-radius:var(--radius);border:1px solid ${isWorked?"var(--green-border)":"var(--border)"};background:var(--surface);margin-bottom:3px;">
+  const priorityTopics=(currentProfile&&currentProfile.priorityTopics)||[];
+  const isCatPriority=showPriorityBadge||priorityTopics.includes(d.cat);
+  return `<div style="display:flex;align-items:center;gap:7px;padding:6px 10px;border-radius:var(--radius);border:1px solid ${isWorked?"var(--green-border)":isCatPriority?"rgba(200,184,154,0.25)":"var(--border)"};background:var(--surface);margin-bottom:3px;">
     <span style="font-size:0.7rem;color:${depthColor(d.depth)};flex-shrink:0;width:14px;text-align:center;">${depthLabel(d.depth)}</span>
     <span style="flex:1;font-size:0.85rem;${isWorked?"color:var(--green-text);":""}">${d.text}</span>
+    ${isCatPriority&&!isWorked?`<span style="font-size:9px;color:var(--accent);opacity:0.7;flex-shrink:0;">⭐</span>`:""}
     <span style="font-size:0.62rem;color:var(--text-faint);background:var(--surface2);padding:1px 5px;border-radius:3px;flex-shrink:0;">${d.role}</span>
     ${isWorked
       ? `<button onclick="unvalidateId(${d.id});" style="font-size:0.65rem;background:var(--red-bg);border:1px solid var(--red-border);color:var(--red-text);border-radius:4px;padding:2px 7px;cursor:pointer;flex-shrink:0;">↩</button>`
