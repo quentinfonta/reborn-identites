@@ -51,11 +51,16 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
   .home-main{padding:0;width:100%;max-width:560px;}
   .home-mobile-nav{display:flex!important;}
   .home-themes-grid{width:100%;display:flex;flex-direction:column;gap:0;padding-bottom:5rem;}
-.layer-section{margin-bottom:4rem;}
-.layer-locked{opacity:0.4;pointer-events:none;}
-.layer-header{display:flex;align-items:center;gap:10px;padding:1rem 0;margin-bottom:1.5rem;border-bottom:1px solid var(--border);}
-.layer-label{font-size:13px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;}
-.layer-lock-badge{font-size:11px;color:var(--text-faint);margin-left:auto;border:1px solid var(--border);padding:3px 8px;border-radius:10px;}
+.layer-section{margin-bottom:2.5rem;}
+.layer-header{display:flex;align-items:center;gap:10px;padding:0.75rem 0;margin-bottom:1rem;border-bottom:1px solid var(--border);}
+.layer-label{font-size:11px;font-weight:600;color:var(--text-faint);text-transform:uppercase;letter-spacing:1.5px;}
+/* badge "Recommandé" sur les thèmes liés aux objectifs */
+.theme-obj-badge{font-size:10px;font-weight:600;color:var(--accent);background:rgba(200,184,154,0.1);border:1px solid rgba(200,184,154,0.25);padding:2px 7px;border-radius:10px;flex-shrink:0;}
+/* séparateur "Autres thèmes" */
+.themes-other-sep{display:flex;align-items:center;gap:10px;margin:1.5rem 0 1rem;color:var(--text-faint);font-size:11px;letter-spacing:1px;text-transform:uppercase;}
+.themes-other-sep::before,.themes-other-sep::after{content:"";flex:1;height:1px;background:var(--border);}
+/* progression circulaire mini sur chaque thème */
+.theme-pct-pill{font-size:10px;color:var(--text-faint);background:var(--surface2);border:1px solid var(--border);padding:2px 7px;border-radius:10px;flex-shrink:0;min-width:38px;text-align:center;}
 .home-theme-row+.home-theme-row{margin-top:16px;}
 }
 
@@ -182,21 +187,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
 .header-btn:disabled{opacity:0.3;cursor:default;}
 
 /* FILTERS */
-.filters-bar{position:sticky;top:53px;z-index:90;background:var(--bg);border-bottom:1px solid var(--border);padding:0.5rem 1.5rem;display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
-.filter-btn{padding:4px 11px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--text-muted);font-size:11px;font-family:inherit;cursor:pointer;transition:all 0.15s;}
-.filter-btn:hover{border-color:var(--border-md);color:var(--text);}
-.filter-btn.active{background:var(--surface2);border-color:var(--border-strong);color:var(--text);font-weight:500;}
-.level-nav{display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border-md);border-radius:20px;padding:3px 8px;}
-.level-nav-btn{background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:14px;padding:0 2px;line-height:1;}
-.level-nav-btn:hover{color:var(--text);}
-.level-nav-display{display:flex;align-items:center;gap:5px;min-width:72px;justify-content:center;}
-.level-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;display:inline-block;}
-.level-nav-name{font-size:11px;font-weight:500;color:var(--text);}
 
 /* SEARCH */
-.dict-search{padding:0.75rem 1.5rem 0;position:sticky;top:96px;z-index:80;background:var(--bg);}
-.search-wrap{position:relative;}
-.search-wrap i{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text-faint);font-size:14px;pointer-events:none;}
 .search-input{width:100%;padding:8px 12px 8px 32px;border:1px solid var(--border-md);border-radius:var(--radius);background:var(--surface);color:var(--text);font-size:13px;font-family:inherit;}
 .search-input:focus{outline:none;border-color:var(--border-strong);}
 .search-input::placeholder{color:var(--text-faint);}
@@ -243,8 +235,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
 .id-actions{display:flex;gap:2px;opacity:0;transition:opacity 0.1s;}
 .id-row:hover .id-actions{opacity:1;}
 .id-row.todo .id-actions,.id-row.worked .id-actions,.id-row.trashed .id-actions{opacity:0.5;}
-.id-action-btn{background:none;border:none;cursor:pointer;font-size:11px;padding:2px 3px;color:var(--text-faint);line-height:1;}
-.id-action-btn:hover{color:var(--text);}
 .group-tag{font-size:9px;padding:1px 5px;border-radius:5px;border:1px solid;flex-shrink:0;}
 
 /* SESSION BAR */
@@ -358,30 +348,15 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
 .close-btn{display:flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface2);color:var(--text-muted);font-size:13px;font-family:inherit;cursor:pointer;}
 .stat-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:2rem;}
 .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.25rem;}
-.stat-label{font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
-.stat-value{font-size:28px;font-weight:600;}
 .stat-unit{font-size:13px;color:var(--text-muted);margin-top:2px;}
 .chart-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:1.5rem;}
 .chart-title{font-size:13px;font-weight:500;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:1.5rem;}
-.bar-chart,.cat-chart{display:flex;flex-direction:column;gap:10px;}
-.bar-row,.cat-row{display:flex;align-items:center;gap:12px;}
-.bar-label,.cat-label{font-size:12px;color:var(--text-muted);width:130px;flex-shrink:0;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.bar-track,.cat-track{flex:1;height:26px;background:var(--surface2);border-radius:6px;overflow:hidden;}
-.cat-track{height:20px;}
-.bar-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,rgba(99,153,34,0.4),rgba(99,153,34,0.7));display:flex;align-items:center;justify-content:flex-end;padding-right:8px;min-width:28px;}
-.bar-count{font-size:11px;font-weight:600;color:var(--green-text);}
-.cat-fill{height:100%;border-radius:5px;background:rgba(200,184,154,0.2);border-right:2px solid var(--accent);display:flex;align-items:center;justify-content:flex-end;padding-right:8px;min-width:24px;}
-.cat-count{font-size:10px;font-weight:600;color:var(--accent);}
 .no-data{font-size:14px;color:var(--text-faint);font-style:italic;}
 
 /* UTILS */
 .scan-level-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px;border-radius:var(--radius);border:1px solid transparent;transition:all 0.15s;}
 .scan-level-item.active{border-color:var(--border-md);background:var(--surface);}
 .scan-level-item:not([style*="cursor:default"]):hover{background:var(--surface2);}
-.dict-level-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:1rem 0;border-bottom:1px solid var(--border);margin-bottom:1rem;}
-.dict-family{margin-bottom:1.5rem;}
-.dict-family-header{display:flex;align-items:center;gap:8px;padding:0.5rem 0;margin-bottom:0.25rem;border-bottom:1px solid var(--border);}
-.dict-family-items{display:flex;flex-direction:column;gap:2px;}
 .dict-nav-btn{padding:6px 12px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface2);color:var(--text-muted);font-size:11px;font-family:inherit;cursor:pointer;transition:all 0.15s;flex:1;}
 .dict-nav-btn:hover:not(:disabled){border-color:var(--border-strong);color:var(--text);}
 .dict-nav-btn:disabled{opacity:0.3;cursor:default;}
@@ -393,6 +368,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
 .scan-themes-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:1rem 0 6rem;}
 .scan-theme-card{display:flex;flex-direction:column;gap:6px;padding:1rem;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);cursor:pointer;transition:all 0.15s;}
 .scan-theme-card:hover{border-color:var(--border-strong);background:var(--surface2);transform:translateY(-1px);}
+.scan-theme-priority{border-color:rgba(200,184,154,0.3)!important;background:rgba(200,184,154,0.05)!important;}
 .scan-theme-icon{font-size:28px;}
 .scan-theme-title{font-size:13px;font-weight:600;}
 .scan-theme-desc{font-size:10px;color:var(--text-faint);line-height:1.4;}
@@ -442,16 +418,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 
 
-.home-theme-row{display:flex;align-items:center;gap:16px;padding:22px 24px;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--surface);cursor:pointer;transition:all 0.15s;}
-.home-theme-row:hover{border-color:var(--border-md);background:var(--surface2);transform:translateX(2px);}
-.home-theme-icon{font-size:18px;flex-shrink:0;width:24px;text-align:center;}
-.home-theme-info{flex:1;min-width:0;}
-.home-theme-title{font-size:12px;font-weight:600;}
-.home-theme-desc{display:none;}
-.home-theme-progress{display:flex;align-items:center;gap:6px;flex-shrink:0;}
-.home-theme-pct{font-size:10px;color:var(--text-faint);min-width:26px;text-align:right;}
-.home-theme-bar{width:36px;height:3px;background:var(--surface3);border-radius:2px;overflow:hidden;}
-.home-theme-bar-fill{height:100%;border-radius:2px;background:var(--accent);}
 
 /* ONBOARDING */
 #onboarding-screen{align-items:center;justify-content:center;padding:2rem 1.5rem;height:100vh;overflow-y:auto;}
@@ -529,8 +495,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
             <input type="text" class="txt-input" id="new-name" placeholder="Prénom…"/>
             <input type="text" class="txt-input" id="new-pin" placeholder="PIN (4 chiffres)" maxlength="4" style="width:130px;flex:none;"/>
           </div>
-          <div class="pin-hint">Le code PIN protège l accès.</div>
-          <input type="text" class="txt-input" id="new-code" placeholder="Code d accès REBORN…" style="margin-top:6px;"/>
+          <div class="pin-hint">Le code PIN protège l'accès.</div>
+          <input type="text" class="txt-input" id="new-code" placeholder="Code d'accès REBORN…" style="margin-top:6px;"/>
           <div id="create-err" style="font-size:13px;color:var(--red-text);min-height:16px;"></div>
           <button class="green-btn" id="create-btn" style="align-self:flex-end">Créer</button>
         </div>
@@ -599,7 +565,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
       <div id="home-objectives-wrap" style="margin-top:0.75rem;"></div>
     </div>
     <div class="home-sidebar-nav">
-      <button class="home-sidebar-btn active" id="home-pinned-btn" style="font-weight:600;color:var(--accent);">→ Commencer par là</button>
+      <button class="home-sidebar-btn active" id="home-pinned-btn" style="font-weight:600;color:var(--accent);">📌 Ma liste</button>
       <div style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-faint);padding:12px 14px 4px;">Introspection</div>
       <button class="home-sidebar-btn" id="home-reconnexion-btn">🌀 Reconnexion</button>
       <button class="home-sidebar-btn" id="home-diagnostic-btn">🔍 Diagnostic</button>
@@ -617,7 +583,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
   <!-- MOBILE NAV -->
   <div class="home-mobile-nav">
     <div class="home-mobile-tabs">
-      <button class="home-mobile-tab active" data-tab="pinned" style="font-weight:600;">→ Par ici</button>
+      <button class="home-mobile-tab active" data-tab="pinned" style="font-weight:600;">📌 Ma liste</button>
       <button class="home-mobile-tab" data-tab="reconnexion">🌀 Reconnexion</button>
       <button class="home-mobile-tab" data-tab="diagnostic">🔍 Diagnostic</button>
       <button class="home-mobile-tab" data-tab="dictionnaire">📖 Dico</button>
@@ -741,45 +707,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
 
   </div>
 </div>
-
-<!-- DICTIONNAIRE -->
-<div class="block-screen" id="main-screen">
-  <div class="main-header">
-    <div><div class="brand" style="margin-bottom:2px">REBORN</div><div class="brand-title">Dictionnaire</div></div>
-    <div class="main-header-right">
-      <div class="profile-badge"><i class="ti ti-user"></i><span id="profile-name-badge">—</span></div>
-      <button class="header-btn" id="switch-btn"><i class="ti ti-arrow-left"></i> Accueil</button>
-      <button class="header-btn purple" id="game-btn"><i class="ti ti-cards"></i> Parcours</button>
-      <button class="header-btn blue" id="progress-btn"><i class="ti ti-chart-bar"></i> Stats</button>
-    </div>
-  </div>
-  <div class="filters-bar">
-    <button class="filter-btn active" data-polarity="all">Toutes</button>
-    <button class="filter-btn" data-polarity="neg">🔴 Négatives</button>
-    <button class="filter-btn" data-polarity="pos">🟢 Positives</button>
-    <div style="width:1px;height:14px;background:var(--border);margin:0 4px;"></div>
-    <button class="filter-btn active" data-state="all">Toutes</button>
-    <button class="filter-btn" data-state="untouched">Non touchées</button>
-    <button class="filter-btn" data-state="todo">🔖</button>
-    <button class="filter-btn" data-state="worked">✅</button>
-    <button class="filter-btn" data-state="trashed">🗑</button>
-    <div style="flex:1;"></div>
-    <div class="level-nav">
-      <button class="level-nav-btn" id="level-prev">←</button>
-      <div class="level-nav-display"><span id="level-dot-display" class="level-dot" style="width:8px;height:8px;background:var(--l1);"></span><span class="level-nav-name" id="level-nav-name">Corps</span></div>
-      <button class="level-nav-btn" id="level-next">→</button>
-    </div>
-  </div>
-  <div class="dict-search"><div class="search-wrap"><i class="ti ti-search"></i><input type="text" class="search-input" id="search" placeholder="Rechercher…"/></div></div>
-  <div class="dict-scroll" id="dict-scroll"></div>
-  <div class="session-bar">
-    <div class="session-inner">
-      <div class="session-tags" id="session-tags"><span class="empty-sel">Aucune identité cochée</span></div>
-      <button class="validate-btn" id="validate-btn" disabled><i class="ti ti-check"></i> Valider</button>
-    </div>
-  </div>
-</div>
-
 <!-- SCAN CORPOREL -->
 <div class="block-screen" id="scan-screen">
   <div class="main-header">
@@ -798,28 +725,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
       <button class="validate-btn" id="scan-validate-btn" disabled><i class="ti ti-check"></i> Valider</button>
     </div>
   </div>
-</div>
-
-<!-- EXERCISES SCREEN -->
-<div class="block-screen" id="exercises-screen">
-  <div class="main-header">
-    <div><div class="brand" style="margin-bottom:2px">REBORN</div><div class="brand-title">Exercices</div></div>
-    <div class="main-header-right">
-      <button class="header-btn" id="exercises-home-btn"><i class="ti ti-arrow-left"></i> Accueil</button>
-    </div>
-  </div>
-  <div class="dict-scroll" id="exercises-content"></div>
-</div>
-
-<!-- JOURNAL SCREEN -->
-<div class="block-screen" id="journal-screen">
-  <div class="main-header">
-    <div><div class="brand" style="margin-bottom:2px">REBORN</div><div class="brand-title">Journal</div></div>
-    <div class="main-header-right">
-      <button class="header-btn" id="journal-home-btn"><i class="ti ti-arrow-left"></i> Accueil</button>
-    </div>
-  </div>
-  <div class="dict-scroll" id="journal-content"></div>
 </div>
 
 <!-- IRT SCREEN -->
@@ -1015,18 +920,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
   </div>
 </div>
 
-<!-- PROGRESS -->
-<div class="overlay" id="progress-overlay">
-  <div class="overlay-inner">
-    <div class="overlay-top">
-      <div><div class="overlay-heading">Progression</div><div id="progress-sub" style="font-size:14px;color:var(--text-muted);margin-top:4px;"></div></div>
-      <button class="close-btn" id="close-progress"><i class="ti ti-x"></i> Fermer</button>
-    </div>
-    <div class="stat-cards" id="stat-cards"></div>
-    <div class="chart-section"><div class="chart-title">Sessions</div><div class="bar-chart" id="bar-chart"></div></div>
-    <div class="chart-section"><div class="chart-title">Par groupe</div><div class="cat-chart" id="cat-chart"></div></div>
-  </div>
-</div>
 
 <div class="toast" id="toast"></div>
 <script>
@@ -2442,49 +2335,18 @@ const DEFAULT_DATA = [
   {id:12581,text:'Je suis résigné',cat:'Dépendance',depth:3,role:'coping'},
   {id:12582,text:'Je suis effacé',cat:'Dépendance',depth:2,role:'coping'}
 ];
-const GROUPS=[
-  {id:"figement",label:"① Figement",subtitle:"Corps bloqué, paralysé, incapable d agir",desc:"corps bloqué, paralysé, incapable d agir",cats:["Figement"],polarity:"neg"},
-  {id:"degel",label:"② Dégel",subtitle:"Se déverrouiller, retrouver le mouvement",desc:"se déverrouiller, retrouver le mouvement",cats:["Figement"],polarity:"pos"},
-  {id:"existence-niee",label:"③ Existence niée",subtitle:"Ne pas avoir le droit d être là, d exister",desc:"ne pas avoir le droit d être là, d exister, de prendre de la place",cats:["Existence"],polarity:"neg"},
-  {id:"existence-retrouvee",label:"④ Existence retrouvée",subtitle:"Avoir le droit d exister pleinement",desc:"avoir le droit d exister pleinement",cats:["Existence"],polarity:"pos"},
-  {id:"abandon",label:"⑤ Abandon",subtitle:"Peur d être quitté, pas choisi, seul",desc:"peur d être quitté, pas choisi, seul",cats:["Abandon"],polarity:"neg"},
-  {id:"accueil",label:"⑥ Accueil",subtitle:"Se sentir reçu, choisi, appartenir",desc:"se sentir reçu, choisi, appartenir",cats:["Abandon"],polarity:"pos"},
-  {id:"violation",label:"⑦ Violation",subtitle:"Limites franchies, corps non respecté, abus",desc:"limites franchies, corps non respecté, abus",cats:["Violation"],polarity:"neg"},
-  {id:"integrite",label:"⑧ Intégrité",subtitle:"Retrouver ses limites, son intouchabilité",desc:"retrouver ses limites, son intouchabilité",cats:["Violation"],polarity:"pos"},
-  {id:"conditionnement",label:"⑨ Conditionnement",subtitle:"Programmé par la famille, la société, les croyances reçues",desc:"programmé par la famille, la société, les croyances reçues",cats:["Conditionnement"],polarity:"neg"},
-  {id:"deconditionnement",label:"⑩ Déconditionnement",subtitle:"Se libérer des programmes, penser par soi-même",desc:"se libérer des programmes, penser par soi-même",cats:["Conditionnement"],polarity:"pos"},
-  {id:"trahison",label:"⑪ Trahison",subtitle:"Manipulé, trahi par quelqu un de confiance",desc:"manipulation, mensonge, trahi par quelqu un de confiance",cats:["Trahison"],polarity:"neg"},
-  {id:"confiance",label:"⑫ Confiance",subtitle:"Retrouver confiance en l autre et en soi",desc:"retrouver confiance en l autre et en soi",cats:["Trahison"],polarity:"pos"},
-  {id:"culpabilite-honte",label:"⑬ Culpabilité & Honte",subtitle:"Responsable de tout, pas assez bien, honte",desc:"se sentir responsable de tout, pas assez bien, honte",cats:["Culpabilité","Honte"],polarity:"neg"},
-  {id:"liberation",label:"⑭ Libération",subtitle:"Se pardonner, sortir de la honte",desc:"se pardonner, sortir de la honte",cats:["Culpabilité","Honte"],polarity:"pos"},
-  {id:"blessure",label:"⑮ Blessure",subtitle:"Cicatrices intérieures, blessures émotionnelles",desc:"blessures émotionnelles, cicatrices intérieures",cats:["Blessure"],polarity:"neg"},
-  {id:"guerison",label:"⑯ Guérison",subtitle:"Cicatriser, avancer, se réparer",desc:"cicatriser, avancer, se réparer",cats:["Blessure"],polarity:"pos"},
-  {id:"deconnexion",label:"⑰ Déconnexion",subtitle:"Coupé de son corps, de ses émotions, absent",desc:"coupé de son corps, de ses émotions, absent à soi-même",cats:["Dissociation"],polarity:"neg"},
-  {id:"reconnexion",label:"⑱ Reconnexion",subtitle:"Revenir à soi, ressentir à nouveau",desc:"revenir à soi, ressentir à nouveau",cats:["Dissociation"],polarity:"pos"},
-  {id:"mecanismes",label:"⑲ Mécanismes & Blocages",subtitle:"Défenses, fermetures, incapable de lâcher",desc:"défenses, fermetures, incapable de lâcher prise",cats:["Contrôle","Isolement","Ouverture"],polarity:"neg"},
-  {id:"ouverture",label:"⑳ Ouverture",subtitle:"Lâcher prise, s ouvrir, faire confiance",desc:"lâcher prise, s ouvrir, faire confiance",cats:["Contrôle","Isolement","Ouverture"],polarity:"pos"},
-  {id:"sideration",label:"㉑ Sidération & Épuisement",subtitle:"Choc émotionnel, plus d énergie, confusion",desc:"choc émotionnel, plus d énergie, confusion mentale",cats:["Rigidité","Épuisement","Confusion"],polarity:"neg"},
-  {id:"eveil",label:"㉒ Éveil & Régénération",subtitle:"Retrouver l élan, la clarté, l énergie",desc:"retrouver de l élan, clarté, énergie",cats:["Rigidité","Épuisement","Confusion"],polarity:"pos"},
-  {id:"usure",label:"㉓ Usure",subtitle:"Épuisé par les années, rongé de l intérieur",desc:"épuisement chronique, usé par les années, rongé",cats:["Usure"],polarity:"neg"},
-  {id:"restauration",label:"㉔ Restauration",subtitle:"Se réparer, se régénérer, revenir à soi",desc:"se réparer, se régénérer, revenir à soi",cats:["Usure"],polarity:"pos"},
-  {id:"perte",label:"㉕ Perte",subtitle:"Deuil, rupture, ce qui a été perdu",desc:"deuil, rupture, ce qui a été perdu",cats:["Perte"],polarity:"neg"},
-  {id:"retrouvailles",label:"㉖ Retrouvailles",subtitle:"Retrouver ce qu on croyait perdu",desc:"retrouver ce qu on croyait perdu",cats:["Perte"],polarity:"pos"},
-  {id:"effondrement",label:"㉗ Effondrement",subtitle:"Burnout, dépression, tout s effondre",desc:"burnout, dépression, tout s effondre autour de moi",cats:["Effondrement"],polarity:"neg"},
-  {id:"reconstruction",label:"㉘ Reconstruction",subtitle:"Reprendre pied, reconstruire sa vie",desc:"reprendre pied, reconstruire sa vie",cats:["Effondrement"],polarity:"pos"},
-  {id:"engagement",label:"㉙ Engagement",subtitle:"Retrouver le sens, s engager, avancer",desc:"retrouver le sens, s engager pleinement, avancer",cats:["Engagement"],polarity:"neg"},
-];
 const SCAN_THEMES=[
   {
     id:"ouvrir_porte",title:"Ouvrir la porte",icon:"🚪",
-    desc:"Ce qui t empêche de ressentir quoi que ce soit",
+    desc:"Ce qui t'empêche de ressentir quoi que ce soit",
     chapters:[
-      {title:"Ce qui t empêche",intro:"Avant d accéder à quoi que ce soit, quelque chose en toi résiste. C est normal. C est une protection.",
+      {title:"Ce qui t'empêche",intro:"Avant d'accéder à quoi que ce soit, quelque chose en toi résiste. C'est normal. C'est une protection.",
        ids:["blindé","cuirassé","cadenassé","verrouillé","barricadé","emmuré","enkysté","cristallisé","fossilisé","sclérosé","congelé","durci","cloisonné","compartimenté"]},
-      {title:"Coupé de toi",intro:"Pour ne plus souffrir, tu t es coupé de tes propres sensations.",
+      {title:"Coupé de toi",intro:"Pour ne plus souffrir, tu t'es coupé de tes propres sensations.",
        ids:["dissocié","détaché","coupé","anesthésié","engourdi","absent","flottant","neutralisé","désactivé","sectionné","fragmenté","morcelé","disloqué"]},
       {title:"Ce que tu réprimes",intro:"Tu contrôles, tu retiens, tu empêches quelque chose de sortir.",
        ids:["retenu","réprimé","refoulé","inhibé","censuré","autocensuré","muselé","bâillonné","contenu","bridé","freiné","empêché","corsété","stoppé"]},
-      {title:"S ouvrir",intro:"L ouverture n est pas un effort. C est juste arrêter de se fermer.",
+      {title:"S'ouvrir",intro:"L'ouverture n'est pas un effort. C'est juste arrêter de se fermer.",
        ids:["ouvert","dilaté","déployé","relâché","détendu","décrispé","desserré","libéré","affranchi","délivré","délié","décroché","dégagé","apaisé","calmé"]}
     ]
   },
@@ -2492,31 +2354,31 @@ const SCAN_THEMES=[
     id:"corps",title:"Être bien dans son corps",icon:"🌊",
     desc:"Retrouver la connexion à son corps et ses sensations",
     chapters:[
-      {title:"Ce qui t empêche",intro:"Quelque chose t empêche d habiter ton corps pleinement.",
+      {title:"Ce qui t'empêche",intro:"Quelque chose t'empêche d'habiter ton corps pleinement.",
        ids:["dissocié","coupé","anesthésié","engourdi","absent","figé","gelé","blindé","enkysté","durci","congelé"]},
       {title:"Le corps bloqué",intro:"Ton corps a appris à se figer pour se protéger.",
        ids:["figé","gelé","glacé","contracté","noué","tendu","serré","raidi","bandé","recroquevillé","voûté","affaissé","tassé","aplati","engourdi","ankylosé","prostré"]},
       {title:"Le corps qui souffre",intro:"Les blessures que le corps a portées.",
        ids:["blessé","meurtri","endolori","courbaturé","frappé","battu","étouffé","suffoqué","comprimé","écrasé","alourdi","lesté","consumé","brûlé","épuisé","vidé","lessivé","claqué","éreinté","exténué"]},
-      {title:"Le corps coupé",intro:"Parfois tu t es coupé de ton corps pour ne plus ressentir.",
+      {title:"Le corps coupé",intro:"Parfois tu t'es coupé de ton corps pour ne plus ressentir.",
        ids:["dissocié","détaché","coupé","séparé","fragmenté","morcelé","anesthésié","engourdi","endormi","assoupi","sectionné","disloqué"]},
       {title:"Le corps qui revient",intro:"Ton corps sait comment revenir à la vie.",
        ids:["détendu","relâché","décrispé","desserré","réchauffé","ancré","enraciné","centré","stabilisé","ouvert","dilaté","déployé","soulevé","allégé","dégagé","dynamisé","revitalisé","rechargé","régénéré","ressourcé","reposé","restauré"]}
     ]
   },
   {
-    id:"figement",title:"Passer à l action",icon:"⚡",
-    desc:"Sortir du figement et retrouver l élan",
+    id:"figement",title:"Passer à l'action",icon:"⚡",
+    desc:"Sortir du figement et retrouver l'élan",
     chapters:[
-      {title:"Ce qui t empêche",intro:"Avant même d agir, quelque chose en toi t en empêche.",
+      {title:"Ce qui t'empêche",intro:"Avant même d'agir, quelque chose en toi t'en empêche.",
        ids:["blindé","enkysté","cristallisé","figé","paralysé","congelé","durci","retenu","réprimé","refoulé","inhibé","stoppé"]},
-      {title:"Le figement dans le corps",intro:"Le corps porte l impossibilité d agir.",
+      {title:"Le figement dans le corps",intro:"Le corps porte l'impossibilité d'agir.",
        ids:["figé","paralysé","tétanisé","pétrifié","immobilisé","bloqué","coincé","rivé","collé","scotché","vissé","planté","engourdi","ankylosé","enkysté","cristallisé","fossilisé","sclérosé"]},
-      {title:"Ce qui t a stoppé",intro:"Des expériences t ont appris à ne pas agir.",
+      {title:"Ce qui t'a stoppé",intro:"Des expériences t'ont appris à ne pas agir.",
        ids:["stoppé","arrêté","empêché","retenu","bridé","freiné","entravé","censuré","réprimé","inhibé","jugé","condamné","puni","sanctionné","ridiculisé","humilié","raté","échoué","défait","sabordé"]},
-      {title:"Ce que tu t es dit",intro:"Tu as intégré la conviction que tu ne pouvais pas.",
+      {title:"Ce que tu t'es dit",intro:"Tu as intégré la conviction que tu ne pouvais pas.",
        ids:["démuni","dépourvu","démis","résigné","capitulé","abdiqué","découragé","défait","déprimé","désemparé","épuisé"]},
-      {title:"L élan retrouvé",intro:"L élan est en toi. Il attendait juste d être libéré.",
+      {title:"L'élan retrouvé",intro:"L'élan est en toi. Il attendait juste d'être libéré.",
        ids:["libéré","débloqué","délivré","affranchi","propulsé","lancé","galvanisé","dynamisé","électrisé","animé","motivé","enthousiasmé","décidé","déterminé","acharné","engagé","voué","investi","habité","porté","appelé","forgé","trempé","aiguisé","rodé"]}
     ]
   },
@@ -2524,13 +2386,13 @@ const SCAN_THEMES=[
     id:"securite",title:"Être en sécurité",icon:"🛡️",
     desc:"Sortir de la peur et retrouver un sentiment de sécurité",
     chapters:[
-      {title:"Ce qui t empêche",intro:"Quelque chose t empêche de te sentir en sécurité même maintenant.",
+      {title:"Ce qui t'empêche",intro:"Quelque chose t'empêche de te sentir en sécurité même maintenant.",
        ids:["blindé","cuirassé","vigilant","alarmé","hérissé","tendu","contracté","raidi","enkysté","durci","barricadé"]},
-      {title:"Ce que le corps ressent",intro:"Le danger s inscrit d abord dans le corps.",
+      {title:"Ce que le corps ressent",intro:"Le danger s'inscrit d'abord dans le corps.",
        ids:["figé","paralysé","tétanisé","pétrifié","tremblé","hérissé","alarmé","électrisé","tendu","contracté","noué","étouffé","suffoqué"]},
       {title:"Ce que tu as vécu",intro:"Des situations ont créé un sentiment de danger permanent.",
        ids:["menacé","ciblé","visé","traqué","pourchassé","espionné","pisté","attaqué","assailli","agressé","violé","frappé","battu","percuté"]},
-      {title:"Ce que tu as conclu",intro:"Tu as appris que le monde n est pas sûr.",
+      {title:"Ce que tu as conclu",intro:"Tu as appris que le monde n'est pas sûr.",
        ids:["insécurisé","alarmé","apeuré","paniqué","hanté","taraudé","tourmenté","inquiété","stressé","terrorisé","angoissé"]},
       {title:"La sécurité retrouvée",intro:"Tu peux retrouver un espace intérieur de sécurité.",
        ids:["sécurisé","protégé","gardé","sauvé","défendu","soutenu","accompagné","ancré","enraciné","centré","stabilisé","rassuré","calmé","apaisé"]}
@@ -2538,51 +2400,51 @@ const SCAN_THEMES=[
   },
   {
     id:"lacher_prise",title:"Lâcher prise",icon:"🍃",
-    desc:"Sortir du contrôle et s ouvrir à la vie",
+    desc:"Sortir du contrôle et s'ouvrir à la vie",
     chapters:[
-      {title:"Ce qui t empêche",intro:"Quelque chose t empêche de lâcher — une peur profonde que tout s effondre si tu le fais.",
+      {title:"Ce qui t'empêche",intro:"Quelque chose t'empêche de lâcher — une peur profonde que tout s'effondre si tu le fais.",
        ids:["blindé","enkysté","durci","congelé","cristallisé","retenu","contrôlé","surveillé","cadenassé","verrouillé","barricadé"]},
       {title:"Le contrôle dans le corps",intro:"Contrôler coûte physiquement très cher.",
        ids:["tendu","contracté","raidi","noué","serré","bandé","bloqué","vissé","rivé","alourdi","lesté","écrasé","épuisé","drainé"]},
-      {title:"Pourquoi tu contrôles",intro:"Contrôler c est une façon de te protéger de ce que tu as vécu.",
+      {title:"Pourquoi tu contrôles",intro:"Contrôler c'est une façon de te protéger de ce que tu as vécu.",
        ids:["trahi","abandonné","menacé","insécurisé","alarmé","apeuré","hanté","taraudé","angoissé","inquiété","terrorisé","traumatisé","blessé","meurtri"]},
-      {title:"Ce que le contrôle a créé",intro:"À force de tout vouloir maîtriser, tu t es enfermé.",
+      {title:"Ce que le contrôle a créé",intro:"À force de tout vouloir maîtriser, tu t'es enfermé.",
        ids:["contrôlé","surveillé","épié","cadenassé","fermé","retranché","blindé","cuirassé","muselé","encagé","enchaîné","emprisonné","corsété"]},
-      {title:"La liberté de lâcher",intro:"Lâcher prise c est faire confiance à la vie.",
+      {title:"La liberté de lâcher",intro:"Lâcher prise c'est faire confiance à la vie.",
        ids:["relâché","détendu","décrispé","desserré","allégé","soulagé","dégagé","ouvert","dilaté","déployé","libéré","affranchi","délivré","délié","décroché","apaisé","calmé","rassuré","sécurisé","ancré","centré","stabilisé"]}
     ]
   },
   {
-    id:"abandon",title:"Guérir de l abandon",icon:"🏠",
-    desc:"Sortir de la peur d être abandonné et se sentir enfin chez soi",
+    id:"abandon",title:"Guérir de l'abandon",icon:"🏠",
+    desc:"Sortir de la peur d'être abandonné et se sentir enfin chez soi",
     chapters:[
-      {title:"Ce qui t empêche",intro:"Quelque chose t empêche de toucher cette blessure — parce qu elle est profonde.",
+      {title:"Ce qui t'empêche",intro:"Quelque chose t'empêche de toucher cette blessure — parce qu'elle est profonde.",
        ids:["blindé","enkysté","anesthésié","dissocié","coupé","congelé","durci","retenu","refoulé","cadenassé","barricadé"]},
-      {title:"Ce que le corps porte",intro:"L abandon laisse un vide physique très réel.",
+      {title:"Ce que le corps porte",intro:"L'abandon laisse un vide physique très réel.",
        ids:["affamé","sevré","vidé","gelé","engourdi","secoué","tremblé","noué","contracté","étouffé","prostré","effondré"]},
       {title:"Ce que tu as vécu",intro:"Tu as été laissé, ignoré, oublié.",
        ids:["abandonné","délaissé","négligé","ignoré","oublié","rejeté","relégué","sacrifié","déserté","esseulé","isolé","séparé","arraché","éloigné"]},
-      {title:"Ce que tu as conclu",intro:"L abandon t a appris que tu n étais pas assez pour qu on reste.",
+      {title:"Ce que tu as conclu",intro:"L'abandon t'a appris que tu n'étais pas assez pour qu'on reste.",
        ids:["raté","rejeté","méprisé","oublié","dévalorisé","honteux","coupable","responsabilisé","blâmé"]},
-      {title:"Appartenir à nouveau",intro:"Tu mérites qu on reste. Tu mérites d appartenir.",
+      {title:"Appartenir à nouveau",intro:"Tu mérites qu'on reste. Tu mérites d'appartenir.",
        ids:["choisi","désiré","aimé","préféré","attendu","voulu","gardé","protégé","soutenu","accompagné","guidé","épaulé","intégré","appartenu","lié","rattaché","uni","allié","accueilli","reçu","comblé","nourri","sécurisé","réintégré"]}
     ]
   },
   {
     id:"etre_aime",title:"Être aimé",icon:"❤️",
-    desc:"Retrouver le droit d être aimé et de recevoir",
+    desc:"Retrouver le droit d'être aimé et de recevoir",
     chapters:[
-      {title:"Ce qui t empêche",intro:"Quelque chose t empêche de recevoir l amour même quand il est là.",
+      {title:"Ce qui t'empêche",intro:"Quelque chose t'empêche de recevoir l'amour même quand il est là.",
        ids:["blindé","cuirassé","fermé","cadenassé","enkysté","anesthésié","dissocié","retenu","refoulé","durci","barricadé","congelé"]},
-      {title:"Ce que ton corps porte",intro:"Avant même les mots, le manque d amour s inscrit dans le corps.",
+      {title:"Ce que ton corps porte",intro:"Avant même les mots, le manque d'amour s'inscrit dans le corps.",
        ids:["affamé","sevré","vidé","gelé","engourdi","étreint","bercé","câliné","caressé","embrassé","tenu","porté","effleuré"]},
-      {title:"Ce que tu as ressenti",intro:"Les émotions qui ont accompagné le manque d amour.",
+      {title:"Ce que tu as ressenti",intro:"Les émotions qui ont accompagné le manque d'amour.",
        ids:["abandonné","rejeté","ignoré","oublié","délaissé","esseulé","détesté","haï","fui","évité","dédaigné","snobé"]},
       {title:"Ce que tu as conclu",intro:"Face au manque, tu as tiré des conclusions sur ta valeur.",
        ids:["rabaissé","dévalorisé","méprisé","minimisé","sous-estimé","humilié","avili","souillé","sali","taché","déprécié"]},
-      {title:"Ce que tu t es dit",intro:"Les programmes installés pour survivre au manque d amour.",
+      {title:"Ce que tu t'es dit",intro:"Les programmes installés pour survivre au manque d'amour.",
        ids:["conditionné","blindé","cadenassé","fermé","retranché","muselé","contrôlé","autocensuré","refoulé","réprimé","inhibé"]},
-      {title:"L amour retrouvé",intro:"L amour n est pas quelque chose à mériter. Il est ton droit naturel.",
+      {title:"L'amour retrouvé",intro:"L'amour n'est pas quelque chose à mériter. Il est ton droit naturel.",
        ids:["aimé","choisi","désiré","préféré","chéri","adoré","séduit","conquis","étreint","enlacé","bercé","câliné","protégé","gardé","soutenu","accompagné","comblé","nourri","rassasié","rempli","régalé","sécurisé"]}
     ]
   },
@@ -2590,15 +2452,15 @@ const SCAN_THEMES=[
     id:"limites",title:"Être respecté",icon:"🚧",
     desc:"Retrouver ses limites et son intégrité",
     chapters:[
-      {title:"Ce qui t empêche",intro:"Quelque chose t empêche d accéder à cette blessure — souvent de la honte ou de la dissociation.",
+      {title:"Ce qui t'empêche",intro:"Quelque chose t'empêche d'accéder à cette blessure — souvent de la honte ou de la dissociation.",
        ids:["dissocié","anesthésié","engourdi","coupé","blindé","enkysté","honteux","muselé","refoulé","retenu","congelé"]},
-      {title:"Ce que le corps a subi",intro:"Les limites franchies s inscrivent d abord dans la chair.",
+      {title:"Ce que le corps a subi",intro:"Les limites franchies s'inscrivent d'abord dans la chair.",
        ids:["frappé","battu","cogné","heurté","percuté","mordu","griffé","écorché","contusionné","bousculé","agrippé","repoussé","transpercé","envahi","fouetté","cinglé","mutilé","flagellé"]},
       {title:"Ce que tu as ressenti",intro:"Quand ton espace intime a été violé.",
        ids:["violé","profané","désacralisé","outragé","avili","souillé","sali","objectivé","chosifié","marchandisé","sexualisé","érotisé","fantasmé","déshabillé","exposé","convoité","dévoré","mangé","consommé","avalé","happé","absorbé"]},
-      {title:"Ce que tu t es dit",intro:"Face à la violation, tu as tiré des conclusions sur tes limites.",
+      {title:"Ce que tu t'es dit",intro:"Face à la violation, tu as tiré des conclusions sur tes limites.",
        ids:["coupable","honteux","responsabilisé","humilié","avili","souillé","abîmé","marqué","taché","sali"]},
-      {title:"L intégrité retrouvée",intro:"Tes limites sont sacrées. Ton corps t appartient.",
+      {title:"L'intégrité retrouvée",intro:"Tes limites sont sacrées. Ton corps t'appartient.",
        ids:["sacré","purifié","réapproprié","restauré","blanchi","lavé","réhabilité","dignifié","respecté","honoré","protégé","défendu","préservé"]}
     ]
   },
@@ -2606,15 +2468,15 @@ const SCAN_THEMES=[
     id:"faire_confiance",title:"Faire confiance",icon:"🤝",
     desc:"Sortir de la méfiance et retrouver la confiance",
     chapters:[
-      {title:"Ce qui t empêche",intro:"Quelque chose t empêche de faire confiance même quand c est safe.",
+      {title:"Ce qui t'empêche",intro:"Quelque chose t'empêche de faire confiance même quand c'est safe.",
        ids:["blindé","cuirassé","barricadé","enkysté","durci","congelé","cadenassé","verrouillé","retranché","fermé","retenu","refoulé"]},
-      {title:"Ce que le corps garde",intro:"La méfiance s est installée dans le corps comme une armure.",
+      {title:"Ce que le corps garde",intro:"La méfiance s'est installée dans le corps comme une armure.",
        ids:["tendu","contracté","raidi","blindé","cuirassé","fermé","rivé","vissé","hérissé","alarmé"]},
-      {title:"Ce qui s est passé",intro:"Quelqu un ou quelque chose a brisé ta confiance.",
+      {title:"Ce qui s'est passé",intro:"Quelqu'un ou quelque chose a brisé ta confiance.",
        ids:["trahi","trompé","dupé","floué","berné","leurré","manipulé","abusé","exploité","utilisé","sacrifié","doublé","calomnié","diffamé","dénigré"]},
       {title:"Ce que tu as installé",intro:"Pour te protéger, tu as mis en place des mécanismes de défense.",
        ids:["contrôlé","surveillé","épié","retranché","cadenassé","fermé","distant","retiré","distancié","réservé"]},
-      {title:"La confiance retrouvée",intro:"La confiance n est pas de la naïveté. C est de la force.",
+      {title:"La confiance retrouvée",intro:"La confiance n'est pas de la naïveté. C'est de la force.",
        ids:["rassuré","sécurisé","protégé","garanti","soutenu","accompagné","guidé","réconforté","apaisé","réconcilié","détrompé","éclairé"]}
     ]
   },
@@ -2622,13 +2484,13 @@ const SCAN_THEMES=[
     id:"trahison",title:"Sortir de la trahison",icon:"🔓",
     desc:"Guérir des blessures de trahison et retrouver la paix",
     chapters:[
-      {title:"Ce qui t empêche",intro:"Quelque chose t empêche de toucher cette blessure — souvent une colère ou une honte enfouie.",
+      {title:"Ce qui t'empêche",intro:"Quelque chose t'empêche de toucher cette blessure — souvent une colère ou une honte enfouie.",
        ids:["blindé","enkysté","durci","congelé","anesthésié","dissocié","retenu","refoulé","barricadé","cadenassé","muselé"]},
       {title:"Ce que le corps a gardé",intro:"La trahison laisse des traces physiques profondes.",
        ids:["tendu","contracté","raidi","blindé","cuirassé","fermé","hérissé","noué","figé","sonné","assommé","choqué"]},
-      {title:"Ce qui s est passé",intro:"Tu as été trahi par quelqu un en qui tu avais confiance.",
+      {title:"Ce qui s'est passé",intro:"Tu as été trahi par quelqu'un en qui tu avais confiance.",
        ids:["trahi","trompé","dupé","floué","berné","leurré","manipulé","abusé","exploité","utilisé","sacrifié","doublé","calomnié","diffamé","dénigré","déçu","désabusé","désenchanté","consterné","atterré","navré"]},
-      {title:"Ce que tu as installé",intro:"Pour ne plus souffrir, tu t es fermé.",
+      {title:"Ce que tu as installé",intro:"Pour ne plus souffrir, tu t'es fermé.",
        ids:["distant","retiré","distancié","réservé","blindé","cadenassé","fermé","retranché","surveillé","contrôlé","épié"]},
       {title:"La paix retrouvée",intro:"La confiance retrouvée est plus forte que la trahison subie.",
        ids:["réconcilié","rassuré","réconforté","apaisé","calmé","soulagé","détrompé","éclairé","pardonné","affranchi","libéré","ouvert","déployé","soutenu","accompagné"]}
@@ -2638,15 +2500,15 @@ const SCAN_THEMES=[
     id:"honte",title:"Ne plus avoir honte",icon:"🌅",
     desc:"Se libérer du regard des autres et de la honte",
     chapters:[
-      {title:"Ce qui t empêche",intro:"La honte elle-même t empêche d accéder à la honte. C est son paradoxe.",
+      {title:"Ce qui t'empêche",intro:"La honte elle-même t'empêche d'accéder à la honte. C'est son paradoxe.",
        ids:["honteux","muselé","caché","dissimulé","masqué","voilé","blindé","enkysté","anesthésié","refoulé","retenu","congelé"]},
       {title:"La honte dans le corps",intro:"La honte a une texture physique très reconnaissable.",
        ids:["contracté","recroquevillé","voûté","caché","dissimulé","masqué","voilé","étouffé","noué","figé","tremblé","baissé","détourné","fléchi"]},
-      {title:"Ce qui a créé la honte",intro:"Quelqu un ou quelque chose t a fait sentir honteux.",
+      {title:"Ce qui a créé la honte",intro:"Quelqu'un ou quelque chose t'a fait sentir honteux.",
        ids:["humilié","ridiculisé","moqué","bafoué","conspué","exposé","montré","flagellé","fustigé","avili","souillé","sali","profané","désacralisé","castré","stérilisé"]},
-      {title:"Ce que tu t es dit",intro:"La honte t a amené à te cacher et à te diminuer.",
+      {title:"Ce que tu t'es dit",intro:"La honte t'a amené à te cacher et à te diminuer.",
        ids:["honteux","souillé","taché","marqué","abîmé","raté","coupable","blâmé","condamné","damné","maudit"]},
-      {title:"Au-delà de la honte",intro:"Tu n es pas ta honte. Tu en es sorti.",
+      {title:"Au-delà de la honte",intro:"Tu n'es pas ta honte. Tu en es sorti.",
        ids:["pardonné","absout","acquitté","gracié","amnistié","racheté","réhabilité","blanchi","lavé","purifié","libéré","affranchi","délivré","dignifié","élevé","révéré","sacré","honoré","célébré","reconnu","accepté"]}
     ]
   },
@@ -2654,11 +2516,11 @@ const SCAN_THEMES=[
     id:"culpabilite",title:"Ne plus se sentir coupable",icon:"⚖️",
     desc:"Se libérer du poids de la culpabilité",
     chapters:[
-      {title:"Ce qui t empêche",intro:"La culpabilité elle-même t empêche de la toucher — tu penses mériter de la porter.",
+      {title:"Ce qui t'empêche",intro:"La culpabilité elle-même t'empêche de la toucher — tu penses mériter de la porter.",
        ids:["blindé","enkysté","durci","retenu","refoulé","muselé","cadenassé","congelé","dissocié","anesthésié","barricadé"]},
       {title:"Le poids dans le corps",intro:"La culpabilité pèse physiquement.",
        ids:["lesté","alourdi","écrasé","plombé","comprimé","noué","contracté","étouffé","prostré","effondré","affaissé"]},
-      {title:"Ce qu on t a mis sur les épaules",intro:"On t a chargé de responsabilités qui n étaient pas les tiennes.",
+      {title:"Ce qu'on t'a mis sur les épaules",intro:"On t'a chargé de responsabilités qui n'étaient pas les tiennes.",
        ids:["culpabilisé","accusé","incriminé","blâmé","condamné","jugé","sanctionné","puni","châtié","grondé","réprimandé","responsabilisé","surresponsabilisé","inculpé"]},
       {title:"Ce que tu portes encore",intro:"Tu continues à te punir pour des choses passées.",
        ids:["coupable","honteux","damné","maudit","sabordé","rabaissé","indigne","condamné"]},
@@ -2670,47 +2532,47 @@ const SCAN_THEMES=[
     id:"blessure",title:"Guérir ses blessures",icon:"💔",
     desc:"Cicatriser ce qui a été blessé en soi",
     chapters:[
-      {title:"Ce qui t empêche",intro:"Les blessures profondes sont souvent protégées par une couche de protection épaisse.",
+      {title:"Ce qui t'empêche",intro:"Les blessures profondes sont souvent protégées par une couche de protection épaisse.",
        ids:["blindé","enkysté","anesthésié","dissocié","coupé","durci","congelé","retenu","refoulé","barricadé","muselé"]},
       {title:"La blessure dans le corps",intro:"Les blessures ont une adresse physique précise.",
        ids:["blessé","meurtri","endolori","lacéré","écorché","contusionné","marqué","abîmé","perforé","transpercé","frappé","battu","cogné"]},
-      {title:"Ce qui t a blessé",intro:"Des mots, des actes, des absences qui ont laissé des traces.",
+      {title:"Ce qui t'a blessé",intro:"Des mots, des actes, des absences qui ont laissé des traces.",
        ids:["humilié","rabaissé","trahi","abandonné","rejeté","ignoré","méprisé","violé","profané","outragé","bafoué","fustigé","flagellé","mutilé"]},
-      {title:"Ce que tu as porté",intro:"La blessure non traitée devient un poids qu on porte partout.",
+      {title:"Ce que tu as porté",intro:"La blessure non traitée devient un poids qu'on porte partout.",
        ids:["meurtri","traumatisé","hanté","taraudé","rongé","miné","sapé","usé","abîmé","détérioré","dégradé","épuisé","vidé","éteint"]},
-      {title:"La cicatrice et la guérison",intro:"Une cicatrice n est pas une faiblesse. C est la preuve que tu as survécu.",
+      {title:"La cicatrice et la guérison",intro:"Une cicatrice n'est pas une faiblesse. C'est la preuve que tu as survécu.",
        ids:["guéri","cicatrisé","réparé","restauré","ressuscité","ressourcé","renouvelé","régénéré","reconstruit","relevé","redressé","revitalisé","rechargé","reposé","soulagé","libéré"]}
     ]
   },
   {
-    id:"epuisement",title:"Sortir de l épuisement",icon:"🌪️",
-    desc:"Retrouver de l énergie et de la vitalité",
+    id:"epuisement",title:"Sortir de l'épuisement",icon:"🌪️",
+    desc:"Retrouver de l'énergie et de la vitalité",
     chapters:[
-      {title:"Ce qui t empêche",intro:"L épuisement lui-même t empêche d y accéder — tu n as plus l énergie de ressentir.",
+      {title:"Ce qui t'empêche",intro:"L'épuisement lui-même t'empêche d'y accéder — tu n'as plus l'énergie de ressentir.",
        ids:["anesthésié","dissocié","engourdi","absent","neutralisé","désactivé","enkysté","congelé","résigné","capitulé","abdiqué"]},
-      {title:"Le corps épuisé",intro:"L épuisement a un visage physique très concret.",
+      {title:"Le corps épuisé",intro:"L'épuisement a un visage physique très concret.",
        ids:["épuisé","vidé","éteint","drainé","lessivé","claqué","éreinté","exténué","prostré","effondré","affaissé","engourdi","ankylosé"]},
-      {title:"Ce qui t a épuisé",intro:"L épuisement ne vient pas de nulle part.",
+      {title:"Ce qui t'a épuisé",intro:"L'épuisement ne vient pas de nulle part.",
        ids:["surchargé","débordé","dépassé","submergé","écrasé","accablé","rongé","miné","sapé","usé","abîmé","sacrifié","exploité","utilisé"]},
-      {title:"Ce que l épuisement a créé",intro:"Un corps épuisé finit par couper le contact avec tout.",
+      {title:"Ce que l'épuisement a créé",intro:"Un corps épuisé finit par couper le contact avec tout.",
        ids:["dissocié","détaché","coupé","anesthésié","absent","résigné","capitulé","abdiqué","désengagé","déprimé","désemparé"]},
       {title:"L énergie retrouvée",intro:"L énergie revient quand on se repose vraiment.",
        ids:["reposé","rechargé","revitalisé","régénéré","ressourcé","restauré","dynamisé","galvanisé","animé","soulagé","allégé","libéré","dégagé"]}
     ]
   },
   {
-    id:"effondrement",title:"Traverser l effondrement",icon:"🔥",
+    id:"effondrement",title:"Traverser l'effondrement",icon:"🔥",
     desc:"Sortir du burnout et reconstruire",
     chapters:[
-      {title:"Ce qui t empêche",intro:"L effondrement fait peur à regarder en face — quelque chose te protège de sa profondeur.",
+      {title:"Ce qui t'empêche",intro:"L effondrement fait peur à regarder en face — quelque chose te protège de sa profondeur.",
        ids:["blindé","enkysté","anesthésié","dissocié","congelé","durci","retenu","refoulé","barricadé","résigné","capitulé"]},
-      {title:"L effondrement dans le corps",intro:"Quand tout s effondre, le corps tombe en premier.",
+      {title:"L effondrement dans le corps",intro:"Quand tout s'effondre, le corps tombe en premier.",
        ids:["effondré","brisé","démoli","ravagé","dévasté","anéanti","pulvérisé","écrasé","prostré","affaissé","tassé","vidé","éteint"]},
-      {title:"Ce qui s est effondré",intro:"Des certitudes, des relations, des illusions se sont brisées.",
+      {title:"Ce qui s'est effondré",intro:"Des certitudes, des relations, des illusions se sont brisées.",
        ids:["trahi","abandonné","défait","vaincu","submergé","noyé","englouti","avalé","assommé","foudroyé","terrassé","sabordé"]},
-      {title:"Dans le chaos",intro:"L effondrement crée un chaos qu on ne sait pas comment traverser.",
+      {title:"Dans le chaos",intro:"L effondrement crée un chaos qu'on ne sait pas comment traverser.",
        ids:["perdu","égaré","déboussolé","désorienté","confus","dispersé","éparpillé","résigné","capitulé","désespéré","déprimé","épuisé"]},
-      {title:"Se relever",intro:"On ne revient pas de l effondrement comme avant. On revient plus solide.",
+      {title:"Se relever",intro:"On ne revient pas de l'effondrement comme avant. On revient plus solide.",
        ids:["reconstruit","relevé","redressé","ressuscité","restauré","régénéré","renouvelé","ressourcé","rechargé","revitalisé","forgé","trempé","aiguisé","rodé","libéré","affranchi"]}
     ]
   },
@@ -2718,15 +2580,15 @@ const SCAN_THEMES=[
     id:"liberte",title:"Être libre",icon:"🕊️",
     desc:"Sortir du contrôle et retrouver son autonomie",
     chapters:[
-      {title:"Ce qui t empêche",intro:"Quelque chose t empêche d accéder à ta liberté — souvent la peur de ce qui arriverait si tu étais vraiment libre.",
+      {title:"Ce qui t'empêche",intro:"Quelque chose t'empêche d'accéder à ta liberté — souvent la peur de ce qui arriverait si tu étais vraiment libre.",
        ids:["blindé","enkysté","durci","congelé","cadenassé","verrouillé","barricadé","retenu","refoulé","inhibé","censuré","autocensuré"]},
-      {title:"Ce que le corps porte",intro:"Le contrôle et l enfermement s inscrivent dans le corps.",
+      {title:"Ce que le corps porte",intro:"Le contrôle et l'enfermement s'inscrivent dans le corps.",
        ids:["figé","bloqué","coincé","paralysé","rivé","collé","scotché","vissé","ligoté","entravé","enchaîné","attaché","emprisonné","encagé","comprimé","étouffé"]},
-      {title:"Ce qu on t a imposé",intro:"Des personnes ou des systèmes ont pris le contrôle sur toi.",
+      {title:"Ce qu'on t'a imposé",intro:"Des personnes ou des systèmes ont pris le contrôle sur toi.",
        ids:["contrôlé","dirigé","gouverné","dominé","opprimé","soumis","asservi","subjugué","domestiqué","dressé","formaté","normé","codifié","embrigadé","manipulé","instrumentalisé"]},
-      {title:"Ce que tu t es interdit",intro:"Tu as intégré les interdits jusqu à les appliquer toi-même.",
+      {title:"Ce que tu t'es interdit",intro:"Tu as intégré les interdits jusqu'à les appliquer toi-même.",
        ids:["censuré","autocensuré","réprimé","inhibé","muselé","bâillonné","refoulé","retenu","bridé","freiné","endigué","jugulé","empêché","corsété","cadenassé","fermé","verrouillé","prohibé","proscrit"]},
-      {title:"La liberté retrouvée",intro:"Tu es libre. Tu l as toujours été au fond.",
+      {title:"La liberté retrouvée",intro:"Tu es libre. Tu l'as toujours été au fond.",
        ids:["libéré","affranchi","émancipé","délié","délivré","déconditionné","désenchaîné","autonomisé","autodéterminé","décroché","désimpliqué","dépris","dégagé","ouvert","déployé","propulsé"]}
     ]
   },
@@ -2734,31 +2596,31 @@ const SCAN_THEMES=[
     id:"valeur",title:"Valoir quelque chose",icon:"💎",
     desc:"Retrouver le sentiment de sa propre valeur",
     chapters:[
-      {title:"Ce qui t empêche",intro:"Quelque chose t empêche de recevoir ta propre valeur — souvent la conviction profonde que tu ne la mérites pas.",
+      {title:"Ce qui t'empêche",intro:"Quelque chose t'empêche de recevoir ta propre valeur — souvent la conviction profonde que tu ne la mérites pas.",
        ids:["blindé","enkysté","anesthésié","durci","congelé","retenu","refoulé","muselé","honteux","coupable","barricadé"]},
-      {title:"Ce que ça fait dans le corps",intro:"Le sentiment de ne rien valoir s ancre dans le corps.",
+      {title:"Ce que ça fait dans le corps",intro:"Le sentiment de ne rien valoir s'ancre dans le corps.",
        ids:["affaissé","voûté","tassé","vidé","éteint","étouffé","contracté","retenu","bridé","écrasé","lesté","alourdi"]},
-      {title:"Ce qu on t a dit",intro:"D où vient ce sentiment que tu ne vaux rien.",
+      {title:"Ce qu'on t'a dit",intro:"D'où vient ce sentiment que tu ne vaux rien.",
        ids:["rabaissé","dévalorisé","méprisé","humilié","ridiculisé","bafoué","dénigré","déprécié","discrédité","disqualifié","fustigé","grondé","réprimandé","sanctionné","puni","jugé","condamné","blâmé","accusé","étiqueté","catalogué","calomnié","sabordé"]},
-      {title:"Ce que tu as conclu",intro:"Tu t es dit que tu n étais pas assez bien.",
+      {title:"Ce que tu as conclu",intro:"Tu t'es dit que tu n'étais pas assez bien.",
        ids:["honteux","coupable","raté","échoué","défait","rejeté","fabriqué","simulé","masqué","dévalué","disqualifié"]},
-      {title:"Ta valeur intrinsèque",intro:"Ta valeur n a jamais eu besoin d être gagnée.",
+      {title:"Ta valeur intrinsèque",intro:"Ta valeur n'a jamais eu besoin d'être gagnée.",
        ids:["valorisé","reconnu","estimé","admiré","apprécié","célébré","félicité","loué","respecté","révéré","honoré","distingué","élevé","dignifié","consacré","couronné","élu","réhabilité"]}
     ]
   },
   {
     id:"exister",title:"Exister",icon:"🌱",
-    desc:"Avoir le droit d être là et de prendre de la place",
+    desc:"Avoir le droit d'être là et de prendre de la place",
     chapters:[
-      {title:"Ce qui t empêche",intro:"Quelque chose t empêche de toucher le droit d exister — souvent parce que ça a été nié très tôt.",
+      {title:"Ce qui t'empêche",intro:"Quelque chose t'empêche de toucher le droit d'exister — souvent parce que ça a été nié très tôt.",
        ids:["blindé","enkysté","anesthésié","dissocié","congelé","durci","retenu","refoulé","muselé","honteux","barricadé"]},
-      {title:"Ce que le corps a senti",intro:"Ne pas avoir le droit d exister commence dans le corps.",
+      {title:"Ce que le corps a senti",intro:"Ne pas avoir le droit d'exister commence dans le corps.",
        ids:["comprimé","écrasé","étouffé","oppressé","aplati","planté","collé","retenu","bridé","effacé","gommé"]},
       {title:"Ce que tu as vécu",intro:"Quand ta présence était niée, ignorée ou trop lourde pour les autres.",
        ids:["ignoré","oublié","effacé","supprimé","rayé","raturé","barré","annulé","censuré","écarté","relégué","marginalisé","ostracisé","banni","exclu"]},
       {title:"Ce que tu as conclu",intro:"Tu as décidé de prendre moins de place pour ne pas déranger.",
        ids:["autocensuré","retenu","réprimé","inhibé","contenu","muselé","honteux","avili","culpabilisé","responsabilisé","blâmé"]},
-      {title:"Le droit d exister",intro:"Tu as le droit d exister pleinement, exactement tel que tu es.",
+      {title:"Le droit d'exister",intro:"Tu as le droit d'exister pleinement, exactement tel que tu es.",
        ids:["né","conçu","fondé","permis","autorisé","légitimé","validé","accepté","reconnu","vu","entériné","ratifié","voulu","attendu","désiré","choisi"]}
     ]
   },
@@ -2766,11 +2628,11 @@ const SCAN_THEMES=[
     id:"dissociation",title:"Sortir de la dissociation",icon:"🔮",
     desc:"Revenir à soi et retrouver ses émotions",
     chapters:[
-      {title:"Ce qui t empêche",intro:"La dissociation elle-même t empêche de la voir — tu es tellement coupé que tu ne sais plus que tu l es.",
+      {title:"Ce qui t'empêche",intro:"La dissociation elle-même t'empêche de la voir — tu es tellement coupé que tu ne sais plus que tu l'es.",
        ids:["anesthésié","engourdi","absent","flottant","neutralisé","désactivé","enkysté","congelé","figé","gelé","cristallisé"]},
-      {title:"La déconnexion dans le corps",intro:"La dissociation c est quand tu n es plus vraiment là.",
+      {title:"La déconnexion dans le corps",intro:"La dissociation c'est quand tu n'es plus vraiment là.",
        ids:["dissocié","détaché","coupé","séparé","fragmenté","morcelé","flottant","absent","anesthésié","engourdi","endormi","assoupi","sectionné","disloqué","volatilisé"]},
-      {title:"Ce qui t a coupé de toi",intro:"Des expériences trop douloureuses ont forcé la déconnexion.",
+      {title:"Ce qui t'a coupé de toi",intro:"Des expériences trop douloureuses ont forcé la déconnexion.",
        ids:["traumatisé","choqué","sidéré","sonné","assommé","foudroyé","terrassé","blessé","violé","profané","outragé","envahi","submergé","noyé","englouti"]},
       {title:"Ce que la dissociation a créé",intro:"Coupé de toi, tu as perdu accès à une partie de ta vie.",
        ids:["perdu","égaré","confus","déboussolé","désorienté","éparpillé","dispersé","absent","vidé","éteint","anesthésié","neutralisé","désactivé"]},
@@ -2782,15 +2644,15 @@ const SCAN_THEMES=[
     id:"sens",title:"Retrouver le sens",icon:"🧭",
     desc:"Sortir du vide et retrouver ce qui compte vraiment",
     chapters:[
-      {title:"Ce qui t empêche",intro:"Quelque chose t empêche d accéder au sens — souvent un épuisement profond ou une conviction que rien ne vaut la peine.",
+      {title:"Ce qui t'empêche",intro:"Quelque chose t'empêche d'accéder au sens — souvent un épuisement profond ou une conviction que rien ne vaut la peine.",
        ids:["anesthésié","dissocié","engourdi","résigné","capitulé","abdiqué","enkysté","congelé","désespéré","blindé","barricadé"]},
       {title:"Le vide dans le corps",intro:"La perte de sens laisse un vide physique.",
        ids:["vidé","éteint","engourdi","prostré","affaissé","effondré","épuisé","lessivé","claqué","déprimé"]},
       {title:"Ce que tu as traversé",intro:"Des événements ont vidé ton existence de sens.",
        ids:["perdu","égaré","déboussolé","désorienté","confus","dispersé","éparpillé","désengagé","dépris","distancié","retiré","résigné","capitulé","abdiqué","désimpliqué"]},
-      {title:"Ce que ça a produit",intro:"Sans sens, tu t es mis à douter de tout.",
+      {title:"Ce que ça a produit",intro:"Sans sens, tu t'es mis à douter de tout.",
        ids:["ébranlé","vacillé","hésité","tergiversé","découragé","démotivé","défait","anéanti","dévasté","perturbé","déconcerté","troublé"]},
-      {title:"Le sens retrouvé",intro:"Le sens n est pas à trouver. Il est à retrouver en toi.",
+      {title:"Le sens retrouvé",intro:"Le sens n'est pas à trouver. Il est à retrouver en toi.",
        ids:["engagé","déterminé","voué","consacré","habité","animé","porté","appelé","destiné","envoyé","investi","motivé","enthousiasmé","décidé","acharné","éveillé","accompli","réussi","grandi","mûri","fondé","né"]}
     ]
   },
@@ -2798,61 +2660,46 @@ const SCAN_THEMES=[
     id:"deconditionnement",title:"Se déconditionner",icon:"⚙️",
     desc:"Se libérer des programmes reçus",
     chapters:[
-      {title:"Ce qui t empêche",intro:"Le conditionnement lui-même t empêche de le voir — tu penses que c est toi.",
+      {title:"Ce qui t'empêche",intro:"Le conditionnement lui-même t'empêche de le voir — tu penses que c'est toi.",
        ids:["blindé","enkysté","durci","congelé","cristallisé","formaté","normé","codifié","standardisé","retenu","refoulé","muselé"]},
       {title:"Le conditionnement dans le corps",intro:"Les programmes reçus finissent par habiter le corps.",
        ids:["formaté","normé","codifié","standardisé","domestiqué","dressé","façonné","lissé","poli","taillé","corsé","rigidifié"]},
-      {title:"Ce qu on t a programmé",intro:"Famille, société, école — des voix qui ont remplacé la tienne.",
+      {title:"Ce qu'on t'a programmé",intro:"Famille, société, école — des voix qui ont remplacé la tienne.",
        ids:["conditionné","endoctriné","embrigadé","enrégimenté","assimilé","colonisé","asservi","subjugué","possédé","instrumentalisé","manipulé","dirigé","gouverné","contrôlé","surveillé","programmé"]},
-      {title:"Ce que ça a créé en toi",intro:"Tu t es mis à penser, ressentir et agir selon leurs règles.",
+      {title:"Ce que ça a créé en toi",intro:"Tu t'es mis à penser, ressentir et agir selon leurs règles.",
        ids:["censuré","autocensuré","réprimé","inhibé","refoulé","retenu","bridé","muselé","bâillonné","prohibé","proscrit","normé","codifié","étiqueté","catalogué","réduit"]},
-      {title:"Ta propre voix",intro:"Sous les programmes, tu as une voix. Elle t appartient.",
+      {title:"Ta propre voix",intro:"Sous les programmes, tu as une voix. Elle t'appartient.",
        ids:["déconditionné","déprogrammé","déconstruit","désenchaîné","affranchi","émancipé","autonomisé","autodéterminé","libéré","délivré","délié","éveillé","illuminé","éclairé","ouvert","déployé"]}
     ]
   },
   {
     id:"reconstruction",title:"Se reconstruire",icon:"🏗️",
-    desc:"Après l effondrement, rebâtir sur des bases solides",
+    desc:"Après l'effondrement, rebâtir sur des bases solides",
     chapters:[
-      {title:"Ce qui t empêche",intro:"Quelque chose t empêche de te reconstruire — souvent la peur que ça s effondre à nouveau.",
+      {title:"Ce qui t'empêche",intro:"Quelque chose t'empêche de te reconstruire — souvent la peur que ça s'effondre à nouveau.",
        ids:["blindé","enkysté","anesthésié","durci","congelé","résigné","capitulé","désespéré","retenu","refoulé","barricadé"]},
       {title:"Les décombres",intro:"Avant de reconstruire, il faut regarder ce qui est tombé.",
        ids:["effondré","brisé","démoli","ravagé","dévasté","anéanti","pulvérisé","défait","vaincu","perdu","égaré","abandonné","sacrifié","sabordé"]},
-      {title:"Ce qui a tenu",intro:"Même dans l effondrement, quelque chose en toi a résisté.",
+      {title:"Ce qui a tenu",intro:"Même dans l'effondrement, quelque chose en toi a résisté.",
        ids:["résisté","tenu","survécu","enduré","persisté","continué","préservé","gardé","maintenu","stabilisé","ancré","enraciné"]},
       {title:"Les premières pierres",intro:"Reconstruire commence par de petits gestes concrets.",
        ids:["décidé","déterminé","engagé","investi","motivé","animé","habité","porté","appelé","forgé","trempé","aiguisé","rodé","affirmé","réaffirmé"]},
-      {title:"La nouvelle fondation",intro:"Ce que tu reconstruis est plus solide que ce qui s est effondré.",
+      {title:"La nouvelle fondation",intro:"Ce que tu reconstruis est plus solide que ce qui s'est effondré.",
        ids:["reconstruit","relevé","redressé","ressuscité","restauré","régénéré","renouvelé","ressourcé","rechargé","revitalisé","accompli","réussi","grandi","mûri","établi","fondé","légitimé","dignifié","élevé"]}
     ]
   }
 ];
-const LAYERS=[{"id": "layer0", "label": "🚪 Ouvrir la porte", "themes": ["ouvrir_porte"], "unlock_pct": 0}, {"id": "layer1", "label": "🌊 Corps & Action", "themes": ["corps", "figement", "securite", "lacher_prise"], "unlock_pct": 50}, {"id": "layer2", "label": "💔 Blessures primaires", "themes": ["abandon", "etre_aime", "limites", "faire_confiance", "trahison"], "unlock_pct": 50}, {"id": "layer3", "label": "🌪 Émotions installées", "themes": ["honte", "culpabilite", "blessure", "epuisement", "effondrement"], "unlock_pct": 60}, {"id": "layer4", "label": "🕊️ Programmes & Identité", "themes": ["liberte", "valeur", "exister", "dissociation"], "unlock_pct": 60}, {"id": "layer5", "label": "🧭 Sens & Reconstruction", "themes": ["sens", "deconditionnement", "reconstruction"], "unlock_pct": 70}];
-
-
-function getGroupForCat(cat,role){
-  if(role){const isPos=role==="coping";return GROUPS.find(g=>g.cats.includes(cat)&&(isPos?g.polarity==="pos":g.polarity==="neg"))||GROUPS.find(g=>g.cats.includes(cat));}
-  return GROUPS.find(g=>g.cats.includes(cat));
-}
-function rand(){return crypto.getRandomValues(new Uint32Array(1))[0]/0xFFFFFFFF;}
-function shuffle(arr){const a=[...arr];for(let r=0;r<3;r++)for(let i=a.length-1;i>0;i--){const j=Math.floor(rand()*(i+1));[a[i],a[j]]=[a[j],a[i]];;}return a;}
 
 let DATA=[...DEFAULT_DATA];
-let currentProfile=null,SESSIONS=[],checked=new Set(),todoIds=new Set(),reviewDates={},trashedIds=new Set(),pinnedIds=new Set();
-let stateFilter="all",levelFilter=0,polarityFilter="all",query="";
-let dictLevelIdx=1;
+let currentProfile=null,SESSIONS=[],checked=new Set(),reviewDates={},pinnedIds=new Set();
+let levelFilter=0,query="";
 let scanThemeId=null,scanChapterIdx=0,scanChecked=new Set();
 let pinTarget=null,pinVal="";
-let sessionSize=5,gameMode="B";
-let gameQueue=[],gameIdx=0,gameWorked=[],gameLater=[],gameSkipped=[],lastGameGroup=null;
+let sessionSize=5;
 
 function workedIds(){return new Set(SESSIONS.flatMap(s=>s.ids));}
-function isDueForReview(id){const r=reviewDates[id];return r&&Date.now()>=r.nextReview;}
 function scheduleReview(id,count){reviewDates[id]={nextReview:Date.now()+((count===0?3:7)*86400000),reviewCount:count};saveReviews();}
-function markIntegrated(id){delete reviewDates[id];saveReviews();}
-function saveTodo(){try{localStorage.setItem("todo_"+currentProfile.id,JSON.stringify([...todoIds]));}catch(e){}}
 function saveReviews(){try{localStorage.setItem("reviews_"+currentProfile.id,JSON.stringify(reviewDates));}catch(e){}}
-function saveTrashed(){try{localStorage.setItem("trashed_"+currentProfile.id,JSON.stringify([...trashedIds]));}catch(e){}}
 async function savePinned(){
   // Sync Supabase : on supprime tout puis on réinsère (simple et fiable)
   try{
@@ -2885,7 +2732,7 @@ async function unvalidateId(id){
     if(document.getElementById("scan-screen")?.classList.contains("show"))renderScan();
   }catch(e){showToast("Erreur: "+e.message);}
 }
-async function togglePin(id){
+async function togglePin(id,silent=false){
   if(pinnedIds.has(id)){
     pinnedIds.delete(id);
     try{await fetch(SB_URL+"/rest/v1/pins?profile_id=eq."+currentProfile.id+"&identity_id=eq."+id,{method:"DELETE",headers:{"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY}});}catch(e){}
@@ -2896,11 +2743,11 @@ async function togglePin(id){
   // Update badge count on pinned tab
   const pinnedMobileBtn=document.querySelector(".home-mobile-tab[data-tab='pinned']");
   if(pinnedMobileBtn){
-    pinnedMobileBtn.textContent=pinnedIds.size>0?`📌 Épinglés (${pinnedIds.size})`:"📌 Épinglés";
+    pinnedMobileBtn.textContent=pinnedIds.size>0?`📌 Ma liste (${pinnedIds.size})`:"📌 Ma liste";
   }
   const pinnedSideBtn=document.getElementById("home-pinned-btn");
   if(pinnedSideBtn){
-    pinnedSideBtn.textContent=pinnedIds.size>0?`📌 Épinglés (${pinnedIds.size})`:"📌 Épinglés";
+    pinnedSideBtn.textContent=pinnedIds.size>0?`📌 Ma liste (${pinnedIds.size})`:"📌 Ma liste";
   }
   // Mettre à jour l'icône 📌 dans la vue scan sans tout re-render
   document.querySelectorAll("[data-pin-scan]").forEach(el=>{
@@ -2919,12 +2766,7 @@ async function togglePin(id){
   if((activeMobile&&activeMobile.dataset.tab==="pinned")||(activeSide&&activeSide.id==="home-pinned-btn")){
     renderPinnedTab();
   }
-  // Update badge
-  const pinnedMobileBtn2=document.querySelector(".home-mobile-tab[data-tab='pinned']");
-  if(pinnedMobileBtn2){pinnedMobileBtn2.textContent=pinnedIds.size>0?`📌 Épinglés (${pinnedIds.size})`:"📌 Épinglés";}
-  const pinnedSideBtn2=document.getElementById("home-pinned-btn");
-  if(pinnedSideBtn2){pinnedSideBtn2.textContent=pinnedIds.size>0?`📌 Épinglés (${pinnedIds.size})`:"📌 Épinglés";}
-  showToast(pinnedIds.has(id)?"📌 Épinglé":"✓ Désépinglé");
+  if(!silent)showToast(pinnedIds.has(id)?"📌 Ajouté à ta liste":"✓ Retiré de la liste");
 }
 function showToast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2500);}
 
@@ -3028,7 +2870,7 @@ function skipOnboarding(){
   currentProfile.objectives=[];
   currentProfile.priorityTopics=[];
   showScreen("home-screen");
-  setHomeTab("pinned");
+  setHomeTab("reconnexion");
   renderHomeStats();
 }
 
@@ -3093,10 +2935,28 @@ async function confirmOnboarding(){
   currentProfile.priorityTopics=priorityTopics;
   try{localStorage.setItem("onb_"+currentProfile.id,JSON.stringify({objectives:currentProfile.objectives,priorityTopics}));}catch(e){}
   try{await sb("profiles?id=eq."+currentProfile.id,{method:"PATCH",body:{topics:priorityTopics},prefer:"return=minimal"});}catch(e){}
-  showScreen("home-screen");
-  setHomeTab("pinned");
-  renderHomeStats();
-  renderHomeObjectives();
+  // Écran de transition "Ta première étape"
+  const cont=document.getElementById("onb-objectives");
+  if(cont){
+    const firstObj=selected[0];
+    cont.innerHTML=`<div style="display:flex;flex-direction:column;align-items:center;text-align:center;padding:2rem 0;gap:1.25rem;">
+      <div style="font-size:3rem;">🌱</div>
+      <div style="font-size:1.3rem;font-weight:700;color:var(--text);">C'est parti, ${currentProfile.name.split(" ")[0]} !</div>
+      <div style="font-size:0.9rem;color:var(--text-faint);line-height:1.7;max-width:300px;">
+        Tes thèmes prioritaires sont prêts.<br>
+        ${firstObj?`Ta première étape : explorer <strong style="color:var(--accent);">${firstObj.emoji} ${firstObj.label}</strong>.`:"Commence par scanner un thème qui résonne."}
+      </div>
+      <button onclick="showScreen('home-screen');setHomeTab('reconnexion');renderHomeStats();renderHomeObjectives();"
+        style="margin-top:0.5rem;padding:14px 32px;border-radius:var(--radius-lg);border:1px solid var(--accent);background:rgba(200,184,154,0.08);color:var(--accent);font-size:1rem;font-weight:600;font-family:inherit;cursor:pointer;">
+        Voir mes thèmes →
+      </button>
+    </div>`;
+  } else {
+    showScreen("home-screen");
+    setHomeTab("reconnexion");
+    renderHomeStats();
+    renderHomeObjectives();
+  }
 }
 
 function loadOnboarding(){
@@ -3122,8 +2982,8 @@ function loadOnboarding(){
 }
 
 function openObjectif(obj){
-  // Filtre le dictionnaire sur les topics de cet objectif
-  setHomeTab("dictionnaire");
+  // Va sur l'onglet reconnexion — les thèmes prioritaires y sont déjà mis en avant
+  setHomeTab("reconnexion");
   setTimeout(()=>{
     homeSearchQuery=obj.label.toLowerCase();
     const srch=document.getElementById("home-search");
@@ -3158,7 +3018,7 @@ function openObjectif(obj){
           <span style="font-size:10px;color:var(--text-faint);flex-shrink:0;margin-right:4px;">${d.cat}</span>
           ${isWorked
             ?`<button title="Retirer" onclick="event.stopPropagation();unvalidateId(${d.id});" style="background:none;border:none;cursor:pointer;font-size:12px;color:var(--red-text);opacity:0.6;flex-shrink:0;padding:2px 4px;">↩</button>`
-            :`<button class="pin-btn" data-pin-id="${d.id}" title="${isPinned?"Désépingler":"Épingler"}" style="background:none;border:none;cursor:pointer;font-size:13px;padding:2px 2px;flex-shrink:0;opacity:${isPinned?1:0.3};transition:opacity 0.15s;" onclick="event.stopPropagation();togglePin(${d.id});renderSearchResults();">📌</button>`
+            :`<button style="font-size:0.7rem;background:${isPinned?"rgba(200,184,154,0.12)":"none"};border:1px solid ${isPinned?"rgba(200,184,154,0.4)":"transparent"};color:${isPinned?"var(--accent)":"var(--text-faint)"};border-radius:4px;padding:2px 8px;cursor:pointer;flex-shrink:0;font-family:inherit;" onclick="event.stopPropagation();togglePin(${d.id}).then(()=>{const p=pinnedIds.has(${d.id});this.style.background=p?'rgba(200,184,154,0.12)':'none';this.style.border='1px solid '+(p?'rgba(200,184,154,0.4)':'transparent');this.style.color=p?'var(--accent)':'var(--text-faint)';this.querySelector('.pin-label').textContent=p?'📌 Liste':'+ Liste';this.title=p?'Retirer de la liste':'Ajouter à ma liste';});" title="${isPinned?"Retirer de la liste":"Ajouter à ma liste"}"><span class="pin-label">${isPinned?"📌 Liste":"+ Liste"}</span></button>`
           }
         </div>`;
       }).join("");
@@ -3170,7 +3030,7 @@ function openObjectif(obj){
     // Wirer les clics sur les thèmes
     grid.querySelectorAll(".home-theme-row[data-tid]").forEach(row=>{
       row.addEventListener("click",()=>{
-        scanThemeId=row.dataset.tid;scanChapterIdx=0;scanChecked=new Set();
+        scanThemeId=row.dataset.tid;scanChapterIdx=0;scanChecked.clear();
         showScreen("scan-screen");renderScan();
       });
     });
@@ -3278,17 +3138,40 @@ function renderProfileGrid(profiles){
     const id=btn.dataset.id,name=btn.dataset.name;
     const card=btn.closest(".profile-card");
     const hash=card.dataset.hash;
-    const pin=prompt(`PIN pour supprimer "${name}" :`);
-    if(!pin)return;
-    if(await hashPin(pin)!==hash){showToast("PIN incorrect");return;}
-    if(!confirm(`Supprimer "${name}" définitivement ?`))return;
-    try{
-      await sb(`sessions?profile_id=eq.${id}`,{method:"DELETE",prefer:"return=minimal"});
-      await sb(`profiles?id=eq.${id}`,{method:"DELETE",prefer:"return=minimal"});
-      ["todo_","reviews_","trashed_"].forEach(k=>localStorage.removeItem(k+id));
-      showToast("Profil supprimé");
-      loadProfiles();
-    }catch(e){showToast("Erreur: "+e.message);}
+    // Overlay maison — pas de prompt() natif
+    const overlay=document.createElement("div");
+    overlay.style.cssText="position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999;display:flex;align-items:center;justify-content:center;padding:1.5rem;";
+    overlay.innerHTML=`<div style="background:var(--surface);border:1px solid var(--border-md);border-radius:var(--radius-lg);padding:1.75rem;max-width:320px;width:100%;">
+      <div style="font-size:1rem;font-weight:600;margin-bottom:0.4rem;">Supprimer le profil</div>
+      <div style="font-size:0.82rem;color:var(--text-faint);margin-bottom:1.25rem;">Saisis le PIN de <strong>${name}</strong> pour confirmer.</div>
+      <input id="del-pin-input" type="password" inputmode="numeric" maxlength="8" placeholder="PIN" autocomplete="off"
+        style="width:100%;box-sizing:border-box;padding:10px 14px;background:var(--surface2);border:1px solid var(--border-md);border-radius:var(--radius);color:var(--text);font-size:1rem;font-family:inherit;outline:none;letter-spacing:0.15em;margin-bottom:0.75rem;"/>
+      <div id="del-pin-err" style="font-size:0.78rem;color:var(--red-text);min-height:1.2em;margin-bottom:0.75rem;"></div>
+      <div style="display:flex;gap:8px;">
+        <button id="del-cancel" style="flex:1;padding:10px;border-radius:var(--radius);border:1px solid var(--border-md);background:transparent;color:var(--text-muted);font-size:0.85rem;font-family:inherit;cursor:pointer;">Annuler</button>
+        <button id="del-confirm" style="flex:1;padding:10px;border-radius:var(--radius);border:1px solid var(--red-border);background:var(--red-bg);color:var(--red-text);font-size:0.85rem;font-family:inherit;cursor:pointer;font-weight:600;">Supprimer</button>
+      </div>
+    </div>`;
+    document.body.appendChild(overlay);
+    const pinInput=overlay.querySelector("#del-pin-input");
+    const errEl=overlay.querySelector("#del-pin-err");
+    pinInput.focus();
+    overlay.querySelector("#del-cancel").addEventListener("click",()=>overlay.remove());
+    overlay.addEventListener("click",e=>{if(e.target===overlay)overlay.remove();});
+    overlay.querySelector("#del-confirm").addEventListener("click",async()=>{
+      const pin=pinInput.value.trim();
+      if(!pin){errEl.textContent="Saisis ton PIN.";return;}
+      if(await hashPin(pin)!==hash){errEl.textContent="PIN incorrect.";pinInput.value="";pinInput.focus();return;}
+      overlay.remove();
+      try{
+        await sb(`sessions?profile_id=eq.${id}`,{method:"DELETE",prefer:"return=minimal"});
+        await sb(`profiles?id=eq.${id}`,{method:"DELETE",prefer:"return=minimal"});
+        ["todo_","reviews_","trashed_"].forEach(k=>localStorage.removeItem(k+id));
+        showToast("Profil supprimé");
+        loadProfiles();
+      }catch(e){showToast("Erreur: "+e.message);}
+    });
+    pinInput.addEventListener("keydown",e=>{if(e.key==="Enter")overlay.querySelector("#del-confirm").click();});
   }));
 }
 
@@ -3297,227 +3180,6 @@ function filterProfiles(q){
   if(!query){renderProfileGrid(_allProfiles);return;}
   renderProfileGrid(_allProfiles.filter(p=>p.name.toLowerCase().includes(query)));
 }
-
-/* ===== EXERCISES ===== */
-let currentExercise=null,currentExPart=0;
-
-function renderExercises(){
-  const cont=document.getElementById("home-themes-grid")||document.getElementById("exercises-content");
-  if(!cont)return;
-  cont.innerHTML=`<div style="padding:0.5rem 0 6rem;">
-    ${EXERCISES.map((e,i)=>{
-      const opacity=Math.max(0.6,1-(i/EXERCISES.length)*0.35);
-      const fontSize=Math.max(12,14-(i/EXERCISES.length)*2);
-      const iconSize=Math.max(16,22-(i/EXERCISES.length)*5);
-      const padding=Math.max(8,12-(i/EXERCISES.length)*3);
-      return`<div class="home-theme-row" data-exid="${e.id}" style="opacity:${opacity.toFixed(2)};padding:${padding.toFixed(0)}px 12px;">
-        <div style="font-size:${iconSize.toFixed(0)}px;width:${(iconSize+4).toFixed(0)}px;flex-shrink:0;">${e.icon}</div>
-        <div style="flex:1;min-width:0;">
-          <div style="font-size:${fontSize.toFixed(0)}px;font-weight:600;">${e.title}</div>
-          <div style="font-size:10px;color:var(--text-faint);margin-top:1px;">${e.duration}</div>
-        </div>
-        <span style="color:var(--text-faint);font-size:12px;flex-shrink:0;">→</span>
-      </div>`;
-    }).join("")}
-  </div>`;
-  cont.querySelectorAll("[data-exid]").forEach(row=>{
-    row.addEventListener("click",()=>{
-      currentExercise=EXERCISES.find(e=>e.id===row.dataset.exid);
-      currentExPart=0;
-      renderExerciseDetail();
-    });
-  });
-}
-
-function getExDoneKey(exId){return`ex_done_${currentProfile?.id}_${exId}`;}
-function isExDone(exId){return localStorage.getItem(getExDoneKey(exId))==="1";}
-function markExDone(exId){try{localStorage.setItem(getExDoneKey(exId),"1");}catch(e){}}
-
-function renderExerciseDetail(){
-  if(!currentExercise)return;
-  const ex=currentExercise;
-  const cont=document.getElementById("home-themes-grid")||document.getElementById("exercises-content");
-  if(!cont)return;
-  if(ex.id==="vie_de_reve"){renderVieDeReve();return;}
-
-  const isVideo=ex.id==="introspection_video";
-  const done=isExDone(ex.id);
-
-  // Build ALL parts at once
-  let allHtml="";
-  ex.parts.forEach((part,pi)=>{
-    const savedKey=`ex_${currentProfile?.id}_${ex.id}_${pi}`;
-    let saved={};
-    try{saved=JSON.parse(localStorage.getItem(savedKey)||"{}");}catch(e){}
-
-    let fieldsHtml="";
-    if(part.questions){
-      if(isVideo){
-        // Read-only: just display questions as a numbered list
-        fieldsHtml=part.questions.map((q,i)=>`
-          <div style="display:flex;gap:12px;padding:1rem 1.25rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:0.75rem;">
-            <span style="font-size:12px;color:var(--text-faint);font-weight:600;min-width:18px;">${i+1}.</span>
-            <span style="font-size:14px;color:var(--text);line-height:1.6;">${q}</span>
-          </div>`).join("");
-      } else {
-        fieldsHtml=part.questions.map((q,i)=>`
-          <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem 1.5rem;margin-bottom:1.25rem;">
-            <div style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-bottom:0.75rem;">✏️ ${q}</div>
-            <textarea data-pidx="${pi}" data-idx="${i}" rows="3" placeholder="Ta réponse…" class="ex-field" style="width:100%;box-sizing:border-box;padding:0;border:none;background:transparent;color:var(--text);font-size:14px;font-family:inherit;resize:none;line-height:1.8;outline:none;">${saved[i]||""}</textarea>
-          </div>`).join("");
-      }
-    } else if(part.fields){
-      fieldsHtml=part.fields.map((f,i)=>`
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem 1.5rem;margin-bottom:1rem;">
-          <div style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-bottom:0.75rem;">✏️ ${f.label}</div>
-          ${f.type==="textarea"
-            ?`<textarea data-pidx="${pi}" data-idx="${i}" placeholder="${f.placeholder||"Ta réponse…"}" rows="2" class="ex-field" style="width:100%;box-sizing:border-box;padding:0;border:none;background:transparent;color:var(--text);font-size:14px;font-family:inherit;resize:none;line-height:1.8;outline:none;">${saved[i]||""}</textarea>`
-            :`<input data-pidx="${pi}" data-idx="${i}" type="text" placeholder="${f.placeholder||"…"}" value="${saved[i]||""}" class="ex-field" style="width:100%;box-sizing:border-box;padding:0;border:none;border-bottom:1px solid var(--border-md);background:transparent;color:var(--text);font-size:14px;font-family:inherit;outline:none;display:block;">`}
-        </div>`).join("");
-    }
-
-    allHtml+=`
-      <div style="margin-bottom:3rem;padding-bottom:2rem;${pi<ex.parts.length-1?"border-bottom:1px solid var(--border);":""}">
-        <div style="font-size:16px;font-weight:600;margin-bottom:0.5rem;">${part.title}</div>
-        <div style="font-size:13px;color:var(--text-muted);margin-bottom:1.5rem;line-height:1.7;font-style:italic;">${part.intro}</div>
-        ${fieldsHtml}
-        ${part.note?`<div style="font-size:12px;color:var(--text-faint);margin-top:1rem;font-style:italic;">${part.note}</div>`:""}
-      </div>`;
-  });
-
-  const btnLabel=done?"✓ Exercice complété":"Marquer comme fait";
-  const btnStyle=done
-    ?`width:100%;padding:12px 20px;border-radius:var(--radius-lg);border:1px solid var(--green-border);background:var(--green-bg);color:var(--green-text);font-size:14px;font-family:inherit;cursor:default;`
-    :`width:100%;padding:12px 20px;border-radius:var(--radius-lg);border:1px solid var(--accent);background:transparent;color:var(--accent);font-size:14px;font-family:inherit;cursor:pointer;`;
-
-  cont.innerHTML=`<div style="padding:1rem 0 4rem;">
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:2rem;">
-      <button id="ex-back-btn" style="font-size:12px;color:var(--text-faint);background:none;border:none;cursor:pointer;padding:0;font-family:inherit;">← Exercices</button>
-      <span style="font-size:18px;font-weight:600;">${ex.icon} ${ex.title}</span>
-    </div>
-    ${allHtml}
-    <button id="ex-done-btn" style="${btnStyle}">${btnLabel}</button>
-    ${!isVideo?`<button id="ex-save-btn" style="width:100%;margin-top:10px;padding:10px 20px;border-radius:var(--radius-lg);border:1px solid var(--border);background:transparent;color:var(--text-muted);font-size:13px;font-family:inherit;cursor:pointer;">Sauvegarder les notes</button>`:""}
-  </div>`;
-
-  // Save on input per part (only for non-video)
-  if(!isVideo){
-    cont.querySelectorAll(".ex-field").forEach(field=>{
-      field.addEventListener("input",()=>{
-        const pi=field.dataset.pidx;
-        const savedKey=`ex_${currentProfile?.id}_${ex.id}_${pi}`;
-        const vals={};
-        cont.querySelectorAll(`.ex-field[data-pidx="${pi}"]`).forEach(x=>{vals[x.dataset.idx]=x.value;});
-        try{localStorage.setItem(savedKey,JSON.stringify(vals));}catch(e){}
-      });
-    });
-    document.getElementById("ex-save-btn")?.addEventListener("click",()=>{
-      showToast("✓ Notes sauvegardées");
-    });
-  }
-
-  document.getElementById("ex-back-btn")?.addEventListener("click",()=>{
-    currentExercise=null;renderExercisesInline();
-  });
-  document.getElementById("ex-done-btn")?.addEventListener("click",()=>{
-    if(!done){
-      markExDone(ex.id);
-      showToast("✓ Exercice complété !");
-      currentExercise=null;renderExercisesInline();
-    }
-  });
-}
-
-function renderVieDeReve(){
-  const ex=currentExercise;
-  const cont=document.getElementById("home-themes-grid")||document.getElementById("exercises-content");
-  if(!cont)return;
-  cont.innerHTML=`
-    <div style="padding:0 0 6rem;">
-      <div class="scan-chapter-top" style="padding:0.75rem 0 0.5rem;margin-bottom:1rem;border-bottom:1px solid var(--border);">
-        <button class="dict-nav-btn" id="vdr-back-btn" style="padding:5px 10px;font-size:12px;">← Exercices</button>
-        <div style="font-size:12px;font-weight:600;">${ex.icon} ${ex.title}</div>
-        <div style="width:60px;"></div>
-      </div>
-      <div style="padding:0 1.5rem;">
-        <div style="font-size:12px;color:var(--text-muted);font-style:italic;margin-bottom:1.5rem;line-height:1.5;">${ex.intro}</div>
-        ${ex.spheres.map((s,si)=>{
-          const savedKey=`ex_${currentProfile?.id}_vie_de_reve_${si}`;
-          let saved={};
-          try{saved=JSON.parse(localStorage.getItem(savedKey)||"{}");}catch(e){}
-          return`<div style="margin-bottom:2rem;">
-            <div style="font-size:13px;font-weight:600;margin-bottom:0.75rem;">${s.icon} ${s.label}</div>
-            ${s.questions.map((q,qi)=>`
-              <div style="margin-bottom:0.75rem;">
-                <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;">${q}</div>
-                <textarea data-si="${si}" data-qi="${qi}" rows="2" placeholder="Ta réponse…" class="vdr-field" style="width:100%;box-sizing:border-box;padding:0;border:none;background:transparent;color:var(--text);font-size:14px;font-family:inherit;resize:none;line-height:1.8;outline:none;">${saved[qi]||""}</textarea>
-              </div>`).join("")}
-          </div>`;
-        }).join("")}
-        <button class="scan-chapter-nav-btn primary" id="vdr-save-btn" style="width:100%;margin-top:1rem;">Sauvegarder ✓</button>
-      </div>
-    </div>`;
-
-  cont.querySelectorAll(".vdr-field").forEach(f=>{
-    f.addEventListener("input",()=>{
-      const si=f.dataset.si;
-      const vals={};
-      cont.querySelectorAll(`.vdr-field[data-si="${si}"]`).forEach(x=>{vals[x.dataset.qi]=x.value;});
-      try{localStorage.setItem(`ex_${currentProfile?.id}_vie_de_reve_${si}`,JSON.stringify(vals));}catch(e){}
-    });
-  });
-  document.getElementById("vdr-back-btn").addEventListener("click",()=>{currentExercise=null;renderExercisesInline();});
-  document.getElementById("vdr-save-btn").addEventListener("click",()=>{showToast("✓ Vision sauvegardée");renderExercisesInline();});
-}
-
-document.getElementById("exercises-home-btn").addEventListener("click",()=>{showScreen("home-screen");renderHomeThemes();});
-
-
-/* ===== JOURNAL ===== */
-function renderJournal(){
-  const cont=document.getElementById("journal-content");
-  const key=`journal_${currentProfile?.id}`;
-  let entries=[];
-  try{entries=JSON.parse(localStorage.getItem(key)||"[]");}catch(e){}
-
-  const past=entries.length
-    ?entries.slice().reverse().map((e,ri)=>{const realIdx=entries.length-1-ri;return`
-      <div style="margin-bottom:1.5rem;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
-          <span style="font-size:13px;font-weight:500;">${e.title||"Sans titre"}</span>
-          <div style="display:flex;align-items:center;gap:8px;">
-            <span style="font-size:11px;color:var(--text-faint);">${e.date}</span>
-            <button data-del-idx="${realIdx}" style="font-size:11px;color:var(--text-faint);background:none;border:none;cursor:pointer;padding:2px 4px;">✕</button>
-          </div>
-        </div>
-        <div style="font-size:13px;color:var(--text-muted);line-height:1.7;white-space:pre-wrap;">${e.note}</div>
-      </div>`}).join("")
-    :"";
-
-  cont.innerHTML=`<div style="padding:1rem 0 6rem;">
-    <input type="text" id="journal-title" placeholder="Titre…" style="width:100%;box-sizing:border-box;padding:10px 14px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:transparent;color:var(--text);font-size:15px;font-weight:500;font-family:inherit;margin-bottom:1rem;">
-    <textarea id="journal-text" class="scan-journal-input" rows="5" placeholder="Ce que tu ressens, ce qui a résonné…" style="font-size:13px;line-height:1.7;margin-bottom:1.25rem;"></textarea>
-    <button class="scan-chapter-nav-btn primary" id="journal-save-btn" style="width:100%;padding:12px;margin-bottom:2.5rem;">Écrire</button>
-    ${past
-      ?`<div style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-bottom:1rem;">Entrées précédentes</div>${past}`
-      :'<div style="font-size:13px;color:var(--text-faint);text-align:center;padding:2rem 0;">Rien encore. Commence à écrire.</div>'}
-  </div>`;
-
-  document.getElementById("journal-save-btn").addEventListener("click",()=>{
-    const note=document.getElementById("journal-text").value.trim();
-    if(!note)return;
-    const title=document.getElementById("journal-title").value.trim();
-    const entries=[];
-    try{entries.push(...JSON.parse(localStorage.getItem(key)||"[]"));}catch(e){}
-    entries.push({date:new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"}),title,note});
-    try{localStorage.setItem(key,JSON.stringify(entries));}catch(e){}
-    showToast("✓ Sauvegardé");
-    renderJournal();
-  });
-}
-
-document.getElementById("journal-home-btn").addEventListener("click",()=>{showScreen("home-screen");renderHomeThemes();});
-
 
 /* ===== IRT PROTOCOL ===== */
 
@@ -3550,7 +3212,7 @@ document.getElementById("create-btn").addEventListener("click",async()=>{
   const errEl=document.getElementById("create-err");errEl.textContent="";
   if(!name){errEl.textContent="Entre un prénom.";return;}
   if(!/^\d{4}$/.test(pin)){errEl.textContent="PIN: 4 chiffres.";return;}
-  if(code!==CREATION_CODE){errEl.textContent="Code d accès invalide.";return;}
+  if(code!==CREATION_CODE){errEl.textContent="Code d'accès invalide.";return;}
   const btn=document.getElementById("create-btn");btn.textContent="…";btn.disabled=true;
   try{
     const pin_hash=await hashPin(pin);
@@ -3579,7 +3241,7 @@ async function enterProfile(id,name){
   currentProfile={id,name};
   document.getElementById("profile-name-badge").textContent=name;
   document.getElementById("home-name").textContent=name;
-  checked.clear();todoIds.clear();reviewDates={};trashedIds.clear();scanChecked.clear();pinnedIds.clear();
+  checked.clear();reviewDates={};scanChecked.clear();pinnedIds.clear();
   await loadData();
   loadOnboarding();
   const hasOnboarding=currentProfile.objectives&&currentProfile.objectives.length>0;
@@ -3587,7 +3249,8 @@ async function enterProfile(id,name){
     startOnboarding();
   } else {
     showScreen("home-screen");
-    setHomeTab("pinned");
+    // Si l'utilisateur a des identités épinglées → sa to-do list, sinon → reconnexion pour découvrir ses thèmes
+    setHomeTab(pinnedIds.size>0?"pinned":"reconnexion");
     renderHomeStats();
     renderHomeObjectives();
   }
@@ -3944,9 +3607,9 @@ async function adminTogglePin(idNum,profileId,btn){
 async function adminValidateId(idNum, profileId){
   // Créer une session d'une identité pour ce client
   try{
-    const today=new Date().toISOString().slice(0,10);
+    const today=new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
     // Chercher une session existante du jour
-    let daySessions=ADMIN_SESSIONS.filter(s=>s.profile_id===profileId&&(s.date||"").slice(0,10)===today);
+    let daySessions=ADMIN_SESSIONS.filter(s=>s.profile_id===profileId&&s.date===today);
     if(daySessions.length>0){
       const sess=daySessions[0];
       const newIds=[...new Set([...(sess.ids||[]),idNum])];
@@ -3975,15 +3638,13 @@ function adminBindEvents(){
 
 async function loadData(){
   try{const s=await sb(`sessions?profile_id=eq.${currentProfile.id}&select=*&order=created_at.asc`);SESSIONS=(s||[]).map(x=>{return{id:x.id,date:x.date,ids:(x.ids||[]).map(Number)}});}catch(e){SESSIONS=[];}
-  try{const s=localStorage.getItem("todo_"+currentProfile.id);if(s)JSON.parse(s).map(Number).forEach(id=>todoIds.add(id));}catch(e){}
   try{const s=localStorage.getItem("reviews_"+currentProfile.id);if(s)reviewDates=JSON.parse(s)||{};}catch(e){reviewDates={};}
-  try{const s=localStorage.getItem("trashed_"+currentProfile.id);if(s)JSON.parse(s).map(Number).forEach(id=>trashedIds.add(id));}catch(e){}
   try{const pins=await sb("pins?profile_id=eq."+currentProfile.id+"&select=identity_id");(pins||[]).forEach(p=>pinnedIds.add(p.identity_id));}catch(e){}
   // Update pinned tab badges after load
   const pinnedMobileBtn=document.querySelector(".home-mobile-tab[data-tab='pinned']");
-  if(pinnedMobileBtn){pinnedMobileBtn.textContent=pinnedIds.size>0?`📌 Épinglés (${pinnedIds.size})`:"📌 Épinglés";}
+  if(pinnedMobileBtn){pinnedMobileBtn.textContent=pinnedIds.size>0?`📌 Ma liste (${pinnedIds.size})`:"📌 Ma liste";}
   const pinnedSideBtn=document.getElementById("home-pinned-btn");
-  if(pinnedSideBtn){pinnedSideBtn.textContent=pinnedIds.size>0?`📌 Épinglés (${pinnedIds.size})`:"📌 Épinglés";}
+  if(pinnedSideBtn){pinnedSideBtn.textContent=pinnedIds.size>0?`📌 Ma liste (${pinnedIds.size})`:"📌 Ma liste";}
 }
 
 /* ===== HOME THEMES ===== */
@@ -3995,13 +3656,46 @@ function getThemePct(t){
   return total?Math.round((done/total)*100):0;
 }
 
-function isLayerUnlocked(layerIdx){
-  if(layerIdx===0)return true;
-  const prevLayer=LAYERS[layerIdx-1];
-  const prevThemes=prevLayer.themes.map(tid=>SCAN_THEMES.find(t=>t.id===tid)).filter(Boolean);
-  if(!prevThemes.length)return true;
-  const avgPct=prevThemes.reduce((a,t)=>a+getThemePct(t),0)/prevThemes.length;
-  return avgPct>=prevLayer.unlock_pct;
+
+// Retourne les ids de thèmes liés aux objectifs de l'utilisateur
+function getObjectiveThemeIds(){
+  const objs=currentProfile.objectives||[];
+  if(!objs.length)return new Set();
+  const themeIds=new Set();
+  objs.forEach(obj=>{
+    const topics=obj.topics||[];
+    SCAN_THEMES.forEach(t=>{
+      // Correspondance : le titre du thème est dans les topics OU les topics sont dans le titre
+      const match=topics.some(tp=>
+        t.title.toLowerCase().includes(tp.toLowerCase())||
+        tp.toLowerCase().includes(t.title.toLowerCase())||
+        // Correspondances sémantiques explicites
+        (tp==="Figement"&&(t.id==="figement"||t.id==="corps"||t.id==="lacher_prise"))||
+        (tp==="Honte"&&t.id==="honte")||
+        (tp==="Humiliation"&&(t.id==="honte"||t.id==="valeur"))||
+        (tp==="Culpabilité"&&t.id==="culpabilite")||
+        (tp==="Abandon"&&t.id==="abandon")||
+        (tp==="Trahison"&&(t.id==="trahison"||t.id==="faire_confiance"))||
+        (tp==="Dépendance"&&(t.id==="culpabilite"||t.id==="limites"))||
+        (tp==="Isolement"&&t.id==="abandon")||
+        (tp==="Affection"&&t.id==="etre_aime")||
+        (tp==="Violation"&&t.id==="limites")||
+        (tp==="Contrôle"&&t.id==="lacher_prise")||
+        (tp==="Épuisement"&&t.id==="epuisement")||
+        (tp==="Usure"&&t.id==="epuisement")||
+        (tp==="Effondrement"&&t.id==="effondrement")||
+        (tp==="Confusion"&&t.id==="sens")||
+        (tp==="Rigidité"&&t.id==="deconditionnement")||
+        (tp==="Conditionnement"&&t.id==="deconditionnement")||
+        (tp==="Dissociation"&&t.id==="dissociation")||
+        (tp==="Existence"&&t.id==="exister")||
+        (tp==="Perte"&&t.id==="reconstruction")||
+        (tp==="Dissociation"&&t.id==="corps")
+      );
+      if(match)themeIds.add(t.id);
+    });
+  });
+  return themeIds;
 }
 
 function renderHomeStats(){
@@ -4026,15 +3720,18 @@ function renderHomeStats(){
     }
   }
 
-  // Next unlock
-  let nextUnlock=null;
-  for(let i=1;i<LAYERS.length;i++){
-    if(!isLayerUnlocked(i)){
-      const prevLayer=LAYERS[i-1];
-      const prevThemes=prevLayer.themes.map(tid=>SCAN_THEMES.find(t=>t.id===tid)).filter(Boolean);
-      const avgPct=prevThemes.length?Math.round(prevThemes.reduce((a,t)=>a+getThemePct(t),0)/prevThemes.length):0;
-      nextUnlock={label:LAYERS[i].label,current:avgPct,required:prevLayer.unlock_pct};
-      break;
+  // Thème prioritaire le plus avancé (parmi les objectifs)
+  let bestObjTheme=null;
+  const objThemeIds=getObjectiveThemeIds();
+  if(objThemeIds.size>0){
+    const objThemes=SCAN_THEMES.filter(t=>objThemeIds.has(t.id));
+    // Trier par progression (le plus avancé mais pas encore à 100%)
+    const inProgress=objThemes.map(t=>({t,pct:getThemePct(t)})).filter(x=>x.pct>0&&x.pct<100).sort((a,b)=>b.pct-a.pct);
+    if(inProgress.length)bestObjTheme=inProgress[0];
+    else{
+      // Prendre le suivant non commencé
+      const notStarted=objThemes.map(t=>({t,pct:getThemePct(t)})).filter(x=>x.pct===0);
+      if(notStarted.length)bestObjTheme=notStarted[0];
     }
   }
 
@@ -4050,82 +3747,91 @@ function renderHomeStats(){
     <div class="home-stat-card">
       <div class="home-stat-val" style="color:var(--green-text);">${streak}</div>
       <div class="home-stat-lbl">Jours consécutifs</div>
-      <div class="home-stat-sub">${streak>0?"Continue comme ça 🔥":"Commence aujourd hui"}</div>
+      <div class="home-stat-sub">${streak>0?"Continue comme ça 🔥":"Commence aujourd'hui"}</div>
     </div>
     <div class="home-stat-card">
       <div class="home-stat-val" style="color:var(--purple-text);">${themesCompleted}</div>
       <div class="home-stat-lbl">Thèmes complétés</div>
       <div class="home-stat-sub">sur ${SCAN_THEMES.length} disponibles</div>
     </div>
-    ${nextUnlock?`<div class="home-stat-card">
-      <div style="font-size:12px;color:var(--text-faint);margin-bottom:6px;">Prochain débloquage</div>
-      <div style="font-size:13px;font-weight:500;margin-bottom:8px;">${nextUnlock.label}</div>
+    ${bestObjTheme?`<div class="home-stat-card" style="cursor:pointer;" onclick="document.getElementById('scan-screen').classList.remove('show');scanThemeId='${bestObjTheme.t.id}';scanChapterIdx=0;scanChecked.clear();showScreen('scan-screen');renderScan();">
+      <div style="font-size:12px;color:var(--text-faint);margin-bottom:6px;">Continue ici →</div>
+      <div style="font-size:13px;font-weight:500;margin-bottom:8px;">${bestObjTheme.t.icon} ${bestObjTheme.t.title}</div>
       <div style="height:4px;background:var(--surface3);border-radius:2px;overflow:hidden;">
-        <div style="height:100%;width:${nextUnlock.current}%;background:var(--accent);border-radius:2px;transition:width 0.5s;"></div>
+        <div style="height:100%;width:${bestObjTheme.pct}%;background:var(--accent);border-radius:2px;transition:width 0.5s;"></div>
       </div>
-      <div style="font-size:11px;color:var(--text-faint);margin-top:4px;">${nextUnlock.current}% / ${nextUnlock.required}% requis</div>
+      <div style="font-size:11px;color:var(--text-faint);margin-top:4px;">${bestObjTheme.pct}% complété</div>
     </div>`:""}`;
 }
 
-function renderPinnedSection(){
-  if(pinnedIds.size===0)return"";
-  const wids=workedIds();
-  const pins=[...pinnedIds].map(id=>DATA.find(d=>d.id===id)).filter(Boolean);
-  const rows=pins.map(d=>{
-    const isWorked=wids.has(d.id);
-    return`<div class="id-row pinned-row${isWorked?" worked":""}" data-pin-id="${d.id}" style="margin-bottom:4px;cursor:default;">
-      <div class="id-check">${isWorked?'<i class="ti ti-check check-icon"></i>':''}</div>
-      <span class="id-text">${d.text}</span>
-      <button class="pin-remove-btn" data-pin-rm="${d.id}" title="Retirer" style="background:none;border:none;cursor:pointer;color:var(--text-faint);font-size:14px;padding:2px 4px;flex-shrink:0;opacity:0.6;">📌</button>
-    </div>`;
-  }).join("");
-  return`<div id="pinned-section" style="margin-bottom:2.5rem;">
-    <div style="font-size:11px;font-weight:600;color:var(--text-faint);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:1rem;display:flex;align-items:center;gap:8px;">
-      📌 Identités à travailler <span style="font-size:11px;font-weight:400;color:var(--text-faint);background:var(--surface2);padding:2px 8px;border-radius:10px;">${pins.length}</span>
+function renderThemeRow(t,badge){
+  const pct=getThemePct(t);
+  const badgeHtml=badge?`<span class="theme-obj-badge">${badge}</span>`:`<span class="theme-pct-pill">${pct>0?pct+"%":"—"}</span>`;
+  const pctBar=pct>0?`<div class="home-theme-bar" style="margin-top:3px;"><div class="home-theme-bar-fill" style="width:${pct}%"></div></div>`:"";
+  return`<div class="home-theme-row" data-tid="${t.id}" style="margin-bottom:10px;padding:13px 16px;">
+    <div class="home-theme-icon" style="font-size:20px;width:26px;">${t.icon}</div>
+    <div class="home-theme-info" style="flex:1;min-width:0;">
+      <div class="home-theme-title" style="font-size:13px;">${t.title}</div>
+      <div style="font-size:10px;color:var(--text-faint);margin-top:2px;">${t.desc}</div>
+      ${pctBar}
     </div>
-    <div>${rows}</div>
+    ${badgeHtml}
   </div>`;
 }
 
 function renderHomeThemes(){
   const grid=document.getElementById("home-themes-grid");
-  if(!grid){console.error("home-themes-grid not found");return;}
-  console.log("renderHomeThemes called, LAYERS:",LAYERS?.length,"SCAN_THEMES:",SCAN_THEMES?.length);
-  let html=renderPinnedSection();
-  LAYERS.forEach((layer,li)=>{
-    const unlocked=isLayerUnlocked(li);
-    const prevLayer=li>0?LAYERS[li-1]:null;
-    const prevAvg=prevLayer?Math.round(prevLayer.themes.map(tid=>SCAN_THEMES.find(t=>t.id===tid)).filter(Boolean).reduce((a,t)=>a+getThemePct(t),0)/prevLayer.themes.length):100;
-    html+=`<div class="layer-section${unlocked?"":" layer-locked"}">
-      <div class="layer-header">
-        <span class="layer-label">${layer.label}</span>
-        ${!unlocked?`<span class="layer-lock-badge">🔒 ${prevAvg}% / ${prevLayer?.unlock_pct}% requis</span>`:""}
-      </div>`;
-    layer.themes.forEach((tid,ti)=>{
-      const t=SCAN_THEMES.find(x=>x.id===tid);
-      if(!t)return;
-      const pct=getThemePct(t);
-      const totalThemesInLayer=layer.themes.length;
-      const progress=ti/Math.max(1,totalThemesInLayer-1);
-      const opacity=Math.max(0.6,1-progress*0.35);
-      const fontSize=Math.max(11,13-progress*1.5);
-      const iconSize=Math.max(16,20-progress*4);
-      const padding=Math.max(8,11-progress*3);
-      const isThemeLocked=!unlocked;
-      html+=`<div class="home-theme-row" data-tid="${t.id}" ${isThemeLocked?'data-locked="1"':''} style="opacity:${(isThemeLocked?0.3:opacity).toFixed(2)};padding:${Math.max(14,padding).toFixed(0)}px 16px;margin-bottom:14px;${isThemeLocked?'pointer-events:none;cursor:default;':''}">
-        <div class="home-theme-icon" style="font-size:${iconSize.toFixed(0)}px;width:${(iconSize+4).toFixed(0)}px;">${t.icon}</div>
-        <div class="home-theme-info">
-          <div class="home-theme-title" style="font-size:${fontSize.toFixed(0)}px;">${t.title}</div>
-        </div>
-        <div class="home-theme-progress">
-          <div class="home-theme-pct" style="font-size:${Math.max(9,fontSize-2).toFixed(0)}px;">${pct}%</div>
-          <div class="home-theme-bar"><div class="home-theme-bar-fill" style="width:${pct}%"></div></div>
-        </div>
-      </div>`;
+  if(!grid){return;}
+  let html="";
+
+  const objThemeIds=getObjectiveThemeIds();
+  const hasObjectives=objThemeIds.size>0;
+
+  if(hasObjectives){
+    // Section 1 : thèmes liés aux objectifs
+    const objThemes=SCAN_THEMES.filter(t=>objThemeIds.has(t.id));
+    // Associer le badge objectif (prendre le 1er objectif qui match)
+    const objs=currentProfile.objectives||[];
+    html+=`<div class="layer-section">
+      <div class="layer-header"><span class="layer-label">🎯 Tes thèmes prioritaires</span></div>`;
+    objThemes.forEach(t=>{
+      // Trouver l'objectif le plus pertinent pour ce thème
+      const matchObj=objs.find(o=>(o.topics||[]).some(tp=>
+        t.title.toLowerCase().includes(tp.toLowerCase())||
+        tp.toLowerCase().includes(t.title.toLowerCase())
+      ))||objs[0];
+      const badge=matchObj?`${matchObj.emoji} ${matchObj.label}`:null;
+      html+=renderThemeRow(t,badge);
     });
     html+="</div>";
-  });
+
+    // Séparateur
+    html+=`<div class="themes-other-sep">Tous les thèmes</div>`;
+
+    // Section 2 : tous les autres thèmes (non liés aux objectifs), sans verrous
+    const otherThemes=SCAN_THEMES.filter(t=>!objThemeIds.has(t.id));
+    if(otherThemes.length){
+      html+="<div class='layer-section'>";
+      otherThemes.forEach(t=>{html+=renderThemeRow(t,null);});
+      html+="</div>";
+    }
+  } else {
+    // Pas d'objectifs définis → CTA + affichage flat
+    html+=`<div style="background:rgba(200,184,154,0.05);border:1px solid rgba(200,184,154,0.2);border-radius:var(--radius-lg);padding:14px 16px;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;gap:12px;">
+      <div>
+        <div style="font-size:0.82rem;font-weight:600;color:var(--accent);margin-bottom:2px;">🎯 Définis tes objectifs</div>
+        <div style="font-size:0.75rem;color:var(--text-faint);line-height:1.5;">Pour voir tes thèmes prioritaires en premier et mieux orienter ton travail.</div>
+      </div>
+      <button onclick="showScreen('profile-screen')" style="flex-shrink:0;padding:7px 14px;border-radius:var(--radius);border:1px solid var(--accent);background:rgba(200,184,154,0.08);color:var(--accent);font-size:0.78rem;font-family:inherit;cursor:pointer;font-weight:600;">Configurer</button>
+    </div>
+    <div class="layer-section">
+      <div class="layer-header"><span class="layer-label">Tous les thèmes</span></div>`;
+    SCAN_THEMES.forEach(t=>{html+=renderThemeRow(t,null);});
+    html+="</div>";
+  }
+
   grid.innerHTML=html;
+
   // Unpin buttons
   grid.querySelectorAll("[data-pin-rm]").forEach(btn=>{
     btn.addEventListener("click",(e)=>{
@@ -4136,7 +3842,7 @@ function renderHomeThemes(){
       renderHomeThemes();
     });
   });
-  grid.querySelectorAll(".home-theme-row:not([data-locked])").forEach(row=>{
+  grid.querySelectorAll(".home-theme-row[data-tid]").forEach(row=>{
     row.addEventListener("click",()=>{
       scanThemeId=row.dataset.tid;scanChapterIdx=0;scanChecked.clear();
       document.getElementById("scan-profile-name").textContent=currentProfile?currentProfile.name:"";
@@ -4145,7 +3851,6 @@ function renderHomeThemes(){
     });
   });
 }
-function renderHomeProgress(){renderHomeThemes();}
 
 
 
@@ -4199,7 +3904,7 @@ function renderSearchResults(){
         <span style="font-size:10px;color:var(--text-faint);flex-shrink:0;margin-right:4px;">${d.cat}</span>
         ${isWorked
           ? `<button title="Retirer la validation" onclick="event.stopPropagation();unvalidateId(${d.id});" style="background:none;border:none;cursor:pointer;font-size:12px;color:var(--red-text);opacity:0.6;flex-shrink:0;padding:2px 4px;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.6">↩</button>`
-          : `<button class="pin-btn" data-pin-id="${d.id}" title="${isPinned?"Désépingler":"Épingler"}" style="background:none;border:none;cursor:pointer;font-size:13px;padding:2px 2px;flex-shrink:0;opacity:${isPinned?1:0.3};transition:opacity 0.15s;" onclick="event.stopPropagation();togglePin(${d.id});renderSearchResults();">📌</button>`
+          : `<button style="font-size:0.7rem;background:${isPinned?"rgba(200,184,154,0.12)":"none"};border:1px solid ${isPinned?"rgba(200,184,154,0.4)":"transparent"};color:${isPinned?"var(--accent)":"var(--text-faint)"};border-radius:4px;padding:2px 8px;cursor:pointer;flex-shrink:0;font-family:inherit;" onclick="event.stopPropagation();togglePin(${d.id}).then(()=>renderSearchResults());" title="${isPinned?"Retirer de la liste":"Ajouter à ma liste"}">${isPinned?"📌 Liste":"+ Liste"}</button>`
         }
       </div>`;
     }).join("");
@@ -4209,11 +3914,15 @@ function renderSearchResults(){
     html=`<div style="font-size:13px;color:var(--text-faint);text-align:center;padding:2rem 0;">Aucun résultat pour "${q}"</div>`;
   }
 
-  // Validate bar if identities checked
+  // Validate bar if identities checked, or shortcut to Ma liste if pinned items exist
   const validBar=searchChecked.size?`
     <div style="position:sticky;bottom:0;background:var(--bg);padding:1rem 0;border-top:1px solid var(--border);margin-top:1rem;display:flex;align-items:center;justify-content:space-between;gap:12px;">
       <span style="font-size:13px;color:var(--text-muted);">${searchChecked.size} identité${searchChecked.size>1?"s":""} sélectionnée${searchChecked.size>1?"s":""}</span>
       <button id="search-validate-btn" style="padding:8px 20px;border-radius:var(--radius-lg);border:1px solid var(--green-border);background:var(--green-bg);color:var(--green-text);font-size:13px;font-family:inherit;cursor:pointer;">Valider ✓</button>
+    </div>`
+  :pinnedIds.size?`
+    <div style="position:sticky;bottom:0;background:var(--bg);padding:0.75rem 0;border-top:1px solid var(--border);margin-top:1rem;display:flex;align-items:center;justify-content:flex-end;">
+      <button onclick="document.getElementById('home-search').value='';homeSearchQuery='';setHomeTab('pinned');" style="font-size:0.8rem;background:rgba(200,184,154,0.08);border:1px solid rgba(200,184,154,0.3);color:var(--accent);border-radius:var(--radius);padding:7px 14px;cursor:pointer;font-family:inherit;">📌 Ma liste (${pinnedIds.size}) →</button>
     </div>`:"";
 
   grid.innerHTML=html+validBar;
@@ -4242,25 +3951,34 @@ function renderSearchResults(){
     });
   });
 
-  // Validate
+  // Validate — pin d'abord, puis valide, puis route vers Ma liste
   document.getElementById("search-validate-btn")?.addEventListener("click",async()=>{
     if(!searchChecked.size)return;
     const newIds=[...searchChecked].filter(id=>!workedIds().has(id));
     if(!newIds.length){searchChecked.clear();renderSearchResults();return;}
+    // Épingler celles qui ne le sont pas encore
+    const notPinned=newIds.filter(id=>!pinnedIds.has(id));
+    for(const id of notPinned){
+      pinnedIds.add(id);
+      try{await fetch(SB_URL+"/rest/v1/pins",{method:"POST",headers:{"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"application/json","Prefer":"return=minimal"},body:JSON.stringify({profile_id:currentProfile.id,identity_id:id})});}catch(e){}
+    }
     const date=new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
     try{
       const r=await sb("sessions",{method:"POST",body:{profile_id:currentProfile.id,date,ids:newIds},prefer:"return=representation"});
       if(r&&r[0])SESSIONS.push({id:r[0].id,date,ids:newIds});
       newIds.forEach(id=>scheduleReview(id,reviewDates[id]?reviewDates[id].reviewCount+1:0));
       searchChecked.clear();
-      showToast(`✓ ${newIds.length} validée${newIds.length>1?"s":""}`);
-      renderSearchResults();
+      document.getElementById("home-search").value="";
+      homeSearchQuery="";
+      showScreen("home-screen");
+      setHomeTab("pinned");
+      setTimeout(()=>showToast(`✓ ${newIds.length} identité${newIds.length>1?"s":""} validée${newIds.length>1?"s":""} — dans ta liste`),150);
       renderHomeStats();
     }catch(e){showToast("Erreur sauvegarde");}
   });
 }
-document.getElementById("home-switch-btn").addEventListener("click",()=>{currentProfile=null;SESSIONS=[];checked.clear();todoIds.clear();trashedIds.clear();pinnedIds.clear();reviewDates={};showScreen("profile-screen");loadProfiles();});
-document.getElementById("home-switch-mobile")?.addEventListener("click",()=>{currentProfile=null;SESSIONS=[];checked.clear();todoIds.clear();trashedIds.clear();pinnedIds.clear();reviewDates={};showScreen("profile-screen");loadProfiles();});
+document.getElementById("home-switch-btn").addEventListener("click",()=>{currentProfile=null;SESSIONS=[];checked.clear();pinnedIds.clear();reviewDates={};showScreen("profile-screen");loadProfiles();});
+document.getElementById("home-switch-mobile")?.addEventListener("click",()=>{currentProfile=null;SESSIONS=[];checked.clear();pinnedIds.clear();reviewDates={};showScreen("profile-screen");loadProfiles();});
 
 // Mobile tabs sync with setHomeTab
 document.querySelectorAll(".home-mobile-tab").forEach(btn=>{
@@ -4279,7 +3997,8 @@ function setHomeTab(tab){
   document.querySelectorAll(".home-mobile-tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));
   const grid=document.getElementById("home-themes-grid");
   if(tab==="reconnexion"){
-    document.getElementById("home-sub").textContent="Qu est-ce qui te pèse le plus en ce moment ?";
+    const objs=currentProfile.objectives||[];
+    document.getElementById("home-sub").textContent=objs.length?"Tes thèmes de travail":"Explore les thèmes de reconnexion";
     const srch3=document.getElementById("home-search");
     if(srch3){srch3.style.display="block";srch3.value="";homeSearchQuery="";}
     grid.style.display="flex";
@@ -4417,18 +4136,21 @@ function renderPinnedSearch(query){
     return `<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--surface2);border-bottom:1px solid var(--border);">
       <span style="flex:1;font-size:0.88rem;${isWorked?"color:var(--green-text);":""}">${d.text}</span>
       <span style="font-size:0.7rem;color:var(--text-faint);background:var(--surface);padding:2px 6px;border-radius:4px;flex-shrink:0;">${d.cat}</span>
-      <button onclick="pinnedIds.add(${d.id});fetch(SB_URL+'/rest/v1/pins',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({profile_id:currentProfile.id,identity_id:${d.id}})}).catch(()=>{});document.getElementById('pinned-search-input').value='';document.getElementById('pinned-search-results').innerHTML='';renderPinnedTab();"
-        style="font-size:0.72rem;background:var(--surface);border:1px solid var(--border-md);color:var(--text);border-radius:5px;padding:3px 8px;cursor:pointer;flex-shrink:0;">📌 Épingler</button>
+      <button onclick="togglePin(${d.id}).then(()=>{document.getElementById('pinned-search-input').value='';document.getElementById('pinned-search-results').innerHTML='';renderPinnedTab();});"
+        style="font-size:0.72rem;background:rgba(200,184,154,0.08);border:1px solid rgba(200,184,154,0.35);color:var(--accent);border-radius:5px;padding:3px 10px;cursor:pointer;flex-shrink:0;font-family:inherit;">+ Ma liste</button>
     </div>`;
   }).join("");
 }
 
 function renderPinnedTab(){
   const grid=document.getElementById("home-themes-grid");
+  const widsPin=workedIds();
 
-  const searchBar=`<div style="margin-bottom:1.2rem;">
+  // Barre de recherche + proposition (toujours présente)
+  const searchSection=`<div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border);">
+    <div style="font-size:11px;font-weight:600;color:var(--text-faint);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:0.75rem;">+ Ajouter à ma liste</div>
     <div style="position:relative;">
-      <input id="pinned-search-input" type="text" placeholder="Rechercher une identité à épingler…"
+      <input id="pinned-search-input" type="text" placeholder="Rechercher une identité…"
         style="width:100%;box-sizing:border-box;padding:10px 14px;padding-left:36px;background:var(--surface);border:1px solid var(--border-md);border-radius:var(--radius);color:var(--text);font-size:0.88rem;font-family:inherit;outline:none;"
         oninput="renderPinnedSearch(this.value)" autocomplete="off"/>
       <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:0.9rem;opacity:0.5;">🔍</span>
@@ -4480,53 +4202,96 @@ function renderPinnedTab(){
     </div>
   </div>`;
 
+  // État vide : appel à l'action clair
   if(pinnedIds.size===0){
-    grid.innerHTML=searchBar+`<div style="text-align:center;padding:2rem 1rem;color:var(--text-muted);">
-      <div style="font-size:2.5rem;margin-bottom:1rem;">📌</div>
-      <div style="font-size:1rem;font-weight:500;margin-bottom:0.75rem;">Aucune identité épinglée</div>
-      <div style="font-size:0.85rem;color:var(--text-faint);margin-bottom:1.5rem;line-height:1.6;">Recherche ci-dessus ou explore les thèmes.</div>
-      <div style="display:flex;flex-direction:column;gap:10px;max-width:260px;margin:0 auto;">
-        <button onclick="setHomeTab('reconnexion')" style="padding:10px 20px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text);font-size:0.85rem;font-family:inherit;cursor:pointer;">🔁 Aller en Reconnexion</button>
-        <button onclick="showScreen('scan-screen');renderScan();" style="padding:10px 20px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text);font-size:0.85rem;font-family:inherit;cursor:pointer;">🔍 Scanner des identités</button>
+    grid.innerHTML=`<div style="text-align:center;padding:2.5rem 1rem 1rem;color:var(--text-muted);">
+      <div style="font-size:3rem;margin-bottom:1rem;">📋</div>
+      <div style="font-size:1.1rem;font-weight:600;margin-bottom:0.5rem;color:var(--text);">Ta liste est vide</div>
+      <div style="font-size:0.85rem;color:var(--text-faint);margin-bottom:2rem;line-height:1.7;">Épingle des identités à travailler depuis un scan ou le dictionnaire.<br>Elles apparaîtront ici pour que tu puisses les valider une par une.</div>
+      <div style="display:flex;flex-direction:column;gap:10px;max-width:280px;margin:0 auto;">
+        <button onclick="showScreen('scan-screen');renderScan();" style="padding:12px 20px;border-radius:var(--radius-lg);border:1px solid var(--accent);background:rgba(200,184,154,0.08);color:var(--accent);font-size:0.9rem;font-family:inherit;cursor:pointer;font-weight:600;">🔍 Scanner un thème</button>
+        <button onclick="setHomeTab('reconnexion')" style="padding:12px 20px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text);font-size:0.9rem;font-family:inherit;cursor:pointer;">🌀 Voir mes thèmes</button>
       </div>
-    </div>`;
+    </div>${searchSection}`;
     setTimeout(()=>{const inp=document.getElementById("pinned-search-input");if(inp)inp.focus();},50);
+    const inp2=document.getElementById("pinned-search-input");
+    if(inp2)inp2.addEventListener("input",function(){renderPinnedSearch(this.value);});
     return;
   }
+
   const pins=[...pinnedIds].map(id=>DATA.find(d=>d.id===id)).filter(Boolean);
-  const catMap={};
-  pins.forEach(d=>{
-    if(!catMap[d.cat])catMap[d.cat]=[];
-    catMap[d.cat].push(d);
-  });
+  const toWork=pins.filter(d=>!widsPin.has(d.id)).sort((a,b)=>(a.depth||3)-(b.depth||3));
+  const worked=pins.filter(d=>widsPin.has(d.id));
+  const totalPinned=pins.length;
+  const nWorked=worked.length;
+  const pctDone=totalPinned>0?Math.round(nWorked/totalPinned*100):0;
   const depthColor=id=>{const c=["","var(--l1)","var(--l2)","var(--l3)","var(--l4)","var(--l5)"];return c[id]||"var(--text-muted)";};
-  let html=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
-    <span style="color:var(--text-muted);font-size:0.85rem;">${pins.length} identité${pins.length>1?"s":""} épinglée${pins.length>1?"s":""}</span>
-    <button onclick="if(confirm('Désépingler toutes les identités ?')){[...pinnedIds].forEach(id=>{fetch(SB_URL+'/rest/v1/pins?profile_id=eq.'+currentProfile.id+'&identity_id=eq.'+id,{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}}).catch(()=>{})});pinnedIds.clear();renderPinnedTab();}" style="font-size:0.75rem;background:var(--red-bg);border:1px solid var(--red-border);color:var(--red-text);border-radius:6px;padding:4px 10px;cursor:pointer;">Tout désépingler</button>
+
+  // Barre de progression
+  let html=`<div style="margin-bottom:1.75rem;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+      <span style="font-size:13px;font-weight:600;color:var(--text);">${nWorked} / ${totalPinned} validée${nWorked>1?"s":""}</span>
+      <span style="font-size:12px;color:var(--text-faint);">${pctDone}%</span>
+    </div>
+    <div style="height:6px;background:var(--surface3);border-radius:3px;overflow:hidden;">
+      <div style="height:100%;width:${pctDone}%;background:var(--accent);border-radius:3px;transition:width 0.4s;"></div>
+    </div>
+    ${toWork.length===0&&nWorked>0?`<div style="font-size:12px;color:var(--green-text);margin-top:6px;text-align:center;">✨ Toutes tes identités sont validées !</div>`:""}
   </div>`;
-  Object.entries(catMap).forEach(([cat,items])=>{
-    html+=`<div style="margin-bottom:1.2rem;">
-      <div style="font-size:0.72rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-faint);margin-bottom:0.5rem;padding:0 2px;">${cat}</div>`;
-    const widsPin=workedIds();
-    items.forEach(d=>{
-      const isWorked=widsPin.has(d.id);
-      const isTodo=todoIds.has(d.id);
-      html+=`<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--surface);border:1px solid ${isWorked?"var(--green-border)":isTodo?"var(--gold-border)":"var(--border)"};border-radius:var(--radius);margin-bottom:6px;">
-        <span style="width:6px;height:6px;border-radius:50%;background:${depthColor(d.depth)};flex-shrink:0;"></span>
-        <span style="flex:1;font-size:0.9rem;${isWorked?"color:var(--green-text);":""}${isTodo?"color:var(--gold-text);":""}">${d.text}</span>
-        <span style="font-size:0.7rem;color:var(--text-faint);background:var(--surface2);padding:2px 6px;border-radius:4px;">${d.role==="source"?"source":d.role==="coping"?"coping":"verdict"}</span>
-        ${isWorked
-          ? `<button onclick="unvalidateId(${d.id});" title="Retirer la validation" style="font-size:0.72rem;background:var(--red-bg);border:1px solid var(--red-border);color:var(--red-text);border-radius:5px;padding:3px 8px;cursor:pointer;flex-shrink:0;">↩ Retirer</button>`
-          : `<button onclick="validateFromDico(${d.id}).then(()=>renderPinnedTab());" style="font-size:0.72rem;background:var(--green-bg);border:1px solid var(--green-border);color:var(--green-text);border-radius:5px;padding:3px 8px;cursor:pointer;flex-shrink:0;">✓ Valider</button>`
-        }
-        <button onclick="pinnedIds.delete(${d.id});fetch(SB_URL+'/rest/v1/pins?profile_id=eq.'+currentProfile.id+'&identity_id=eq.${d.id}',{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}}).catch(()=>{});renderPinnedTab();" style="background:none;border:none;cursor:pointer;font-size:0.9rem;opacity:0.5;flex-shrink:0;" title="Désépingler">📌</button>
+
+  // Section "À travailler" — identités non encore validées
+  if(toWork.length>0){
+    html+=`<div style="margin-bottom:1.75rem;">
+      <div style="font-size:11px;font-weight:600;color:var(--text-faint);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:0.75rem;">À travailler — ${toWork.length}</div>`;
+    toWork.forEach(d=>{
+      html+=`<div style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--surface);border:1px solid var(--border-md);border-radius:var(--radius);margin-bottom:8px;">
+        <span style="width:7px;height:7px;border-radius:50%;background:${depthColor(d.depth)};flex-shrink:0;"></span>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:0.9rem;font-weight:500;">${d.text}</div>
+          <div style="font-size:10px;color:var(--text-faint);margin-top:2px;">${d.cat} · ${d.role==="source"?"source":d.role==="coping"?"coping":"verdict"}</div>
+        </div>
+        <button onclick="validateFromDico(${d.id}).then(()=>{renderPinnedTab();showToast('✓ Validée');})" style="font-size:0.72rem;color:var(--green-text);background:var(--green-bg);border:1px solid var(--green-border);border-radius:var(--radius);padding:5px 11px;flex-shrink:0;font-weight:600;cursor:pointer;font-family:inherit;transition:opacity 0.15s;" onmouseenter="this.style.opacity=0.75" onmouseleave="this.style.opacity=1">✓ Valider</button>
+        <button onclick="togglePin(${d.id}).then(()=>renderPinnedTab());" style="background:none;border:none;cursor:pointer;font-size:1rem;opacity:0.3;flex-shrink:0;transition:opacity 0.15s;" onmouseenter="this.style.opacity=0.8" onmouseleave="this.style.opacity=0.3" title="Retirer de la liste">✕</button>
       </div>`;
     });
     html+=`</div>`;
-  });
-  grid.innerHTML=searchBar+html;
+  }
+
+  // Section "Déjà validées" — repliable si plusieurs
+  if(worked.length>0){
+    const showWorked=worked.length<=3;
+    html+=`<div style="margin-bottom:1.5rem;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
+        <div style="font-size:11px;font-weight:600;color:var(--green-text);text-transform:uppercase;letter-spacing:1.5px;">✓ Validées — ${worked.length}</div>
+        ${worked.length>3?`<button onclick="const s=document.getElementById('pinned-worked-list');const isHidden=s.style.display==='none';s.style.display=isHidden?'flex':'none';this.textContent=isHidden?'Masquer':'Voir tout';" style="font-size:0.75rem;background:none;border:none;color:var(--text-faint);cursor:pointer;text-decoration:underline;">Voir tout</button>`:""}
+      </div>
+      <div id="pinned-worked-list" style="display:${showWorked?"flex":"none"};flex-direction:column;gap:6px;">`;
+    worked.forEach(d=>{
+      html+=`<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--green-bg);border:1px solid var(--green-border);border-radius:var(--radius);opacity:0.8;">
+        <span style="color:var(--green-text);font-size:0.85rem;flex:1;">${d.text}</span>
+        <span style="font-size:0.7rem;color:var(--text-faint);background:var(--surface2);padding:2px 6px;border-radius:4px;flex-shrink:0;">${d.cat}</span>
+        <button onclick="unvalidateId(${d.id});" title="Retirer la validation" style="font-size:0.72rem;background:none;border:none;color:var(--red-text);border-radius:5px;padding:3px 6px;cursor:pointer;flex-shrink:0;opacity:0.6;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.6">↩</button>
+        <button onclick="togglePin(${d.id}).then(()=>renderPinnedTab());" style="background:none;border:none;cursor:pointer;font-size:0.85rem;opacity:0.3;flex-shrink:0;transition:opacity 0.15s;" onmouseenter="this.style.opacity=0.7" onmouseleave="this.style.opacity=0.3" title="Retirer de la liste">✕</button>
+      </div>`;
+    });
+    html+=`</div></div>`;
+  }
+
+  // Actions secondaires
+  html+=`<div style="display:flex;gap:8px;margin-bottom:0.5rem;flex-wrap:wrap;">
+    <button onclick="showScreen('scan-screen');renderScan();" style="flex:1;min-width:140px;padding:10px 14px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface);color:var(--text);font-size:0.82rem;font-family:inherit;cursor:pointer;">🔍 Scanner un thème</button>
+    <button id="clear-list-btn" onclick="const b=document.getElementById('clear-list-btn');if(b.dataset.confirm==='1'){const n=pinnedIds.size;Promise.all([...pinnedIds].map(id=>togglePin(id,true))).then(()=>{renderPinnedTab();showToast('✓ Liste vidée');});}else{b.dataset.confirm='1';b.textContent='Confirmer ?';b.style.background='var(--red-bg)';b.style.borderColor='var(--red-border)';b.style.color='var(--red-text)';setTimeout(()=>{if(b&&b.dataset.confirm==='1'){b.dataset.confirm='0';b.textContent='Vider la liste';b.style.background='transparent';b.style.borderColor='var(--border-md)';b.style.color='var(--text-faint)';}},2500);}" style="padding:10px 14px;border-radius:var(--radius);border:1px solid var(--border-md);background:transparent;color:var(--text-faint);font-size:0.78rem;font-family:inherit;cursor:pointer;transition:all 0.2s;">Vider la liste</button>
+  </div>`;
+
+  grid.innerHTML=html+searchSection;
   const inp=document.getElementById("pinned-search-input");
   if(inp)inp.addEventListener("input",function(){renderPinnedSearch(this.value);});
+  // Scroll vers le haut pour voir la barre de progression
+  requestAnimationFrame(()=>{
+    const container=grid.closest(".home-main")||grid.parentElement;
+    if(container)container.scrollTop=0;
+    else window.scrollTo({top:0,behavior:"smooth"});
+  });
 }
 
 // Table de synonymes pour le diagnostic
@@ -4556,7 +4321,7 @@ const DIAG_SYNONYMS={
   "épuisement":["épuisé","vidé","à bout","fatigué","usé"],
   "fatigue":["fatigué","épuisé","vidé","usé","exténué"],
   "blocage":["bloqué","figé","paralysé","immobile","incapable"],
-  "procrastination":["procrastinateur","bloqué","paralysé","incapable de passer à l action"],
+  "procrastination":["procrastinateur","bloqué","paralysé","incapable de passer à l'action"],
   "echec":["raté","échoué","perdant","insuffisant","incapable"],
   "argent":["pauvre","endetté","précaire","financièrement bloqué","manque"],
   "famille":["contrôlé","jugé","enfermé","conditionné","programmé"],
@@ -4672,7 +4437,7 @@ function renderDiagnosticInline(){
             ? `<button onclick="event.preventDefault();event.stopPropagation();unvalidateId(${d.id});" title="Retirer la validation" style="font-size:11px;background:var(--red-bg);border:1px solid var(--red-border);color:var(--red-text);padding:2px 8px;border-radius:10px;cursor:pointer;font-family:inherit;">↩</button>`
             : `<span style="font-size:11px;color:var(--text-faint);">p${d.depth}</span>`
           }
-          <button data-diag-pin="${d.id}" title="${isPinned?"Désépingler":"Épingler"}" style="background:none;border:none;cursor:pointer;font-size:14px;padding:2px;opacity:${isPinned?1:0.25};transition:opacity 0.15s;" onclick="event.preventDefault();event.stopPropagation();togglePin(${d.id});this.style.opacity=pinnedIds.has(${d.id})?1:0.25;this.title=pinnedIds.has(${d.id})?'Désépingler':'Épingler';">📌</button>
+          <button data-diag-pin="${d.id}" title="${isPinned?"Retirer de la liste":"Ajouter à ma liste"}" style="font-size:0.68rem;background:${isPinned?"rgba(200,184,154,0.12)":"none"};border:1px solid ${isPinned?"rgba(200,184,154,0.4)":"transparent"};color:${isPinned?"var(--accent)":"var(--text-faint)"};border-radius:4px;padding:2px 7px;cursor:pointer;flex-shrink:0;font-family:inherit;transition:all 0.15s;" onclick="event.preventDefault();event.stopPropagation();togglePin(${d.id}).then(()=>{this.style.background=pinnedIds.has(${d.id})?'rgba(200,184,154,0.12)':'none';this.style.border='1px solid '+(pinnedIds.has(${d.id})?'rgba(200,184,154,0.4)':'transparent');this.style.color=pinnedIds.has(${d.id})?'var(--accent)':'var(--text-faint)';this.textContent=pinnedIds.has(${d.id})?'📌 Liste':'+ Liste';this.title=pinnedIds.has(${d.id})?'Retirer de la liste':'Ajouter à ma liste';});">${isPinned?"📌 Liste":"+ Liste"}</button>
         </div>
       </label>`;
     }
@@ -4857,7 +4622,7 @@ function renderJournalInline(mode){
     </div>
     ${past
       ?past
-      :'<div style="font-size:13px;color:var(--text-faint);text-align:center;padding:3rem 0;font-style:italic;">Aucune entrée pour l instant.<br>Commence à écrire.</div>'}`;
+      :`<div style="font-size:13px;color:var(--text-faint);text-align:center;padding:3rem 0;font-style:italic;">Aucune entrée pour l'instant.<br>Commence à écrire.</div>`}`;
   document.getElementById("journal-new-btn")?.addEventListener("click",()=>renderJournalInline("new"));
   grid.querySelectorAll("[data-entry-idx]").forEach(row=>{
     row.addEventListener("click",()=>renderJournalInline(+row.dataset.entryIdx));
@@ -5048,18 +4813,20 @@ function dicoRow(d,wids,depthColor,depthLabel,showPriorityBadge){
   const isPinned=pinnedIds.has(d.id);
   const priorityTopics=(currentProfile&&currentProfile.priorityTopics)||[];
   const isCatPriority=showPriorityBadge||priorityTopics.includes(d.cat);
-  return `<div style="display:flex;align-items:center;gap:7px;padding:6px 10px;border-radius:var(--radius);border:1px solid ${isWorked?"var(--green-border)":isCatPriority?"rgba(200,184,154,0.25)":"var(--border)"};background:var(--surface);margin-bottom:3px;">
+  // Le dico est un outil d'exploration — on épingle pour travailler depuis la liste
+  // Les identités déjà validées montrent juste leur statut (pas de re-validation possible ici)
+  return `<div style="display:flex;align-items:center;gap:7px;padding:6px 10px;border-radius:var(--radius);border:1px solid ${isWorked?"var(--green-border)":isPinned?"rgba(200,184,154,0.3)":isCatPriority?"rgba(200,184,154,0.15)":"var(--border)"};background:var(--surface);margin-bottom:3px;">
     <span style="font-size:0.7rem;color:${depthColor(d.depth)};flex-shrink:0;width:14px;text-align:center;">${depthLabel(d.depth)}</span>
     <span style="flex:1;font-size:0.85rem;${isWorked?"color:var(--green-text);":""}">${d.text}</span>
-    ${isCatPriority&&!isWorked?`<span style="font-size:9px;color:var(--accent);opacity:0.7;flex-shrink:0;">⭐</span>`:""}
+    ${isWorked?`<span style="font-size:9px;color:var(--green-text);opacity:0.7;flex-shrink:0;">✓</span>`:""}
+    ${isCatPriority&&!isWorked&&!isPinned?`<span style="font-size:9px;color:var(--accent);opacity:0.7;flex-shrink:0;">⭐</span>`:""}
     <span style="font-size:0.62rem;color:var(--text-faint);background:var(--surface2);padding:1px 5px;border-radius:3px;flex-shrink:0;">${d.role}</span>
-    ${isWorked
-      ? `<button onclick="unvalidateId(${d.id});" style="font-size:0.65rem;background:var(--red-bg);border:1px solid var(--red-border);color:var(--red-text);border-radius:4px;padding:2px 7px;cursor:pointer;flex-shrink:0;">↩</button>`
-      : `<button onclick="validateFromDico(${d.id});" style="font-size:0.65rem;background:var(--green-bg);border:1px solid var(--green-border);color:var(--green-text);border-radius:4px;padding:2px 7px;cursor:pointer;flex-shrink:0;">✓</button>`
+    ${!isWorked
+      ? `<button onclick="togglePin(${d.id}).then(()=>renderDicoBody());"
+          style="font-size:0.7rem;background:${isPinned?"rgba(200,184,154,0.12)":"none"};border:1px solid ${isPinned?"rgba(200,184,154,0.4)":"transparent"};color:${isPinned?"var(--accent)":"var(--text-faint)"};border-radius:4px;padding:2px 8px;cursor:pointer;flex-shrink:0;transition:all 0.15s;font-family:inherit;"
+          title="${isPinned?"Retirer de la liste":"Ajouter à ma liste"}">${isPinned?"📌 Liste":"+ Liste"}</button>`
+      : `<button onclick="unvalidateId(${d.id});" style="font-size:0.65rem;background:var(--red-bg);border:1px solid var(--red-border);color:var(--red-text);border-radius:4px;padding:2px 7px;cursor:pointer;flex-shrink:0;opacity:0.7;" title="Retirer la validation">↩</button>`
     }
-    <button onclick="togglePin(${d.id});renderDicoBody();"
-      style="background:none;border:none;cursor:pointer;font-size:0.85rem;opacity:${isPinned?1:0.25};flex-shrink:0;padding:0 2px;"
-      title="${isPinned?"Désépingler":"Épingler"}">📌</button>
   </div>`;
 }
 
@@ -5084,7 +4851,15 @@ async function validateFromDico(id){
 function renderHistoryInline(){
   const grid=document.getElementById("home-themes-grid");
   if(!SESSIONS.length){
-    grid.innerHTML='<div style="font-size:13px;color:var(--text-faint);text-align:center;padding:3rem 0;font-style:italic;">Aucune session pour l instant.</div>';
+    grid.innerHTML=`<div style="text-align:center;padding:2.5rem 1rem;">
+      <div style="font-size:2.5rem;margin-bottom:1rem;">📭</div>
+      <div style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:0.5rem;">Aucune session pour l'instant</div>
+      <div style="font-size:0.82rem;color:var(--text-faint);line-height:1.7;margin-bottom:1.5rem;">Commence par scanner un thème ou valider des identités depuis ta liste.</div>
+      <div style="display:flex;flex-direction:column;gap:8px;max-width:260px;margin:0 auto;">
+        <button onclick="setHomeTab('pinned')" style="padding:10px 16px;border-radius:var(--radius);border:1px solid var(--accent);background:rgba(200,184,154,0.08);color:var(--accent);font-size:0.85rem;font-family:inherit;cursor:pointer;font-weight:600;">📌 Voir ma liste</button>
+        <button onclick="showScreen('scan-screen');renderScan();" style="padding:10px 16px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface);color:var(--text);font-size:0.85rem;font-family:inherit;cursor:pointer;">🔍 Scanner un thème</button>
+      </div>
+    </div>`;
     return;
   }
   // Group by date
@@ -5119,9 +4894,9 @@ function checkInactivity(){
   const diffDays=Math.floor((Date.now()-last.getTime())/86400000);
   if(diffDays<1)return;
   const msgs={
-    1:"Tu n as pas travaillé hier — reprends là où tu t es arrêté.",
+    1:"Tu n'as pas travaillé hier — reprends là où tu t'es arrêté.",
     2:"2 jours sans reconnexion. Ton cerveau attend.",
-    3:"3 jours. L habitude se construit dans la régularité.",
+    3:"3 jours. L'habitude se construit dans la régularité.",
     7:"Une semaine. Ce que tu ne traverses pas reste.",
   };
   const msg=msgs[diffDays]||`${diffDays} jours sans reconnexion. Il est temps de revenir.`;
@@ -5150,14 +4925,24 @@ function renderScan(){
     bar.style.display="none";
     document.getElementById("scan-sticky-header").innerHTML="";
     document.getElementById("scan-header-title").textContent="Choisir un thème";
-    cont.innerHTML=`<div style="padding:1rem 0 6rem;">
-      <div class="scan-themes-grid">
-        ${SCAN_THEMES.map(t=>`<div class="scan-theme-card" data-tid="${t.id}">
-          <div class="scan-theme-icon">${t.icon}</div>
-          <div class="scan-theme-title">${t.title}</div>
-          <div class="scan-theme-desc">${t.desc}</div>
-        </div>`).join("")}
-      </div></div>`;
+    // Tri objectif-aware : thèmes liés aux objectifs en premier, les autres ensuite
+    const objThemeIdsScan=getObjectiveThemeIds();
+    const priorityThemes=SCAN_THEMES.filter(t=>objThemeIdsScan.has(t.id));
+    const otherThemes=SCAN_THEMES.filter(t=>!objThemeIdsScan.has(t.id));
+    const makeCard=t=>`<div class="scan-theme-card${objThemeIdsScan.has(t.id)?" scan-theme-priority":""}" data-tid="${t.id}">
+      <div class="scan-theme-icon">${t.icon}</div>
+      <div class="scan-theme-title">${t.title}</div>
+      <div class="scan-theme-desc">${t.desc}</div>
+    </div>`;
+    let pickerHtml=`<div style="padding:1rem 0 6rem;">`;
+    if(priorityThemes.length){
+      pickerHtml+=`<div style="font-size:10px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:0.75rem;">🎯 Tes priorités</div>
+        <div class="scan-themes-grid" style="margin-bottom:1.5rem;">${priorityThemes.map(makeCard).join("")}</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:0.75rem;color:var(--text-faint);font-size:10px;letter-spacing:1px;text-transform:uppercase;">
+          <span style="flex:1;height:1px;background:var(--border);display:block;"></span>Tous les thèmes<span style="flex:1;height:1px;background:var(--border);display:block;"></span></div>`;
+    }
+    pickerHtml+=`<div class="scan-themes-grid">${otherThemes.map(makeCard).join("")}</div></div>`;
+    cont.innerHTML=pickerHtml;
     cont.querySelectorAll(".scan-theme-card").forEach(card=>{
       card.addEventListener("click",()=>{
         scanThemeId=card.dataset.tid;scanChapterIdx=0;scanChecked.clear();
@@ -5187,7 +4972,7 @@ function renderScan(){
       <span class="scan-pill-text">${d.text}</span>
       ${isWorked
         ? `<span title="Retirer la validation" style="font-size:11px;opacity:0.5;cursor:pointer;flex-shrink:0;transition:opacity 0.15s;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.5" onclick="event.stopPropagation();unvalidateId(${d.id});">↩</span>`
-        : `<span class="scan-pill-pin" data-pin-scan="${d.id}" title="${isPinned?"Désépingler":"Épingler"}" style="font-size:11px;opacity:${isPinned?1:0.25};cursor:pointer;flex-shrink:0;transition:opacity 0.15s;" onclick="event.stopPropagation();togglePin(${d.id});">📌</span>`
+        : `<span class="scan-pill-pin" data-pin-scan="${d.id}" title="${isPinned?"Retirer de la liste":"+ Ma liste"}" style="font-size:10px;background:${isPinned?"rgba(200,184,154,0.15)":"transparent"};border:1px solid ${isPinned?"rgba(200,184,154,0.4)":"rgba(255,255,255,0.12)"};color:${isPinned?"var(--accent)":"rgba(255,255,255,0.4)"};border-radius:3px;padding:1px 5px;cursor:pointer;flex-shrink:0;transition:all 0.15s;white-space:nowrap;" onclick="event.stopPropagation();togglePin(${d.id});">${isPinned?"📌":"+"}</span>`
       }
     </div>`;
   }).join("");
@@ -5244,6 +5029,7 @@ function renderScan(){
   function handleBack(){
     if(scanChapterIdx===0){
       scanThemeId=null;
+      scanChecked.clear();
       document.getElementById("scan-sticky-header").innerHTML="";
       showScreen("home-screen");
       setHomeTab("reconnexion");
@@ -5323,41 +5109,69 @@ async function saveScanChecked(){
   }catch(e){showToast("Erreur sauvegarde");}
 }
 
-function showScanTransition(isPreLast,nextTitle,onContinue){
-  const cont=document.getElementById("scan-content");
-  cont.innerHTML=`<div class="scan-transition">
-    <div class="scan-transition-emoji">${isPreLast?"🌅":"🔑"}</div>
-    <div class="scan-transition-title">${isPreLast?"Tu arrives à la lumière":"Bien. Continue."}</div>
-    <div class="scan-transition-text">${isPreLast?"Tu as traversé les couches sombres. Le prochain chapitre t amène vers ce que tu veux ressentir.":"Tu viens de nommer ce que tu portes. Chaque identité reconnue est déjà libérée en partie."}</div>
-    <button class="scan-continue-btn" id="scan-trans-next">Continuer → ${nextTitle}</button>
-  </div>`;
-  document.getElementById("scan-trans-next").addEventListener("click",onContinue);
-}
-
 function showScanResults(theme){
   const cont=document.getElementById("scan-content");
   document.getElementById("scan-session-bar").style.display="none";
   const total=scanChecked.size;
   const totalPossible=theme.chapters.reduce((a,c)=>a+c.ids.filter(w=>DATA.find(d=>d.text===`Je suis ${w}`)).length,0);
+  const resonance=totalPossible?Math.round((total/totalPossible)*100):0;
+  // Identités cochées dans ce scan (non encore épinglées)
+  const checkedData=[...scanChecked].map(id=>DATA.find(d=>d.id===id)).filter(Boolean);
+  const notPinned=checkedData.filter(d=>!pinnedIds.has(d.id));
+  const alreadyPinned=checkedData.filter(d=>pinnedIds.has(d.id));
+  const identitesList=checkedData.length?`
+    <div style="margin:1.25rem 0;max-height:220px;overflow-y:auto;">
+      ${checkedData.map(d=>`<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:var(--radius);background:var(--surface);border:1px solid ${pinnedIds.has(d.id)?"rgba(200,184,154,0.3)":"var(--border)"};margin-bottom:5px;">
+        <span style="flex:1;font-size:0.85rem;">${d.text}</span>
+        <span style="font-size:10px;color:var(--text-faint);">${d.cat}</span>
+        ${pinnedIds.has(d.id)?`<span style="font-size:10px;color:var(--accent);">📌</span>`:""}
+      </div>`).join("")}
+    </div>`:"";
   cont.innerHTML=`<div class="scan-results">
     <div class="scan-results-title">${theme.icon} Parcours terminé</div>
     <div class="scan-results-sub">${theme.title} — ${theme.chapters.length} chapitres traversés</div>
     <div class="scan-results-grid">
-      <div class="scan-result-stat"><div class="scan-result-val" style="color:var(--green-text)">${total}</div><div class="scan-result-lbl">Travaillées</div></div>
+      <div class="scan-result-stat"><div class="scan-result-val" style="color:var(--green-text)">${total}</div><div class="scan-result-lbl">Identités</div></div>
       <div class="scan-result-stat"><div class="scan-result-val" style="color:var(--accent)">${theme.chapters.length}</div><div class="scan-result-lbl">Chapitres</div></div>
-      <div class="scan-result-stat"><div class="scan-result-val" style="color:var(--purple-text)">${totalPossible?Math.round((total/totalPossible)*100):0}%</div><div class="scan-result-lbl">Résonance</div></div>
+      <div class="scan-result-stat"><div class="scan-result-val" style="color:var(--purple-text)">${resonance}%</div><div class="scan-result-lbl">Résonance</div></div>
     </div>
-    <div style="display:flex;gap:10px;">
-      <button class="scan-continue-btn" id="scan-res-retry" style="flex:1;">↺ Autre thème</button>
-      <button class="scan-continue-btn" id="scan-res-home" style="flex:1;border-color:var(--green-border);color:var(--green-text);">✓ Terminer</button>
+    ${identitesList}
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      ${notPinned.length>0
+        ?`<button class="scan-continue-btn" id="scan-res-pin" style="border-color:var(--accent);color:var(--accent);font-weight:600;">📌 Épingler (${notPinned.length}) → Ma liste</button>`
+        :`<button class="scan-continue-btn" id="scan-res-mylist" style="border-color:var(--accent);color:var(--accent);font-weight:600;">→ Voir ma liste</button>`
+      }
+      <div style="display:flex;gap:8px;">
+        <button class="scan-continue-btn" id="scan-res-retry" style="flex:1;font-size:0.82rem;">↺ Autre thème</button>
+        <button class="scan-continue-btn" id="scan-res-home" style="flex:1;font-size:0.82rem;color:var(--text-faint);">Accueil</button>
+      </div>
     </div>
   </div>`;
+  // Épingler toutes les identités cochées non encore épinglées, puis aller à la liste
+  const goToList=()=>{showScreen("home-screen");setHomeTab("pinned");};
+  if(notPinned.length>0){
+    document.getElementById("scan-res-pin").addEventListener("click",async()=>{
+      await Promise.all(notPinned.filter(d=>!pinnedIds.has(d.id)).map(d=>togglePin(d.id,true)));
+      goToList();
+      setTimeout(()=>showToast(`📌 ${notPinned.length} identité${notPinned.length>1?"s":"" } ajoutée${notPinned.length>1?"s":""} à ta liste`),200);
+    });
+  } else {
+    document.getElementById("scan-res-mylist")?.addEventListener("click",goToList);
+  }
   document.getElementById("scan-res-retry").addEventListener("click",()=>{scanThemeId=null;scanChecked.clear();renderScan();});
-  document.getElementById("scan-res-home").addEventListener("click",()=>{showScreen("home-screen");renderHomeThemes();});
+  document.getElementById("scan-res-home").addEventListener("click",()=>{showScreen("home-screen");setHomeTab("reconnexion");});
 }
 
 document.getElementById("scan-validate-btn")?.addEventListener("click",async()=>{
-  await saveScanChecked();scanChecked.clear();renderScanSession();showToast("✓ Validées");
+  // Épingler automatiquement les identités cochées non encore épinglées
+  const toPin=[...scanChecked].map(id=>DATA.find(d=>d.id===id)).filter(d=>d&&!pinnedIds.has(d.id));
+  if(toPin.length>0)await Promise.all(toPin.map(d=>togglePin(d.id,true)));
+  await saveScanChecked();scanChecked.clear();renderScanSession();
+  if(toPin.length>0){
+    showToast(`📌 ${toPin.length} ajoutée${toPin.length>1?"s":""} à ta liste`);
+  } else {
+    showToast("✓ Enregistrées");
+  }
 });
 document.getElementById("scan-home-btn")?.addEventListener("click",()=>{
   scanThemeId=null;scanChapterIdx=0;scanChecked.clear();
@@ -5366,715 +5180,6 @@ document.getElementById("scan-home-btn")?.addEventListener("click",()=>{
   setHomeTab("reconnexion");
 });
 
-/* ===== DICT ===== */
-const openGroups=new Set();
-let dictGroupIdx=null;
-
-function render(){
-  const wids=workedIds();
-  const scroll=document.getElementById("dict-scroll");
-  const lc=LEVEL_COLORS[dictLevelIdx]||"var(--text-faint)";
-  const ln=LEVEL_NAMES[dictLevelIdx]||"";
-  const lvlDescs=["","Résonance immédiate — le corps sait sans réfléchir","Reconnaissable rapidement — quelques secondes","Demande un moment — quelque chose de plus subtil","Demande de la réflexion — son histoire personnelle","Élaboré — après avoir traversé les autres niveaux"];
-
-  let html=`<div class="dict-level-nav">
-    <button class="dict-nav-btn" id="dict-prev-lvl" ${dictLevelIdx===1?"disabled":""}>← ${dictLevelIdx>1?LEVEL_NAMES[dictLevelIdx-1]:"—"}</button>
-    <div style="text-align:center;">
-      <div style="font-size:13px;font-weight:600;color:${lc};">${ln}</div>
-      <div style="font-size:10px;color:var(--text-faint);margin-top:2px;">${lvlDescs[dictLevelIdx]}</div>
-    </div>
-    <button class="dict-nav-btn" id="dict-next-lvl" ${dictLevelIdx===5?"disabled":""} style="text-align:right;">${dictLevelIdx<5?LEVEL_NAMES[dictLevelIdx+1]:"—"} →</button>
-  </div>`;
-
-  GROUPS.forEach(g=>{
-    const isPos=g.polarity==="pos";
-    const dotColor=isPos?"var(--green-border)":"var(--red-border)";
-    const labelColor=isPos?"var(--green-text)":"var(--red-text)";
-    const items=DATA.filter(d=>{
-      if(!g.cats.includes(d.cat))return false;
-      if(isPos?d.role!=="coping":(d.role==="coping"))return false;
-      if((d.depth||3)!==dictLevelIdx)return false;
-      if(polarityFilter==="neg"&&isPos)return false;
-      if(polarityFilter==="pos"&&!isPos)return false;
-      if(query){
-        const words=query.split("|");
-        if(!words.some(w=>d.text.toLowerCase().includes(w.toLowerCase())))return false;
-      }
-      const isWorked=wids.has(d.id),isTodo=todoIds.has(d.id)&&!isWorked;
-      if(stateFilter==="untouched")return!isWorked&&!isTodo&&!trashedIds.has(d.id);
-      if(stateFilter==="worked")return isWorked;
-      if(stateFilter==="todo")return isTodo;
-      if(stateFilter==="trashed")return trashedIds.has(d.id);
-      return!trashedIds.has(d.id)||stateFilter==="trashed";
-    });
-    if(!items.length)return;
-    html+=`<div class="dict-family">
-      <div class="dict-family-header">
-        <div style="width:7px;height:7px;border-radius:50%;background:${dotColor};flex-shrink:0;"></div>
-        <span style="font-size:11px;font-weight:600;color:${labelColor};">${g.label}</span>
-        <span style="font-size:10px;color:var(--text-faint);font-style:italic;">${g.desc||g.subtitle}</span>
-      </div>
-      <div class="dict-family-items">`;
-    items.forEach(d=>{
-      const isWorked=wids.has(d.id),isTodo=todoIds.has(d.id)&&!isWorked,isChecked=checked.has(d.id),isTrashed=trashedIds.has(d.id);
-      let cls="id-row"+(isWorked?" worked":isChecked?" checked":isTodo?" todo":"")+(isTrashed?" trashed":"");
-      html+=`<div class="${cls}" data-id="${d.id}">
-        <div class="id-check"><i class="ti ti-check check-icon"></i></div>
-        <span class="id-text">${d.text}</span>
-        <div class="id-actions">
-          ${isWorked
-            ? `<button class="id-action-btn unvalidate-btn" data-id="${d.id}" title="Retirer la validation" style="font-size:11px;color:var(--red-text);opacity:0.7;">↩</button>`
-            : `<button class="id-action-btn todo-btn" data-id="${d.id}">🔖</button><button class="id-action-btn trash-btn" data-id="${d.id}">🗑</button>`
-          }
-        </div>
-      </div>`;
-    });
-    html+="</div></div>";
-  });
-
-  scroll.innerHTML=html||'<div style="padding:3rem;text-align:center;color:var(--text-faint)">Aucune identité à ce niveau</div>';
-
-  document.getElementById("dict-prev-lvl")?.addEventListener("click",()=>{dictLevelIdx--;render();scroll.scrollTop=0;});
-  document.getElementById("dict-next-lvl")?.addEventListener("click",()=>{dictLevelIdx++;render();scroll.scrollTop=0;});
-
-  scroll.querySelectorAll(".id-row[data-id]").forEach(row=>{
-    row.addEventListener("click",e=>{
-      if(e.target.closest(".id-action-btn"))return;
-      const id=+row.dataset.id;
-      if(wids.has(id))return;
-      if(checked.has(id))checked.delete(id);
-      else if(todoIds.has(id)){todoIds.delete(id);saveTodo();}
-      else checked.add(id);
-      row.className="id-row"+(wids.has(id)?" worked":checked.has(id)?" checked":todoIds.has(id)?" todo":"");
-      renderSession();
-    });
-    row.addEventListener("dblclick",async e=>{
-      if(e.target.closest(".id-action-btn"))return;
-      const id=+row.dataset.id;
-      if(!wids.has(id))return;
-      const session=SESSIONS.find(s=>s.ids.includes(id));
-      if(!session)return;
-      try{
-        if(session.ids.length===1){await sb(`sessions?id=eq.${session.id}`,{method:"DELETE",prefer:"return=minimal"});SESSIONS=SESSIONS.filter(s=>s.id!==session.id);}
-        else{const newIds=session.ids.filter(i=>i!==id);await sb(`sessions?id=eq.${session.id}`,{method:"PATCH",body:{ids:newIds},prefer:"return=minimal"});session.ids=newIds;}
-        row.className="id-row";renderSession();renderHomeThemes();showToast("↩ Remise en non touchée");
-      }catch(e){showToast("Erreur");}
-    });
-  });
-  scroll.querySelectorAll(".unvalidate-btn").forEach(btn=>btn.addEventListener("click",async e=>{
-    e.stopPropagation();const id=+btn.dataset.id;
-    await unvalidateId(id);render();
-  }));
-  scroll.querySelectorAll(".todo-btn").forEach(btn=>btn.addEventListener("click",e=>{
-    e.stopPropagation();const id=+btn.dataset.id;
-    if(workedIds().has(id))return;
-    if(todoIds.has(id)){todoIds.delete(id);showToast("Retiré");}
-    else{todoIds.add(id);checked.delete(id);showToast("🔖 À faire");}
-    saveTodo();render();
-  }));
-  scroll.querySelectorAll(".trash-btn").forEach(btn=>btn.addEventListener("click",e=>{
-    e.stopPropagation();const id=+btn.dataset.id;
-    if(trashedIds.has(id)){trashedIds.delete(id);showToast("Restaurée");}
-    else{trashedIds.add(id);checked.delete(id);todoIds.delete(id);showToast("🚫 Exclue");}
-    saveTrashed();saveTodo();render();
-  }));
-  renderSession();
-}
-
-function renderSession(){
-  const wids=workedIds();
-  const sel=DATA.filter(d=>checked.has(d.id)&&!wids.has(d.id));
-  document.getElementById("session-tags").innerHTML=sel.length
-    ?sel.map(d=>`<span class="sel-tag" data-id="${d.id}">${d.text}</span>`).join("")
-    :'<span class="empty-sel">Aucune identité cochée</span>';
-  document.getElementById("validate-btn").disabled=!sel.length;
-  document.querySelectorAll("#session-tags .sel-tag").forEach(tag=>tag.addEventListener("click",()=>{checked.delete(+tag.dataset.id);render();}));
-}
-
-document.getElementById("validate-btn").addEventListener("click",async()=>{
-  if(!currentProfile)return;
-  const wids=workedIds();
-  const newIds=[...checked].filter(id=>!wids.has(id));
-  if(!newIds.length){checked.clear();render();return;}
-  const btn=document.getElementById("validate-btn");btn.disabled=true;
-  const date=new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
-  try{
-    const r=await sb("sessions",{method:"POST",body:{profile_id:currentProfile.id,date,ids:newIds},prefer:"return=representation"});
-    if(r&&r[0])SESSIONS.push({id:r[0].id,date,ids:newIds});
-    newIds.forEach(id=>{checked.delete(id);scheduleReview(id,reviewDates[id]?reviewDates[id].reviewCount+1:0);});
-    render();renderHomeThemes();showToast(`✓ ${newIds.length} validée${newIds.length>1?"s":""}`);
-  }catch(e){showToast("Erreur");btn.disabled=false;}
-});
-
-// FILTERS
-document.querySelectorAll("[data-polarity]").forEach(btn=>btn.addEventListener("click",()=>{
-  polarityFilter=btn.dataset.polarity;
-  document.querySelectorAll("[data-polarity]").forEach(b=>b.classList.remove("active"));
-  btn.classList.add("active");render();
-}));
-document.querySelectorAll("[data-state]").forEach(btn=>btn.addEventListener("click",()=>{
-  stateFilter=btn.dataset.state;
-  document.querySelectorAll("[data-state]").forEach(b=>b.classList.remove("active"));
-  btn.classList.add("active");render();
-}));
-document.getElementById("search").addEventListener("input",e=>{query=e.target.value;render();});
-document.getElementById("switch-btn").addEventListener("click",()=>{showScreen("home-screen");renderHomeThemes();});
-
-
-/* ===== GAME ===== */
-function buildGamePool(size){
-  const wids=workedIds();
-  const available=DATA.filter(d=>!wids.has(d.id)&&!trashedIds.has(d.id));
-  let pool=[];
-  if(gameMode==="R"){
-    pool=[...shuffle(available.filter(d=>d.role!=="coping")),...shuffle(available.filter(d=>d.role==="coping"))].slice(0,size);
-  }else{
-    for(const g of GROUPS){
-      if(pool.length>=size)break;
-      const isNeg=g.polarity==="neg";
-      const items=available.filter(d=>g.cats.includes(d.cat)&&(isNeg?(d.role!=="coping"):d.role==="coping")&&!pool.find(p=>p.id===d.id));
-      const byDepth={};
-      items.forEach(d=>{const lv=d.depth||3;if(!byDepth[lv])byDepth[lv]=[];byDepth[lv].push(d);});
-      const sorted=[];[1,2,3,4,5].forEach(lv=>{if(byDepth[lv])sorted.push(...shuffle(byDepth[lv]));});
-      pool.push(...sorted.slice(0,size-pool.length));
-    }
-  }
-  const due=shuffle(DATA.filter(d=>isDueForReview(d.id)&&!workedIds().has(d.id)));
-  return [...due,...pool].slice(0,size+due.length);
-}
-
-function openSessionFormat(){
-  if(!currentProfile){showToast("Connecte-toi d abord");return;}
-  document.querySelectorAll(".sf-card").forEach(c=>c.classList.remove("sel"));
-  document.getElementById("sf-start").disabled=true;
-  document.querySelectorAll(".sf-mode").forEach(b=>b.classList.toggle("active",b.dataset.mode===gameMode));
-  document.getElementById("sf-modal").classList.add("show");
-}
-document.querySelectorAll(".sf-mode").forEach(btn=>btn.addEventListener("click",()=>{
-  document.querySelectorAll(".sf-mode").forEach(b=>b.classList.remove("active"));
-  btn.classList.add("active");gameMode=btn.dataset.mode;
-}));
-document.querySelectorAll(".sf-card").forEach(card=>card.addEventListener("click",()=>{
-  document.querySelectorAll(".sf-card").forEach(c=>c.classList.remove("sel"));
-  card.classList.add("sel");sessionSize=+card.dataset.size;
-  document.getElementById("sf-start").disabled=false;
-}));
-document.getElementById("sf-cancel").addEventListener("click",()=>document.getElementById("sf-modal").classList.remove("show"));
-document.getElementById("sf-start").addEventListener("click",()=>{document.getElementById("sf-modal").classList.remove("show");startGame();});
-
-function startGame(){
-  gameQueue=buildGamePool(sessionSize);
-  gameIdx=0;gameWorked=[];gameLater=[];gameSkipped=[];lastGameGroup=null;
-  document.getElementById("game-overlay").classList.add("show");
-  showGameState();
-}
-
-function showGameState(){
-  if(gameIdx>=gameQueue.length){endGame();return;}
-  const d=gameQueue[gameIdx];
-  const group=getGroupForCat(d.cat,d.role);
-  if(group?.id!==lastGameGroup){lastGameGroup=group?.id||null;showGroupTrans(group,()=>showCard());}
-  else showCard();
-}
-
-function showGroupTrans(group,onDone){
-  const trans=document.getElementById("g-trans");
-  document.getElementById("g-card").classList.remove("show");
-  trans.classList.add("show");
-  document.getElementById("g-trans-emoji").textContent=group?group.label.match(/^(.)/)?.[1]:"";
-  document.getElementById("g-trans-title").textContent=group?group.label.replace(/^.\s*/,""):"";
-  document.getElementById("g-trans-sub").textContent=group?group.subtitle:"";
-  const btn=document.getElementById("g-trans-start");
-  const nb=btn.cloneNode(true);btn.parentNode.replaceChild(nb,btn);
-  nb.addEventListener("click",()=>{trans.classList.remove("show");onDone();});
-}
-
-function showCard(){
-  const d=gameQueue[gameIdx];
-  const group=getGroupForCat(d.cat,d.role);
-  const lvl=d.depth||3;
-  const lc=LEVEL_COLORS[lvl]||"var(--text-faint)";
-  const ln=LEVEL_NAMES[lvl]||"";
-  if(document.getElementById("g-card-group"))document.getElementById("g-card-group").textContent=group?group.label:"";
-  document.getElementById("g-card-text").textContent=d.text;
-
-  // Level progress
-  const levelTotal=gameQueue.filter(x=>(x.depth||3)===lvl).length;
-  const levelDone=gameQueue.slice(0,gameIdx).filter(x=>(x.depth||3)===lvl).length;
-  const levelPct=levelTotal?Math.round((levelDone/levelTotal)*100):0;
-  document.getElementById("g-level-progress").innerHTML=`
-    <span class="game-level-label" style="color:${lc}">${ln}</span>
-    <div class="game-level-bar-wrap"><div class="game-level-bar-fill" style="width:${levelPct}%;background:${lc};"></div></div>
-    <span class="game-level-pct">${levelPct}%</span>`;
-
-  const groupTotal=group?gameQueue.filter(x=>getGroupForCat(x.cat,x.role)?.id===group.id).length:0;
-  const groupDone=group?gameQueue.slice(0,gameIdx).filter(x=>getGroupForCat(x.cat,x.role)?.id===group.id).length:0;
-  document.getElementById("g-group-info").innerHTML=group?`<span class="game-group-name">${group.label}</span><span class="game-group-pos">${groupDone+1}/${groupTotal}</span>`:"";
-
-  document.getElementById("g-card-desc").textContent=group?`(${group.desc||group.subtitle})`:"";
-
-  const badge=document.getElementById("g-level-badge");
-  badge.textContent=ln;badge.style.borderColor=lc;badge.style.color=lc;
-  document.getElementById("gp-fill").style.width=Math.round((gameIdx/gameQueue.length)*100)+"%";
-  document.getElementById("g-counter").textContent=`${gameIdx+1} / ${gameQueue.length} · ✅ ${gameWorked.length}`;
-
-  const dots=gameQueue.map((_,i)=>{
-    let cls="game-session-dot";
-    if(i<gameIdx){if(gameWorked.includes(gameQueue[i].id))cls+=" worked";else if(gameLater.includes(gameQueue[i].id))cls+=" todo";else cls+=" skipped";}
-    else if(i===gameIdx)cls+=" current";
-    return`<div class="${cls}"></div>`;
-  }).join("");
-  document.getElementById("g-session-progress").innerHTML=`<div class="game-session-dots">${dots}</div><div class="game-session-label">✅ ${gameWorked.length} travaillées · 🔖 ${gameLater.length} à faire</div>`;
-
-  const card=document.getElementById("g-card");
-  card.classList.add("show","anim-in");setTimeout(()=>card.classList.remove("anim-in"),300);
-}
-
-function animateCard(cls,cb){
-  const card=document.getElementById("g-card");
-  card.classList.add(cls);setTimeout(()=>{card.classList.remove("show",cls);cb();},220);
-}
-function confetti(){
-  const colors=["#8dc94a","#c8b89a","#5aaaf0","#a78bfa","#d4933a"];
-  for(let i=0;i<20;i++){
-    const el=document.createElement("div");el.className="confetti-dot";
-    el.style.cssText=`background:${colors[Math.floor(rand()*colors.length)]};left:${20+rand()*60}vw;top:${20+rand()*30}vh;animation:confettiDrop ${0.5+rand()*0.5}s ${rand()*0.3}s ease-out forwards;`;
-    document.body.appendChild(el);setTimeout(()=>el.remove(),1200);
-  }
-}
-
-document.getElementById("g-yes").addEventListener("click",async()=>{
-  const d=gameQueue[gameIdx];
-  animateCard("anim-right",async()=>{
-    gameWorked.push(d.id);confetti();
-    if(currentProfile&&!workedIds().has(d.id)){
-      const date=new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
-      try{
-        const r=await sb("sessions",{method:"POST",body:{profile_id:currentProfile.id,date,ids:[d.id]},prefer:"return=representation"});
-        if(r&&r[0])SESSIONS.push({id:r[0].id,date,ids:[d.id]});
-        scheduleReview(d.id,reviewDates[d.id]?reviewDates[d.id].reviewCount+1:0);
-        renderHomeThemes();
-      }catch(e){}
-    }
-    gameIdx++;showGameState();
-  });
-});
-document.getElementById("g-later").addEventListener("click",()=>{
-  const d=gameQueue[gameIdx];
-  animateCard("anim-up",()=>{gameLater.push(d.id);todoIds.add(d.id);saveTodo();renderHomeThemes();gameIdx++;showGameState();});
-});
-document.getElementById("g-skip").addEventListener("click",()=>{
-  const d=gameQueue[gameIdx];
-  animateCard("anim-left",()=>{gameSkipped.push(d.id);trashedIds.add(d.id);saveTrashed();if(isDueForReview(d.id))markIntegrated(d.id);renderHomeThemes();gameIdx++;showGameState();});
-});
-document.addEventListener("keydown",e=>{
-  if(!document.getElementById("game-overlay").classList.contains("show"))return;
-  if(document.getElementById("g-trans").classList.contains("show")){if(e.key==="Enter"||e.key===" ")document.getElementById("g-trans-start").click();return;}
-  if(e.key==="ArrowRight"||e.key===" ")document.getElementById("g-yes").click();
-  else if(e.key==="ArrowDown")document.getElementById("g-later").click();
-  else if(e.key==="ArrowLeft")document.getElementById("g-skip").click();
-  else if(e.key==="Escape")document.getElementById("g-quit").click();
-});
-document.getElementById("g-quit").addEventListener("click",()=>{
-  document.getElementById("game-overlay").classList.remove("show");
-  document.getElementById("g-trans").classList.remove("show");
-  document.getElementById("g-card").classList.remove("show");
-  document.getElementById("g-results").classList.remove("show");
-  lastGameGroup=null;renderHomeThemes();
-});
-function endGame(){
-  document.getElementById("g-card").classList.remove("show");
-  document.getElementById("g-trans").classList.remove("show");
-  document.getElementById("g-results").classList.add("show");
-  document.getElementById("gp-fill").style.width="100%";
-  document.getElementById("g-res-sub").textContent=`${gameWorked.length} travaillées · ${gameLater.length} à faire · ${gameSkipped.length} exclues`;
-  document.getElementById("g-res-grid").innerHTML=[
-    {lbl:"Travaillées",val:gameWorked.length,color:"var(--green-text)"},
-    {lbl:"À faire",val:gameLater.length,color:"var(--gold-text)"},
-    {lbl:"Exclues",val:gameSkipped.length,color:"var(--red-text)"},
-  ].map(s=>`<div class="game-res-stat"><div class="game-res-val" style="color:${s.color}">${s.val}</div><div class="game-res-lbl">${s.lbl}</div></div>`).join("");
-  renderHomeThemes();
-}
-document.getElementById("g-validate").addEventListener("click",()=>{document.getElementById("game-overlay").classList.remove("show");document.getElementById("g-results").classList.remove("show");lastGameGroup=null;renderHomeThemes();});
-document.getElementById("g-restart").addEventListener("click",()=>{document.getElementById("g-results").classList.remove("show");lastGameGroup=null;startGame();});
-
-/* ===== PROGRESS ===== */
-function renderProgress(){
-  document.getElementById("progress-sub").textContent=currentProfile?"Profil — "+currentProfile.name:"";
-  const total=SESSIONS.reduce((a,s)=>a+s.ids.length,0);
-  const avg=SESSIONS.length?Math.round(total/SESSIONS.length):0;
-  document.getElementById("stat-cards").innerHTML=[
-    {label:"Sessions",value:SESSIONS.length,unit:"au total"},
-    {label:"Travaillées",value:total,unit:"identités"},
-    {label:"Par session",value:avg,unit:"en moyenne"},
-  ].map(s=>`<div class="stat-card"><div class="stat-label">${s.label}</div><div class="stat-value">${s.value}</div><div class="stat-unit">${s.unit}</div></div>`).join("");
-  const barEl=document.getElementById("bar-chart");
-  if(!SESSIONS.length)barEl.innerHTML='<div class="no-data">Aucune session.</div>';
-  else{const max=Math.max(...SESSIONS.map(s=>s.ids.length));barEl.innerHTML=SESSIONS.map(s=>{const pct=max?Math.round((s.ids.length/max)*100):0;return`<div class="bar-row"><span class="bar-label">${s.date}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.max(pct,4)}%"><span class="bar-count">${s.ids.length}</span></div></div></div>`;}).join("");}
-  const gc={};
-  SESSIONS.flatMap(s=>s.ids).forEach(id=>{const item=DATA.find(d=>d.id===id);if(item){const g=getGroupForCat(item.cat,item.role);const k=g?g.label:"Autre";gc[k]=(gc[k]||0)+1;}});
-  const sorted=Object.entries(gc).sort((a,b)=>b[1]-a[1]);
-  const catEl=document.getElementById("cat-chart");
-  if(!sorted.length)catEl.innerHTML='<div class="no-data">Aucune donnée.</div>';
-  else{const mx=sorted[0][1];catEl.innerHTML=sorted.map(([g,c])=>{const pct=Math.round((c/mx)*100);return`<div class="cat-row"><span class="cat-label">${g.replace(/^.\s*/,"")}</span><div class="cat-track"><div class="cat-fill" style="width:${Math.max(pct,4)}%"><span class="cat-count">${c}</span></div></div></div>`;}).join("");}
-}
-document.getElementById("close-progress").addEventListener("click",()=>document.getElementById("progress-overlay").classList.remove("show"));
-
-const EXERCISES=[
-  {
-    id:"introspection_video",
-    title:"Introspection vidéo",
-    icon:"🎥",
-    desc:"Avant tout — te voir tel que tu es vraiment",
-    duration:"15-20 min",
-    parts:[
-      {
-        title:"Qui tu es aujourd hui",
-        intro:"Prends ton téléphone, appuie sur record. Personne d autre ne verra cette vidéo.",
-        questions:[
-          "Comment tu te sens dans ta vie en ce moment — vraiment ?",
-          "T es où niveau confiance sur 10 — et pourquoi ?",
-          "Qu est-ce que tu ne t autorises pas à être ou à faire ?"
-        ]
-      },
-      {
-        title:"Tu parles à demain",
-        intro:"Prends une grande inspiration. Ferme les yeux 10 secondes. Puis regarde la caméra et parle directement à la version de toi dans 3 mois.",
-        questions:[
-          "Ce que tu veux qu il sache.",
-          "Ce que tu veux qu il soit devenu.",
-          "Ce que tu veux qu il ressente."
-        ],
-        note:"Garde cette vidéo précieusement. On la regardera ensemble dans 3 mois."
-      }
-    ]
-  },
-  {
-    id:"mes_proches",
-    title:"Mes proches",
-    icon:"👥",
-    desc:"Comprendre ton environnement pour comprendre qui tu es",
-    duration:"20-30 min",
-    parts:[
-      {
-        title:"Ton entourage proche",
-        intro:"Qui sont les 5 personnes que tu vois le plus souvent ? Amis, collègues, famille, partenaire.",
-        fields:[
-          {label:"Personne 1",type:"text",placeholder:"Prénom — relation"},
-          {label:"Personne 2",type:"text",placeholder:""},
-          {label:"Personne 3",type:"text",placeholder:""},
-          {label:"Personne 4",type:"text",placeholder:""},
-          {label:"Personne 5",type:"text",placeholder:""}
-        ]
-      },
-      {
-        title:"Ce qu ils t inspirent",
-        intro:"Pour chacun, ce qui te vient directement à l esprit — leur énergie, ambitions, manière de voir le monde.",
-        fields:[
-          {label:"Personne 1",type:"textarea",placeholder:""},
-          {label:"Personne 2",type:"textarea",placeholder:""},
-          {label:"Personne 3",type:"textarea",placeholder:""},
-          {label:"Personne 4",type:"textarea",placeholder:""},
-          {label:"Personne 5",type:"textarea",placeholder:""}
-        ]
-      },
-      {
-        title:"Ce qu ils pensent de toi",
-        intro:"Demande à chacun 5 à 10 adjectifs — ce qu ils apprécient et ce qu ils détestent. Le but n est pas de te blesser mais de révéler des parties de toi que tu n aurais jamais écouté.",
-        fields:[
-          {label:"Personne 1",type:"textarea",placeholder:"Ex: généreux, trop dans sa tête, loyal..."},
-          {label:"Personne 2",type:"textarea",placeholder:""},
-          {label:"Personne 3",type:"textarea",placeholder:""},
-          {label:"Personne 4",type:"textarea",placeholder:""},
-          {label:"Personne 5",type:"textarea",placeholder:""}
-        ]
-      }
-    ]
-  },
-  {
-    id:"vie_de_reve",
-    title:"Ma vie de rêve",
-    icon:"🌟",
-    desc:"Approfondir la vision — ce que tu veux vraiment",
-    duration:"30-45 min",
-    intro:"Tu as déjà dit à ta future version ce que tu voulais qu il soit. Maintenant on creuse — pas ce qu on t a dit de vouloir, mais ce que toi tu veux vraiment.",
-    spheres:[
-      {icon:"💼",label:"Travail & Mission",questions:["Dans 3 ans, qu est-ce que tu fais comme travail — concrètement ?","Qu est-ce qui te donne de l énergie dans ce que tu fais ?","Qu est-ce qui t en empêche aujourd hui ?","Une chose concrète que tu peux faire cette semaine."]},
-      {icon:"💪",label:"Corps & Santé",questions:["Comment tu te sens physiquement dans ta vie de rêve ?","Qu est-ce que tu veux ressentir dans ton corps ?","Qu est-ce qui t en empêche aujourd hui ?","Une chose concrète que tu peux faire cette semaine."]},
-      {icon:"❤️",label:"Relations & Amour",questions:["Quel type de relations tu veux dans ta vie ?","Comment tu veux te sentir avec les autres ?","Qu est-ce qui t en empêche aujourd hui ?","Une chose concrète que tu peux faire cette semaine."]},
-      {icon:"💰",label:"Finances & Liberté",questions:["De quoi tu as besoin financièrement pour vivre comme tu veux ?","Qu est-ce que l argent représente pour toi vraiment ?","Qu est-ce qui t en empêche aujourd hui ?","Une chose concrète que tu peux faire cette semaine."]},
-      {icon:"🌍",label:"Impact & Sens",questions:["Quel impact tu veux avoir sur les autres, sur le monde ?","Qu est-ce qui compte vraiment pour toi au fond ?","Qu est-ce qui t en empêche aujourd hui ?","Une chose concrète que tu peux faire cette semaine."]},
-      {icon:"🕊️",label:"Liberté & Épanouissement",questions:["À quoi ressemble ta journée idéale dans 3 ans ?","Qu est-ce que tu t autorises à être que tu ne t autorises pas aujourd hui ?","Qu est-ce qui t en empêche aujourd hui ?","Une chose concrète que tu peux faire cette semaine."]}
-    ]
-  },
-  {
-    id:"cadre_de_vie",
-    title:"Cadre de vie",
-    icon:"🏠",
-    desc:"Ton lieu de vie — choisi ou subi ?",
-    duration:"15 min",
-    parts:[{
-      title:"État des lieux",
-      intro:"Pas de jugement. Juste ce qui est.",
-      fields:[
-        {label:"Ton lieu de vie est choisi ou subi ? Pourquoi ?",type:"textarea",placeholder:""},
-        {label:"Si quelqu un entrait chez toi aujourd hui, que comprendrait-il de ta vie ?",type:"textarea",placeholder:""},
-        {label:"À quoi ressemblerait ton cadre idéal ? Quels sont les blocages à ça ?",type:"textarea",placeholder:""},
-        {label:"Qu est-ce que cette situation dit de toi, vue de l extérieur ?",type:"textarea",placeholder:""}
-      ]
-    }]
-  },
-  {
-    id:"liberte",
-    title:"Liberté",
-    icon:"🗝️",
-    desc:"Liberté ressentie vs liberté réelle",
-    duration:"15 min",
-    parts:[{
-      title:"Liberté objective vs ressentie",
-      intro:"Deux questions, une honnêteté.",
-      fields:[
-        {label:"Sur 10 — à quel point tu te sens libre ? Et à quel point tu l es objectivement ?",type:"textarea",placeholder:"Ex: je me sens à 3/10 mais objectivement je suis à 7/10"},
-        {label:"Où est-ce que tu te racontes une histoire plutôt que de prendre une décision ?",type:"textarea",placeholder:""},
-        {label:"Si tu avais la liberté totale demain, que ferais-tu — concrètement ?",type:"textarea",placeholder:""},
-        {label:"Qu est-ce que cette situation dit de toi, vue de l extérieur ?",type:"textarea",placeholder:""}
-      ]
-    }]
-  },
-  {
-    id:"finances",
-    title:"Sécurité financière",
-    icon:"💶",
-    desc:"Ta réalité matérielle, sans se mentir",
-    duration:"15 min",
-    parts:[{
-      title:"L argent tel qu il est",
-      intro:"Ce n est pas un jugement — c est une information.",
-      fields:[
-        {label:"Ton revenu est stable ou fluctuant ? Combien de mois tu pourrais tenir si rien ne change ?",type:"textarea",placeholder:""},
-        {label:"Te sens-tu en sécurité financièrement ? Pourquoi oui ou non ?",type:"textarea",placeholder:""},
-        {label:"Quelles émotions et blocages autour de l argent ?",type:"textarea",placeholder:"Ex: honte, peur de manquer, sentiment de ne pas mériter..."},
-        {label:"Qu est-ce que cette situation dit de toi, vue de l extérieur ?",type:"textarea",placeholder:""}
-      ]
-    }]
-  },
-  {
-    id:"quotidien",
-    title:"Quotidien & structure",
-    icon:"📅",
-    desc:"Tes journées — intentionnelles ou subies ?",
-    duration:"15 min",
-    parts:[{
-      title:"Une journée honnête",
-      intro:"Décris vraiment — pas ce que tu voudrais faire.",
-      fields:[
-        {label:"À quoi ressemblent tes matinées, après-midis, soirées ?",type:"textarea",placeholder:""},
-        {label:"Tes journées sont intentionnelles ou subies ? Combien d heures sur le téléphone ?",type:"textarea",placeholder:""},
-        {label:"Si quelqu un observait ta journée entière, dirait-il que tu te respectes ?",type:"textarea",placeholder:""},
-        {label:"Qu est-ce que cette situation dit de toi, vue de l extérieur ?",type:"textarea",placeholder:""}
-      ]
-    }]
-  },
-  {
-    id:"actions_impact",
-    title:"Actions à fort impact",
-    icon:"⚡",
-    desc:"Ce qui fait vraiment avancer — vs ce que tu fais",
-    duration:"15 min",
-    parts:[{
-      title:"L essentiel vs le reste",
-      intro:"Honnêteté totale sur ce que tu fais vraiment.",
-      fields:[
-        {label:"Quelle est ta plus grande peur à l action ? Qu est-ce que tu as peur de découvrir ?",type:"textarea",placeholder:""},
-        {label:"Quelles actions ont réellement un impact sur ta situation ? Combien de fois tu les fais ?",type:"textarea",placeholder:""},
-        {label:"Ce que tu fais à la place — et ce que tu évites systématiquement de faire ?",type:"textarea",placeholder:""},
-        {label:"Qu est-ce que cette situation dit de toi, vue de l extérieur ?",type:"textarea",placeholder:""}
-      ]
-    }]
-  },
-  {
-    id:"procrastination",
-    title:"Procrastination",
-    icon:"⏳",
-    desc:"Ce que tu repousses — et pourquoi",
-    duration:"10 min",
-    parts:[{
-      title:"Ce que tu évites",
-      intro:"Nommer, c est déjà la moitié du travail.",
-      fields:[
-        {label:"Quelles sont les actions importantes que tu repousses ? Depuis combien de temps ?",type:"textarea",placeholder:""},
-        {label:"Que ressens-tu juste avant de devoir les faire ? Quelle excuse revient ?",type:"textarea",placeholder:""},
-        {label:"Ce que tu risques si tu les fais — et si tu continues à ne pas les faire ?",type:"textarea",placeholder:""},
-        {label:"Qu est-ce que cette situation dit de toi, vue de l extérieur ?",type:"textarea",placeholder:""}
-      ]
-    }]
-  },
-  {
-    id:"dopamine",
-    title:"Dopamine & fuites",
-    icon:"📱",
-    desc:"Ce que tu consommes pour fuir",
-    duration:"10 min",
-    parts:[{
-      title:"Tes fuites",
-      intro:"Sans jugement — juste observer.",
-      fields:[
-        {label:"Temps sur les écrans ? Types de contenus ? Tu utilises ça pour fuir quoi ?",type:"textarea",placeholder:""},
-        {label:"Ressenti avant et après ces moments de fuite ?",type:"textarea",placeholder:""},
-        {label:"Que se passe-t-il quand tu es seul, sans distraction, sans téléphone ?",type:"textarea",placeholder:""},
-        {label:"Qu est-ce que cette situation dit de toi, vue de l extérieur ?",type:"textarea",placeholder:""}
-      ]
-    }]
-  },
-  {
-    id:"corps_nourriture",
-    title:"Corps & nourriture",
-    icon:"🥗",
-    desc:"Ton rapport au corps et à l alimentation",
-    duration:"10 min",
-    parts:[{
-      title:"Ce que ton corps te dit",
-      intro:"Le corps ne ment pas.",
-      fields:[
-        {label:"Faim réelle ou émotionnelle ? Compulsions ? Ressenti après les repas ?",type:"textarea",placeholder:""},
-        {label:"Ton corps est allié ou frein dans ton quotidien ?",type:"textarea",placeholder:""},
-        {label:"Si ton corps pouvait parler, qu est-ce qu il dirait sur ton rapport à lui ?",type:"textarea",placeholder:""},
-        {label:"Qu est-ce que cette situation dit de toi, vue de l extérieur ?",type:"textarea",placeholder:""}
-      ]
-    }]
-  },
-  {
-    id:"sommeil",
-    title:"Sommeil",
-    icon:"🌙",
-    desc:"La qualité de ta récupération",
-    duration:"10 min",
-    parts:[{
-      title:"Ton sommeil honnête",
-      intro:"Tout se joue souvent là.",
-      fields:[
-        {label:"Heure de coucher et lever. Ton sommeil est réparateur ou non ?",type:"textarea",placeholder:""},
-        {label:"Téléphone avant de dormir ? Réveils nocturnes ? Fatigué au réveil ?",type:"textarea",placeholder:""},
-        {label:"Quel impact ton sommeil a sur ton énergie et ton état mental ?",type:"textarea",placeholder:""},
-        {label:"Quelles identités pourraient changer ce quotidien ?",type:"textarea",placeholder:""}
-      ]
-    }]
-  },
-  {
-    id:"sport_energie",
-    title:"Sport & énergie",
-    icon:"💪",
-    desc:"Ton rapport au mouvement et à l énergie",
-    duration:"10 min",
-    parts:[{
-      title:"Corps en mouvement",
-      intro:"Ce n est pas qu une question de sport.",
-      fields:[
-        {label:"Activité physique ? Quelle fréquence ? Niveau d énergie global ?",type:"textarea",placeholder:""},
-        {label:"Ton ressenti après une séance. Corps allié ou frein ?",type:"textarea",placeholder:""},
-        {label:"Collectif ou individuel — et pourquoi ? Qu est-ce que ça dit de toi ?",type:"textarea",placeholder:""},
-        {label:"Quels sont les blocages à progresser ou mieux faire ?",type:"textarea",placeholder:""}
-      ]
-    }]
-  },
-  {
-    id:"emotions",
-    title:"Émotions",
-    icon:"🌊",
-    desc:"Tes émotions dominantes et leur origine",
-    duration:"15 min",
-    parts:[{
-      title:"Ce que tu ressens vraiment",
-      intro:"Affronter ou fuir — tout est là.",
-      fields:[
-        {label:"Quelles sont tes émotions dominantes au quotidien ?",type:"textarea",placeholder:""},
-        {label:"Tu es dans l affrontement ou la fuite ? Que fais-tu quand elles apparaissent ?",type:"textarea",placeholder:""},
-        {label:"À quoi font-elles référence ? Quand sont-elles apparues pour la première fois ?",type:"textarea",placeholder:""},
-        {label:"Quelles identités peut-on associer à tout cela ?",type:"textarea",placeholder:""}
-      ]
-    }]
-  },
-  {
-    id:"estime",
-    title:"Estime & dialogue intérieur",
-    icon:"🪞",
-    desc:"Comment tu te parles — et ce que tu te mérites",
-    duration:"15 min",
-    parts:[{
-      title:"Ce que tu te dis",
-      intro:"Parlerais-tu à un ami comme tu te parles à toi-même ?",
-      fields:[
-        {label:"Quel est ton dialogue intérieur ? Tu respectes les décisions que tu te donnes ?",type:"textarea",placeholder:""},
-        {label:"As-tu confiance en toi ? Que te dis-tu quand tu échoues ?",type:"textarea",placeholder:""},
-        {label:"As-tu l impression d être assez ? Qu est-ce que tu penses mériter comme vie ?",type:"textarea",placeholder:""},
-        {label:"Quelles identités ressortent de tout ça ?",type:"textarea",placeholder:""}
-      ]
-    }]
-  },
-  {
-    id:"relations",
-    title:"Relations & liens",
-    icon:"🤝",
-    desc:"Ton entourage — nourrissant ou confortable ?",
-    duration:"20 min",
-    parts:[
-      {
-        title:"Tes liens",
-        intro:"Les personnes autour de toi te font grandir ou te font stagner ?",
-        fields:[
-          {label:"Tu te sens seul ? As-tu des relations nourrissantes ou juste confortables ?",type:"textarea",placeholder:""},
-          {label:"Tu arrives à te montrer tel que tu es ? Tu dis ce que tu penses — à qui, dans quelles situations ?",type:"textarea",placeholder:""},
-          {label:"As-tu peur du rejet ? Tu t adaptes — dans quelles situations ?",type:"textarea",placeholder:""},
-          {label:"Quelles émotions et identités ressortent de tout ça ?",type:"textarea",placeholder:""}
-        ]
-      },
-      {
-        title:"Les personnes que tu détestes",
-        intro:"La haine est un miroir. Ce que tu détestes chez l autre dit quelque chose sur toi.",
-        fields:[
-          {label:"Qui détestes-tu — ou as-tu détesté ? Quelle est la raison que tu donnes ?",type:"textarea",placeholder:"Pas la raison de surface. Celle que tu n oses pas forcément dire."},
-          {label:"Qu est-ce que cette personne a, représente, ou incarne — que tu veux ou que tu refuses ?",type:"textarea",placeholder:""},
-          {label:"Ce que tu détestes chez elle existe-t-il en toi, même en petit ?",type:"textarea",placeholder:"Prends le temps de vraiment chercher."},
-          {label:"Qu est-ce que cette haine te coûte ? À quoi tu t accroches en la gardant ?",type:"textarea",placeholder:""}
-        ]
-      }
-    ]
-  },
-  {
-    id:"sens_presence",
-    title:"Sens & présence",
-    icon:"✨",
-    desc:"Tu vis ou tu attends que ta vie passe ?",
-    duration:"15 min",
-    parts:[{
-      title:"Ta présence à ta propre vie",
-      intro:"Vivre demande des efforts. L attendre aussi — mais différemment.",
-      fields:[
-        {label:"Tu te sens existant ? Présent ? Ou tu passes beaucoup de temps dans ta tête ?",type:"textarea",placeholder:""},
-        {label:"Tu fantasmes une autre vie ? À quel moment tu t es senti le plus vivant ?",type:"textarea",placeholder:""},
-        {label:"Ton quotidien est-il conforme à la vie que tu veux ? Qu est-ce qui manque ?",type:"textarea",placeholder:""},
-        {label:"Quelles identités peut-on en tirer ?",type:"textarea",placeholder:""}
-      ]
-    }]
-  },
-  {
-    id:"peur_centrale",
-    title:"Peur centrale",
-    icon:"🔥",
-    desc:"Ta peur la plus profonde — celle qui gouverne tout",
-    duration:"15 min",
-    parts:[{
-      title:"La peur qui gouverne",
-      intro:"Tout le reste tourne autour d elle.",
-      fields:[
-        {label:"Quelle est ta plus grande peur à l action — vraiment ?",type:"textarea",placeholder:""},
-        {label:"Qu est-ce que tu as peur de découvrir sur toi-même ?",type:"textarea",placeholder:""},
-        {label:"De quoi tu te protèges pour survivre ? Quel besoin tu as peur de manquer ?",type:"textarea",placeholder:""},
-        {label:"Quelles sont tes limites ? Qu est-ce que cette situation dit de toi ?",type:"textarea",placeholder:""}
-      ]
-    }]
-  }
-];
 
 function openPin(id,name,hash){
   pinTarget={id,name,hash};pinVal="";
