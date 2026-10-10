@@ -78,7 +78,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
 .home-mobile-tab.active{background:var(--surface);color:var(--text);font-weight:500;}
 .home-mobile-switch{position:absolute;right:0;background:none;border:none;color:var(--text-faint);cursor:pointer;font-size:16px;padding:4px;}
 .block-screen{display:none;overflow-y:auto;height:100vh;}
-.block-screen.show{display:block;}
+.block-screen.show{display:block;position:fixed;top:0;left:0;width:100%;z-index:200;background:var(--bg);}
 
 /* PROFILE */
 .brand{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);}
@@ -455,6 +455,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
 
 /* ONBOARDING */
 #onboarding-screen{align-items:center;justify-content:center;padding:2rem 1.5rem;height:100vh;overflow-y:auto;}
+#onboarding-recap-screen{align-items:center;justify-content:flex-start;padding:2rem 1.5rem;height:100vh;overflow-y:auto;}
 .onb-wrap{width:100%;max-width:480px;display:flex;flex-direction:column;gap:1.5rem;}
 .onb-progress{width:100%;height:3px;background:var(--surface3);border-radius:2px;overflow:hidden;}
 .onb-progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width 0.4s ease;}
@@ -468,18 +469,25 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
 
 /* OBJECTIFS sur l'accueil */
 .home-objectives{display:flex;flex-direction:column;gap:8px;margin-bottom:1.5rem;}
-.home-obj-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface);font-size:13px;}
+.home-obj-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface);font-size:13px;cursor:pointer;transition:border-color 0.15s,background 0.15s;}
+.home-obj-item:hover{border-color:var(--accent);background:rgba(200,184,154,0.06);}
+.home-obj-item:hover .home-obj-arrow{opacity:1;}
+.home-obj-arrow{font-size:11px;color:var(--accent);opacity:0;transition:opacity 0.15s;flex-shrink:0;}
 .home-obj-emoji{font-size:16px;flex-shrink:0;}
 .home-obj-label{flex:1;font-weight:500;}
 .home-obj-rank{font-size:10px;color:var(--text-faint);background:var(--surface2);padding:2px 7px;border-radius:10px;flex-shrink:0;}
 
-/* RECAP objectifs */
-.onb-obj-card{display:flex;align-items:center;gap:12px;padding:14px 18px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);cursor:grab;user-select:none;}
-.onb-obj-card.priority-1{border-color:var(--accent);background:rgba(200,184,154,0.06);}
-.onb-obj-handle{font-size:14px;color:var(--text-faint);flex-shrink:0;}
+/* RECAP objectifs — sélection libre */
+.onb-obj-card{display:flex;align-items:center;gap:12px;padding:14px 18px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);cursor:pointer;user-select:none;transition:all 0.15s;}
+.onb-obj-card:hover{border-color:var(--border-strong);}
+.onb-obj-card.selected{border-color:var(--accent);background:rgba(200,184,154,0.06);}
+.onb-obj-card.selected-1{border-color:var(--accent);background:rgba(200,184,154,0.08);}
+.onb-obj-check{width:20px;height:20px;border-radius:50%;border:2px solid var(--border-md);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;transition:all 0.15s;}
+.onb-obj-card.selected .onb-obj-check,.onb-obj-card.selected-1 .onb-obj-check{background:var(--accent);border-color:var(--accent);color:#000;}
 .onb-obj-emoji{font-size:20px;flex-shrink:0;}
 .onb-obj-label{flex:1;font-size:0.95rem;font-weight:500;}
 .onb-obj-rank-badge{font-size:10px;font-weight:600;color:var(--accent);background:rgba(200,184,154,0.12);border:1px solid rgba(200,184,154,0.3);padding:2px 8px;border-radius:10px;flex-shrink:0;}
+.onb-obj-suggested{font-size:10px;color:var(--text-faint);background:var(--surface2);border:1px solid var(--border);padding:2px 7px;border-radius:10px;flex-shrink:0;}
 
 /* IRT PROTOCOL */
 #irt-screen{overflow-y:auto;height:100vh;background:var(--bg);}
@@ -573,9 +581,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
     <div style="text-align:center;margin-bottom:0.5rem;"><div class="brand">REBORN</div></div>
     <div style="text-align:center;">
       <div style="font-size:1.4rem;font-weight:700;margin-bottom:0.5rem;">Voilà ce qu'on a identifié</div>
-      <div style="font-size:0.88rem;color:var(--text-muted);line-height:1.5;">Ce sont tes priorités de travail. Tu peux les réordonner selon ce qui compte le plus pour toi.</div>
+      <div style="font-size:0.88rem;color:var(--text-muted);line-height:1.5;">Tes 3 objectifs prioritaires sont pré-sélectionnés. Tu peux en changer librement — coche ceux qui te correspondent.</div>
     </div>
-    <div id="onb-objectives-list" style="display:flex;flex-direction:column;gap:10px;"></div>
+    <div id="onb-counter" style="text-align:center;font-size:12px;color:var(--text-faint);padding:4px 0;"></div>
+    <div id="onb-objectives-list" style="display:flex;flex-direction:column;gap:8px;"></div>
     <button id="onb-confirm-btn" style="padding:14px 24px;border-radius:var(--radius-lg);border:1px solid var(--accent);background:transparent;color:var(--accent);font-size:1rem;font-weight:600;font-family:inherit;cursor:pointer;margin-top:0.5rem;">Commencer →</button>
   </div>
 </div>
@@ -2921,61 +2930,74 @@ function showToast(msg){const t=document.getElementById("toast");t.textContent=m
 
 /* ===== ONBOARDING ===== */
 const ONBOARDING_QUESTIONS=[
-  {id:"q1",question:"Qu'est-ce qui t'a amené ici ?",choices:[
-    {label:"Je me sens bloqué sans savoir pourquoi",topics:["Figement","Confusion","Dissociation"]},
-    {label:"Je veux agir mais j'y arrive pas",topics:["Figement","Rigidité","Conditionnement"]},
-    {label:"Je me perds dans le regard des autres",topics:["Honte","Humiliation","Dépendance"]}
+  {id:"q1",question:"Ce qui te pèse le plus en ce moment, c'est…",choices:[
+    {label:"Je sais ce que je veux faire, mais je n'arrive pas à me lancer",topics:["Figement","Rigidité","Conditionnement"]},
+    {label:"Je me sens vide, sans direction claire",topics:["Confusion","Existence","Dissociation"]},
+    {label:"Je me sens seul ou incompris",topics:["Isolement","Abandon","Affection"]}
   ]},
-  {id:"q2",question:"Dans quel domaine tu souffres le plus ?",choices:[
-    {label:"Ma vie pro / mes projets",topics:["Figement","Rigidité","Épuisement"]},
-    {label:"Mes relations et ma solitude",topics:["Isolement","Abandon","Affection"]},
-    {label:"Mon rapport à moi-même",topics:["Honte","Culpabilité","Existence"]}
+  {id:"q2",question:"Ton rapport aux autres, c'est plutôt…",choices:[
+    {label:"Je garde mes distances, j'ai du mal à faire confiance",topics:["Trahison","Isolement","Abandon"]},
+    {label:"Je m'efface facilement pour ne pas déranger",topics:["Culpabilité","Dépendance","Violation"]},
+    {label:"Je cherche une vraie connexion mais je ne sais pas comment",topics:["Affection","Abandon","Isolement"]}
   ]},
-  {id:"q3",question:"Sous pression, tu…",choices:[
-    {label:"Fuis ou procrastines",topics:["Figement","Conditionnement","Rigidité"]},
-    {label:"Cherches à plaire pour éviter le conflit",topics:["Dépendance","Culpabilité","Honte"]},
-    {label:"T'en veux et tu te critiques",topics:["Honte","Culpabilité","Humiliation"]}
+  {id:"q3",question:"Comment tu vis le regard des autres sur toi ?",choices:[
+    {label:"J'ai peur d'être jugé, ça me bloque",topics:["Honte","Humiliation","Conditionnement"]},
+    {label:"J'ai l'impression de ne jamais être assez",topics:["Honte","Existence","Humiliation"]},
+    {label:"Je joue un rôle pour plaire, je ne me montre pas vraiment",topics:["Dépendance","Honte","Culpabilité"]}
   ]},
-  {id:"q4",question:"La voix dans ta tête qui revient le plus ?",choices:[
-    {label:"\"Je suis pas à la hauteur\"",topics:["Honte","Humiliation","Existence"]},
-    {label:"\"Je vais déranger si je demande\"",topics:["Culpabilité","Dépendance","Violation"]},
-    {label:"\"Ça sert à rien d'essayer\"",topics:["Figement","Effondrement","Perte"]}
+  {id:"q4",question:"Ta vie amoureuse, c'est…",choices:[
+    {label:"Je tombe souvent sur les mêmes schémas douloureux",topics:["Abandon","Trahison","Dépendance"]},
+    {label:"J'ai du mal à m'ouvrir ou à m'engager vraiment",topics:["Trahison","Isolement","Affection"]},
+    {label:"Ce n'est pas ma priorité pour l'instant",topics:["Figement","Confusion"]}
   ]},
-  {id:"q5",question:"Ce qui te coûte le plus d'énergie ?",choices:[
-    {label:"Satisfaire tout le monde",topics:["Dépendance","Culpabilité","Épuisement"]},
-    {label:"Me mettre en mouvement",topics:["Figement","Rigidité","Conditionnement"]},
-    {label:"Faire confiance aux autres",topics:["Trahison","Injustice","Isolement"]}
+  {id:"q5",question:"Quand tu dois t'affirmer ou dire non…",choices:[
+    {label:"Je cède pour éviter le conflit",topics:["Culpabilité","Dépendance","Violation"]},
+    {label:"Je me sens coupable d'avoir des besoins",topics:["Culpabilité","Honte","Existence"]},
+    {label:"Je le fais mais ça me coûte énormément d'énergie",topics:["Épuisement","Contrôle","Rigidité"]}
   ]},
-  {id:"q6",question:"Ta plus grande peur ?",choices:[
-    {label:"Échouer et perdre la face",topics:["Honte","Humiliation","Rigidité"]},
-    {label:"Être rejeté ou abandonné",topics:["Abandon","Isolement","Affection"]},
-    {label:"Perdre le contrôle",topics:["Contrôle","Rigidité","Figement"]}
+  {id:"q6",question:"Ton rapport à toi-même, ta valeur…",choices:[
+    {label:"Je doute souvent de moi, de ce que je vaux vraiment",topics:["Honte","Existence","Humiliation"]},
+    {label:"Je me compare aux autres et je me trouve en dessous",topics:["Honte","Humiliation","Dépendance"]},
+    {label:"Je sais ce que je vaux mais je n'arrive pas à le montrer",topics:["Figement","Rigidité","Conditionnement"]}
   ]},
-  {id:"q7",question:"Ce que tu veux vraiment changer ?",choices:[
-    {label:"Passer à l'action enfin",topics:["Figement","Conditionnement","Rigidité"]},
-    {label:"Me libérer du regard des autres",topics:["Honte","Humiliation","Dépendance"]},
-    {label:"Trouver ce qui me fait vibrer",topics:["Confusion","Existence","Perte"]}
+  {id:"q7",question:"Ton énergie au quotidien, c'est…",choices:[
+    {label:"Je suis souvent épuisé, à bout",topics:["Épuisement","Usure","Effondrement"]},
+    {label:"Je tourne en rond, j'ai du mal à avancer",topics:["Figement","Confusion","Rigidité"]},
+    {label:"Je me disperse, j'ai des idées mais rien ne sort",topics:["Figement","Conditionnement","Épuisement"]}
   ]},
-  {id:"q8",question:"Si tu changes vraiment, tu as peur de…",choices:[
-    {label:"Décevoir ceux qui comptent sur toi",topics:["Culpabilité","Dépendance","Trahison"]},
-    {label:"Ne plus savoir qui tu es",topics:["Dissociation","Existence","Confusion"]},
-    {label:"Que ça dure pas",topics:["Figement","Effondrement","Conditionnement"]}
+  {id:"q8",question:"Ton projet de vie ou professionnel, c'est…",choices:[
+    {label:"Je ne sais pas ce que je veux faire",topics:["Confusion","Existence","Perte"]},
+    {label:"J'ai une idée mais je n'ose pas me lancer",topics:["Figement","Rigidité","Honte"]},
+    {label:"Je veux vivre autrement mais je ne sais pas par où commencer",topics:["Confusion","Figement","Épuisement"]}
+  ]},
+  {id:"q9",question:"Ton rapport à ton corps et tes émotions…",choices:[
+    {label:"Je suis coupé de mes émotions, je vis dans ma tête",topics:["Dissociation","Contrôle","Figement"]},
+    {label:"Je ressens tout très fort, ça me déborde",topics:["Effondrement","Épuisement","Usure"]},
+    {label:"J'ai du mal à me sentir bien dans ma peau",topics:["Honte","Existence","Humiliation"]}
+  ]},
+  {id:"q10",question:"Ce qui te retient le plus souvent, c'est…",choices:[
+    {label:"La peur de ce que les autres vont penser",topics:["Honte","Humiliation","Dépendance"]},
+    {label:"La peur d'échouer ou de mal faire",topics:["Figement","Rigidité","Honte"]},
+    {label:"Une force invisible que je n'arrive pas à nommer",topics:["Dissociation","Confusion","Effondrement"]}
   ]}
 ];
 
 const OBJECTIVES_MAP=[
   {id:"action",label:"Passer à l'action",emoji:"🎯",topics:["Figement","Rigidité","Conditionnement","Épuisement"]},
   {id:"regard",label:"Me libérer du regard des autres",emoji:"🔓",topics:["Honte","Humiliation","Dépendance","Culpabilité"]},
-  {id:"relations",label:"Sortir de la solitude",emoji:"🤝",topics:["Isolement","Abandon","Affection","Trahison"]},
   {id:"valeur",label:"Reconnaître ma valeur",emoji:"💎",topics:["Honte","Existence","Humiliation","Perte"]},
-  {id:"energie",label:"Retrouver de l'énergie",emoji:"⚡",topics:["Épuisement","Usure","Contrôle","Effondrement"]},
-  {id:"clarte",label:"Trouver ma direction",emoji:"🧭",topics:["Confusion","Existence","Dissociation","Perte"]}
+  {id:"liens",label:"Créer des liens vrais",emoji:"🤝",topics:["Isolement","Abandon","Affection","Trahison"]},
+  {id:"amour",label:"Vivre une relation amoureuse saine",emoji:"❤️",topics:["Abandon","Trahison","Dépendance","Affection"]},
+  {id:"affirmer",label:"M'affirmer et poser mes limites",emoji:"💬",topics:["Culpabilité","Dépendance","Violation","Contrôle"]},
+  {id:"energie",label:"Retrouver de l'énergie et la clarté",emoji:"⚡",topics:["Épuisement","Usure","Effondrement","Confusion"]},
+  {id:"projet",label:"Construire mon projet ou ma vie pro",emoji:"💰",topics:["Figement","Confusion","Rigidité","Perte"]},
+  {id:"corps",label:"Me réconcilier avec mon corps",emoji:"🌿",topics:["Dissociation","Contrôle","Effondrement","Existence"]}
 ];
 
-let onbStep=0,onbAnswers=[],onbSelectedObjectives=[];
+let onbStep=0,onbAnswers=[],onbScoredObjectives=[],onbSelectedIds=new Set();
 
 function startOnboarding(){
-  onbStep=0;onbAnswers=[];
+  onbStep=0;onbAnswers=[];onbScoredObjectives=[];onbSelectedIds=new Set();
   showScreen("onboarding-screen");
   renderOnbQuestion();
 }
@@ -3013,40 +3035,61 @@ function skipOnboarding(){
 function showOnbRecap(){
   const topicCount={};
   onbAnswers.forEach(a=>a.topics.forEach(t=>{topicCount[t]=(topicCount[t]||0)+1;}));
-  const scored=OBJECTIVES_MAP.map(obj=>{
+  onbScoredObjectives=OBJECTIVES_MAP.map(obj=>{
     const score=obj.topics.reduce((s,t)=>s+(topicCount[t]||0),0);
     return{...obj,score};
   }).sort((a,b)=>b.score-a.score);
-  onbSelectedObjectives=scored.slice(0,3).map(o=>({...o}));
+  // Pré-sélectionner les 3 meilleurs
+  onbSelectedIds=new Set(onbScoredObjectives.slice(0,3).map(o=>o.id));
   renderOnbRecap();
   showScreen("onboarding-recap-screen");
 }
 
-function renderOnbRecap(){
-  const list=document.getElementById("onb-objectives-list");
-  list.innerHTML=onbSelectedObjectives.map((obj,i)=>`
-    <div class="onb-obj-card${i===0?" priority-1":""}" data-idx="${i}">
-      <span class="onb-obj-emoji">${obj.emoji}</span>
-      <span class="onb-obj-label">${obj.label}</span>
-      <div style="display:flex;gap:6px;align-items:center;">
-        ${i>0?`<button onclick="moveObj(${i},-1)" style="background:none;border:none;cursor:pointer;color:var(--text-faint);font-size:14px;padding:2px;">↑</button>`:""}
-        ${i<onbSelectedObjectives.length-1?`<button onclick="moveObj(${i},1)" style="background:none;border:none;cursor:pointer;color:var(--text-faint);font-size:14px;padding:2px;">↓</button>`:""}
-        ${i===0?`<span class="onb-obj-rank-badge">Priorité 1</span>`:`<span style="font-size:10px;color:var(--text-faint);">Priorité ${i+1}</span>`}
-      </div>
-    </div>`).join("");
-}
-
-function moveObj(idx,dir){
-  const newIdx=idx+dir;
-  if(newIdx<0||newIdx>=onbSelectedObjectives.length)return;
-  [onbSelectedObjectives[idx],onbSelectedObjectives[newIdx]]=[onbSelectedObjectives[newIdx],onbSelectedObjectives[idx]];
+function toggleOnbObjective(id){
+  if(onbSelectedIds.has(id)){
+    onbSelectedIds.delete(id);
+  } else {
+    if(onbSelectedIds.size>=3){showToast("Maximum 3 objectifs");return;}
+    onbSelectedIds.add(id);
+  }
   renderOnbRecap();
 }
 
+function renderOnbRecap(){
+  const list=document.getElementById("onb-objectives-list");
+  const counter=document.getElementById("onb-counter");
+  const n=onbSelectedIds.size;
+  counter.textContent=`${n}/3 sélectionné${n>1?"s":""}`;
+  counter.style.color=n===3?"var(--accent)":"var(--text-faint)";
+
+  // Trier : sélectionnés d'abord (dans l'ordre du score), puis le reste
+  const selected=onbScoredObjectives.filter(o=>onbSelectedIds.has(o.id));
+  const rest=onbScoredObjectives.filter(o=>!onbSelectedIds.has(o.id));
+  const displayOrder=[...selected,...rest];
+  const topIds=new Set(onbScoredObjectives.slice(0,3).map(o=>o.id));
+
+  list.innerHTML=displayOrder.map((obj)=>{
+    const isSel=onbSelectedIds.has(obj.id);
+    const rank=isSel?([...onbSelectedIds].indexOf(obj.id)+1):null;
+    const isSuggested=topIds.has(obj.id)&&!isSel;
+    return`<div class="onb-obj-card${isSel?" selected":""}" onclick="toggleOnbObjective('${obj.id}')">
+      <div class="onb-obj-check">${isSel?"✓":""}</div>
+      <span class="onb-obj-emoji">${obj.emoji}</span>
+      <span class="onb-obj-label">${obj.label}</span>
+      ${isSel?`<span class="onb-obj-rank-badge">N°${rank}</span>`:""}
+      ${isSuggested?`<span class="onb-obj-suggested">Suggéré</span>`:""}
+    </div>`;
+  }).join("");
+
+  const btn=document.getElementById("onb-confirm-btn");
+  if(btn){btn.style.opacity=n===0?"0.4":"1";btn.style.pointerEvents=n===0?"none":"auto";}
+}
+
 async function confirmOnboarding(){
+  const selected=onbScoredObjectives.filter(o=>onbSelectedIds.has(o.id));
   const priorityTopics=[];
-  onbSelectedObjectives.forEach(obj=>obj.topics.forEach(t=>{if(!priorityTopics.includes(t))priorityTopics.push(t);}));
-  currentProfile.objectives=onbSelectedObjectives.map(o=>({id:o.id,label:o.label,emoji:o.emoji}));
+  selected.forEach(obj=>obj.topics.forEach(t=>{if(!priorityTopics.includes(t))priorityTopics.push(t);}));
+  currentProfile.objectives=selected.map(o=>({id:o.id,label:o.label,emoji:o.emoji,topics:o.topics}));
   currentProfile.priorityTopics=priorityTopics;
   try{localStorage.setItem("onb_"+currentProfile.id,JSON.stringify({objectives:currentProfile.objectives,priorityTopics}));}catch(e){}
   try{await sb("profiles?id=eq."+currentProfile.id,{method:"PATCH",body:{topics:priorityTopics},prefer:"return=minimal"});}catch(e){}
@@ -3063,11 +3106,84 @@ function loadOnboarding(){
       const data=JSON.parse(saved);
       currentProfile.objectives=data.objectives||[];
       currentProfile.priorityTopics=data.priorityTopics||[];
+      // Backfill topics depuis OBJECTIVES_MAP si absents (ancien format)
+      currentProfile.objectives=currentProfile.objectives.map(o=>{
+        if(!o.topics){
+          const ref=OBJECTIVES_MAP.find(m=>m.id===o.id);
+          return ref?{...o,topics:ref.topics}:o;
+        }
+        return o;
+      });
     } else {
       currentProfile.objectives=[];
       currentProfile.priorityTopics=[];
     }
   }catch(e){currentProfile.objectives=[];currentProfile.priorityTopics=[];}
+}
+
+function openObjectif(obj){
+  // Filtre le dictionnaire sur les topics de cet objectif
+  setHomeTab("dictionnaire");
+  setTimeout(()=>{
+    homeSearchQuery=obj.label.toLowerCase();
+    const srch=document.getElementById("home-search");
+    if(srch){srch.value=obj.label;srch.style.display="block";}
+    // Afficher les identités liées aux topics
+    const grid=document.getElementById("home-themes-grid");
+    if(!grid)return;
+    const topics=obj.topics||[];
+    const wids=workedIds();
+    // Trouver les thèmes SCAN_THEMES dont le titre correspond aux topics
+    const matchThemes=SCAN_THEMES.filter(t=>topics.some(tp=>t.title.toLowerCase().includes(tp.toLowerCase())||tp.toLowerCase().includes(t.title.toLowerCase())));
+    // Trouver les identités DATA dont la catégorie correspond aux topics
+    const matchIds=DATA.filter(d=>topics.some(tp=>d.cat&&d.cat.toLowerCase().includes(tp.toLowerCase())||tp.toLowerCase().includes((d.cat||"").toLowerCase()))).slice(0,60);
+    let html=`<div style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">${obj.emoji} ${obj.label}</div>`;
+    if(matchThemes.length){
+      html+=`<div style="font-size:11px;color:var(--text-faint);margin-bottom:8px;">Thèmes à explorer</div>`;
+      html+=matchThemes.map(t=>`
+        <div class="home-theme-row" data-tid="${t.id}" style="margin-bottom:8px;">
+          <div style="font-size:18px;width:24px;flex-shrink:0;">${t.icon}</div>
+          <div style="flex:1;"><div style="font-size:13px;font-weight:600;">${t.title}</div><div style="font-size:10px;color:var(--text-faint);">${t.desc}</div></div>
+          <span style="font-size:11px;color:var(--text-faint);">→</span>
+        </div>`).join("");
+    }
+    if(matchIds.length){
+      html+=`<div style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin:${matchThemes.length?"1.5rem":"0"} 0 10px;">Identités — ${matchIds.length} résultat${matchIds.length>1?"s":""}</div>`;
+      html+=matchIds.map(d=>{
+        const isWorked=wids.has(d.id);
+        const isPinned=pinnedIds.has(d.id);
+        return`<div class="id-row${isWorked?" worked":""}" data-search-id="${d.id}" style="margin-bottom:4px;">
+          <div class="id-check"><i class="ti ti-check check-icon"></i></div>
+          <span class="id-text">${d.text}</span>
+          <span style="font-size:10px;color:var(--text-faint);flex-shrink:0;margin-right:4px;">${d.cat}</span>
+          ${isWorked
+            ?`<button title="Retirer" onclick="event.stopPropagation();unvalidateId(${d.id});" style="background:none;border:none;cursor:pointer;font-size:12px;color:var(--red-text);opacity:0.6;flex-shrink:0;padding:2px 4px;">↩</button>`
+            :`<button class="pin-btn" data-pin-id="${d.id}" title="${isPinned?"Désépingler":"Épingler"}" style="background:none;border:none;cursor:pointer;font-size:13px;padding:2px 2px;flex-shrink:0;opacity:${isPinned?1:0.3};transition:opacity 0.15s;" onclick="event.stopPropagation();togglePin(${d.id});renderSearchResults();">📌</button>`
+          }
+        </div>`;
+      }).join("");
+    }
+    if(!matchThemes.length&&!matchIds.length){
+      html+=`<div style="font-size:13px;color:var(--text-faint);text-align:center;padding:2rem 0;">Aucune identité trouvée pour cet objectif.</div>`;
+    }
+    grid.innerHTML=html;
+    // Wirer les clics sur les thèmes
+    grid.querySelectorAll(".home-theme-row[data-tid]").forEach(row=>{
+      row.addEventListener("click",()=>{
+        scanThemeId=row.dataset.tid;scanChapterIdx=0;scanChecked=new Set();
+        showScreen("scan-screen");renderScan();
+      });
+    });
+    // Wirer les clics sur les identités
+    grid.querySelectorAll(".id-row[data-search-id]").forEach(row=>{
+      row.addEventListener("click",()=>{
+        const id=+row.dataset.searchId;
+        if(searchChecked.has(id)){searchChecked.delete(id);}
+        else{searchChecked.add(id);}
+        row.classList.toggle("checked",searchChecked.has(id));
+      });
+    });
+  },50);
 }
 
 function renderHomeObjectives(){
@@ -3077,10 +3193,11 @@ function renderHomeObjectives(){
     if(objs.length===0){el.innerHTML="";}
     else{
       el.innerHTML=`<div class="home-objectives">${objs.map((o,i)=>`
-        <div class="home-obj-item">
+        <div class="home-obj-item" onclick="openObjectif(${JSON.stringify(o).replace(/"/g,'&quot;')})">
           <span class="home-obj-emoji">${o.emoji}</span>
           <span class="home-obj-label">${o.label}</span>
-          <span class="home-obj-rank">Priorité ${i+1}</span>
+          <span class="home-obj-rank">N°${i+1}</span>
+          <span class="home-obj-arrow">→</span>
         </div>`).join("")}</div>`;
     }
   }
@@ -3091,10 +3208,11 @@ function renderHomeObjectives(){
       el2.innerHTML=`<div style="margin-bottom:1rem;">
         <div style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-bottom:0.75rem;">Tes objectifs</div>
         <div class="home-objectives">${objs.map((o,i)=>`
-          <div class="home-obj-item">
+          <div class="home-obj-item" onclick="openObjectif(${JSON.stringify(o).replace(/"/g,'&quot;')})">
             <span class="home-obj-emoji">${o.emoji}</span>
             <span class="home-obj-label">${o.label}</span>
             ${i===0?`<span class="home-obj-rank" style="background:rgba(200,184,154,0.15);color:var(--accent);border:1px solid rgba(200,184,154,0.3);">Principal</span>`:`<span class="home-obj-rank">N°${i+1}</span>`}
+            <span class="home-obj-arrow">→</span>
           </div>`).join("")}
         </div>
       </div>`;
