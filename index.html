@@ -49,7 +49,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
   .home-screen.show{display:flex;flex-direction:column;align-items:center;padding:1.5rem;min-height:100vh;}
   .home-sidebar{display:none;}
   .home-main{padding:0;width:100%;max-width:560px;}
-  .home-mobile-nav{display:flex!important;}
+  .home-mobile-nav{display:flex!important;flex-direction:column;}
   .home-themes-grid{width:100%;display:flex;flex-direction:column;gap:0;padding-bottom:5rem;}
 .layer-section{margin-bottom:2.5rem;}
 .layer-header{display:flex;align-items:center;gap:10px;padding:0.75rem 0;margin-bottom:1rem;border-bottom:1px solid var(--border);}
@@ -76,12 +76,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
 .home-stat-val{font-size:28px;font-weight:700;margin-bottom:2px;}
 .home-stat-lbl{font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;}
 .home-stat-sub{font-size:12px;color:var(--text-muted);margin-top:4px;}
-.home-mobile-nav{display:none;width:100%;margin-bottom:1.5rem;position:relative;overflow:hidden;}
+.home-mobile-nav{display:none;width:100%;margin-bottom:1.5rem;flex-direction:column;gap:8px;}
 .home-mobile-tabs{display:flex;gap:4px;background:var(--surface2);border-radius:20px;padding:3px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;white-space:nowrap;}
 .home-mobile-tabs::-webkit-scrollbar{display:none;}
 .home-mobile-tab{padding:7px 14px;border-radius:20px;border:none;background:transparent;color:var(--text-faint);font-size:12px;font-family:inherit;cursor:pointer;white-space:nowrap;transition:all 0.15s;}
 .home-mobile-tab.active{background:var(--surface);color:var(--text);font-weight:500;}
-.home-mobile-switch{position:absolute;right:0;background:none;border:none;color:var(--text-faint);cursor:pointer;font-size:16px;padding:4px;}
+.home-mobile-switch{display:flex;align-items:center;justify-content:center;gap:6px;padding:7px 14px;border-radius:var(--radius);border:1px solid var(--border);background:none;color:var(--text-faint);font-size:12px;font-family:inherit;cursor:pointer;align-self:flex-start;}
 .block-screen{display:none;overflow-y:auto;height:100vh;}
 .block-screen.show{display:block;position:fixed;top:0;left:0;width:100%;z-index:200;background:var(--bg);}
 
@@ -322,6 +322,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
 .game-res-title{font-size:22px;font-weight:600;margin-bottom:0.5rem;}
 .game-res-sub{font-size:13px;color:var(--text-muted);margin-bottom:2rem;}
 .game-res-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:2rem;width:100%;}
+@media(max-width:380px){.game-res-grid{grid-template-columns:repeat(2,1fr);}}
 .game-res-stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem;}
 .game-res-val{font-size:28px;font-weight:600;}
 .game-res-lbl{font-size:10px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-top:4px;}
@@ -409,6 +410,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
 .scan-results-title{font-size:22px;font-weight:600;margin-bottom:0.5rem;}
 .scan-results-sub{font-size:13px;color:var(--text-muted);margin-bottom:2rem;}
 .scan-results-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:2rem;}
+@media(max-width:400px){.scan-results-grid{grid-template-columns:repeat(2,1fr);}}
 .scan-result-stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem;text-align:center;}
 .scan-result-val{font-size:28px;font-weight:600;}
 .scan-result-lbl{font-size:10px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-top:4px;}
@@ -578,29 +580,34 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
       <button class="home-sidebar-btn" id="home-irt-btn">🎧 Séance IRT</button>
     </div>
     <div class="home-sidebar-footer">
+      <button class="home-sidebar-btn" id="home-objectives-btn" style="font-size:13px;">🎯 Mes objectifs</button>
       <button class="home-sidebar-btn" id="home-history-btn" style="font-size:12px;color:var(--text-faint);opacity:0.7;">📅 Historique</button>
       <button class="home-footer-btn" id="home-switch-btn"><i class="ti ti-switch-horizontal"></i> Changer de profil</button>
     </div>
   </div>
   <!-- MOBILE NAV -->
   <div class="home-mobile-nav">
+    <div style="display:flex;align-items:center;justify-content:space-between;width:100%;padding:0 2px;">
+      <div style="font-size:15px;font-weight:600;">Bonjour, <span id="home-name-mobile"></span> 👋</div>
+      <button class="home-mobile-switch" id="home-switch-mobile"><i class="ti ti-switch-horizontal"></i> Changer</button>
+    </div>
     <div class="home-mobile-tabs">
       <button class="home-mobile-tab active" data-tab="pinned" style="font-weight:600;">📌 Ma liste</button>
       <button class="home-mobile-tab" data-tab="reconnexion">🌀 Reconnexion</button>
       <button class="home-mobile-tab" data-tab="diagnostic">🔍 Diagnostic</button>
       <button class="home-mobile-tab" data-tab="dictionnaire">📖 Dico</button>
       <button class="home-mobile-tab" data-tab="exercises">⚡ Exercices</button>
-      <button class="home-mobile-tab" data-tab="journal">Journal</button>
+      <button class="home-mobile-tab" data-tab="journal">📓 Journal</button>
       <button class="home-mobile-tab" data-tab="irt">🎧 IRT</button>
+      <button class="home-mobile-tab" data-tab="objectives">🎯 Objectifs</button>
       <button class="home-mobile-tab" data-tab="history" style="opacity:0.6;">📅 Historique</button>
     </div>
-    <button class="home-mobile-switch" id="home-switch-mobile"><i class="ti ti-switch-horizontal"></i></button>
   </div>
   <!-- MAIN -->
   <div class="home-main">
     <div id="home-stats-bar" style="display:flex;gap:1.5rem;margin-bottom:2.5rem;flex-wrap:wrap;"></div>
     <div id="home-objectives-accueil" style="margin-bottom:1.5rem;"></div>
-    <div id="home-sub" style="font-size:22px;font-weight:600;margin-bottom:1.5rem;color:var(--text);">Qu est-ce qui te pèse le plus en ce moment ?</div>
+    <div id="home-sub" style="font-size:22px;font-weight:600;margin-bottom:1.5rem;color:var(--text);">Qu'est-ce qui te pèse le plus en ce moment ?</div>
     <div style="margin-bottom:2rem;">
       <input type="text" id="home-search" placeholder="Rechercher une identité ou un thème…" style="width:100%;box-sizing:border-box;padding:12px 16px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface2);color:var(--text);font-size:14px;font-family:inherit;outline:none;">
     </div>
@@ -801,19 +808,23 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
           <div style="display:flex;flex-direction:column;gap:10px;">
             <div style="padding:12px 14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface);">
               <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-faint);margin-bottom:4px;">A — Nommer l'identité</div>
-              <div style="font-size:13px;color:var(--text-muted);line-height:1.6;">Identifie l'identité à travailler (ex : <em>Je suis indigne d'être aimé</em>). Garde-la présente à l'esprit pendant toute la boucle.</div>
+              <div style="font-size:13px;color:var(--text-muted);line-height:1.6;">Formule l'identité à travailler sous la forme <em>« Je ne suis plus… »</em> ou <em>« J'étais quelqu'un qui… »</em> — par exemple : <em>Je ne suis plus quelqu'un d'indigne d'être aimé</em>. Cette formulation ancre le travail dans ce que tu quittais, pas dans ce que tu es encore. Garde-la présente à l'esprit pendant toute la boucle.</div>
             </div>
             <div style="padding:12px 14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface);">
-              <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-faint);margin-bottom:4px;">B — SUDS de départ (0–10)</div>
-              <div style="font-size:13px;color:var(--text-muted);line-height:1.6;">Évalue l'intensité émotionnelle de cette identité en ce moment, sur une échelle de 0 (aucune charge) à 10 (intensité maximale). Note-la.</div>
+              <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-faint);margin-bottom:4px;">B — Niveau de charge émotionnelle (0–10)</div>
+              <div style="font-size:13px;color:var(--text-muted);line-height:1.6;">Avant de commencer, tu vas mesurer ce que tu ressens face à cette identité — pas ce que tu penses, ce que tu <em>ressens dans le corps</em>. Donne-lui un chiffre entre 0 et 10 : 0 = rien, aucune réaction. 10 = c'est insupportable, ça prend toute la place. Note ce chiffre, tu en auras besoin à la fin pour voir si quelque chose s'est déplacé.</div>
             </div>
             <div style="padding:12px 14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface);">
-              <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-faint);margin-bottom:4px;">C — Cycles de stimulation (1 min chacun)</div>
-              <div style="font-size:13px;color:var(--text-muted);line-height:1.6;">Lance la stimulation bilatérale. Tiens l'identité dans ton esprit sans essayer de l'analyser. Laisse ce qui vient, venir. Chaque cycle dure environ 1 minute. Tu peux faire autant de cycles que nécessaire — en général 3 à 6 par identité.<br><br>Entre chaque cycle : respire, note ce qui a changé ou émergé, et reprends si l'intensité est encore élevée.</div>
+              <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-faint);margin-bottom:4px;">C — Mise en place de la stimulation</div>
+              <div style="font-size:13px;color:var(--text-muted);line-height:1.6;">Lance la stimulation bilatérale dans ton autre onglet. Mets tes deux mains à plat sur le dessus du crâne, paumes bien posées — et laisse-les là pendant toute la durée du cycle. Cette posture n'est pas accessoire : elle ancre le travail dans le corps et renforce la connexion avec ce qui remonte. Tiens l'identité dans ton esprit sans chercher à l'analyser. Laisse ce qui vient, venir.</div>
             </div>
             <div style="padding:12px 14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface);">
-              <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-faint);margin-bottom:4px;">D — SUDS final</div>
-              <div style="font-size:13px;color:var(--text-muted);line-height:1.6;">Réévalue l'intensité une fois les cycles terminés. L'objectif n'est pas de descendre à 0 en une séance — une baisse de 2 à 4 points est déjà significative.</div>
+              <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-faint);margin-bottom:4px;">D — Cycles (1 min chacun)</div>
+              <div style="font-size:13px;color:var(--text-muted);line-height:1.6;">Chaque cycle dure environ 1 minute. Tu peux en faire autant que nécessaire — en général 3 à 6 par identité. Entre chaque cycle : baisse les mains, respire, note ce qui a changé ou émergé. Si la charge est encore présente, reprends.</div>
+            </div>
+            <div style="padding:12px 14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface);">
+              <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-faint);margin-bottom:4px;">E — Réévaluation finale</div>
+              <div style="font-size:13px;color:var(--text-muted);line-height:1.6;">Une fois les cycles terminés, redonne un chiffre entre 0 et 10 à cette identité. Compare-le avec celui du départ. L'objectif n'est pas de descendre à 0 en une seule séance — une baisse de 2 à 4 points, c'est déjà du travail réel qui s'est passé.</div>
             </div>
           </div>
 
@@ -864,7 +875,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
     <div class="modal-sub">Choisis ton mode et la durée</div>
     <div class="sf-section-label">Mode</div>
     <div class="sf-modes">
-      <button class="sf-mode active" data-mode="B">🌱 Parcours<span>Du récent vers l originel</span></button>
+      <button class="sf-mode active" data-mode="B">🌱 Parcours<span>Du récent vers l'originel</span></button>
       <button class="sf-mode" data-mode="R">🎲 Aléatoire<span>Full random</span></button>
     </div>
     <div class="sf-section-label" style="margin-top:1rem">Durée</div>
@@ -2695,7 +2706,7 @@ const SCAN_THEMES=[
 let DATA=[...DEFAULT_DATA];
 let currentProfile=null,SESSIONS=[],checked=new Set(),reviewDates={},pinnedIds=new Set();
 let levelFilter=0,query="";
-let scanThemeId=null,scanChapterIdx=0,scanChecked=new Set();
+let scanThemeId=null,scanChapterIdx=0,scanChecked=new Set(),lastHomeTab="reconnexion";
 let pinTarget=null,pinVal="";
 let sessionSize=5;
 
@@ -2710,7 +2721,7 @@ async function savePinned(){
       const rows=[...pinnedIds].map(id=>({profile_id:currentProfile.id,identity_id:id}));
       await fetch(SB_URL+"/rest/v1/pins",{method:"POST",headers:{"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"application/json","Prefer":"return=minimal"},body:JSON.stringify(rows)});
     }
-  }catch(e){}
+  }catch(e){showToast("Erreur sync liste — vérifie ta connexion");}
 }
 async function unvalidateId(id){
   const session=SESSIONS.find(s=>s.ids.includes(id));
@@ -2737,10 +2748,10 @@ async function unvalidateId(id){
 async function togglePin(id,silent=false){
   if(pinnedIds.has(id)){
     pinnedIds.delete(id);
-    try{await fetch(SB_URL+"/rest/v1/pins?profile_id=eq."+currentProfile.id+"&identity_id=eq."+id,{method:"DELETE",headers:{"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY}});}catch(e){}
+    try{await fetch(SB_URL+"/rest/v1/pins?profile_id=eq."+currentProfile.id+"&identity_id=eq."+id,{method:"DELETE",headers:{"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY}});}catch(e){pinnedIds.add(id);if(!silent)showToast("Erreur — réessaie");return;}
   }else{
     pinnedIds.add(id);
-    try{await fetch(SB_URL+"/rest/v1/pins",{method:"POST",headers:{"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"application/json","Prefer":"return=minimal"},body:JSON.stringify({profile_id:currentProfile.id,identity_id:id})});}catch(e){}
+    try{await fetch(SB_URL+"/rest/v1/pins",{method:"POST",headers:{"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"application/json","Prefer":"return=minimal"},body:JSON.stringify({profile_id:currentProfile.id,identity_id:id})});}catch(e){pinnedIds.delete(id);if(!silent)showToast("Erreur — réessaie");return;}
   }
   // Update badge count on pinned tab
   const pinnedMobileBtn=document.querySelector(".home-mobile-tab[data-tab='pinned']");
@@ -2872,8 +2883,7 @@ function skipOnboarding(){
   currentProfile.objectives=[];
   currentProfile.priorityTopics=[];
   showScreen("home-screen");
-  setHomeTab("reconnexion");
-  renderHomeStats();
+  setHomeTab("reconnexion"); // appelle déjà renderHomeStats()
 }
 
 function showOnbRecap(){
@@ -2955,8 +2965,7 @@ async function confirmOnboarding(){
     </div>`;
   } else {
     showScreen("home-screen");
-    setHomeTab("reconnexion");
-    renderHomeStats();
+    setHomeTab("reconnexion"); // appelle déjà renderHomeStats()
     renderHomeObjectives();
   }
 }
@@ -3242,6 +3251,7 @@ async function enterProfile(id,name){
   }
   currentProfile={id,name};
   document.getElementById("home-name").textContent=name;
+  const mname=document.getElementById("home-name-mobile");if(mname)mname.textContent=name;
   checked.clear();reviewDates={};scanChecked.clear();pinnedIds.clear();
   await loadData();
   loadOnboarding();
@@ -3251,8 +3261,7 @@ async function enterProfile(id,name){
   } else {
     showScreen("home-screen");
     // Si l'utilisateur a des identités épinglées → sa to-do list, sinon → reconnexion pour découvrir ses thèmes
-    setHomeTab(pinnedIds.size>0?"pinned":"reconnexion");
-    renderHomeStats();
+    setHomeTab(pinnedIds.size>0?"pinned":"reconnexion"); // appelle déjà renderHomeStats()
     renderHomeObjectives();
   }
   setTimeout(checkInactivity,1000);
@@ -3712,8 +3721,8 @@ function renderHomeStats(){
   let streak=0;
   if(dates.length){
     const today=new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
-    const yesterday=new Date(Date.now()-86400000).toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
-    let d=new Date();
+    // Si pas de session aujourd'hui, on commence le décompte depuis hier
+    let d=dates.includes(today)?new Date():new Date(Date.now()-86400000);
     while(true){
       const label=d.toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
       if(dates.includes(label)){streak++;d=new Date(d-86400000);}
@@ -3748,7 +3757,7 @@ function renderHomeStats(){
     <div class="home-stat-card">
       <div class="home-stat-val" style="color:var(--green-text);">${streak}</div>
       <div class="home-stat-lbl">Jours consécutifs</div>
-      <div class="home-stat-sub">${streak>0?"Continue comme ça 🔥":"Commence aujourd'hui"}</div>
+      <div class="home-stat-sub">${streak>0?"Continue comme ça 🔥":dates.length>0?"Reprends aujourd'hui":"Commence aujourd'hui"}</div>
     </div>
     <div class="home-stat-card">
       <div class="home-stat-val" style="color:var(--purple-text);">${themesCompleted}</div>
@@ -3823,7 +3832,7 @@ function renderHomeThemes(){
         <div style="font-size:0.82rem;font-weight:600;color:var(--accent);margin-bottom:2px;">🎯 Définis tes objectifs</div>
         <div style="font-size:0.75rem;color:var(--text-faint);line-height:1.5;">Pour voir tes thèmes prioritaires en premier et mieux orienter ton travail.</div>
       </div>
-      <button onclick="showScreen('profile-screen')" style="flex-shrink:0;padding:7px 14px;border-radius:var(--radius);border:1px solid var(--accent);background:rgba(200,184,154,0.08);color:var(--accent);font-size:0.78rem;font-family:inherit;cursor:pointer;font-weight:600;">Configurer</button>
+      <button onclick="startOnboarding()" style="flex-shrink:0;padding:7px 14px;border-radius:var(--radius);border:1px solid var(--accent);background:rgba(200,184,154,0.08);color:var(--accent);font-size:0.78rem;font-family:inherit;cursor:pointer;font-weight:600;">Configurer</button>
     </div>
     <div class="layer-section">
       <div class="layer-header"><span class="layer-label">Tous les thèmes</span></div>`;
@@ -3965,8 +3974,18 @@ function renderSearchResults(){
     }
     const date=new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
     try{
-      const r=await sb("sessions",{method:"POST",body:{profile_id:currentProfile.id,date,ids:newIds},prefer:"return=representation"});
-      if(r&&r[0])SESSIONS.push({id:r[0].id,date,ids:newIds});
+      const existing=SESSIONS.find(s=>s.date===date);
+      if(existing){
+        const toAdd=newIds.filter(id=>!existing.ids.includes(id));
+        if(toAdd.length){
+          const merged=[...existing.ids,...toAdd];
+          await sb(`sessions?id=eq.${existing.id}`,{method:"PATCH",body:{ids:merged},prefer:"return=minimal"});
+          existing.ids=merged;
+        }
+      } else {
+        const r=await sb("sessions",{method:"POST",body:{profile_id:currentProfile.id,date,ids:newIds},prefer:"return=representation"});
+        if(r&&r[0])SESSIONS.push({id:r[0].id,date,ids:newIds});
+      }
       newIds.forEach(id=>scheduleReview(id,reviewDates[id]?reviewDates[id].reviewCount+1:0));
       searchChecked.clear();
       document.getElementById("home-search").value="";
@@ -3992,65 +4011,49 @@ document.querySelectorAll(".home-mobile-tab").forEach(btn=>{
 
 // Home top nav
 function setHomeTab(tab){
+  if(tab!=="irt"&&tab!=="objectives")lastHomeTab=tab;
   document.querySelectorAll(".home-sidebar-btn").forEach(b=>b.classList.remove("active"));
   const sideBtn=document.getElementById("home-"+tab+"-btn");
   if(sideBtn)sideBtn.classList.add("active");
   document.querySelectorAll(".home-mobile-tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));
   const grid=document.getElementById("home-themes-grid");
+  const srch=document.getElementById("home-search");
+
+  // Tabs qui n'ont pas de grille
+  if(tab==="irt"){openIrtScreen();return;}
+  if(tab==="objectives"){startOnboarding();return;}
+
+  // Setup commun à tous les autres onglets
+  grid.style.display="flex";
+  grid.style.flexDirection="column";
+
   if(tab==="reconnexion"){
     const objs=currentProfile.objectives||[];
     document.getElementById("home-sub").textContent=objs.length?"Tes thèmes de travail":"Explore les thèmes de reconnexion";
-    const srch3=document.getElementById("home-search");
-    if(srch3){srch3.style.display="block";srch3.value="";homeSearchQuery="";}
-    grid.style.display="flex";
-    grid.style.flexDirection="column";
+    if(srch){srch.style.display="block";srch.value="";homeSearchQuery="";}
     renderHomeStats();
     renderHomeThemes();
-  } else if(tab==="journal"){
-    document.getElementById("home-sub").textContent="Journal";
-    const srch=document.getElementById("home-search");
-    if(srch){srch.style.display="none";}
-    grid.style.display="flex";
-    grid.style.flexDirection="column";
-    renderJournalInline();
-  } else if(tab==="exercises"){
-    document.getElementById("home-sub").textContent="Exercices";
-    const srch2=document.getElementById("home-search");
-    if(srch2){srch2.style.display="none";}
-    grid.style.display="flex";
-    grid.style.flexDirection="column";
-    renderExercisesInline();
-  } else if(tab==="history"){
-    document.getElementById("home-sub").textContent="Historique";
-    const srch4=document.getElementById("home-search");
-    if(srch4){srch4.style.display="none";}
-    grid.style.display="flex";
-    grid.style.flexDirection="column";
-    renderHistoryInline();
-  } else if(tab==="diagnostic"){
-    document.getElementById("home-sub").textContent="Diagnostic";
-    const srch5=document.getElementById("home-search");
-    if(srch5){srch5.style.display="none";}
-    grid.style.display="flex";
-    grid.style.flexDirection="column";
-    renderDiagnosticInline();
-  } else if(tab==="pinned"){
-    document.getElementById("home-sub").textContent="Identités épinglées";
-    const srch6=document.getElementById("home-search");
-    if(srch6){srch6.style.display="none";}
-    grid.style.display="flex";
-    grid.style.flexDirection="column";
-    renderPinnedTab();
-  } else if(tab==="dictionnaire"){
-    document.getElementById("home-sub").textContent="Dictionnaire des identités";
-    const srch7=document.getElementById("home-search");
-    if(srch7){srch7.style.display="none";}
-    grid.style.display="flex";
-    grid.style.flexDirection="column";
-    renderDictionnaireInline();
-  } else if(tab==="irt"){
-    // IRT ouvre en block-screen plein écran
-    openIrtScreen();
+  } else {
+    if(srch)srch.style.display="none";
+    if(tab==="journal"){
+      document.getElementById("home-sub").textContent="Journal";
+      renderJournalInline();
+    } else if(tab==="exercises"){
+      document.getElementById("home-sub").textContent="Exercices";
+      renderExercisesInline();
+    } else if(tab==="history"){
+      document.getElementById("home-sub").textContent="Historique";
+      renderHistoryInline();
+    } else if(tab==="diagnostic"){
+      document.getElementById("home-sub").textContent="Diagnostic";
+      renderDiagnosticInline();
+    } else if(tab==="pinned"){
+      document.getElementById("home-sub").textContent="Identités épinglées";
+      renderPinnedTab();
+    } else if(tab==="dictionnaire"){
+      document.getElementById("home-sub").textContent="Dictionnaire des identités";
+      renderDictionnaireInline();
+    }
   }
 }
 
@@ -4251,7 +4254,7 @@ function renderPinnedTab(){
           <div style="font-size:0.9rem;font-weight:500;">${d.text}</div>
           <div style="font-size:10px;color:var(--text-faint);margin-top:2px;">${d.cat} · ${d.role==="source"?"source":d.role==="coping"?"coping":"verdict"}</div>
         </div>
-        <button onclick="validateFromDico(${d.id}).then(()=>{renderPinnedTab();showToast('✓ Validée');})" style="font-size:0.72rem;color:var(--green-text);background:var(--green-bg);border:1px solid var(--green-border);border-radius:var(--radius);padding:5px 11px;flex-shrink:0;font-weight:600;cursor:pointer;font-family:inherit;transition:opacity 0.15s;" onmouseenter="this.style.opacity=0.75" onmouseleave="this.style.opacity=1">✓ Valider</button>
+        <button onclick="validateFromDico(${d.id},this).then(()=>{renderPinnedTab();showToast('✓ Validée');})" style="font-size:0.72rem;color:var(--green-text);background:var(--green-bg);border:1px solid var(--green-border);border-radius:var(--radius);padding:5px 11px;flex-shrink:0;font-weight:600;cursor:pointer;font-family:inherit;transition:opacity 0.15s;" onmouseenter="this.style.opacity=0.75" onmouseleave="this.style.opacity=1">✓ Valider</button>
         <button onclick="togglePin(${d.id}).then(()=>renderPinnedTab());" style="background:none;border:none;cursor:pointer;font-size:1rem;opacity:0.3;flex-shrink:0;transition:opacity 0.15s;" onmouseenter="this.style.opacity=0.8" onmouseleave="this.style.opacity=0.3" title="Retirer de la liste">✕</button>
       </div>`;
     });
@@ -4356,7 +4359,6 @@ function diagScore(d,tokens,expandedTokens){
 }
 
 function renderDiagnosticInline(){
-  diagChecked=new Set();
   const grid=document.getElementById("home-themes-grid");
   grid.innerHTML=`
     <div style="margin-bottom:1.5rem;">
@@ -4369,16 +4371,18 @@ function renderDiagnosticInline(){
   document.getElementById("diag-btn").addEventListener("click",()=>{
     const query=(document.getElementById("diag-input").value||"").toLowerCase().trim();
     if(!query){return;}
-    diagChecked=new Set();
+    diagChecked=new Set(); // reset uniquement au lancement d'une nouvelle analyse
+    const btn=document.getElementById("diag-btn");
+    if(btn){btn.disabled=true;btn.textContent="Analyse…";}
     const results=document.getElementById("diag-results");
 
-    // Sauvegarde silencieuse du texte
-    try{sb("diagnostics",{method:"POST",body:{profile_id:currentProfile.id,date:new Date().toISOString(),texte:query}});}catch(e){}
+    // Sauvegarde silencieuse du texte (best-effort, pas de feedback si erreur)
+    sb("diagnostics",{method:"POST",body:{profile_id:currentProfile.id,date:new Date().toISOString(),texte:query}}).catch(()=>{});
 
     const stopwords=new Set(["je","me","le","la","les","de","du","des","un","une","et","en","que","qui","est","il","elle","on","au","aux","par","pas","plus","sur","dans","avec","pour","son","sa","ses","mon","ma","mes","tu","nous","vous","ils","elles","tout","très","si","car","mais","ou","ni","donc","or","c","d","l","j","m","y","n","s","qu","ca","ça","ne","se"]);
     const tokens=query.split(/[\s,;.!?]+/).filter(t=>t.length>=2&&!stopwords.has(t));
 
-    if(!tokens.length){results.innerHTML=`<p style="color:var(--text-muted);font-size:14px;">Essaie avec d'autres mots.</p>`;return;}
+    if(!tokens.length){results.innerHTML=`<p style="color:var(--text-muted);font-size:14px;">Essaie avec d'autres mots.</p>`;if(btn){btn.disabled=false;btn.textContent="Analyser";}return;}
 
     // Expansion via synonymes
     const expandedTokens=[];
@@ -4398,6 +4402,7 @@ function renderDiagnosticInline(){
 
     if(!scored.length){
       results.innerHTML=`<p style="color:var(--text-muted);font-size:14px;">Aucune identité trouvée. Essaie d'autres mots (ex : rejet, colère, honte…).</p>`;
+      if(btn){btn.disabled=false;btn.textContent="Analyser";}
       return;
     }
 
@@ -4473,6 +4478,8 @@ function renderDiagnosticInline(){
 
     html+=`<button id="diag-validate-btn" style="margin-top:1.25rem;padding:11px 22px;border-radius:var(--radius-lg);border:none;background:var(--accent);color:#fff;font-size:14px;font-weight:500;font-family:inherit;cursor:pointer;display:none;">✓ Valider les identités sélectionnées</button>`;
     results.innerHTML=html;
+    // Réactiver le bouton analyser
+    if(btn){btn.disabled=false;btn.textContent="Analyser";}
 
     // Checkboxes
     results.querySelectorAll("input[type=checkbox]").forEach(cb=>{
@@ -4485,19 +4492,31 @@ function renderDiagnosticInline(){
     });
 
     // Bouton valider
-    document.getElementById("diag-validate-btn")?.addEventListener("click",async()=>{
+    document.getElementById("diag-validate-btn")?.addEventListener("click",async(e)=>{
+      const vbtn=e.currentTarget;vbtn.disabled=true;vbtn.textContent="Sauvegarde…";
       const newIds=[...diagChecked].filter(id=>!workedIds().has(id));
-      if(!newIds.length){showToast("Aucune nouvelle identité à valider");return;}
+      if(!newIds.length){vbtn.disabled=false;vbtn.textContent="✓ Valider les identités sélectionnées";showToast("Aucune nouvelle identité à valider");return;}
       const date=new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
       try{
-        const r=await sb("sessions",{method:"POST",body:{profile_id:currentProfile.id,date,ids:newIds},prefer:"return=representation"});
-        if(r&&r[0])SESSIONS.push({id:r[0].id,date,ids:newIds});
+        const existing=SESSIONS.find(s=>s.date===date);
+        if(existing){
+          const toAdd=newIds.filter(id=>!existing.ids.includes(id));
+          if(toAdd.length){
+            const merged=[...existing.ids,...toAdd];
+            await sb(`sessions?id=eq.${existing.id}`,{method:"PATCH",body:{ids:merged},prefer:"return=minimal"});
+            existing.ids=merged;
+          }
+        } else {
+          const r=await sb("sessions",{method:"POST",body:{profile_id:currentProfile.id,date,ids:newIds},prefer:"return=representation"});
+          if(r&&r[0])SESSIONS.push({id:r[0].id,date,ids:newIds});
+        }
         diagChecked.clear();
+        vbtn.disabled=false;vbtn.style.display="none";
         showToast(`✓ ${newIds.length} identité${newIds.length>1?"s":""} validée${newIds.length>1?"s":""}`);
         renderHomeStats();
         // Rafraîchir les résultats pour afficher les badges "fait"
         document.getElementById("diag-btn").click();
-      }catch(e){showToast("Erreur sauvegarde");}
+      }catch(e){vbtn.disabled=false;vbtn.textContent="✓ Valider les identités sélectionnées";showToast("Erreur sauvegarde");}
     });
   });
 }
@@ -4666,6 +4685,10 @@ function renderExercisesInline(){
   grid.querySelectorAll("[data-exid]").forEach(row=>{
     row.addEventListener("click",()=>{
       currentExercise=EXERCISES.find(e=>e.id===row.dataset.exid);
+      if(!currentExercise)return;
+      if(isExDone(currentExercise.id)){
+        showToast("✓ Exercice déjà complété — tu peux le refaire");
+      }
       currentExPart=0;
       renderExerciseDetail();
     });
@@ -4678,6 +4701,7 @@ document.getElementById("home-pinned-btn")?.addEventListener("click",()=>setHome
 document.getElementById("home-journal-btn").addEventListener("click",()=>setHomeTab("journal"));
 document.getElementById("home-exercises-btn").addEventListener("click",()=>setHomeTab("exercises"));
 document.getElementById("home-history-btn")?.addEventListener("click",()=>setHomeTab("history"));
+document.getElementById("home-objectives-btn")?.addEventListener("click",()=>{startOnboarding();});
 document.getElementById("home-diagnostic-btn")?.addEventListener("click",()=>setHomeTab("diagnostic"));
 document.getElementById("home-dictionnaire-btn")?.addEventListener("click",()=>setHomeTab("dictionnaire"));
 
@@ -4831,8 +4855,9 @@ function dicoRow(d,wids,depthColor,depthLabel,showPriorityBadge){
   </div>`;
 }
 
-async function validateFromDico(id){
+async function validateFromDico(id,btnEl){
   if(!currentProfile)return;
+  if(btnEl){btnEl.disabled=true;btnEl.textContent="…";}
   const date=new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
   try{
     const existing=SESSIONS.find(s=>s.date===date);
@@ -4846,7 +4871,10 @@ async function validateFromDico(id){
     }
     renderHomeThemes();
     renderDicoBody();
-  }catch(e){showToast("Erreur lors de la validation");}
+  }catch(e){
+    showToast("Erreur lors de la validation");
+    if(btnEl){btnEl.disabled=false;btnEl.textContent="✓ Valider";}
+  }
 }
 
 function renderHistoryInline(){
@@ -4870,8 +4898,8 @@ function renderHistoryInline(){
     byDate[s.date].push(...s.ids);
   });
   const dates=Object.keys(byDate).sort((a,b)=>{
-    const parse=d=>{const[day,,month,,year]=d.split(' ');const months={janvier:0,février:1,mars:2,avril:3,mai:4,juin:5,juillet:6,août:7,septembre:8,octobre:9,novembre:10,décembre:11};return new Date(year,months[month],day);};
-    return parse(b)-parse(a);
+    const da=parseFrDate(a),db=parseFrDate(b);
+    return(db?db.getTime():0)-(da?da.getTime():0);
   });
   grid.innerHTML=dates.map(date=>{
     const ids=byDate[date];
@@ -4886,13 +4914,28 @@ function renderHistoryInline(){
 }
 
 // Inactivity notification
+function parseFrDate(str){
+  if(!str)return null;
+  const months={janvier:0,février:1,mars:2,avril:3,mai:4,juin:5,juillet:6,août:7,septembre:8,octobre:9,novembre:10,décembre:11};
+  const parts=str.trim().split(/\s+/);
+  if(parts.length<3)return null;
+  const day=parseInt(parts[0],10);
+  const month=months[parts[1].toLowerCase()];
+  const year=parseInt(parts[2],10);
+  if(isNaN(day)||month===undefined||isNaN(year))return null;
+  return new Date(year,month,day);
+}
+
 function checkInactivity(){
   if(!SESSIONS.length)return;
-  const lastDate=SESSIONS[SESSIONS.length-1].date;
-  const months={janvier:0,février:1,mars:2,avril:3,mai:4,juin:5,juillet:6,août:7,septembre:8,octobre:9,novembre:10,décembre:11};
-  const parts=lastDate.split(' ');
-  const last=new Date(parts[2],months[parts[1]],parts[0]);
-  const diffDays=Math.floor((Date.now()-last.getTime())/86400000);
+  // Chercher la date la plus récente parmi toutes les sessions
+  let lastMs=0;
+  SESSIONS.forEach(s=>{
+    const d=parseFrDate(s.date);
+    if(d&&d.getTime()>lastMs)lastMs=d.getTime();
+  });
+  if(!lastMs)return;
+  const diffDays=Math.floor((Date.now()-lastMs)/86400000);
   if(diffDays<1)return;
   const msgs={
     1:"Tu n'as pas travaillé hier — reprends là où tu t'es arrêté.",
@@ -4901,7 +4944,8 @@ function checkInactivity(){
     7:"Une semaine. Ce que tu ne traverses pas reste.",
   };
   const msg=msgs[diffDays]||`${diffDays} jours sans reconnexion. Il est temps de revenir.`;
-  showInactivityBanner(msg);
+  // Délai de 3s pour ne pas casser l'arrivée sur l'écran
+  setTimeout(()=>showInactivityBanner(msg),3000);
 }
 
 function showInactivityBanner(msg){
@@ -4963,6 +5007,14 @@ function renderScan(){
   const dots=theme.chapters.map((_,i)=>`<div class="scan-progress-dot ${i<scanChapterIdx?"done":i===scanChapterIdx?"current":""}"></div>`).join("");
 
   const items=chapter.ids.filter(w=>DATA.find(d=>d.text===`Je suis ${w}`));
+
+  if(!items.length){
+    cont.innerHTML=`<div style="text-align:center;padding:3rem 1rem;color:var(--text-faint);">
+      <div style="font-size:2.5rem;margin-bottom:1rem;">🔍</div>
+      <div style="font-size:0.9rem;">Aucune identité disponible pour ce chapitre.</div>
+    </div>`;
+    return;
+  }
 
   let itemsHtml=items.map(w=>{
     const d=DATA.find(x=>x.text===`Je suis ${w}`);
@@ -5033,7 +5085,7 @@ function renderScan(){
       scanChecked.clear();
       document.getElementById("scan-sticky-header").innerHTML="";
       showScreen("home-screen");
-      setHomeTab("reconnexion");
+      setHomeTab(lastHomeTab||"reconnexion");
     } else {
       saveJournalNote?.();
       scanChapterIdx--;
@@ -5103,8 +5155,18 @@ async function saveScanChecked(){
   if(!newIds.length)return;
   const date=new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
   try{
-    const r=await sb("sessions",{method:"POST",body:{profile_id:currentProfile.id,date,ids:newIds},prefer:"return=representation"});
-    if(r&&r[0])SESSIONS.push({id:r[0].id,date,ids:newIds});
+    const existing=SESSIONS.find(s=>s.date===date);
+    if(existing){
+      const toAdd=newIds.filter(id=>!existing.ids.includes(id));
+      if(toAdd.length){
+        const merged=[...existing.ids,...toAdd];
+        await sb(`sessions?id=eq.${existing.id}`,{method:"PATCH",body:{ids:merged},prefer:"return=minimal"});
+        existing.ids=merged;
+      }
+    } else {
+      const r=await sb("sessions",{method:"POST",body:{profile_id:currentProfile.id,date,ids:newIds},prefer:"return=representation"});
+      if(r&&r[0])SESSIONS.push({id:r[0].id,date,ids:newIds});
+    }
     newIds.forEach(id=>scheduleReview(id,reviewDates[id]?reviewDates[id].reviewCount+1:0));
     renderHomeThemes();
   }catch(e){showToast("Erreur sauvegarde");}
@@ -5163,11 +5225,14 @@ function showScanResults(theme){
   document.getElementById("scan-res-home").addEventListener("click",()=>{showScreen("home-screen");setHomeTab("reconnexion");});
 }
 
-document.getElementById("scan-validate-btn")?.addEventListener("click",async()=>{
+document.getElementById("scan-validate-btn")?.addEventListener("click",async(e)=>{
+  const btn=e.currentTarget;
+  btn.disabled=true;btn.textContent="Sauvegarde…";
   // Épingler automatiquement les identités cochées non encore épinglées
   const toPin=[...scanChecked].map(id=>DATA.find(d=>d.id===id)).filter(d=>d&&!pinnedIds.has(d.id));
   if(toPin.length>0)await Promise.all(toPin.map(d=>togglePin(d.id,true)));
   await saveScanChecked();scanChecked.clear();renderScanSession();
+  btn.disabled=false;btn.textContent="Valider ✓";
   if(toPin.length>0){
     showToast(`📌 ${toPin.length} ajoutée${toPin.length>1?"s":""} à ta liste`);
   } else {
@@ -5178,7 +5243,7 @@ document.getElementById("scan-home-btn")?.addEventListener("click",()=>{
   scanThemeId=null;scanChapterIdx=0;scanChecked.clear();
   document.getElementById("scan-sticky-header").innerHTML="";
   showScreen("home-screen");
-  setHomeTab("reconnexion");
+  setHomeTab(lastHomeTab||"reconnexion");
 });
 
 
@@ -5203,21 +5268,18 @@ document.querySelectorAll(".pin-key").forEach(key=>{
     if(pinVal.length===4){
       const errEl=document.getElementById("pin-error");
       const dotsEl=document.getElementById("pin-dots");
-      console.log("[PIN] pinTarget=",JSON.stringify(pinTarget),"pinVal=",pinVal);
       // Cas profil sans hash (créé avant implémentation du PIN) : accès direct
       if(!pinTarget.hash){
-        console.log("[PIN] no hash → direct enterProfile");
         try{await enterProfile(pinTarget.id,pinTarget.name);}
-        catch(e){errEl.textContent="Erreur connexion : "+e.message;console.error("[PIN] enterProfile error",e);}
+        catch(e){errEl.textContent="Erreur connexion : "+e.message;}
         return;
       }
       let hash;
-      try{hash=await hashPin(pinVal);console.log("[PIN] computed hash=",hash,"stored hash=",pinTarget.hash,"match=",hash===pinTarget.hash);}
-      catch(e){errEl.textContent="Erreur système — réessaie";console.error("[PIN] hashPin error",e);pinVal="";updateDots();return;}
+      try{hash=await hashPin(pinVal);}
+      catch(e){errEl.textContent="Erreur système — réessaie";pinVal="";updateDots();return;}
       if(hash===pinTarget.hash){
-        console.log("[PIN] hash OK → enterProfile");
         try{await enterProfile(pinTarget.id,pinTarget.name);}
-        catch(e){errEl.textContent="Erreur connexion : "+e.message;console.error("[PIN] enterProfile error",e);}
+        catch(e){errEl.textContent="Erreur connexion : "+e.message;}
       }else{
         errEl.textContent="Code incorrect — réessaie";
         dotsEl.classList.add("shake");
