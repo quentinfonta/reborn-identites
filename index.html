@@ -136,6 +136,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
 .pin-key.del{font-size:14px;color:var(--text-muted);}
 .pin-error{font-size:13px;color:var(--red-text);min-height:18px;text-align:center;}
 .back-link{font-size:13px;color:var(--text-faint);cursor:pointer;text-decoration:underline;}
+@keyframes shake{0%,100%{transform:translateX(0);}20%{transform:translateX(-8px);}40%{transform:translateX(8px);}60%{transform:translateX(-6px);}80%{transform:translateX(6px);}}
+.pin-dots.shake{animation:shake 0.4s ease;}
 
 /* HOME */
 .home-welcome{text-align:center;}
@@ -4311,7 +4313,7 @@ const DIAG_SYNONYMS={
   "culpabilité":["coupable","responsable","fautif","autopuni"],
   "perfectionnisme":["imparfait","insuffisant","pas assez bien","raté","décevant"],
   "controle":["contrôlé","dominé","écrasé","manipulé","opprimé"],
-  "inutile":["inutile","inutilisé","superflu","sans valeur","à l écart"],
+  "inutile":["inutile","inutilisé","superflu","sans valeur","à l'écart"],
   "nul":["incapable","incompétent","raté","mauvais","insuffisant"],
   "jugement":["jugé","critiqué","condamné","pointé du doigt","stigmatisé"],
   "comparison":["comparé","dépassé","inférieur","moins bien","jaloux"],
@@ -4972,7 +4974,7 @@ function renderScan(){
       <span class="scan-pill-text">${d.text}</span>
       ${isWorked
         ? `<span title="Retirer la validation" style="font-size:11px;opacity:0.5;cursor:pointer;flex-shrink:0;transition:opacity 0.15s;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.5" onclick="event.stopPropagation();unvalidateId(${d.id});">↩</span>`
-        : `<span class="scan-pill-pin" data-pin-scan="${d.id}" title="${isPinned?"Retirer de la liste":"+ Ma liste"}" style="font-size:10px;background:${isPinned?"rgba(200,184,154,0.15)":"transparent"};border:1px solid ${isPinned?"rgba(200,184,154,0.4)":"rgba(255,255,255,0.12)"};color:${isPinned?"var(--accent)":"rgba(255,255,255,0.4)"};border-radius:3px;padding:1px 5px;cursor:pointer;flex-shrink:0;transition:all 0.15s;white-space:nowrap;" onclick="event.stopPropagation();togglePin(${d.id});">${isPinned?"📌":"+"}</span>`
+        : `<span class="scan-pill-pin" data-pin-scan="${d.id}" title="${isPinned?"Retirer de la liste":"+ Ma liste"}" style="font-size:10px;background:${isPinned?"rgba(200,184,154,0.15)":"transparent"};border:1px solid ${isPinned?"rgba(200,184,154,0.4)":"rgba(255,255,255,0.12)"};color:${isPinned?"var(--accent)":"rgba(255,255,255,0.4)"};border-radius:3px;padding:1px 5px;cursor:pointer;flex-shrink:0;transition:all 0.15s;white-space:nowrap;" onclick="event.stopPropagation();togglePin(${d.id}).then(()=>{const p=pinnedIds.has(${d.id});this.style.background=p?'rgba(200,184,154,0.15)':'transparent';this.style.border='1px solid '+(p?'rgba(200,184,154,0.4)':'rgba(255,255,255,0.12)');this.style.color=p?'var(--accent)':'rgba(255,255,255,0.4)';this.textContent=p?'📌':'+';this.title=p?'Retirer de la liste':'+ Ma liste';});">${isPinned?"📌":"+"}</span>`
       }
     </div>`;
   }).join("");
@@ -5200,16 +5202,20 @@ document.querySelectorAll(".pin-key").forEach(key=>{
     if(pinVal.length>=4)return;
     pinVal+=v;updateDots();
     if(pinVal.length===4){
+      // Cas profil sans hash (créé avant implémentation du PIN) : accès direct
+      if(!pinTarget.hash){await enterProfile(pinTarget.id,pinTarget.name);return;}
       const hash=await hashPin(pinVal);
       if(hash===pinTarget.hash){await enterProfile(pinTarget.id,pinTarget.name);}
       else{
-        document.getElementById("pin-error").textContent="Code incorrect";
-        document.getElementById("pin-dots").classList.add("shake");
+        const errEl=document.getElementById("pin-error");
+        const dotsEl=document.getElementById("pin-dots");
+        errEl.textContent="Code incorrect — réessaie";
+        dotsEl.classList.add("shake");
         setTimeout(()=>{
-          document.getElementById("pin-dots").classList.remove("shake");
+          dotsEl.classList.remove("shake");
           pinVal="";updateDots();
-          document.getElementById("pin-error").textContent="";
-        },500);
+          errEl.textContent="";
+        },1500);
       }
     }
   });
