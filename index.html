@@ -3241,7 +3241,6 @@ async function enterProfile(id,name){
     return;
   }
   currentProfile={id,name};
-  document.getElementById("profile-name-badge").textContent=name;
   document.getElementById("home-name").textContent=name;
   checked.clear();reviewDates={};scanChecked.clear();pinnedIds.clear();
   await loadData();
