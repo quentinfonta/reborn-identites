@@ -537,6 +537,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
     </div>
     <div class="onb-progress"><div class="onb-progress-fill" id="onb-progress-fill" style="width:12.5%;"></div></div>
     <div style="display:flex;align-items:center;justify-content:space-between;">
+      <button class="onb-skip" id="onb-back-btn" onclick="onbGoBack()" style="display:none;">← Retour</button>
       <div class="onb-step" id="onb-step-label">Question 1 / 8</div>
       <button class="onb-skip" onclick="skipOnboarding()">Passer →</button>
     </div>
@@ -2866,17 +2867,26 @@ function renderOnbQuestion(){
   document.getElementById("onb-choices").innerHTML=q.choices.map((c,i)=>
     `<button class="onb-choice" onclick="selectOnbChoice(${i})">${c.label}</button>`
   ).join("");
+  const backBtn=document.getElementById("onb-back-btn");
+  if(backBtn)backBtn.style.display=onbStep>0?"inline":"none";
+}
+
+function onbGoBack(){
+  if(onbStep<=0){
+    skipOnboarding();
+    return;
+  }
+  onbStep--;
+  onbAnswers.pop();
+  renderOnbQuestion();
 }
 
 function selectOnbChoice(idx){
   const q=ONBOARDING_QUESTIONS[onbStep];
   onbAnswers.push({q:q.id,topics:q.choices[idx].topics});
-  document.querySelectorAll(".onb-choice").forEach((b,i)=>{b.classList.toggle("selected",i===idx);b.style.pointerEvents="none";});
-  setTimeout(()=>{
-    onbStep++;
-    if(onbStep>=ONBOARDING_QUESTIONS.length){showOnbRecap();}
-    else{renderOnbQuestion();}
-  },350);
+  onbStep++;
+  if(onbStep>=ONBOARDING_QUESTIONS.length){showOnbRecap();}
+  else{renderOnbQuestion();}
 }
 
 function skipOnboarding(){
