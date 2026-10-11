@@ -557,6 +557,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
     <div id="onb-counter" style="text-align:center;font-size:12px;color:var(--text-faint);padding:4px 0;"></div>
     <div id="onb-objectives-list" style="display:flex;flex-direction:column;gap:8px;"></div>
     <button id="onb-confirm-btn" style="padding:14px 24px;border-radius:var(--radius-lg);border:1px solid var(--accent);background:transparent;color:var(--accent);font-size:1rem;font-weight:600;font-family:inherit;cursor:pointer;margin-top:0.5rem;">Commencer →</button>
+    <button onclick="startOnboarding()" style="background:none;border:none;font-size:12px;color:var(--text-faint);cursor:pointer;font-family:inherit;text-decoration:underline;padding:4px 0;text-align:center;">← Refaire le questionnaire</button>
   </div>
 </div>
 
@@ -857,6 +858,27 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
 
     <div style="height:1px;background:var(--border);margin-bottom:2rem;"></div>
 
+    <!-- ENREGISTRER LA SÉANCE IRT -->
+    <div id="irt-log-section" style="padding:18px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);margin-bottom:1rem;">
+      <div style="font-size:13px;font-weight:600;margin-bottom:4px;">Enregistrer cette séance</div>
+      <div style="font-size:12px;color:var(--text-muted);margin-bottom:1rem;">Garde une trace de ce qui s'est passé — identité et niveau de charge avant/après.</div>
+      <div style="margin-bottom:0.75rem;">
+        <div style="font-size:10px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Identité travaillée</div>
+        <input id="irt-log-identity" type="text" placeholder="ex. Je ne suis plus quelqu'un d'indigne d'être aimé" style="width:100%;padding:9px 12px;border:1px solid var(--border-md);border-radius:var(--radius);background:var(--surface2);color:var(--text);font-size:13px;font-family:inherit;outline:none;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border-md)'">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1rem;">
+        <div>
+          <div style="font-size:10px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Charge avant (0–10)</div>
+          <input id="irt-log-before" type="number" min="0" max="10" placeholder="7" style="width:100%;padding:9px 12px;border:1px solid var(--border-md);border-radius:var(--radius);background:var(--surface2);color:var(--text);font-size:14px;font-family:inherit;outline:none;text-align:center;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border-md)'">
+        </div>
+        <div>
+          <div style="font-size:10px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Charge après (0–10)</div>
+          <input id="irt-log-after" type="number" min="0" max="10" placeholder="2" style="width:100%;padding:9px 12px;border:1px solid var(--border-md);border-radius:var(--radius);background:var(--surface2);color:var(--text);font-size:14px;font-family:inherit;outline:none;text-align:center;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border-md)'">
+        </div>
+      </div>
+      <button id="irt-log-save-btn" onclick="saveIrtLog()" style="width:100%;padding:10px;border-radius:var(--radius-lg);border:1px solid var(--accent);background:transparent;color:var(--accent);font-size:13px;font-family:inherit;cursor:pointer;">Enregistrer →</button>
+    </div>
+
     <!-- LIEN VERS LE JOURNAL -->
     <div style="padding:16px 18px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);display:flex;align-items:center;justify-content:space-between;gap:12px;">
       <div>
@@ -952,6 +974,7 @@ const LEVEL_COLORS=["", "#ff4d2e", "#ff8c42", "#f5c842", "#7ab8d4", "#555560"];
 const LEVEL_NAMES=["Tous", "Corps", "Ressenti", "Émotion", "Relation", "Abstrait"];
 
 async function sb(path,opts={}){
+  if(!navigator.onLine){showOfflineBanner();throw new Error("Hors ligne");}
   const res=await fetch(SB_URL+"/rest/v1/"+path,{
     headers:{"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"application/json","Prefer":opts.prefer||"return=representation",...(opts.headers||{})},
     method:opts.method||"GET",body:opts.body?JSON.stringify(opts.body):undefined
@@ -960,6 +983,19 @@ async function sb(path,opts={}){
   if(!res.ok)throw new Error("HTTP "+res.status+": "+txt);
   return txt?JSON.parse(txt):null;
 }
+
+function showOfflineBanner(){
+  if(document.getElementById("offline-banner"))return;
+  const b=document.createElement("div");
+  b.id="offline-banner";
+  const isMobile=window.innerWidth<768;
+  b.style.cssText=`position:fixed;top:0;left:${isMobile?"0":"260px"};right:0;background:#1a1200;border-bottom:1px solid rgba(186,117,23,0.4);padding:10px ${isMobile?"1rem":"2rem"};display:flex;align-items:center;justify-content:space-between;gap:12px;z-index:9999;`;
+  b.innerHTML=`<span style="font-size:13px;color:var(--gold-text);">📡 Pas de connexion — certaines actions sont désactivées</span><button onclick="this.parentNode.remove()" style="font-size:11px;color:var(--text-faint);background:none;border:none;cursor:pointer;padding:4px 8px;">✕</button>`;
+  document.body.appendChild(b);
+}
+
+window.addEventListener("online",()=>{const b=document.getElementById("offline-banner");if(b)b.remove();});
+window.addEventListener("offline",()=>showOfflineBanner());
 
 async function hashPin(pin){
   const buf=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(pin+"REBORN_SALT"));
@@ -2707,7 +2743,7 @@ const SCAN_THEMES=[
 let DATA=[...DEFAULT_DATA];
 let currentProfile=null,SESSIONS=[],checked=new Set(),reviewDates={},pinnedIds=new Set();
 let levelFilter=0,query="";
-let scanThemeId=null,scanChapterIdx=0,scanChecked=new Set(),lastHomeTab="reconnexion";
+let scanThemeId=null,scanChapterIdx=0,scanChecked=new Set(),lastHomeTab="reconnexion",journalEditing=false;
 let pinTarget=null,pinVal="";
 let sessionSize=5;
 
@@ -2722,7 +2758,7 @@ async function savePinned(){
       const rows=[...pinnedIds].map(id=>({profile_id:currentProfile.id,identity_id:id}));
       await fetch(SB_URL+"/rest/v1/pins",{method:"POST",headers:{"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"application/json","Prefer":"return=minimal"},body:JSON.stringify(rows)});
     }
-  }catch(e){showToast("Erreur sync liste — vérifie ta connexion");}
+  }catch(e){showToast("Connexion perdue — réessaie dans un instant");}
 }
 async function unvalidateId(id){
   const session=SESSIONS.find(s=>s.ids.includes(id));
@@ -2736,7 +2772,7 @@ async function unvalidateId(id){
       await sb(`sessions?id=eq.${session.id}`,{method:"PATCH",body:{ids:newIds},prefer:"return=minimal"});
       session.ids=newIds;
     }
-    showToast("↩ Identité retirée");
+    showToast("↩ Remise en jeu");
     renderHomeThemes();
     // refresh les vues ouvertes
     const activeMobile=document.querySelector(".home-mobile-tab.active");
@@ -2780,7 +2816,7 @@ async function togglePin(id,silent=false){
   if((activeMobile&&activeMobile.dataset.tab==="pinned")||(activeSide&&activeSide.id==="home-pinned-btn")){
     renderPinnedTab();
   }
-  if(!silent)showToast(pinnedIds.has(id)?"📌 Ajouté à ta liste":"✓ Retiré de la liste");
+  if(!silent)showToast(pinnedIds.has(id)?"📌 Ajouté à ta liste":"Retiré de ta liste");
 }
 function showToast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2500);}
 
@@ -2860,7 +2896,7 @@ function startOnboarding(){
 
 function renderOnbQuestion(){
   const q=ONBOARDING_QUESTIONS[onbStep];
-  const pct=((onbStep+1)/ONBOARDING_QUESTIONS.length*100).toFixed(0);
+  const pct=(onbStep/ONBOARDING_QUESTIONS.length*100).toFixed(0);
   document.getElementById("onb-progress-fill").style.width=pct+"%";
   document.getElementById("onb-step-label").textContent=`Question ${onbStep+1} / ${ONBOARDING_QUESTIONS.length}`;
   document.getElementById("onb-question-text").textContent=q.question;
@@ -2896,6 +2932,69 @@ function skipOnboarding(){
   setHomeTab("reconnexion"); // appelle déjà renderHomeStats()
 }
 
+function showObjectivesPanel(){
+  const grid=document.getElementById("home-themes-grid");
+  const srch=document.getElementById("home-search");
+  if(srch)srch.style.display="none";
+  grid.style.display="flex";
+  grid.style.flexDirection="column";
+
+  const objs=currentProfile.objectives||[];
+  const allObjs=OBJECTIVES_MAP;
+  const wids=workedIds();
+  const totalWorked=wids.size;
+  const totalSessions=SESSIONS.length;
+  const irtKey=`irt_log_${currentProfile?.id}`;
+  let irtLogs=[];
+  try{irtLogs=JSON.parse(localStorage.getItem(irtKey)||"[]");}catch(e){}
+
+  // Statistiques globales
+  const statsHtml=`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1.5rem;">
+    <div style="padding:12px 10px;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--surface);text-align:center;">
+      <div style="font-size:1.4rem;font-weight:700;">${totalWorked}</div>
+      <div style="font-size:9px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-top:2px;">Identités</div>
+    </div>
+    <div style="padding:12px 10px;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--surface);text-align:center;">
+      <div style="font-size:1.4rem;font-weight:700;">${totalSessions}</div>
+      <div style="font-size:9px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-top:2px;">Sessions</div>
+    </div>
+    <div style="padding:12px 10px;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--surface);text-align:center;">
+      <div style="font-size:1.4rem;font-weight:700;">${irtLogs.length}</div>
+      <div style="font-size:9px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-top:2px;">IRT</div>
+    </div>
+  </div>`;
+
+  // Objectifs
+  const currentHtml=objs.length>0
+    ?objs.map(id=>{
+        const o=allObjs.find(x=>x.id===id);
+        if(!o)return"";
+        return`<div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);">
+          <span style="font-size:1.4rem;">${o.emoji}</span>
+          <span style="font-size:0.95rem;font-weight:500;flex:1;">${o.label}</span>
+        </div>`;
+      }).join("")
+    :`<div style="text-align:center;padding:1.5rem;color:var(--text-faint);font-size:0.88rem;">Aucun objectif défini pour l'instant.</div>`;
+
+  // Dernières identités travaillées
+  const recentWorked=[...wids].slice(-5).reverse().map(id=>{
+    const d=DATA.find(x=>x.id===id);
+    return d?`<div style="font-size:12px;color:var(--green-text);padding:5px 0;border-bottom:1px solid var(--border);">${d.text.replace("Je suis ","")}</div>`:"";
+  }).join("");
+
+  grid.innerHTML=`<div style="padding:0.5rem 0;">
+    ${statsHtml}
+    <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-faint);margin-bottom:0.75rem;">Tes objectifs</div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:1.5rem;">${currentHtml}</div>
+    ${totalWorked>0?`<div style="margin-bottom:1.5rem;">
+      <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-faint);margin-bottom:0.75rem;">Dernières identités traversées</div>
+      ${recentWorked}
+      ${totalWorked>5?`<button onclick="setHomeTab('history')" style="font-size:11px;color:var(--text-faint);background:none;border:none;cursor:pointer;padding:6px 0;text-decoration:underline;">Voir tout l'historique →</button>`:""}
+    </div>`:""}
+    <button onclick="startOnboarding()" style="width:100%;padding:12px 20px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text);font-size:0.9rem;font-family:inherit;cursor:pointer;">✏️ Modifier mes objectifs</button>
+  </div>`;
+}
+
 function showOnbRecap(){
   const topicCount={};
   onbAnswers.forEach(a=>a.topics.forEach(t=>{topicCount[t]=(topicCount[t]||0)+1;}));
@@ -2913,7 +3012,7 @@ function toggleOnbObjective(id){
   if(onbSelectedIds.has(id)){
     onbSelectedIds.delete(id);
   } else {
-    if(onbSelectedIds.size>=3){showToast("Maximum 3 objectifs");return;}
+    if(onbSelectedIds.size>=3){showToast("3 objectifs maximum — retire-en un pour continuer");return;}
     onbSelectedIds.add(id);
   }
   renderOnbRecap();
@@ -3207,6 +3306,34 @@ function filterProfiles(q){
 function openIrtScreen(){
   document.getElementById("irt-screen").classList.add("show");
   document.getElementById("irt-screen").scrollTop=0;
+  // Reset le formulaire de log
+  const idInp=document.getElementById("irt-log-identity");
+  const bInp=document.getElementById("irt-log-before");
+  const aInp=document.getElementById("irt-log-after");
+  const btn=document.getElementById("irt-log-save-btn");
+  if(idInp)idInp.value="";if(bInp)bInp.value="";if(aInp)aInp.value="";
+  if(btn){btn.textContent="Enregistrer →";btn.disabled=false;}
+}
+
+function saveIrtLog(){
+  const identity=(document.getElementById("irt-log-identity")?.value||"").trim();
+  const before=document.getElementById("irt-log-before")?.value;
+  const after=document.getElementById("irt-log-after")?.value;
+  if(!identity){showToast("Note l'identité travaillée avant d'enregistrer");return;}
+  const entry={
+    date:new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"}),
+    identity,
+    before:before!==""?parseInt(before):null,
+    after:after!==""?parseInt(after):null
+  };
+  const key=`irt_log_${currentProfile?.id}`;
+  const logs=[];
+  try{logs.push(...JSON.parse(localStorage.getItem(key)||"[]"));}catch(e){}
+  logs.push(entry);
+  try{localStorage.setItem(key,JSON.stringify(logs));}catch(e){}
+  const btn=document.getElementById("irt-log-save-btn");
+  if(btn){btn.textContent="✓ Enregistré";btn.disabled=true;}
+  showToast("Séance IRT enregistrée");
 }
 
 document.getElementById("irt-home-btn").addEventListener("click",()=>{
@@ -3894,7 +4021,7 @@ function renderSearchResults(){
     t.chapters.some(c=>c.title.toLowerCase().includes(q))
   );
 
-  const matchingIds=DATA.filter(d=>d.text.toLowerCase().includes(q)).slice(0,40);
+  const matchingIds=DATA.filter(d=>d.text.toLowerCase().includes(q)||(getIdentityNote(d.id).toLowerCase().includes(q))).slice(0,40);
   const wids=workedIds();
 
   let html="";
@@ -3918,9 +4045,14 @@ function renderSearchResults(){
       const isWorked=wids.has(d.id);
       const isChecked=searchChecked.has(d.id);
       const isPinned=pinnedIds.has(d.id);
-      return`<div class="id-row${isWorked?" worked":isChecked?" checked":""}" data-search-id="${d.id}" style="margin-bottom:4px;">
+      const note=getIdentityNote(d.id);
+      const notePreview=note.trim()?`<div style="font-size:11px;color:var(--text-faint);margin-top:3px;font-style:italic;line-height:1.4;">📝 ${note.slice(0,100)}${note.length>100?"…":""}</div>`:"";
+      return`<div class="id-row${isWorked?" worked":isChecked?" checked":""}" data-search-id="${d.id}" style="margin-bottom:4px;${notePreview?"align-items:flex-start;padding-top:10px;padding-bottom:10px;":""}">
         <div class="id-check"><i class="ti ti-check check-icon"></i></div>
-        <span class="id-text">${d.text}</span>
+        <div style="flex:1;min-width:0;">
+          <span class="id-text">${d.text}</span>
+          ${notePreview}
+        </div>
         <span style="font-size:10px;color:var(--text-faint);flex-shrink:0;margin-right:4px;">${d.cat}</span>
         ${isWorked
           ? `<button title="Retirer la validation" onclick="event.stopPropagation();unvalidateId(${d.id});" style="background:none;border:none;cursor:pointer;font-size:12px;color:var(--red-text);opacity:0.6;flex-shrink:0;padding:2px 4px;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.6">↩</button>`
@@ -4004,7 +4136,7 @@ function renderSearchResults(){
       setHomeTab("pinned");
       setTimeout(()=>showToast(`✓ ${newIds.length} identité${newIds.length>1?"s":""} validée${newIds.length>1?"s":""} — dans ta liste`),150);
       renderHomeStats();
-    }catch(e){showToast("Erreur sauvegarde");}
+    }catch(e){showToast("Quelque chose a bloqué — réessaie");}
   });
 }
 document.getElementById("home-switch-btn").addEventListener("click",()=>{currentProfile=null;SESSIONS=[];checked.clear();pinnedIds.clear();reviewDates={};showScreen("profile-screen");loadProfiles();});
@@ -4021,6 +4153,11 @@ document.querySelectorAll(".home-mobile-tab").forEach(btn=>{
 
 // Home top nav
 function setHomeTab(tab){
+  if(journalEditing&&tab!=="journal"){
+    const hasUnsaved=JOURNAL_QUESTIONS.some(q=>{const el=document.getElementById(`jq_${q.id}`);return el&&el.value.trim().length>0;});
+    if(hasUnsaved&&!confirm("Tu as du contenu non sauvegardé dans le journal. Quitter quand même ?"))return;
+    journalEditing=false;
+  }
   if(tab!=="irt"&&tab!=="objectives")lastHomeTab=tab;
   document.querySelectorAll(".home-sidebar-btn").forEach(b=>b.classList.remove("active"));
   const sideBtn=document.getElementById("home-"+tab+"-btn");
@@ -4031,7 +4168,7 @@ function setHomeTab(tab){
 
   // Tabs qui n'ont pas de grille
   if(tab==="irt"){openIrtScreen();return;}
-  if(tab==="objectives"){startOnboarding();return;}
+  if(tab==="objectives"){showObjectivesPanel();return;}
 
   // Setup commun à tous les autres onglets
   grid.style.display="flex";
@@ -4081,9 +4218,9 @@ async function submitProposal(){
   const inp=document.getElementById("proposal-input");
   if(!inp)return;
   const t=inp.value.trim();
-  if(!t){showToast("⚠️ Entrez une identité");return;}
-  if(!t.toLowerCase().startsWith("je suis ")){showToast("⚠️ Format : Je suis [participe passé]");return;}
-  if(t.toLowerCase()==="je suis "){showToast("⚠️ Complétez l'identité");return;}
+  if(!t){showToast("Écris l'identité avant d'envoyer");return;}
+  if(!t.toLowerCase().startsWith("je suis ")){showToast("Format attendu : Je suis [participe passé]");return;}
+  if(t.toLowerCase()==="je suis "){showToast("Complète la phrase — Je suis…");return;}
   const cat=document.getElementById("proposal-cat")?.value||null;
   const role=document.getElementById("proposal-role")?.value||null;
   const depthRaw=document.getElementById("proposal-depth")?.value;
@@ -4098,12 +4235,12 @@ async function submitProposal(){
       headers:{"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"application/json","Prefer":"return=minimal"},
       body:JSON.stringify(payload)
     });
-    showToast("✓ Proposition envoyée !");
+    showToast("Proposition reçue — merci");
     inp.value="Je suis ";
     const catEl=document.getElementById("proposal-cat");const roleEl=document.getElementById("proposal-role");const depEl=document.getElementById("proposal-depth");
     if(catEl)catEl.value="";if(roleEl)roleEl.value="";if(depEl)depEl.value="";
     document.getElementById("proposal-form").style.display="none";
-  }catch(e){showToast("Erreur lors de l'envoi");}
+  }catch(e){showToast("Envoi impossible — vérifie ta connexion");}
 }
 
 async function proposerIdentite(texte){
@@ -4124,8 +4261,44 @@ async function proposerIdentite(texte){
       headers:{"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"application/json","Prefer":"return=minimal"},
       body:JSON.stringify({text:t,profile_id:currentProfile?.id||null,status:"pending"})
     });
-    showToast("✓ Proposition envoyée !");
-  }catch(e){showToast("Erreur lors de l'envoi");}
+    showToast("Proposition reçue — merci");
+  }catch(e){showToast("Envoi impossible — vérifie ta connexion");}
+}
+
+/* ===== NOTES PAR IDENTITÉ ===== */
+function getIdentityNote(identityId){
+  const key=`identity_note_${currentProfile?.id}_${identityId}`;
+  try{return localStorage.getItem(key)||"";}catch(e){return"";}
+}
+function saveIdentityNote(identityId,text){
+  const key=`identity_note_${currentProfile?.id}_${identityId}`;
+  try{localStorage.setItem(key,text);}catch(e){}
+}
+function toggleNotePanel(identityId){
+  const panel=document.getElementById(`note-panel-${identityId}`);
+  if(!panel)return;
+  const isOpen=panel.style.display!=="none";
+  panel.style.display=isOpen?"none":"block";
+  if(!isOpen){
+    const ta=document.getElementById(`note-ta-${identityId}`);
+    if(ta)ta.focus();
+  }
+}
+function saveNoteFromPanel(identityId){
+  const ta=document.getElementById(`note-ta-${identityId}`);
+  if(!ta)return;
+  saveIdentityNote(identityId,ta.value);
+  const btn=document.getElementById(`note-save-${identityId}`);
+  if(btn){btn.textContent="✓ Enregistré";btn.disabled=true;setTimeout(()=>{if(btn){btn.textContent="Enregistrer";btn.disabled=false;}},1800);}
+}
+function noteCardHtml(d){
+  const note=getIdentityNote(d.id);
+  const hasNote=note.trim().length>0;
+  return`<div id="note-panel-${d.id}" style="display:none;margin-top:8px;padding-top:8px;border-top:1px solid var(--border);">
+    <textarea id="note-ta-${d.id}" rows="3" placeholder="Ajoute une note sur cette identité…" oninput="document.getElementById('note-save-${d.id}').textContent='Enregistrer';document.getElementById('note-save-${d.id}').disabled=false;" style="width:100%;padding:9px 12px;border:1px solid var(--border-md);border-radius:var(--radius);background:var(--surface2);color:var(--text);font-size:12px;font-family:inherit;resize:vertical;outline:none;line-height:1.5;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border-md)'">${note}</textarea>
+    <button id="note-save-${d.id}" onclick="saveNoteFromPanel(${d.id})" style="margin-top:6px;padding:5px 14px;border-radius:var(--radius);border:1px solid var(--border-md);background:transparent;color:var(--text-faint);font-size:11px;font-family:inherit;cursor:pointer;">Enregistrer</button>
+  </div>
+  ${hasNote?`<div id="note-preview-${d.id}" style="margin-top:6px;font-size:11px;color:var(--text-faint);line-height:1.5;white-space:pre-wrap;font-style:italic;">${note.slice(0,120)}${note.length>120?"…":""}</div>`:`<div id="note-preview-${d.id}"></div>`}`;
 }
 
 function renderPinnedSearch(query){
@@ -4218,13 +4391,15 @@ function renderPinnedTab(){
 
   // État vide : appel à l'action clair
   if(pinnedIds.size===0){
-    grid.innerHTML=`<div style="text-align:center;padding:2.5rem 1rem 1rem;color:var(--text-muted);">
-      <div style="font-size:3rem;margin-bottom:1rem;">📋</div>
-      <div style="font-size:1.1rem;font-weight:600;margin-bottom:0.5rem;color:var(--text);">Ta liste est vide</div>
-      <div style="font-size:0.85rem;color:var(--text-faint);margin-bottom:2rem;line-height:1.7;">Épingle des identités à travailler depuis un scan ou le dictionnaire.<br>Elles apparaîtront ici pour que tu puisses les valider une par une.</div>
-      <div style="display:flex;flex-direction:column;gap:10px;max-width:280px;margin:0 auto;">
-        <button onclick="showScreen('scan-screen');renderScan();" style="padding:12px 20px;border-radius:var(--radius-lg);border:1px solid var(--accent);background:rgba(200,184,154,0.08);color:var(--accent);font-size:0.9rem;font-family:inherit;cursor:pointer;font-weight:600;">🔍 Scanner un thème</button>
-        <button onclick="setHomeTab('reconnexion')" style="padding:12px 20px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text);font-size:0.9rem;font-family:inherit;cursor:pointer;">🌀 Voir mes thèmes</button>
+    grid.innerHTML=`<div style="padding:2rem 0 1rem;">
+      <div style="text-align:center;padding:2rem 1rem;border:1px dashed var(--border-md);border-radius:var(--radius-lg);margin-bottom:1.5rem;">
+        <div style="font-size:2.5rem;margin-bottom:0.75rem;">📌</div>
+        <div style="font-size:1rem;font-weight:600;margin-bottom:0.4rem;color:var(--text);">Ta liste de travail est vide</div>
+        <div style="font-size:0.83rem;color:var(--text-faint);line-height:1.7;max-width:300px;margin:0 auto 1.25rem;">C'est ici que tu rassembles les identités que tu veux travailler — une par une, à ton rythme. Pour commencer, explore un thème ou utilise le diagnostic.</div>
+        <div style="display:flex;flex-direction:column;gap:8px;max-width:260px;margin:0 auto;">
+          <button onclick="setHomeTab('reconnexion')" style="padding:11px 18px;border-radius:var(--radius-lg);border:1px solid var(--accent);background:rgba(200,184,154,0.08);color:var(--accent);font-size:0.88rem;font-family:inherit;cursor:pointer;font-weight:600;">🌀 Explorer les thèmes</button>
+          <button onclick="setHomeTab('diagnostic')" style="padding:11px 18px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text);font-size:0.88rem;font-family:inherit;cursor:pointer;">🔍 Faire le diagnostic</button>
+        </div>
       </div>
     </div>${searchSection}`;
     setTimeout(()=>{const inp=document.getElementById("pinned-search-input");if(inp)inp.focus();},50);
@@ -4258,14 +4433,19 @@ function renderPinnedTab(){
     html+=`<div style="margin-bottom:1.75rem;">
       <div style="font-size:11px;font-weight:600;color:var(--text-faint);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:0.75rem;">À travailler — ${toWork.length}</div>`;
     toWork.forEach(d=>{
-      html+=`<div style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--surface);border:1px solid var(--border-md);border-radius:var(--radius);margin-bottom:8px;">
-        <span style="width:7px;height:7px;border-radius:50%;background:${depthColor(d.depth)};flex-shrink:0;"></span>
-        <div style="flex:1;min-width:0;">
-          <div style="font-size:0.9rem;font-weight:500;">${d.text}</div>
-          <div style="font-size:10px;color:var(--text-faint);margin-top:2px;">${d.cat} · ${d.role==="source"?"source":d.role==="coping"?"coping":"verdict"}</div>
+      const hasNote=getIdentityNote(d.id).trim().length>0;
+      html+=`<div style="padding:12px 14px;background:var(--surface);border:1px solid var(--border-md);border-radius:var(--radius);margin-bottom:8px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="width:7px;height:7px;border-radius:50%;background:${depthColor(d.depth)};flex-shrink:0;"></span>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:0.9rem;font-weight:500;">${d.text}</div>
+            <div style="font-size:10px;color:var(--text-faint);margin-top:2px;">${d.cat} · ${d.role==="source"?"source":d.role==="coping"?"coping":"verdict"}</div>
+          </div>
+          <button onclick="toggleNotePanel(${d.id})" title="Note" style="background:none;border:none;cursor:pointer;font-size:0.85rem;flex-shrink:0;opacity:${hasNote?0.9:0.3};transition:opacity 0.15s;" onmouseenter="this.style.opacity=0.9" onmouseleave="this.style.opacity=${hasNote?0.9:0.3}">📝</button>
+          <button onclick="validateFromDico(${d.id},this).then(()=>{renderPinnedTab();showToast('✓ Validée');})" style="font-size:0.72rem;color:var(--green-text);background:var(--green-bg);border:1px solid var(--green-border);border-radius:var(--radius);padding:5px 11px;flex-shrink:0;font-weight:600;cursor:pointer;font-family:inherit;transition:opacity 0.15s;" onmouseenter="this.style.opacity=0.75" onmouseleave="this.style.opacity=1">✓ Valider</button>
+          <button onclick="togglePin(${d.id}).then(()=>renderPinnedTab());" style="background:none;border:none;cursor:pointer;font-size:1rem;opacity:0.3;flex-shrink:0;transition:opacity 0.15s;" onmouseenter="this.style.opacity=0.8" onmouseleave="this.style.opacity=0.3" title="Retirer de la liste">✕</button>
         </div>
-        <button onclick="validateFromDico(${d.id},this).then(()=>{renderPinnedTab();showToast('✓ Validée');})" style="font-size:0.72rem;color:var(--green-text);background:var(--green-bg);border:1px solid var(--green-border);border-radius:var(--radius);padding:5px 11px;flex-shrink:0;font-weight:600;cursor:pointer;font-family:inherit;transition:opacity 0.15s;" onmouseenter="this.style.opacity=0.75" onmouseleave="this.style.opacity=1">✓ Valider</button>
-        <button onclick="togglePin(${d.id}).then(()=>renderPinnedTab());" style="background:none;border:none;cursor:pointer;font-size:1rem;opacity:0.3;flex-shrink:0;transition:opacity 0.15s;" onmouseenter="this.style.opacity=0.8" onmouseleave="this.style.opacity=0.3" title="Retirer de la liste">✕</button>
+        ${noteCardHtml(d)}
       </div>`;
     });
     html+=`</div>`;
@@ -4281,11 +4461,16 @@ function renderPinnedTab(){
       </div>
       <div id="pinned-worked-list" style="display:${showWorked?"flex":"none"};flex-direction:column;gap:6px;">`;
     worked.forEach(d=>{
-      html+=`<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--green-bg);border:1px solid var(--green-border);border-radius:var(--radius);opacity:0.8;">
-        <span style="color:var(--green-text);font-size:0.85rem;flex:1;">${d.text}</span>
-        <span style="font-size:0.7rem;color:var(--text-faint);background:var(--surface2);padding:2px 6px;border-radius:4px;flex-shrink:0;">${d.cat}</span>
-        <button onclick="unvalidateId(${d.id});" title="Retirer la validation" style="font-size:0.72rem;background:none;border:none;color:var(--red-text);border-radius:5px;padding:3px 6px;cursor:pointer;flex-shrink:0;opacity:0.6;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.6">↩</button>
-        <button onclick="togglePin(${d.id}).then(()=>renderPinnedTab());" style="background:none;border:none;cursor:pointer;font-size:0.85rem;opacity:0.3;flex-shrink:0;transition:opacity 0.15s;" onmouseenter="this.style.opacity=0.7" onmouseleave="this.style.opacity=0.3" title="Retirer de la liste">✕</button>
+      const hasNote=getIdentityNote(d.id).trim().length>0;
+      html+=`<div style="padding:10px 12px;background:var(--green-bg);border:1px solid var(--green-border);border-radius:var(--radius);opacity:0.9;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="color:var(--green-text);font-size:0.85rem;flex:1;">${d.text}</span>
+          <span style="font-size:0.7rem;color:var(--text-faint);background:var(--surface2);padding:2px 6px;border-radius:4px;flex-shrink:0;">${d.cat}</span>
+          <button onclick="toggleNotePanel(${d.id})" title="Note" style="background:none;border:none;cursor:pointer;font-size:0.8rem;flex-shrink:0;opacity:${hasNote?0.9:0.3};transition:opacity 0.15s;" onmouseenter="this.style.opacity=0.9" onmouseleave="this.style.opacity=${hasNote?0.9:0.3}">📝</button>
+          <button onclick="unvalidateId(${d.id});" title="Retirer la validation" style="font-size:0.72rem;background:none;border:none;color:var(--red-text);border-radius:5px;padding:3px 6px;cursor:pointer;flex-shrink:0;opacity:0.6;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.6">↩</button>
+          <button onclick="togglePin(${d.id}).then(()=>renderPinnedTab());" style="background:none;border:none;cursor:pointer;font-size:0.85rem;opacity:0.3;flex-shrink:0;transition:opacity 0.15s;" onmouseenter="this.style.opacity=0.7" onmouseleave="this.style.opacity=0.3" title="Retirer de la liste">✕</button>
+        </div>
+        ${noteCardHtml(d)}
       </div>`;
     });
     html+=`</div></div>`;
@@ -4505,7 +4690,7 @@ function renderDiagnosticInline(){
     document.getElementById("diag-validate-btn")?.addEventListener("click",async(e)=>{
       const vbtn=e.currentTarget;vbtn.disabled=true;vbtn.textContent="Sauvegarde…";
       const newIds=[...diagChecked].filter(id=>!workedIds().has(id));
-      if(!newIds.length){vbtn.disabled=false;vbtn.textContent="✓ Valider les identités sélectionnées";showToast("Aucune nouvelle identité à valider");return;}
+      if(!newIds.length){vbtn.disabled=false;vbtn.textContent="✓ Valider les identités sélectionnées";showToast("Ces identités ont déjà été travaillées");return;}
       const date=new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
       try{
         const existing=SESSIONS.find(s=>s.date===date);
@@ -4526,7 +4711,7 @@ function renderDiagnosticInline(){
         renderHomeStats();
         // Rafraîchir les résultats pour afficher les badges "fait"
         document.getElementById("diag-btn").click();
-      }catch(e){vbtn.disabled=false;vbtn.textContent="✓ Valider les identités sélectionnées";showToast("Erreur sauvegarde");}
+      }catch(e){vbtn.disabled=false;vbtn.textContent="✓ Valider les identités sélectionnées";showToast("Quelque chose a bloqué — réessaie");}
     });
   });
 }
@@ -4548,6 +4733,7 @@ function renderJournalInline(mode){
   try{entries=JSON.parse(localStorage.getItem(key)||"[]");}catch(e){}
 
   if(mode==="new"){
+    journalEditing=true;
     // New guided entry form
     const questionsHtml=JOURNAL_QUESTIONS.map((q,i)=>`
       <div style="margin-bottom:1.5rem;">
@@ -4565,8 +4751,15 @@ function renderJournalInline(mode){
         <button id="journal-list-btn2" style="flex:1;padding:11px 20px;border-radius:var(--radius-lg);border:1px solid var(--border);background:transparent;color:var(--text-muted);font-size:13px;font-family:inherit;cursor:pointer;">Annuler</button>
         <button id="journal-save-guided" style="flex:2;padding:11px 20px;border-radius:var(--radius-lg);border:1px solid var(--accent);background:transparent;color:var(--accent);font-size:13px;font-family:inherit;cursor:pointer;">Sauvegarder →</button>
       </div>`;
-    document.getElementById("journal-list-btn")?.addEventListener("click",()=>renderJournalInline());
-    document.getElementById("journal-list-btn2")?.addEventListener("click",()=>renderJournalInline());
+    const journalCancelFn=()=>{
+      const hasUnsaved=JOURNAL_QUESTIONS.some(q=>{const el=document.getElementById(`jq_${q.id}`);return el&&el.value.trim().length>0;});
+      if(hasUnsaved){
+        if(!confirm("Tu as du contenu non sauvegardé. Quitter quand même ?"))return;
+      }
+      renderJournalInline();
+    };
+    document.getElementById("journal-list-btn")?.addEventListener("click",journalCancelFn);
+    document.getElementById("journal-list-btn2")?.addEventListener("click",journalCancelFn);
     document.getElementById("journal-save-guided")?.addEventListener("click",()=>{
       const answers={};
       let hasContent=false;
@@ -4585,7 +4778,8 @@ function renderJournalInline(mode){
         type:"guided"
       });
       try{localStorage.setItem(key,JSON.stringify(ents));}catch(e){}
-      showToast("✓ Entrée sauvegardée");
+      journalEditing=false;
+      showToast("Entrée enregistrée");
       renderJournalInline();
     });
     return;
@@ -4697,7 +4891,7 @@ function renderExercisesInline(){
       currentExercise=EXERCISES.find(e=>e.id===row.dataset.exid);
       if(!currentExercise)return;
       if(isExDone(currentExercise.id)){
-        showToast("✓ Exercice déjà complété — tu peux le refaire");
+        showToast("Exercice déjà fait — tu peux le refaire autant que tu veux");
       }
       currentExPart=0;
       renderExerciseDetail();
@@ -4711,7 +4905,7 @@ document.getElementById("home-pinned-btn")?.addEventListener("click",()=>setHome
 document.getElementById("home-journal-btn").addEventListener("click",()=>setHomeTab("journal"));
 document.getElementById("home-exercises-btn").addEventListener("click",()=>setHomeTab("exercises"));
 document.getElementById("home-history-btn")?.addEventListener("click",()=>setHomeTab("history"));
-document.getElementById("home-objectives-btn")?.addEventListener("click",()=>{startOnboarding();});
+document.getElementById("home-objectives-btn")?.addEventListener("click",()=>{showObjectivesPanel();});
 document.getElementById("home-diagnostic-btn")?.addEventListener("click",()=>setHomeTab("diagnostic"));
 document.getElementById("home-dictionnaire-btn")?.addEventListener("click",()=>setHomeTab("dictionnaire"));
 
@@ -4882,9 +5076,73 @@ async function validateFromDico(id,btnEl){
     renderHomeThemes();
     renderDicoBody();
   }catch(e){
-    showToast("Erreur lors de la validation");
+    showToast("Quelque chose a bloqué — réessaie");
     if(btnEl){btnEl.disabled=false;btnEl.textContent="✓ Valider";}
   }
+}
+
+function renderIrtChart(logs){
+  // Filtre les logs ayant avant ET après
+  const pts=logs.filter(l=>l.before!==null&&l.after!==null);
+  if(pts.length<2)return"";
+  const W=320,H=100,PAD={t:12,r:12,b:20,l:24};
+  const cW=W-PAD.l-PAD.r,cH=H-PAD.t-PAD.b;
+  const n=pts.length;
+  const xStep=cW/(n-1);
+  // points avant (rouge atténué) et après (vert)
+  const befPts=pts.map((l,i)=>({x:PAD.l+i*xStep,y:PAD.t+cH-(l.before/10)*cH}));
+  const aftPts=pts.map((l,i)=>({x:PAD.l+i*xStep,y:PAD.t+cH-(l.after/10)*cH}));
+  const poly=arr=>arr.map(p=>`${p.x},${p.y}`).join(" ");
+  // Gridlines à 0,5,10
+  const grids=[0,5,10].map(v=>{
+    const y=PAD.t+cH-(v/10)*cH;
+    return`<line x1="${PAD.l}" y1="${y}" x2="${PAD.l+cW}" y2="${y}" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+    <text x="${PAD.l-4}" y="${y+4}" text-anchor="end" font-size="8" fill="rgba(255,255,255,0.2)">${v}</text>`;
+  }).join("");
+  const befPath=`M${befPts.map(p=>`${p.x},${p.y}`).join("L")}`;
+  const aftPath=`M${aftPts.map(p=>`${p.x},${p.y}`).join("L")}`;
+  const befDots=befPts.map(p=>`<circle cx="${p.x}" cy="${p.y}" r="3" fill="rgba(224,96,96,0.6)"/>`).join("");
+  const aftDots=aftPts.map(p=>`<circle cx="${p.x}" cy="${p.y}" r="3" fill="rgba(141,201,74,0.8)"/>`).join("");
+  return`<div style="margin-top:1rem;margin-bottom:0.5rem;">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;">
+      <span style="font-size:10px;color:var(--text-faint);display:flex;align-items:center;gap:4px;"><span style="display:inline-block;width:12px;height:2px;background:rgba(224,96,96,0.6);border-radius:1px;"></span>Avant</span>
+      <span style="font-size:10px;color:var(--text-faint);display:flex;align-items:center;gap:4px;"><span style="display:inline-block;width:12px;height:2px;background:rgba(141,201,74,0.8);border-radius:1px;"></span>Après</span>
+    </div>
+    <svg width="100%" viewBox="0 0 ${W} ${H}" style="overflow:visible;">
+      ${grids}
+      <path d="${befPath}" fill="none" stroke="rgba(224,96,96,0.5)" stroke-width="1.5" stroke-linejoin="round"/>
+      <path d="${aftPath}" fill="none" stroke="rgba(141,201,74,0.7)" stroke-width="1.5" stroke-linejoin="round"/>
+      ${befDots}${aftDots}
+    </svg>
+  </div>`;
+}
+
+function renderIrtLogsSection(){
+  const key=`irt_log_${currentProfile?.id}`;
+  let logs=[];
+  try{logs=JSON.parse(localStorage.getItem(key)||"[]");}catch(e){}
+  if(!logs.length)return"";
+  const reversed=[...logs].reverse();
+  const chartHtml=renderIrtChart(logs);
+  const rows=reversed.map(l=>{
+    const drop=(l.before!==null&&l.after!==null)?l.before-l.after:null;
+    const dropHtml=drop!==null
+      ?`<span style="font-size:11px;padding:2px 7px;border-radius:10px;background:${drop>0?"var(--green-bg)":drop<0?"var(--red-bg)":"var(--surface2)"};color:${drop>0?"var(--green-text)":drop<0?"var(--red-text)":"var(--text-faint)"};border:1px solid ${drop>0?"var(--green-border)":drop<0?"var(--red-border)":"var(--border)"};">${drop>0?"−"+drop+" pts":drop<0?"+"+Math.abs(drop)+" pts":"stable"}</span>`
+      :"";
+    const scores=(l.before!==null&&l.after!==null)?`<span style="font-size:11px;color:var(--text-faint);">${l.before} → ${l.after}</span>`:"";
+    return`<div style="padding:10px 0;border-bottom:1px solid var(--border);">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px;">
+        <span style="font-size:10px;color:var(--text-faint);">${l.date}</span>
+        <div style="display:flex;align-items:center;gap:6px;">${scores}${dropHtml}</div>
+      </div>
+      <div style="font-size:13px;color:var(--text);line-height:1.5;">${l.identity}</div>
+    </div>`;
+  }).join("");
+  return`<div style="margin-top:2rem;">
+    <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-faint);margin-bottom:0.75rem;display:flex;align-items:center;gap:8px;">🎧 Séances IRT <span style="font-weight:400;font-size:10px;">(${logs.length})</span></div>
+    ${chartHtml}
+    ${rows}
+  </div>`;
 }
 
 function renderHistoryInline(){
@@ -4911,16 +5169,27 @@ function renderHistoryInline(){
     const da=parseFrDate(a),db=parseFrDate(b);
     return(db?db.getTime():0)-(da?da.getTime():0);
   });
-  grid.innerHTML=dates.map(date=>{
+  const totalWorked=new Set(SESSIONS.flatMap(s=>s.ids)).size;
+  grid.innerHTML=`<div style="margin-bottom:1.5rem;">
+    <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-faint);margin-bottom:0.5rem;">Identités traversées</div>
+    <div style="font-size:1.6rem;font-weight:700;">${totalWorked}</div>
+    <div style="font-size:0.78rem;color:var(--text-faint);">sur ${SESSIONS.length} session${SESSIONS.length>1?"s":""}</div>
+  </div>
+  <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-faint);margin-bottom:0.75rem;">Chronologie</div>`
+  +dates.map(date=>{
     const ids=byDate[date];
     const items=ids.map(id=>DATA.find(d=>d.id===id)).filter(Boolean);
-    return`<div style="display:flex;gap:1rem;padding:0.75rem 0;border-bottom:1px solid var(--border);align-items:baseline;">
-      <div style="font-size:11px;color:var(--text-faint);white-space:nowrap;min-width:110px;">${date}</div>
-      <div style="display:flex;flex-wrap:wrap;gap:4px;">
-        ${items.map(d=>`<span style="font-size:11px;padding:2px 8px;border-radius:20px;background:var(--green-bg);color:var(--green-text);border:1px solid var(--green-border);">${d.text.replace("Je suis ","")}</span>`).join("")}
+    return`<div style="padding:0.75rem 0;border-bottom:1px solid var(--border);">
+      <div style="font-size:10px;color:var(--text-faint);margin-bottom:0.5rem;">${date}</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;">
+        ${items.map(d=>`<div style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;background:var(--green-bg);border:1px solid var(--green-border);">
+          <span style="font-size:12px;color:var(--green-text);">${d.text.replace("Je suis ","")}</span>
+          <button onclick="event.stopPropagation();unvalidateId(${d.id}).then(()=>renderHistoryInline());" title="Remettre en jeu" style="background:none;border:none;cursor:pointer;font-size:10px;color:var(--text-faint);padding:0;line-height:1;transition:color 0.15s;" onmouseenter="this.style.color='var(--red-text)'" onmouseleave="this.style.color='var(--text-faint)'">↩</button>
+        </div>`).join("")}
       </div>
     </div>`;
-  }).join("");
+  }).join("")
+  +renderIrtLogsSection();
 }
 
 // Inactivity notification
@@ -5031,10 +5300,10 @@ function renderScan(){
     if(!d)return"";
     const isWorked=wids.has(d.id),isChecked=scanChecked.has(d.id),isPinned=pinnedIds.has(d.id);
     let cls="scan-pill"+(isWorked?" worked":isChecked?" checked":"")+(isPinned?" pinned":"");
-    return`<div class="${cls}" data-scan-id="${d.id}" style="display:inline-flex;align-items:center;gap:5px;">
+    return`<div class="${cls}" data-scan-id="${d.id}" style="display:inline-flex;align-items:center;gap:5px;${isWorked?"cursor:not-allowed;":""}">
       <span class="scan-pill-text">${d.text}</span>
       ${isWorked
-        ? `<span title="Retirer la validation" style="font-size:11px;opacity:0.5;cursor:pointer;flex-shrink:0;transition:opacity 0.15s;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.5" onclick="event.stopPropagation();unvalidateId(${d.id});">↩</span>`
+        ? `<span title="Retirer la validation" style="font-size:11px;opacity:0.45;cursor:pointer;flex-shrink:0;transition:opacity 0.15s;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.45" onclick="event.stopPropagation();unvalidateId(${d.id});">↩</span>`
         : `<span class="scan-pill-pin" data-pin-scan="${d.id}" title="${isPinned?"Retirer de la liste":"+ Ma liste"}" style="font-size:10px;background:${isPinned?"rgba(200,184,154,0.15)":"transparent"};border:1px solid ${isPinned?"rgba(200,184,154,0.4)":"rgba(255,255,255,0.12)"};color:${isPinned?"var(--accent)":"rgba(255,255,255,0.4)"};border-radius:3px;padding:1px 5px;cursor:pointer;flex-shrink:0;transition:all 0.15s;white-space:nowrap;" onclick="event.stopPropagation();togglePin(${d.id}).then(()=>{const p=pinnedIds.has(${d.id});this.style.background=p?'rgba(200,184,154,0.15)':'transparent';this.style.border='1px solid '+(p?'rgba(200,184,154,0.4)':'rgba(255,255,255,0.12)');this.style.color=p?'var(--accent)':'rgba(255,255,255,0.4)';this.textContent=p?'📌':'+';this.title=p?'Retirer de la liste':'+ Ma liste';});">${isPinned?"📌":"+"}</span>`
       }
     </div>`;
@@ -5124,7 +5393,7 @@ function renderScan(){
       entries.push({date,title:`${theme.title} — ${chapter.title}`,note,theme:theme.id,chapter:scanChapterIdx});
       localStorage.setItem(key,JSON.stringify(entries));
       if(input)input.value="";
-      showToast("✓ Note sauvegardée");
+      showToast("Note enregistrée");
     }catch(e){}
   }
 
@@ -5179,7 +5448,7 @@ async function saveScanChecked(){
     }
     newIds.forEach(id=>scheduleReview(id,reviewDates[id]?reviewDates[id].reviewCount+1:0));
     renderHomeThemes();
-  }catch(e){showToast("Erreur sauvegarde");}
+  }catch(e){showToast("Quelque chose a bloqué — réessaie");}
 }
 
 function showScanResults(theme){
@@ -5246,7 +5515,7 @@ document.getElementById("scan-validate-btn")?.addEventListener("click",async(e)=
   if(toPin.length>0){
     showToast(`📌 ${toPin.length} ajoutée${toPin.length>1?"s":""} à ta liste`);
   } else {
-    showToast("✓ Enregistrées");
+    showToast("Séance enregistrée");
   }
 });
 document.getElementById("scan-home-btn")?.addEventListener("click",()=>{
