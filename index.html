@@ -3125,7 +3125,7 @@ function renderProfileGrid(profiles){
   list.innerHTML=profiles.map((p,i)=>{
     const pal=palettes[i%palettes.length];
     const ini=p.name.slice(0,2).toUpperCase();
-    return`<div class="profile-card" data-id="${p.id}" data-name="${p.name}" data-hash="${p.pin_hash}">
+    return`<div class="profile-card" data-id="${p.id}" data-name="${p.name}" data-hash="${p.pin_hash||""}">
       <button class="profile-delete-btn" data-id="${p.id}" data-name="${p.name}" title="Supprimer">✕</button>
       <div class="profile-avatar" style="background:${pal.bg};border-color:${pal.border};color:${pal.text};width:42px;height:42px;font-size:15px;">${ini}</div>
       <div class="profile-name">${p.name}</div>
@@ -5202,13 +5202,24 @@ document.querySelectorAll(".pin-key").forEach(key=>{
     if(pinVal.length>=4)return;
     pinVal+=v;updateDots();
     if(pinVal.length===4){
+      const errEl=document.getElementById("pin-error");
+      const dotsEl=document.getElementById("pin-dots");
+      console.log("[PIN] pinTarget=",JSON.stringify(pinTarget),"pinVal=",pinVal);
       // Cas profil sans hash (créé avant implémentation du PIN) : accès direct
-      if(!pinTarget.hash){await enterProfile(pinTarget.id,pinTarget.name);return;}
-      const hash=await hashPin(pinVal);
-      if(hash===pinTarget.hash){await enterProfile(pinTarget.id,pinTarget.name);}
-      else{
-        const errEl=document.getElementById("pin-error");
-        const dotsEl=document.getElementById("pin-dots");
+      if(!pinTarget.hash){
+        console.log("[PIN] no hash → direct enterProfile");
+        try{await enterProfile(pinTarget.id,pinTarget.name);}
+        catch(e){errEl.textContent="Erreur connexion : "+e.message;console.error("[PIN] enterProfile error",e);}
+        return;
+      }
+      let hash;
+      try{hash=await hashPin(pinVal);console.log("[PIN] computed hash=",hash,"stored hash=",pinTarget.hash,"match=",hash===pinTarget.hash);}
+      catch(e){errEl.textContent="Erreur système — réessaie";console.error("[PIN] hashPin error",e);pinVal="";updateDots();return;}
+      if(hash===pinTarget.hash){
+        console.log("[PIN] hash OK → enterProfile");
+        try{await enterProfile(pinTarget.id,pinTarget.name);}
+        catch(e){errEl.textContent="Erreur connexion : "+e.message;console.error("[PIN] enterProfile error",e);}
+      }else{
         errEl.textContent="Code incorrect — réessaie";
         dotsEl.classList.add("shake");
         setTimeout(()=>{
