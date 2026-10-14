@@ -172,6 +172,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
 .home-theme-bar{width:36px;height:3px;background:var(--surface3);border-radius:2px;overflow:hidden;}
 .home-theme-bar-fill{height:100%;border-radius:2px;background:var(--accent);}
 
+.prob-id-row{transition:background 0.1s;border-radius:var(--radius);}
+.prob-id-row:not(.worked):hover{background:var(--surface3);}
+.prob-theme{margin-bottom:0;}
+.prob-theme-header:hover{opacity:0.92;}
+
 .home-footer{display:flex;gap:12px;align-items:center;}
 .home-footer-btn{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--radius);border:1px solid var(--border);background:none;color:var(--text-faint);font-size:12px;font-family:inherit;cursor:pointer;}
 .home-footer-btn:hover{color:var(--text-muted);}
@@ -573,7 +578,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
     <div class="home-sidebar-nav">
       <button class="home-sidebar-btn active" id="home-pinned-btn" style="font-weight:600;color:var(--accent);">📌 Ma liste</button>
       <div style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-faint);padding:12px 14px 4px;">Introspection</div>
-      <button class="home-sidebar-btn" id="home-reconnexion-btn">🌀 Reconnexion</button>
+      <button class="home-sidebar-btn" id="home-reconnexion-btn">🗂 Problématiques</button>
       <button class="home-sidebar-btn" id="home-diagnostic-btn">🔍 Diagnostic</button>
       <button class="home-sidebar-btn" id="home-dictionnaire-btn">📖 Dictionnaire</button>
       <div style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-faint);padding:12px 14px 4px;">Travail</div>
@@ -595,7 +600,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
     </div>
     <div class="home-mobile-tabs">
       <button class="home-mobile-tab active" data-tab="pinned" style="font-weight:600;">📌 Ma liste</button>
-      <button class="home-mobile-tab" data-tab="reconnexion">🌀 Reconnexion</button>
+      <button class="home-mobile-tab" data-tab="reconnexion">🗂 Problématiques</button>
       <button class="home-mobile-tab" data-tab="diagnostic">🔍 Diagnostic</button>
       <button class="home-mobile-tab" data-tab="dictionnaire">📖 Dico</button>
       <button class="home-mobile-tab" data-tab="exercises">⚡ Exercices</button>
@@ -3926,6 +3931,105 @@ function renderThemeRow(t,badge){
   </div>`;
 }
 
+// Etat accordion : quel thème est ouvert
+let expandedThemeId=null;
+
+// Retourne les DATA entries pour un thème donné (via ses chapitres)
+function getThemeIdentities(t){
+  const items=[];
+  const seen=new Set();
+  t.chapters.forEach(ch=>{
+    ch.ids.forEach(word=>{
+      const d=DATA.find(x=>x.text==='Je suis '+word);
+      if(d&&!seen.has(d.id)){seen.add(d.id);items.push({...d,_chapter:ch.title});}
+    });
+  });
+  return items;
+}
+
+function renderProblematiquesTheme(t,isExpanded,badge){
+  const pct=getThemePct(t);
+  const wids=workedIds();
+  const ids=getThemeIdentities(t);
+  const workedCount=ids.filter(d=>wids.has(d.id)).length;
+  const total=ids.length;
+
+  // Header du thème
+  let html=`<div class="prob-theme" id="prob-theme-${t.id}">
+    <div class="prob-theme-header" onclick="toggleProblematique('${t.id}')" style="display:flex;align-items:center;gap:12px;padding:13px 16px;cursor:pointer;border-radius:${isExpanded?"var(--radius-lg) var(--radius-lg) 0 0":"var(--radius-lg)"};background:var(--surface2);border:1px solid ${isExpanded?"var(--accent)":"var(--border)"};transition:border-color 0.2s,border-radius 0.15s;">
+      <span style="font-size:20px;width:26px;flex-shrink:0;">${t.icon}</span>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:13px;font-weight:600;color:var(--text);">${t.title}</div>
+        <div style="font-size:10px;color:var(--text-faint);margin-top:1px;">${t.desc}</div>
+        ${pct>0?`<div style="height:3px;background:var(--surface3);border-radius:2px;overflow:hidden;margin-top:5px;"><div style="height:100%;width:${pct}%;background:var(--accent);border-radius:2px;"></div></div>`:""}
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+        ${badge?`<span style="font-size:10px;background:rgba(200,184,154,0.12);border:1px solid rgba(200,184,154,0.3);color:var(--accent);border-radius:20px;padding:2px 8px;">${badge}</span>`:""}
+        ${total?`<span style="font-size:11px;color:${workedCount===total?"var(--green-text)":"var(--text-faint)"};">${workedCount}/${total}</span>`:""}
+        <span style="font-size:14px;color:var(--text-faint);transform:rotate(${isExpanded?"180":"0"}deg);transition:transform 0.2s;">▾</span>
+      </div>
+    </div>`;
+
+  if(isExpanded&&ids.length){
+    // Grouper par rôle source / verdict / coping
+    const byRole={source:[],verdict:[],coping:[]};
+    ids.forEach(d=>{byRole[d.role]?byRole[d.role].push(d):byRole.source.push(d);});
+    const roleLabel={source:"Identités racines",verdict:"Jugements intériorisés",coping:"Mécanismes d'adaptation"};
+    const roleColors={source:"var(--red-text)",verdict:"var(--purple-text)",coping:"var(--accent)"};
+
+    html+=`<div class="prob-theme-body" style="border:1px solid var(--accent);border-top:none;border-radius:0 0 var(--radius-lg) var(--radius-lg);overflow:hidden;">`;
+
+    ["source","verdict","coping"].forEach(role=>{
+      const group=byRole[role];
+      if(!group.length)return;
+      html+=`<div style="padding:0 4px;">
+        <div style="font-size:10px;color:${roleColors[role]};font-weight:600;letter-spacing:0.5px;padding:8px 12px 4px;text-transform:uppercase;">${roleLabel[role]}</div>`;
+      group.forEach(d=>{
+        const isWorked=wids.has(d.id);
+        const isPinned=pinnedIds.has(d.id);
+        const pinTitle=isPinned?"Retirer de la liste":"Ajouter à ma liste";
+        const pinLabel=isPinned?"📌":"+ Liste";
+        const pinBg=isPinned?"rgba(200,184,154,0.12)":"none";
+        const pinBorder=isPinned?"rgba(200,184,154,0.35)":"rgba(200,184,154,0.15)";
+        const pinColor=isPinned?"var(--accent)":"var(--text-faint)";
+        const rowColor=isWorked?"var(--text-muted)":"var(--text)";
+        const rowCursor=isWorked?"opacity:0.55;":"cursor:pointer;";
+        html+=`<div class="prob-id-row${isWorked?" worked":""}" data-prob-id="${d.id}" style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:var(--radius);margin:2px 0;${rowCursor}">
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:12.5px;color:${rowColor};">${d.text}</div>
+          </div>
+          ${isWorked
+            ? `<span style="font-size:10px;background:var(--green-bg);color:var(--green-text);border-radius:20px;padding:2px 8px;flex-shrink:0;">✓ Travaillée</span>
+               <button title="Annuler" onclick="event.stopPropagation();unvalidateId(${d.id});" style="background:none;border:none;cursor:pointer;font-size:11px;color:var(--text-faint);padding:2px 4px;flex-shrink:0;">↩</button>`
+            : `<button onclick="event.stopPropagation();togglePin(${d.id}).then(()=>renderHomeThemes());" style="flex-shrink:0;font-size:0.7rem;background:${pinBg};border:1px solid ${pinBorder};color:${pinColor};border-radius:var(--radius);padding:3px 9px;cursor:pointer;font-family:inherit;transition:all 0.15s;" title="${pinTitle}">${pinLabel}</button>
+               <button onclick="event.stopPropagation();validateFromDico(${d.id});" style="flex-shrink:0;font-size:0.7rem;background:none;border:1px solid rgba(100,180,100,0.25);color:var(--green-text);border-radius:var(--radius);padding:3px 9px;cursor:pointer;font-family:inherit;transition:all 0.15s;" title="Marquer comme travaillée">✓</button>`
+          }
+        </div>`;
+      });
+      html+="</div>";
+    });
+
+    // Footer : lancer scan complet
+    html+=`<div style="padding:10px 12px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+      <span style="font-size:11px;color:var(--text-faint);">${total} identités dans ce thème</span>
+      <button onclick="event.stopPropagation();scanThemeId='${t.id}';scanChapterIdx=0;scanChecked.clear();document.getElementById('scan-profile-name').textContent=currentProfile?currentProfile.name:'';showScreen('scan-screen');renderScan();" style="font-size:0.75rem;background:none;border:1px solid rgba(200,184,154,0.25);color:var(--accent);border-radius:var(--radius);padding:5px 12px;cursor:pointer;font-family:inherit;" onmouseenter="this.style.background='rgba(200,184,154,0.08)'" onmouseleave="this.style.background='none'">Scan guidé →</button>
+    </div>`;
+    html+="</div>";
+  }
+
+  html+="</div>";
+  return html;
+}
+
+function toggleProblematique(tid){
+  expandedThemeId=(expandedThemeId===tid)?null:tid;
+  renderHomeThemes();
+  // Scroll vers le thème ouvert
+  if(expandedThemeId){
+    setTimeout(()=>{const el=document.getElementById("prob-theme-"+expandedThemeId);if(el)el.scrollIntoView({behavior:"smooth",block:"nearest"});},80);
+  }
+}
+
 function renderHomeThemes(){
   const grid=document.getElementById("home-themes-grid");
   if(!grid){return;}
@@ -3933,70 +4037,42 @@ function renderHomeThemes(){
 
   const objThemeIds=getObjectiveThemeIds();
   const hasObjectives=objThemeIds.size>0;
+  const objs=currentProfile?.objectives||[];
 
   if(hasObjectives){
-    // Section 1 : thèmes liés aux objectifs
     const objThemes=SCAN_THEMES.filter(t=>objThemeIds.has(t.id));
-    // Associer le badge objectif (prendre le 1er objectif qui match)
-    const objs=currentProfile.objectives||[];
-    html+=`<div class="layer-section">
-      <div class="layer-header"><span class="layer-label">🎯 Tes thèmes prioritaires</span></div>`;
+    html+=`<div style="font-size:10px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;font-weight:600;">🎯 Prioritaires</div>`;
     objThemes.forEach(t=>{
-      // Trouver l'objectif le plus pertinent pour ce thème
       const matchObj=objs.find(o=>(o.topics||[]).some(tp=>
-        t.title.toLowerCase().includes(tp.toLowerCase())||
-        tp.toLowerCase().includes(t.title.toLowerCase())
+        t.title.toLowerCase().includes(tp.toLowerCase())||tp.toLowerCase().includes(t.title.toLowerCase())
       ))||objs[0];
       const badge=matchObj?`${matchObj.emoji} ${matchObj.label}`:null;
-      html+=renderThemeRow(t,badge);
+      html+=renderProblematiquesTheme(t,expandedThemeId===t.id,badge);
+      html+="<div style='height:6px;'></div>";
     });
-    html+="</div>";
-
-    // Séparateur
-    html+=`<div class="themes-other-sep">Tous les thèmes</div>`;
-
-    // Section 2 : tous les autres thèmes (non liés aux objectifs), sans verrous
+    html+=`<div style="font-size:10px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin:14px 0 10px;font-weight:600;">Tous les thèmes</div>`;
     const otherThemes=SCAN_THEMES.filter(t=>!objThemeIds.has(t.id));
-    if(otherThemes.length){
-      html+="<div class='layer-section'>";
-      otherThemes.forEach(t=>{html+=renderThemeRow(t,null);});
-      html+="</div>";
-    }
+    otherThemes.forEach(t=>{
+      html+=renderProblematiquesTheme(t,expandedThemeId===t.id,null);
+      html+="<div style='height:6px;'></div>";
+    });
   } else {
-    // Pas d'objectifs définis → CTA + affichage flat
-    html+=`<div style="background:rgba(200,184,154,0.05);border:1px solid rgba(200,184,154,0.2);border-radius:var(--radius-lg);padding:14px 16px;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;gap:12px;">
+    html+=`<div style="background:rgba(200,184,154,0.05);border:1px solid rgba(200,184,154,0.2);border-radius:var(--radius-lg);padding:14px 16px;margin-bottom:1.2rem;display:flex;align-items:center;justify-content:space-between;gap:12px;">
       <div>
         <div style="font-size:0.82rem;font-weight:600;color:var(--accent);margin-bottom:2px;">🎯 Définis tes objectifs</div>
-        <div style="font-size:0.75rem;color:var(--text-faint);line-height:1.5;">Pour voir tes thèmes prioritaires en premier et mieux orienter ton travail.</div>
+        <div style="font-size:0.75rem;color:var(--text-faint);line-height:1.5;">Pour voir tes thèmes prioritaires et mieux orienter ton travail.</div>
       </div>
       <button onclick="startOnboarding()" style="flex-shrink:0;padding:7px 14px;border-radius:var(--radius);border:1px solid var(--accent);background:rgba(200,184,154,0.08);color:var(--accent);font-size:0.78rem;font-family:inherit;cursor:pointer;font-weight:600;">Configurer</button>
-    </div>
-    <div class="layer-section">
-      <div class="layer-header"><span class="layer-label">Tous les thèmes</span></div>`;
-    SCAN_THEMES.forEach(t=>{html+=renderThemeRow(t,null);});
-    html+="</div>";
+    </div>`;
+    SCAN_THEMES.forEach(t=>{
+      html+=renderProblematiquesTheme(t,expandedThemeId===t.id,null);
+      html+="<div style='height:6px;'></div>";
+    });
   }
 
   grid.innerHTML=html;
-
-  // Unpin buttons
-  grid.querySelectorAll("[data-pin-rm]").forEach(btn=>{
-    btn.addEventListener("click",(e)=>{
-      e.stopPropagation();
-      const id=+btn.dataset.pinRm;
-      pinnedIds.delete(id);
-      savePinned();
-      renderHomeThemes();
-    });
-  });
-  grid.querySelectorAll(".home-theme-row[data-tid]").forEach(row=>{
-    row.addEventListener("click",()=>{
-      scanThemeId=row.dataset.tid;scanChapterIdx=0;scanChecked.clear();
-      document.getElementById("scan-profile-name").textContent=currentProfile?currentProfile.name:"";
-      showScreen("scan-screen");
-      renderScan();
-    });
-  });
+  grid.style.display="flex";
+  grid.style.flexDirection="column";
 }
 
 
@@ -4176,7 +4252,7 @@ function setHomeTab(tab){
 
   if(tab==="reconnexion"){
     const objs=currentProfile.objectives||[];
-    document.getElementById("home-sub").textContent=objs.length?"Tes thèmes de travail":"Explore les thèmes de reconnexion";
+    document.getElementById("home-sub").textContent=objs.length?"Tes problématiques de travail":"Explore les problématiques";
     if(srch){srch.style.display="block";srch.value="";homeSearchQuery="";}
     renderHomeStats();
     renderHomeThemes();
