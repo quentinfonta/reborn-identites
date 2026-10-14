@@ -578,7 +578,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
     <div class="home-sidebar-nav">
       <button class="home-sidebar-btn active" id="home-pinned-btn" style="font-weight:600;color:var(--accent);">📌 Ma liste</button>
       <div style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-faint);padding:12px 14px 4px;">Introspection</div>
-      <button class="home-sidebar-btn" id="home-reconnexion-btn">🗂 Problématiques</button>
+      <button class="home-sidebar-btn" id="home-reconnexion-btn">🗂 Thèmes</button>
       <button class="home-sidebar-btn" id="home-diagnostic-btn">🔍 Diagnostic</button>
       <button class="home-sidebar-btn" id="home-dictionnaire-btn">📖 Dictionnaire</button>
       <div style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-faint);padding:12px 14px 4px;">Travail</div>
@@ -600,7 +600,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
     </div>
     <div class="home-mobile-tabs">
       <button class="home-mobile-tab active" data-tab="pinned" style="font-weight:600;">📌 Ma liste</button>
-      <button class="home-mobile-tab" data-tab="reconnexion">🗂 Problématiques</button>
+      <button class="home-mobile-tab" data-tab="reconnexion">🗂 Thèmes</button>
       <button class="home-mobile-tab" data-tab="diagnostic">🔍 Diagnostic</button>
       <button class="home-mobile-tab" data-tab="dictionnaire">📖 Dico</button>
       <button class="home-mobile-tab" data-tab="exercises">⚡ Exercices</button>
@@ -3916,21 +3916,6 @@ function renderHomeStats(){
     </div>`:""}`;
 }
 
-function renderThemeRow(t,badge){
-  const pct=getThemePct(t);
-  const badgeHtml=badge?`<span class="theme-obj-badge">${badge}</span>`:`<span class="theme-pct-pill">${pct>0?pct+"%":"—"}</span>`;
-  const pctBar=pct>0?`<div class="home-theme-bar" style="margin-top:3px;"><div class="home-theme-bar-fill" style="width:${pct}%"></div></div>`:"";
-  return`<div class="home-theme-row" data-tid="${t.id}" style="margin-bottom:10px;padding:13px 16px;">
-    <div class="home-theme-icon" style="font-size:20px;width:26px;">${t.icon}</div>
-    <div class="home-theme-info" style="flex:1;min-width:0;">
-      <div class="home-theme-title" style="font-size:13px;">${t.title}</div>
-      <div style="font-size:10px;color:var(--text-faint);margin-top:2px;">${t.desc}</div>
-      ${pctBar}
-    </div>
-    ${badgeHtml}
-  </div>`;
-}
-
 // Etat accordion : quel thème est ouvert
 let expandedThemeId=null;
 
@@ -4252,7 +4237,7 @@ function setHomeTab(tab){
 
   if(tab==="reconnexion"){
     const objs=currentProfile.objectives||[];
-    document.getElementById("home-sub").textContent=objs.length?"Tes problématiques de travail":"Explore les problématiques";
+    document.getElementById("home-sub").textContent=objs.length?"Tes thèmes de travail":"Explore les thèmes";
     if(srch){srch.style.display="block";srch.value="";homeSearchQuery="";}
     renderHomeStats();
     renderHomeThemes();
