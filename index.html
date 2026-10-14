@@ -3062,7 +3062,7 @@ async function confirmOnboarding(){
   try{localStorage.setItem("onb_"+currentProfile.id,JSON.stringify({objectives:currentProfile.objectives,priorityTopics}));}catch(e){}
   try{await sb("profiles?id=eq."+currentProfile.id,{method:"PATCH",body:{topics:priorityTopics},prefer:"return=minimal"});}catch(e){}
   // Écran de transition "Ta première étape"
-  const cont=document.getElementById("onb-objectives");
+  const cont=document.getElementById("onb-objectives-list");
   if(cont){
     const firstObj=selected[0];
     cont.innerHTML=`<div style="display:flex;flex-direction:column;align-items:center;text-align:center;padding:2rem 0;gap:1.25rem;">
@@ -4231,6 +4231,10 @@ function setHomeTab(tab){
   if(tab==="irt"){openIrtScreen();return;}
   if(tab==="objectives"){showObjectivesPanel();return;}
 
+  // Masquer stats/objectifs accueil sur tous les onglets sauf reconnexion
+  const statsBar=document.getElementById("home-stats-bar");
+  const objAccueil=document.getElementById("home-objectives-accueil");
+
   // Setup commun à tous les autres onglets
   grid.style.display="flex";
   grid.style.flexDirection="column";
@@ -4239,9 +4243,13 @@ function setHomeTab(tab){
     const objs=currentProfile.objectives||[];
     document.getElementById("home-sub").textContent=objs.length?"Tes thèmes de travail":"Explore les thèmes";
     if(srch){srch.style.display="block";srch.value="";homeSearchQuery="";}
+    if(statsBar)statsBar.style.display="flex";
+    if(objAccueil)objAccueil.style.display="block";
     renderHomeStats();
     renderHomeThemes();
   } else {
+    if(statsBar)statsBar.style.display="none";
+    if(objAccueil)objAccueil.style.display="none";
     if(srch)srch.style.display="none";
     if(tab==="journal"){
       document.getElementById("home-sub").textContent="Journal";
