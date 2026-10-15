@@ -2751,6 +2751,7 @@ const SCAN_THEMES=[
 
 let DATA=[...DEFAULT_DATA];
 let currentProfile=null,SESSIONS=[],checked=new Set(),reviewDates={},pinnedIds=new Set();
+let currentExercise=null,currentExPart=0;
 let levelFilter=0,query="";
 let scanThemeId=null,scanChapterIdx=0,scanChecked=new Set(),lastHomeTab="reconnexion",journalEditing=false;
 let pinTarget=null,pinVal="";
@@ -3000,8 +3001,21 @@ function showObjectivesPanel(){
       ${recentWorked}
       ${totalWorked>5?`<button onclick="setHomeTab('history')" style="font-size:11px;color:var(--text-faint);background:none;border:none;cursor:pointer;padding:6px 0;text-decoration:underline;">Voir tout l'historique →</button>`:""}
     </div>`:""}
-    <button onclick="startOnboarding()" style="width:100%;padding:12px 20px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text);font-size:0.9rem;font-family:inherit;cursor:pointer;">✏️ Modifier mes objectifs</button>
+    <button onclick="editObjectives()" style="width:100%;padding:12px 20px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text);font-size:0.9rem;font-family:inherit;cursor:pointer;">✏️ Modifier mes objectifs</button>
   </div>`;
+}
+
+function editObjectives(){
+  // Aller directement au récap avec les objectifs courants pré-sélectionnés,
+  // sans repasser par les 8 questions
+  const currentObjs=currentProfile.objectives||[];
+  // Construire onbScoredObjectives depuis OBJECTIVES_MAP (sans score, ordre alphabétique)
+  onbScoredObjectives=OBJECTIVES_MAP.map(obj=>({...obj,score:0}));
+  // Pré-sélectionner les objectifs courants
+  const currentIds=currentObjs.map(o=>o.id||o);
+  onbSelectedIds=new Set(currentIds);
+  renderOnbRecap();
+  showScreen("onboarding-recap-screen");
 }
 
 function showOnbRecap(){
@@ -4927,6 +4941,357 @@ function renderJournalInline(mode){
 }
 
 
+
+/* ──────────────────────────────────────────────
+   EXERCISES — données + helpers
+────────────────────────────────────────────── */
+const EXERCISES=[
+  {
+    id:"lettre_humiliation",
+    icon:"✍️",
+    title:"Lettre à l'humiliation",
+    duration:"15–20 min",
+    parts:[
+      {
+        title:"Ferme les yeux",
+        instruction:"Prends une minute. Rappelle-toi une situation où tu as ressenti de la honte ou de l'humiliation. Pas besoin que ce soit la pire — juste une qui revient parfois.",
+        prompt:null,
+        type:"breathe"
+      },
+      {
+        title:"Décris la scène",
+        instruction:"Écris sans censure : que s'est-il passé ? Qui était là ? Qu'est-ce qu'on t'a dit ou fait ?",
+        prompt:"La scène que je revois…",
+        type:"write"
+      },
+      {
+        title:"Ce que tu as conclu",
+        instruction:"À ce moment-là, qu'as-tu décidé sur toi-même ? Souvent une phrase courte, une « vérité » sur toi.",
+        prompt:"Ce que j'ai décidé sur moi : « Je suis… »",
+        type:"write"
+      },
+      {
+        title:"La vérité d'aujourd'hui",
+        instruction:"Est-ce que ce que tu as décidé était vrai alors ? Est-ce vrai maintenant ? Qu'est-ce que tu dirais à cet enfant ou ado ?",
+        prompt:"Ce que je lui dirais aujourd'hui…",
+        type:"write"
+      },
+      {
+        title:"L'intégration",
+        instruction:"Dis à voix haute ou écris : « J'ai été humilié(e) et j'ai survécu. Ce regard n'était pas la vérité sur moi. »\n\nReste avec ça quelques instants.",
+        prompt:null,
+        type:"close"
+      }
+    ]
+  },
+  {
+    id:"dialogue_ombre",
+    icon:"🌑",
+    title:"Dialogue avec l'Ombre",
+    duration:"20–25 min",
+    parts:[
+      {
+        title:"Choisir un trait",
+        instruction:"Pense à un trait de caractère que tu n'aimes pas chez toi — quelque chose que tu essaies de cacher ou que tu critiques souvent. Écris-le.",
+        prompt:"Le trait que je veux explorer : …",
+        type:"write"
+      },
+      {
+        title:"Où tu le vois chez les autres",
+        instruction:"Chez qui ce trait t'énerve ou te dérange le plus ? Souvent ce qui nous irrite chez l'autre est une partie de nous qu'on refuse.",
+        prompt:"Je le vois surtout chez… et ça me fait ressentir…",
+        type:"write"
+      },
+      {
+        title:"Quand ça t'a aidé",
+        instruction:"Reviens en arrière : y a-t-il eu un moment où ce trait t'a protégé, t'a aidé à survivre ou à t'adapter ?",
+        prompt:"Ce trait m'a servi quand…",
+        type:"write"
+      },
+      {
+        title:"Le remercier",
+        instruction:"Adresse-toi à cette part de toi. Remercie-la pour ce qu'elle a fait. Elle n'était pas un défaut — c'était une solution.",
+        prompt:"Merci de m'avoir protégé(e) quand…",
+        type:"write"
+      },
+      {
+        title:"L'intégrer",
+        instruction:"Imagine que tu intègres ce trait au lieu de le combattre. Comment il pourrait devenir une force ? Écris une phrase qui l'accepte.",
+        prompt:"J'accepte que je sois aussi… et que ça peut servir à…",
+        type:"close"
+      }
+    ]
+  },
+  {
+    id:"corps_present",
+    icon:"🌊",
+    title:"Revenir dans son corps",
+    duration:"10–15 min",
+    parts:[
+      {
+        title:"Scanner le corps",
+        instruction:"Assieds-toi, pieds au sol. Ferme les yeux. Parcours ton corps de haut en bas. Où ressens-tu une tension, une chaleur, un vide, un inconfort ?",
+        prompt:null,
+        type:"breathe"
+      },
+      {
+        title:"Localiser",
+        instruction:"Note où tu ressens quelque chose. Pas besoin d'expliquer pourquoi — juste observer.",
+        prompt:"Je sens quelque chose dans… C'est comme…",
+        type:"write"
+      },
+      {
+        title:"Respirer dans la zone",
+        instruction:"Dirige ta respiration vers cette zone. Imagine que chaque inspiration l'ouvre un peu. Fais ça pendant 5 respirations.",
+        prompt:null,
+        type:"breathe"
+      },
+      {
+        title:"Ce que le corps dit",
+        instruction:"Si cette sensation pouvait parler, que dirait-elle ? Quelle émotion porte-t-elle ? Quelle peur ? Quel besoin ?",
+        prompt:"Cette sensation me dit…",
+        type:"write"
+      },
+      {
+        title:"Ancrage",
+        instruction:"Pose tes mains à plat sur tes cuisses. Sens le poids de ton corps dans la chaise. Dis-toi : « Je suis ici, maintenant, en sécurité. »",
+        prompt:null,
+        type:"close"
+      }
+    ]
+  },
+  {
+    id:"peur_action",
+    icon:"⚡",
+    title:"Décoder sa peur d'agir",
+    duration:"15–20 min",
+    parts:[
+      {
+        title:"L'action bloquée",
+        instruction:"Pense à quelque chose que tu veux faire depuis longtemps mais que tu n'as pas commencé. Quelle est cette action ?",
+        prompt:"Ce que je n'ai pas encore fait : …",
+        type:"write"
+      },
+      {
+        title:"Le pire scénario",
+        instruction:"Si tu le faisais et que ça tournait vraiment mal — que se passerait-il ? Va au bout. Ecris le pire.",
+        prompt:"Dans le pire des cas…",
+        type:"write"
+      },
+      {
+        title:"D'où ça vient",
+        instruction:"Ce pire scénario, c'est une peur de quoi exactement ? D'être jugé ? Rejeté ? De rater ? De décevoir ? Trouve le mot.",
+        prompt:"Ce que je crains vraiment : …",
+        type:"write"
+      },
+      {
+        title:"La probabilité réelle",
+        instruction:"Sur 10 : quelle est la probabilité que ce pire scénario se produise vraiment ? Et même si ça arrivait — tu t'en remettrais ?",
+        prompt:"Probabilité réelle : …/10. Et je m'en remettrais parce que…",
+        type:"write"
+      },
+      {
+        title:"Une micro-action",
+        instruction:"Quelle est la plus petite action possible que tu peux faire dans les 48 heures — tellement petite qu'elle ne justifie aucune peur ?",
+        prompt:"Dans les 48h, je vais juste…",
+        type:"close"
+      }
+    ]
+  },
+  {
+    id:"besoin_profond",
+    icon:"🔑",
+    title:"Identifier son besoin profond",
+    duration:"15–20 min",
+    parts:[
+      {
+        title:"Une situation récente",
+        instruction:"Pense à une situation récente où tu as été fortement réactif(ve) — en colère, blessé(e), fermé(e), anxieux(se). Quelle était cette situation ?",
+        prompt:"La situation : …",
+        type:"write"
+      },
+      {
+        title:"L'émotion brute",
+        instruction:"Qu'as-tu ressenti exactement ? Nomme l'émotion sans la justifier.",
+        prompt:"J'ai ressenti…",
+        type:"write"
+      },
+      {
+        title:"Le besoin non comblé",
+        instruction:"Derrière chaque émotion forte, il y a un besoin non satisfait. Attention, amour, sécurité, liberté, justice, reconnaissance ? Lequel était absent ?",
+        prompt:"Ce dont j'avais besoin et qui manquait : …",
+        type:"write"
+      },
+      {
+        title:"À qui tu le demandais",
+        instruction:"Tu attendais ce besoin de qui ? D'une autre personne ? De toi-même ? Est-ce une attente réaliste ?",
+        prompt:"Je l'attendais de… C'est réaliste parce que… / Ce n'est pas réaliste parce que…",
+        type:"write"
+      },
+      {
+        title:"Comment te le donner",
+        instruction:"Comment peux-tu commencer à répondre toi-même à ce besoin, maintenant, sans attendre l'autre ?",
+        prompt:"Je peux me donner ça en…",
+        type:"close"
+      }
+    ]
+  },
+  {
+    id:"identite_choisie",
+    icon:"🌱",
+    title:"Choisir une identité nouvelle",
+    duration:"15–20 min",
+    parts:[
+      {
+        title:"L'identité héritée",
+        instruction:"Quelle est une phrase sur toi-même que tu te répètes souvent — et qui vient probablement de quelqu'un d'autre (parent, prof, camarade) ? Écris-la.",
+        prompt:"Une phrase que je me dis souvent : « Je suis… »",
+        type:"write"
+      },
+      {
+        title:"D'où ça vient",
+        instruction:"Qui te l'a dit ou montré pour la première fois ? Dans quel contexte ? Tu avais quel âge ?",
+        prompt:"Ça vient de… quand j'avais… ans, dans cette situation : …",
+        type:"write"
+      },
+      {
+        title:"Ce n'était pas la vérité",
+        instruction:"Cette personne avait-elle vraiment autorité pour définir qui tu es ? Est-ce qu'on peut dire qu'elle avait raison sur toi pour toujours ?",
+        prompt:"En réalité, cette personne… et ce n'était pas la vérité parce que…",
+        type:"write"
+      },
+      {
+        title:"L'identité choisie",
+        instruction:"Si tu pouvais choisir librement qui tu es aujourd'hui — indépendamment du passé — quelle phrase te décrirait mieux ?",
+        prompt:"Je choisis d'être quelqu'un qui…",
+        type:"write"
+      },
+      {
+        title:"L'ancrer",
+        instruction:"Dis cette nouvelle phrase à voix haute, 3 fois, en te regardant dans un miroir si possible. Ressens ce que ça fait dans le corps.",
+        prompt:null,
+        type:"close"
+      }
+    ]
+  },
+  {
+    id:"relation_mere",
+    icon:"🧵",
+    title:"Le fil maternel",
+    duration:"20–25 min",
+    parts:[
+      {
+        title:"Le lien",
+        instruction:"Ferme les yeux. Imagine ta mère devant toi. Sans jugement. Juste elle. Comment tu te sens en sa présence, ou à l'idée d'elle ?",
+        prompt:"Quand je pense à ma mère, je me sens…",
+        type:"write"
+      },
+      {
+        title:"Ce qu'elle t'a donné",
+        instruction:"Qu'est-ce qu'elle t'a transmis de positif — même inconsciemment ? Force, intelligence, intuition, résilience ?",
+        prompt:"Ce qu'elle m'a transmis et que je porte en moi : …",
+        type:"write"
+      },
+      {
+        title:"Ce qu'elle n'a pas pu donner",
+        instruction:"Qu'est-ce dont tu avais besoin et qu'elle n'a pas pu t'offrir ? Sans colère — juste une observation honnête.",
+        prompt:"Ce que j'aurais eu besoin qu'elle me donne : …",
+        type:"write"
+      },
+      {
+        title:"La comprendre",
+        instruction:"Si tu regardes sa vie, ses propres blessures, les contraintes qu'elle avait — qu'est-ce qu'elle portait, elle ?",
+        prompt:"Elle portait…",
+        type:"write"
+      },
+      {
+        title:"Te séparer avec douceur",
+        instruction:"Imagine un fil qui relie ton nombril au sien. Visualise-toi en train de couper ce fil avec douceur — pas avec colère. Tu lui rends ce qui lui appartient. Tu gardes ce qui est à toi.",
+        prompt:"Ce que je lui rends : … Ce que je garde : …",
+        type:"close"
+      }
+    ]
+  }
+];
+
+function isExDone(id){
+  try{
+    const key="ex_done_"+(currentProfile?currentProfile.id:"guest");
+    const done=JSON.parse(localStorage.getItem(key)||"[]");
+    return done.includes(id);
+  }catch(e){return false;}
+}
+
+function markExDone(id){
+  try{
+    const key="ex_done_"+(currentProfile?currentProfile.id:"guest");
+    const done=JSON.parse(localStorage.getItem(key)||"[]");
+    if(!done.includes(id)){done.push(id);}
+    localStorage.setItem(key,JSON.stringify(done));
+  }catch(e){}
+}
+
+function renderExerciseDetail(){
+  const grid=document.getElementById("home-themes-grid");
+  const ex=currentExercise;
+  if(!ex)return;
+  const part=ex.parts[currentExPart];
+  const totalParts=ex.parts.length;
+  const pct=Math.round((currentExPart/totalParts)*100);
+  const isLast=currentExPart===totalParts-1;
+
+  grid.innerHTML=`
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.25rem;">
+      <button onclick="renderExercisesInline()" style="background:none;border:none;color:var(--text-faint);font-size:1.1rem;cursor:pointer;padding:4px;">←</button>
+      <div style="flex:1;">
+        <div style="font-size:11px;color:var(--text-faint);margin-bottom:4px;">${ex.icon} ${ex.title}</div>
+        <div style="height:3px;background:var(--border);border-radius:2px;overflow:hidden;">
+          <div style="height:100%;width:${pct}%;background:var(--accent);border-radius:2px;transition:width 0.4s;"></div>
+        </div>
+      </div>
+      <div style="font-size:10px;color:var(--text-faint);white-space:nowrap;">${currentExPart+1} / ${totalParts}</div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;gap:1rem;">
+      <div style="font-size:1.05rem;font-weight:700;color:var(--text);">${part.title}</div>
+      <div style="font-size:0.9rem;color:var(--text-muted);line-height:1.7;white-space:pre-line;">${part.instruction}</div>
+      ${part.type==="breathe"?`
+        <div style="display:flex;flex-direction:column;align-items:center;gap:0.75rem;padding:1.5rem;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--surface);">
+          <div style="font-size:2.5rem;">🫁</div>
+          <div style="font-size:0.82rem;color:var(--text-faint);text-align:center;">Prends le temps qu'il faut.<br>Il n'y a rien à écrire ici.</div>
+        </div>
+      `:""}
+      ${part.type==="write"||part.type==="close"&&part.prompt?`
+        <textarea id="ex-textarea" placeholder="${part.prompt||""}"
+          style="width:100%;min-height:110px;padding:12px 14px;background:var(--surface);border:1px solid var(--border-md);border-radius:var(--radius-lg);color:var(--text);font-size:0.88rem;font-family:inherit;line-height:1.65;outline:none;resize:vertical;"
+          oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px';"></textarea>
+      `:""}
+      ${part.type==="close"&&!part.prompt?`
+        <div style="display:flex;flex-direction:column;align-items:center;gap:0.75rem;padding:1.5rem;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--surface);">
+          <div style="font-size:2rem;">🌱</div>
+          <div style="font-size:0.82rem;color:var(--text-faint);text-align:center;">Prends le temps d'intégrer.<br>Respire.</div>
+        </div>
+      `:""}
+    </div>
+    <button id="ex-next-btn" style="width:100%;margin-top:1.25rem;padding:14px;border-radius:var(--radius-lg);border:1px solid var(--accent);background:rgba(200,184,154,0.08);color:var(--accent);font-size:0.95rem;font-weight:600;font-family:inherit;cursor:pointer;">
+      ${isLast?"✓ Terminer l'exercice":"Étape suivante →"}
+    </button>
+  `;
+
+  document.getElementById("ex-next-btn").addEventListener("click",()=>{
+    if(isLast){
+      markExDone(ex.id);
+      grid.innerHTML=`<div style="display:flex;flex-direction:column;align-items:center;text-align:center;padding:3rem 1rem;gap:1.25rem;">
+        <div style="font-size:3rem;">✅</div>
+        <div style="font-size:1.2rem;font-weight:700;">Exercice complété</div>
+        <div style="font-size:0.88rem;color:var(--text-futed);max-width:280px;line-height:1.6;">Bien joué. Ce que tu viens de traverser laisse une trace. Reviens demain si tu veux aller plus loin.</div>
+        <button onclick="renderExercisesInline()" style="margin-top:0.5rem;padding:12px 28px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text);font-size:0.9rem;font-family:inherit;cursor:pointer;">← Retour aux exercices</button>
+      </div>`;
+    } else {
+      currentExPart++;
+      renderExerciseDetail();
+    }
+  });
+}
 
 function renderExercisesInline(){
   currentExercise=null;
