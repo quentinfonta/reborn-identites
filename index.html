@@ -343,6 +343,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
 @keyframes cardIn{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
 @keyframes cardOutRight{from{opacity:1;transform:translateX(0);}to{opacity:0;transform:translateX(130px) rotate(8deg);}}
 @keyframes cardOutLeft{from{opacity:1;transform:translateX(0);}to{opacity:0;transform:translateX(-130px) rotate(-8deg);}}
+@keyframes cardOutUp{from{opacity:1;transform:translateY(0);}to{opacity:0;transform:translateY(-80px);scale:0.95;}}
 @keyframes cardOutUp{from{opacity:1;transform:translateY(0);}to{opacity:0;transform:translateY(-60px);}}
 .anim-in{animation:cardIn 0.3s ease forwards;}
 .anim-right{animation:cardOutRight 0.22s ease forwards;}
@@ -581,14 +582,20 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
     </div>
     <div class="home-sidebar-nav">
       <button class="home-sidebar-btn active" id="home-pinned-btn" style="font-weight:600;color:var(--accent);">📌 Ma liste</button>
-      <div style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-faint);padding:12px 14px 4px;">Introspection</div>
+      <div style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-faint);padding:12px 14px 4px;">Explorer</div>
+      <button class="home-sidebar-btn" id="home-game-btn">🃏 Jeu de cartes</button>
       <button class="home-sidebar-btn" id="home-reconnexion-btn">🗂 Thèmes</button>
       <button class="home-sidebar-btn" id="home-diagnostic-btn">🔍 Diagnostic</button>
       <button class="home-sidebar-btn" id="home-dictionnaire-btn">📖 Dictionnaire</button>
-      <div style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-faint);padding:12px 14px 4px;">Travail</div>
-      <button class="home-sidebar-btn" id="home-exercises-btn">⚡ Exercices</button>
-      <button class="home-sidebar-btn" id="home-journal-btn">📓 Journal</button>
-      <button class="home-sidebar-btn" id="home-irt-btn">🎧 Séance IRT</button>
+      <!-- Section avancée repliable -->
+      <div id="sidebar-more-section" style="display:none;flex-direction:column;gap:0;">
+        <div style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-faint);padding:12px 14px 4px;">Travail en séance</div>
+        <button class="home-sidebar-btn" id="home-progression-btn">📈 Ma progression</button>
+        <button class="home-sidebar-btn" id="home-exercises-btn">⚡ Exercices</button>
+        <button class="home-sidebar-btn" id="home-journal-btn">📓 Journal</button>
+        <button class="home-sidebar-btn" id="home-irt-btn">🎧 Séance IRT</button>
+      </div>
+      <button id="sidebar-more-btn" onclick="const s=document.getElementById('sidebar-more-section');const isOpen=s.style.display!=='none';s.style.display=isOpen?'none':'flex';this.textContent=isOpen?'··· Plus d\'outils':'✕ Réduire';" style="padding:8px 14px;border-radius:var(--radius-lg);border:none;background:transparent;color:var(--text-faint);font-size:12px;font-family:inherit;cursor:pointer;text-align:left;margin-top:4px;">··· Plus d'outils</button>
     </div>
     <div class="home-sidebar-footer">
       <button class="home-sidebar-btn" id="home-objectives-btn" style="font-size:13px;">🎯 Mes objectifs</button>
@@ -604,9 +611,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
     </div>
     <div class="home-mobile-tabs">
       <button class="home-mobile-tab active" data-tab="pinned" style="font-weight:600;">📌 Ma liste</button>
+      <button class="home-mobile-tab" data-tab="game">🃏 Cartes</button>
       <button class="home-mobile-tab" data-tab="reconnexion">🗂 Thèmes</button>
       <button class="home-mobile-tab" data-tab="diagnostic">🔍 Diagnostic</button>
       <button class="home-mobile-tab" data-tab="dictionnaire">📖 Dico</button>
+      <button class="home-mobile-tab" data-tab="progression">📈 Progression</button>
       <button class="home-mobile-tab" data-tab="exercises">⚡ Exercices</button>
       <button class="home-mobile-tab" data-tab="journal">📓 Journal</button>
       <button class="home-mobile-tab" data-tab="irt">🎧 IRT</button>
@@ -618,7 +627,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
   <div class="home-main">
     <div id="home-stats-bar" style="display:flex;gap:1.5rem;margin-bottom:2.5rem;flex-wrap:wrap;"></div>
     <div id="home-objectives-accueil" style="margin-bottom:1.5rem;"></div>
-    <div id="home-sub" style="font-size:22px;font-weight:600;margin-bottom:1.5rem;color:var(--text);">Qu'est-ce qui te pèse le plus en ce moment ?</div>
+    <div id="home-sub" style="font-size:22px;font-weight:600;margin-bottom:1.5rem;color:var(--text);">Ma liste</div>
     <div style="margin-bottom:2rem;">
       <input type="text" id="home-search" placeholder="Rechercher une identité ou un thème…" style="width:100%;box-sizing:border-box;padding:12px 16px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface2);color:var(--text);font-size:14px;font-family:inherit;outline:none;">
     </div>
@@ -748,16 +757,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
 </div>
 
 <!-- IRT SCREEN -->
-<div class="block-screen" id="irt-screen">
-  <div class="main-header">
-    <div>
-      <div class="brand" style="margin-bottom:2px">REBORN</div>
-      <div class="brand-title">Protocole IRT</div>
-    </div>
-    <div class="main-header-right">
-      <button class="header-btn" id="irt-home-btn"><i class="ti ti-arrow-left"></i> Accueil</button>
-    </div>
-  </div>
+<!-- irt-screen migré inline dans renderIrtInline() -->
+<div class="block-screen" id="irt-screen-legacy" style="display:none!important;">
   <div class="dict-scroll" style="padding:1.5rem;max-width:600px;margin:0 auto;padding-bottom:5rem;">
 
     <!-- INTRO -->
@@ -894,7 +895,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
         <div style="font-size:13px;font-weight:600;margin-bottom:2px;">Après la séance</div>
         <div style="font-size:12px;color:var(--text-muted);">Note ce qui a émergé dans ton journal</div>
       </div>
-      <button onclick="document.getElementById('irt-screen').classList.remove('show');showScreen('home-screen');setHomeTab('journal');" style="padding:8px 14px;border-radius:var(--radius);border:1px solid var(--border-md);background:transparent;color:var(--text);font-size:13px;font-family:inherit;cursor:pointer;white-space:nowrap;">📓 Journal →</button>
+      <button onclick="setHomeTab('journal')" style="padding:8px 14px;border-radius:var(--radius);border:1px solid var(--border-md);background:transparent;color:var(--text);font-size:13px;font-family:inherit;cursor:pointer;white-space:nowrap;">📓 Journal →</button>
     </div>
 
   </div>
@@ -948,9 +949,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
     <div class="game-card-text" id="g-card-text"></div>
     <div class="game-card-desc" id="g-card-desc"></div>
     <div class="game-btns">
-      <button class="game-btn-action yes" id="g-yes"><span class="game-btn-icon">✅</span><span class="game-btn-label">Travaillée</span></button>
+      <button class="game-btn-action yes" id="g-yes"><span class="game-btn-icon">📌</span><span class="game-btn-label">Épinglé</span></button>
       <button class="game-btn-action later" id="g-later"><span class="game-btn-icon">🔖</span><span class="game-btn-label">À faire</span></button>
-      <button class="game-btn-action" id="g-skip"><span class="game-btn-icon">🚫</span><span class="game-btn-label">Passer</span></button>
+      <button class="game-btn-action" id="g-skip"><span class="game-btn-icon">→</span><span class="game-btn-label">Passé</span></button>
     </div>
     <div class="game-session-progress" id="g-session-progress"></div>
   </div>
@@ -3326,17 +3327,7 @@ function filterProfiles(q){
 
 /* ===== IRT PROTOCOL ===== */
 
-function openIrtScreen(){
-  document.getElementById("irt-screen").classList.add("show");
-  document.getElementById("irt-screen").scrollTop=0;
-  // Reset le formulaire de log
-  const idInp=document.getElementById("irt-log-identity");
-  const bInp=document.getElementById("irt-log-before");
-  const aInp=document.getElementById("irt-log-after");
-  const btn=document.getElementById("irt-log-save-btn");
-  if(idInp)idInp.value="";if(bInp)bInp.value="";if(aInp)aInp.value="";
-  if(btn){btn.textContent="Enregistrer →";btn.disabled=false;}
-}
+// openIrtScreen remplacé par renderIrtInline() via setHomeTab("irt")
 
 function saveIrtLog(){
   const identity=(document.getElementById("irt-log-identity")?.value||"").trim();
@@ -3359,14 +3350,10 @@ function saveIrtLog(){
   showToast("Séance IRT enregistrée");
 }
 
-document.getElementById("irt-home-btn").addEventListener("click",()=>{
-  document.getElementById("irt-screen").classList.remove("show");
-  showScreen("home-screen");
-  renderHomeThemes();
-});
-
 document.getElementById("home-irt-btn")?.addEventListener("click",()=>{
-  openIrtScreen();
+  document.getElementById("sidebar-more-section").style.display="flex";
+  document.getElementById("sidebar-more-btn").textContent="✕ Réduire";
+  setHomeTab("irt");
 });
 
 
@@ -4221,6 +4208,138 @@ function renderSearchResults(){
 document.getElementById("home-switch-btn").addEventListener("click",()=>{currentProfile=null;SESSIONS=[];checked.clear();pinnedIds.clear();reviewDates={};showScreen("profile-screen");loadProfiles();});
 document.getElementById("home-switch-mobile")?.addEventListener("click",()=>{currentProfile=null;SESSIONS=[];checked.clear();pinnedIds.clear();reviewDates={};showScreen("profile-screen");loadProfiles();});
 
+function renderIrtInline(){
+  const grid=document.getElementById("home-themes-grid");
+  grid.style.display="flex";
+  grid.style.flexDirection="column";
+  grid.style.overflowY="visible";
+
+  // Reset log form state
+  grid.innerHTML=`
+    <div style="margin-bottom:2rem;">
+      <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:0.5rem;">Formation</div>
+      <div style="font-size:1.4rem;font-weight:700;margin-bottom:0.75rem;line-height:1.3;">Séance de désintensification émotionnelle</div>
+      <div style="font-size:0.87rem;color:var(--text-muted);line-height:1.7;">Cette page décrit comment mener une séance IRT — une approche de désintensification émotionnelle inspirée de l'EMDR, adaptée au travail sur les identités. Elle n'est pas un outil clinique : c'est un protocole de travail personnel.</div>
+      <div style="margin-top:0.75rem;padding:10px 14px;border-radius:var(--radius);border:1px solid rgba(200,184,154,0.2);background:rgba(200,184,154,0.04);font-size:12px;color:var(--text-muted);line-height:1.6;">
+        🎧 <strong style="color:var(--text);">Matériel requis :</strong> casque ou écouteurs stéréo — la stimulation bilatérale n'est efficace qu'en stéréo.
+      </div>
+    </div>
+
+    <div style="height:1px;background:var(--border);margin-bottom:2rem;"></div>
+
+    <div style="margin-bottom:2rem;">
+      <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-faint);margin-bottom:1rem;">Outils de stimulation bilatérale</div>
+      <div style="font-size:12px;color:var(--text-muted);margin-bottom:1rem;line-height:1.6;">Avant de commencer la séance, ouvre l'un de ces outils dans un autre onglet et lance la stimulation. Laisse-le tourner en arrière-plan pendant les cycles de travail.</div>
+      <div class="irt-tool-card">
+        <div class="irt-tool-icon">🎧</div>
+        <div class="irt-tool-info">
+          <div class="irt-tool-name">EMDR Tappers</div>
+          <div class="irt-tool-desc">Sons alternés gauche/droite — le plus simple à paramétrer. Recommandé.</div>
+        </div>
+        <a href="https://app.emdrtappers.com" target="_blank" class="irt-tool-link">Ouvrir →</a>
+      </div>
+      <div class="irt-tool-card">
+        <div class="irt-tool-icon">👁️</div>
+        <div class="irt-tool-info">
+          <div class="irt-tool-name">EyeMove BLS</div>
+          <div class="irt-tool-desc">Alternative — suivi oculaire ou sons binauraux selon préférence.</div>
+        </div>
+        <a href="https://eyemove.app/bls" target="_blank" class="irt-tool-link">Ouvrir →</a>
+      </div>
+    </div>
+
+    <div style="height:1px;background:var(--border);margin-bottom:2rem;"></div>
+
+    <div style="margin-bottom:2rem;">
+      <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-faint);margin-bottom:1rem;">Structure d'une séance</div>
+      <div style="display:flex;gap:14px;margin-bottom:1.5rem;">
+        <div style="flex-shrink:0;width:32px;height:32px;border-radius:50%;border:1px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--accent);">1</div>
+        <div style="flex:1;">
+          <div style="font-size:14px;font-weight:700;margin-bottom:4px;">Reconnexion corporelle <span style="font-size:12px;color:var(--text-faint);font-weight:400;">— 5 min, sans stimulation</span></div>
+          <div style="font-size:13px;color:var(--text-muted);line-height:1.7;">Installe-toi confortablement. Ferme les yeux. Fais descendre ton attention dans ton corps, des pieds jusqu'à la tête. Remarque les zones de tension, d'inconfort ou d'engourdissement — sans chercher à changer quoi que ce soit. C'est juste un état des lieux.<br><br>Prends environ 5 minutes. Pas de minuteur nécessaire — c'est au ressenti.</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:14px;margin-bottom:1.5rem;">
+        <div style="flex-shrink:0;width:32px;height:32px;border-radius:50%;border:1px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--accent);">2</div>
+        <div style="flex:1;">
+          <div style="font-size:14px;font-weight:700;margin-bottom:4px;">Boucle de travail <span style="font-size:12px;color:var(--text-faint);font-weight:400;">— identité par identité</span></div>
+          <div style="font-size:13px;color:var(--text-muted);line-height:1.7;margin-bottom:1rem;">Pour chaque identité à traiter, on répète la même boucle :</div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div style="padding:12px 14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface);">
+              <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-faint);margin-bottom:4px;">A — Nommer l'identité</div>
+              <div style="font-size:13px;color:var(--text-muted);line-height:1.6;">Formule l'identité à travailler sous la forme <em>« Je ne suis plus… »</em> ou <em>« J'étais quelqu'un qui… »</em>. Cette formulation ancre le travail dans ce que tu quittais, pas dans ce que tu es encore. Garde-la présente à l'esprit pendant toute la boucle.</div>
+            </div>
+            <div style="padding:12px 14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface);">
+              <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-faint);margin-bottom:4px;">B — Niveau de charge émotionnelle (0–10)</div>
+              <div style="font-size:13px;color:var(--text-muted);line-height:1.6;">Donne un chiffre entre 0 et 10 à ce que tu ressens dans le corps face à cette identité. Note-le — tu en auras besoin à la fin.</div>
+            </div>
+            <div style="padding:12px 14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface);">
+              <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-faint);margin-bottom:4px;">C — Mise en place de la stimulation</div>
+              <div style="font-size:13px;color:var(--text-muted);line-height:1.6;">Lance la stimulation bilatérale. Mets tes deux mains à plat sur le dessus du crâne, paumes bien posées — et laisse-les là pendant toute la durée du cycle. Tiens l'identité dans ton esprit sans chercher à l'analyser. Laisse ce qui vient, venir.</div>
+            </div>
+            <div style="padding:12px 14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface);">
+              <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-faint);margin-bottom:4px;">D — Cycles (1 min chacun)</div>
+              <div style="font-size:13px;color:var(--text-muted);line-height:1.6;">Chaque cycle dure environ 1 minute. En général 3 à 6 par identité. Entre chaque cycle : baisse les mains, respire, note ce qui a changé. Si la charge est encore présente, reprends.</div>
+            </div>
+            <div style="padding:12px 14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface);">
+              <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-faint);margin-bottom:4px;">E — Réévaluation finale</div>
+              <div style="font-size:13px;color:var(--text-muted);line-height:1.6;">Redonne un chiffre entre 0 et 10. Une baisse de 2 à 4 points, c'est déjà du travail réel qui s'est passé. Passe ensuite à l'identité suivante.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;gap:14px;margin-bottom:1.5rem;">
+        <div style="flex-shrink:0;width:32px;height:32px;border-radius:50%;border:1px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--accent);">3</div>
+        <div style="flex:1;">
+          <div style="font-size:14px;font-weight:700;margin-bottom:4px;">Mini-bilan <span style="font-size:12px;color:var(--text-faint);font-weight:400;">— 5 min</span></div>
+          <div style="font-size:13px;color:var(--text-muted);line-height:1.7;">Note rapidement ce qui a bougé, ce qui a émergé, les images ou sensations qui sont apparues. Ça aide à ancrer le travail.</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="height:1px;background:var(--border);margin-bottom:2rem;"></div>
+
+    <div style="margin-bottom:2rem;">
+      <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-faint);margin-bottom:1rem;">Points de vigilance</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;gap:10px;font-size:13px;color:var(--text-muted);line-height:1.6;"><span style="flex-shrink:0;">⚠️</span><span>Ce protocole est un <strong style="color:var(--text);">outil de désintensification émotionnelle inspiré de l'EMDR</strong>, pas de l'EMDR clinique. Il n'est pas un substitut à un accompagnement thérapeutique.</span></div>
+        <div style="display:flex;gap:10px;font-size:13px;color:var(--text-muted);line-height:1.6;"><span style="flex-shrink:0;">⚠️</span><span>Si une identité fait remonter quelque chose de très intense (trauma fort, dissociation), arrête la stimulation et reviens à ta respiration.</span></div>
+        <div style="display:flex;gap:10px;font-size:13px;color:var(--text-muted);line-height:1.6;"><span style="flex-shrink:0;">💡</span><span>Le travail s'intègre entre les séances, pas pendant. Il est normal de ressentir une fatigue légère après.</span></div>
+      </div>
+    </div>
+
+    <div style="height:1px;background:var(--border);margin-bottom:2rem;"></div>
+
+    <div id="irt-log-section" style="padding:18px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);margin-bottom:1rem;">
+      <div style="font-size:13px;font-weight:600;margin-bottom:4px;">Enregistrer cette séance</div>
+      <div style="font-size:12px;color:var(--text-muted);margin-bottom:1rem;">Garde une trace de ce qui s'est passé — identité et niveau de charge avant/après.</div>
+      <div style="margin-bottom:0.75rem;">
+        <div style="font-size:10px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Identité travaillée</div>
+        <input id="irt-log-identity" type="text" placeholder="ex. Je ne suis plus quelqu'un d'indigne d'être aimé" style="width:100%;padding:9px 12px;border:1px solid var(--border-md);border-radius:var(--radius);background:var(--surface2);color:var(--text);font-size:13px;font-family:inherit;outline:none;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border-md)'">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1rem;">
+        <div>
+          <div style="font-size:10px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Charge avant (0–10)</div>
+          <input id="irt-log-before" type="number" min="0" max="10" placeholder="7" style="width:100%;padding:9px 12px;border:1px solid var(--border-md);border-radius:var(--radius);background:var(--surface2);color:var(--text);font-size:14px;font-family:inherit;outline:none;text-align:center;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border-md)'">
+        </div>
+        <div>
+          <div style="font-size:10px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Charge après (0–10)</div>
+          <input id="irt-log-after" type="number" min="0" max="10" placeholder="2" style="width:100%;padding:9px 12px;border:1px solid var(--border-md);border-radius:var(--radius);background:var(--surface2);color:var(--text);font-size:14px;font-family:inherit;outline:none;text-align:center;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border-md)'">
+        </div>
+      </div>
+      <button id="irt-log-save-btn" onclick="saveIrtLog()" style="width:100%;padding:10px;border-radius:var(--radius-lg);border:1px solid var(--accent);background:transparent;color:var(--accent);font-size:13px;font-family:inherit;cursor:pointer;">Enregistrer →</button>
+    </div>
+
+    <div style="padding:16px 18px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);display:flex;align-items:center;justify-content:space-between;gap:12px;">
+      <div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:2px;">Après la séance</div>
+        <div style="font-size:12px;color:var(--text-muted);">Note ce qui a émergé dans ton journal</div>
+      </div>
+      <button onclick="setHomeTab('journal')" style="padding:8px 14px;border-radius:var(--radius);border:1px solid var(--border-md);background:transparent;color:var(--text);font-size:13px;font-family:inherit;cursor:pointer;white-space:nowrap;">📓 Journal →</button>
+    </div>
+  `;
+}
+
 // Mobile tabs sync with setHomeTab
 document.querySelectorAll(".home-mobile-tab").forEach(btn=>{
   btn.addEventListener("click",()=>{
@@ -4246,7 +4365,6 @@ function setHomeTab(tab){
   const srch=document.getElementById("home-search");
 
   // Tabs qui n'ont pas de grille
-  if(tab==="irt"){openIrtScreen();return;}
   if(tab==="objectives"){showObjectivesPanel();return;}
 
   // Masquer stats/objectifs accueil sur tous les onglets sauf reconnexion
@@ -4282,11 +4400,20 @@ function setHomeTab(tab){
       document.getElementById("home-sub").textContent="Diagnostic";
       renderDiagnosticInline();
     } else if(tab==="pinned"){
-      document.getElementById("home-sub").textContent="Identités épinglées";
+      document.getElementById("home-sub").textContent="Ma liste";
       renderPinnedTab();
     } else if(tab==="dictionnaire"){
       document.getElementById("home-sub").textContent="Dictionnaire des identités";
       renderDictionnaireInline();
+    } else if(tab==="irt"){
+      document.getElementById("home-sub").textContent="Séance IRT";
+      renderIrtInline();
+    } else if(tab==="progression"){
+      document.getElementById("home-sub").textContent="Ma progression";
+      renderProgressionInline();
+    } else if(tab==="game"){
+      document.getElementById("home-sub").textContent="Jeu de cartes";
+      renderGameInline();
     }
   }
 }
@@ -4478,15 +4605,37 @@ function renderPinnedTab(){
 
   // État vide : appel à l'action clair
   if(pinnedIds.size===0){
-    grid.innerHTML=`<div style="padding:2rem 0 1rem;">
-      <div style="text-align:center;padding:2rem 1rem;border:1px dashed var(--border-md);border-radius:var(--radius-lg);margin-bottom:1.5rem;">
-        <div style="font-size:2.5rem;margin-bottom:0.75rem;">📌</div>
-        <div style="font-size:1rem;font-weight:600;margin-bottom:0.4rem;color:var(--text);">Ta liste de travail est vide</div>
-        <div style="font-size:0.83rem;color:var(--text-faint);line-height:1.7;max-width:300px;margin:0 auto 1.25rem;">C'est ici que tu rassembles les identités que tu veux travailler — une par une, à ton rythme. Pour commencer, explore un thème ou utilise le diagnostic.</div>
-        <div style="display:flex;flex-direction:column;gap:8px;max-width:260px;margin:0 auto;">
-          <button onclick="setHomeTab('reconnexion')" style="padding:11px 18px;border-radius:var(--radius-lg);border:1px solid var(--accent);background:rgba(200,184,154,0.08);color:var(--accent);font-size:0.88rem;font-family:inherit;cursor:pointer;font-weight:600;">🌀 Explorer les thèmes</button>
-          <button onclick="setHomeTab('diagnostic')" style="padding:11px 18px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text);font-size:0.88rem;font-family:inherit;cursor:pointer;">🔍 Faire le diagnostic</button>
+    grid.innerHTML=`<div style="padding:1rem 0 1rem;">
+      <!-- Message d'accueil -->
+      <div style="margin-bottom:1.75rem;">
+        <div style="font-size:1.25rem;font-weight:700;margin-bottom:0.4rem;">Par où commencer ?</div>
+        <div style="font-size:0.85rem;color:var(--text-faint);line-height:1.6;">Ta liste est vide. Commence par le jeu de cartes pour identifier ce qui te résonne — tu pourras ensuite travailler dessus une identité à la fois.</div>
+      </div>
+      <!-- CTA principal : Jeu de cartes -->
+      <button onclick="setHomeTab('game')" style="width:100%;padding:20px 22px;border-radius:var(--radius-lg);border:1px solid rgba(200,184,154,0.35);background:rgba(200,184,154,0.07);color:var(--accent);font-family:inherit;cursor:pointer;text-align:left;display:flex;align-items:center;gap:16px;margin-bottom:10px;transition:background 0.15s;" onmouseenter="this.style.background='rgba(200,184,154,0.12)'" onmouseleave="this.style.background='rgba(200,184,154,0.07)'">
+        <span style="font-size:2rem;flex-shrink:0;">🃏</span>
+        <div>
+          <div style="font-size:1rem;font-weight:700;margin-bottom:3px;">Jeu de cartes</div>
+          <div style="font-size:0.82rem;color:var(--text-muted);">10 identités. Reconnais ce qui te parle — les autres passent.</div>
         </div>
+        <span style="margin-left:auto;font-size:1.25rem;opacity:0.5;">→</span>
+      </button>
+      <!-- CTAs secondaires -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1.75rem;">
+        <button onclick="setHomeTab('diagnostic')" style="padding:14px 14px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text);font-family:inherit;cursor:pointer;text-align:left;display:flex;align-items:center;gap:10px;transition:border-color 0.15s;" onmouseenter="this.style.borderColor='var(--border-strong)'" onmouseleave="this.style.borderColor='var(--border-md)'">
+          <span style="font-size:1.3rem;">🔍</span>
+          <div>
+            <div style="font-size:0.88rem;font-weight:600;">Diagnostic</div>
+            <div style="font-size:0.75rem;color:var(--text-faint);margin-top:1px;">Analyse ton ressenti</div>
+          </div>
+        </button>
+        <button onclick="setHomeTab('reconnexion')" style="padding:14px 14px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text);font-family:inherit;cursor:pointer;text-align:left;display:flex;align-items:center;gap:10px;transition:border-color 0.15s;" onmouseenter="this.style.borderColor='var(--border-strong)'" onmouseleave="this.style.borderColor='var(--border-md)'">
+          <span style="font-size:1.3rem;">🗂</span>
+          <div>
+            <div style="font-size:0.88rem;font-weight:600;">Thèmes</div>
+            <div style="font-size:0.75rem;color:var(--text-faint);margin-top:1px;">Explore par domaine</div>
+          </div>
+        </button>
       </div>
     </div>${searchSection}`;
     setTimeout(()=>{const inp=document.getElementById("pinned-search-input");if(inp)inp.focus();},50);
@@ -4503,8 +4652,23 @@ function renderPinnedTab(){
   const pctDone=totalPinned>0?Math.round(nWorked/totalPinned*100):0;
   const depthColor=id=>{const c=["","var(--l1)","var(--l2)","var(--l3)","var(--l4)","var(--l5)"];return c[id]||"var(--text-muted)";};
 
+  // Message contextuel selon état
+  const contextMsg=toWork.length===0&&nWorked>0
+    ? `<div style="padding:14px 16px;border-radius:var(--radius-lg);background:rgba(99,153,34,0.06);border:1px solid var(--green-border);margin-bottom:1.5rem;display:flex;align-items:center;gap:12px;">
+        <span style="font-size:1.5rem;">✨</span>
+        <div>
+          <div style="font-size:0.9rem;font-weight:600;color:var(--green-text);">Liste complète</div>
+          <div style="font-size:0.8rem;color:var(--text-faint);margin-top:2px;"><button onclick="setHomeTab('game')" style="background:none;border:none;color:var(--accent);cursor:pointer;font-family:inherit;font-size:0.8rem;text-decoration:underline;padding:0;">Lance une nouvelle session de cartes</button> pour ajouter de nouvelles identités.</div>
+        </div>
+       </div>`
+    : toWork.length>0&&nWorked===0
+    ? `<div style="font-size:0.82rem;color:var(--text-faint);margin-bottom:1.25rem;padding:0 2px;">
+        ${toWork.length} identité${toWork.length>1?"s":""} à travailler — clique <strong style="color:var(--text);">✓ Valider</strong> après avoir exploré chacune avec Quentin.
+       </div>`
+    : "";
+
   // Barre de progression
-  let html=`<div style="margin-bottom:1.75rem;">
+  let html=contextMsg+`<div style="margin-bottom:1.75rem;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
       <span style="font-size:13px;font-weight:600;color:var(--text);">${nWorked} / ${totalPinned} validée${nWorked>1?"s":""}</span>
       <span style="font-size:12px;color:var(--text-faint);">${pctDone}%</span>
@@ -4512,7 +4676,6 @@ function renderPinnedTab(){
     <div style="height:6px;background:var(--surface3);border-radius:3px;overflow:hidden;">
       <div style="height:100%;width:${pctDone}%;background:var(--accent);border-radius:3px;transition:width 0.4s;"></div>
     </div>
-    ${toWork.length===0&&nWorked>0?`<div style="font-size:12px;color:var(--green-text);margin-top:6px;text-align:center;">✨ Toutes tes identités sont validées !</div>`:""}
   </div>`;
 
   // Section "À travailler" — identités non encore validées
@@ -5340,15 +5503,415 @@ function renderExercisesInline(){
 document.getElementById("onb-confirm-btn")?.addEventListener("click",confirmOnboarding);
 document.getElementById("home-reconnexion-btn").addEventListener("click",()=>setHomeTab("reconnexion"));
 document.getElementById("home-pinned-btn")?.addEventListener("click",()=>setHomeTab("pinned"));
-document.getElementById("home-journal-btn").addEventListener("click",()=>setHomeTab("journal"));
-document.getElementById("home-exercises-btn").addEventListener("click",()=>setHomeTab("exercises"));
+document.getElementById("home-journal-btn").addEventListener("click",()=>{
+  document.getElementById("sidebar-more-section").style.display="flex";
+  document.getElementById("sidebar-more-btn").textContent="✕ Réduire";
+  setHomeTab("journal");
+});
+document.getElementById("home-exercises-btn").addEventListener("click",()=>{
+  document.getElementById("sidebar-more-section").style.display="flex";
+  document.getElementById("sidebar-more-btn").textContent="✕ Réduire";
+  setHomeTab("exercises");
+});
 document.getElementById("home-history-btn")?.addEventListener("click",()=>setHomeTab("history"));
 document.getElementById("home-objectives-btn")?.addEventListener("click",()=>{showObjectivesPanel();});
 document.getElementById("home-diagnostic-btn")?.addEventListener("click",()=>setHomeTab("diagnostic"));
 document.getElementById("home-dictionnaire-btn")?.addEventListener("click",()=>setHomeTab("dictionnaire"));
+document.getElementById("home-progression-btn")?.addEventListener("click",()=>{
+  document.getElementById("sidebar-more-section").style.display="flex";
+  document.getElementById("sidebar-more-btn").textContent="✕ Réduire";
+  setHomeTab("progression");
+});
+document.getElementById("home-game-btn")?.addEventListener("click",()=>setHomeTab("game"));
 
 let dicoSort="alpha"; // "alpha" | "cat" | "depth"
 let dicoShowWorked=false;
+
+/* ===== JEU DE CARTES ===== */
+let gameQueue=[];
+let gameIdx=0;
+let gameSession=[];   // {id, action: "pin"|"skip"}
+const GAME_SIZE=10;
+
+function buildGameQueue(){
+  const wids=workedIds();
+  // Priorité : catégories liées aux objectifs actifs
+  const objCats=new Set((currentProfile.objectives||[]).flatMap(id=>{
+    const o=OBJECTIVES_MAP.find(x=>x.id===id);
+    return o?o.topics:[];
+  }));
+  const shuffle=arr=>[...arr].sort(()=>Math.random()-0.5);
+  const notWorked=DATA.filter(d=>!wids.has(d.id));
+  const priority=notWorked.filter(d=>objCats.has(d.cat));
+  const rest=notWorked.filter(d=>!objCats.has(d.cat));
+  return [...shuffle(priority),...shuffle(rest)];
+}
+
+function renderGameInline(){
+  const grid=document.getElementById("home-themes-grid");
+  const total=DATA.filter(d=>!workedIds().has(d.id)).length;
+
+  if(total===0){
+    grid.innerHTML=`<div style="padding:3rem 0;text-align:center;">
+      <div style="font-size:2.5rem;margin-bottom:1rem;">🎉</div>
+      <div style="font-size:1.1rem;font-weight:600;margin-bottom:0.5rem;">Toutes les identités ont été travaillées</div>
+      <div style="font-size:0.88rem;color:var(--text-muted);">Retourne dans Thèmes pour en explorer de nouvelles.</div>
+    </div>`;
+    return;
+  }
+
+  gameQueue=buildGameQueue();
+  gameIdx=0;
+  gameSession=[];
+
+  grid.innerHTML=`
+    <div id="game-inline-wrap" style="max-width:480px;width:100%;margin:0 auto;display:flex;flex-direction:column;align-items:center;">
+      <!-- barre de progression -->
+      <div style="width:100%;height:3px;background:var(--surface3);border-radius:2px;margin-bottom:2rem;overflow:hidden;">
+        <div id="gi-bar" style="height:100%;background:var(--accent);width:0%;transition:width 0.3s;border-radius:2px;"></div>
+      </div>
+      <div id="gi-counter" style="font-size:12px;color:var(--text-faint);margin-bottom:2.5rem;">0 / ${GAME_SIZE}</div>
+
+      <!-- carte -->
+      <div id="gi-card-wrap" style="width:100%;display:flex;flex-direction:column;align-items:center;">
+        <div id="gi-identity" style="font-size:clamp(24px,5vw,36px);font-weight:700;text-align:center;line-height:1.3;margin-bottom:0.75rem;padding:0 1rem;"></div>
+        <div id="gi-cat" style="font-size:11px;color:var(--text-faint);letter-spacing:1px;text-transform:uppercase;margin-bottom:3rem;"></div>
+        <!-- boutons -->
+        <div style="display:flex;gap:12px;justify-content:center;width:100%;">
+          <button id="gi-skip" style="flex:1;max-width:120px;display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px 10px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text-muted);font-family:inherit;cursor:pointer;transition:all 0.15s;" onmouseenter="this.style.borderColor='var(--border-strong)';this.style.color='var(--text)'" onmouseleave="this.style.borderColor='var(--border-md)';this.style.color='var(--text-muted)'">
+            <span style="font-size:22px;">→</span>
+            <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;">Passé</span>
+          </button>
+          <button id="gi-later" style="flex:1;max-width:120px;display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px 10px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text-muted);font-family:inherit;cursor:pointer;transition:all 0.15s;" onmouseenter="this.style.borderColor='var(--border-strong)';this.style.color='var(--text)'" onmouseleave="this.style.borderColor='var(--border-md)';this.style.color='var(--text-muted)'">
+            <span style="font-size:22px;">🔖</span>
+            <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;">À faire</span>
+          </button>
+          <button id="gi-yes" style="flex:1;max-width:120px;display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px 10px;border-radius:var(--radius-lg);border:1px solid var(--accent);background:rgba(200,184,154,0.1);color:var(--accent);font-family:inherit;cursor:pointer;transition:all 0.15s;" onmouseenter="this.style.background='rgba(200,184,154,0.18)'" onmouseleave="this.style.background='rgba(200,184,154,0.1)'">
+            <span style="font-size:22px;">📌</span>
+            <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;">Épinglé</span>
+          </button>
+        </div>
+        <!-- dots session -->
+        <div id="gi-dots" style="display:flex;gap:5px;margin-top:2rem;flex-wrap:wrap;justify-content:center;max-width:220px;"></div>
+      </div>
+
+      <!-- résultats (caché au départ) -->
+      <div id="gi-results" style="display:none;width:100%;flex-direction:column;align-items:center;text-align:center;">
+        <div style="font-size:2rem;margin-bottom:0.75rem;">✨</div>
+        <div style="font-size:1.2rem;font-weight:700;margin-bottom:0.5rem;">Session terminée</div>
+        <div id="gi-res-sub" style="font-size:0.88rem;color:var(--text-muted);margin-bottom:1.5rem;"></div>
+        <div id="gi-res-pins" style="width:100%;margin-bottom:1.75rem;text-align:left;"></div>
+        <div id="gi-cta-wrap" style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;"></div>
+      </div>
+    </div>`;
+
+  gameShowCard();
+
+  document.getElementById("gi-yes").addEventListener("click",()=>gameAction("pin"));
+  document.getElementById("gi-later")?.addEventListener("click",()=>gameAction("later"));
+  document.getElementById("gi-skip").addEventListener("click",()=>gameAction("skip"));
+  document.getElementById("gi-validate")?.addEventListener("click",gameValidate);
+  document.getElementById("gi-replay")?.addEventListener("click",()=>renderGameInline());
+}
+
+function gameShowCard(){
+  if(gameIdx>=GAME_SIZE||gameIdx>=gameQueue.length){gameShowResults();return;}
+  const entry=gameQueue[gameIdx];
+  const wrap=document.getElementById("gi-card-wrap");
+  if(!wrap)return;
+
+  // Texte
+  document.getElementById("gi-identity").textContent="Je suis "+entry.text;
+  const catLabel=entry.cat||"";
+  document.getElementById("gi-cat").textContent=catLabel;
+
+  // Compteur
+  const done=gameIdx;
+  document.getElementById("gi-counter").textContent=`${done} / ${GAME_SIZE}`;
+  document.getElementById("gi-bar").style.width=`${(done/GAME_SIZE)*100}%`;
+
+  // Dots
+  const dots=document.getElementById("gi-dots");
+  dots.innerHTML=Array.from({length:GAME_SIZE},(_,i)=>{
+    const s=gameSession[i];
+    const cls=s?.action==="pin"?"background:var(--green-border)":s?.action==="skip"?"background:var(--surface3);opacity:0.4":i===gameIdx?"background:var(--accent);transform:scale(1.3)":"background:var(--surface3)";
+    return`<div style="width:8px;height:8px;border-radius:50%;transition:all 0.2s;${cls};"></div>`;
+  }).join("");
+
+  // Animation entrée
+  wrap.style.animation="none";
+  wrap.offsetHeight; // reflow
+  wrap.style.animation="cardIn 0.28s ease forwards";
+}
+
+function gameAction(action){
+  if(gameIdx>=gameQueue.length)return;
+  const entry=gameQueue[gameIdx];
+  gameSession[gameIdx]={id:entry.id,text:entry.text,action};
+
+  const wrap=document.getElementById("gi-card-wrap");
+  wrap.style.animation=action==="pin"?"cardOutRight 0.22s ease forwards":action==="later"?"cardOutUp 0.22s ease forwards":"cardOutLeft 0.22s ease forwards";
+
+  setTimeout(()=>{
+    gameIdx++;
+    if(gameIdx>=GAME_SIZE||gameIdx>=gameQueue.length){gameShowResults();}
+    else{gameShowCard();}
+  },200);
+}
+
+function gameShowResults(){
+  const cardWrap=document.getElementById("gi-card-wrap");
+  const resWrap=document.getElementById("gi-results");
+  if(cardWrap)cardWrap.style.display="none";
+  if(resWrap)resWrap.style.display="flex";
+
+  const pinned=gameSession.filter(s=>s.action==="pin");
+  const later=gameSession.filter(s=>s.action==="later");
+  const skipped=gameSession.filter(s=>s.action==="skip");
+  const toAdd=pinned.length+later.length;
+
+  const subEl=document.getElementById("gi-res-sub");
+  if(subEl){
+    const parts=[];
+    if(pinned.length>0)parts.push(`${pinned.length} épinglée${pinned.length>1?"s":""}`);
+    if(later.length>0)parts.push(`${later.length} à faire`);
+    if(skipped.length>0)parts.push(`${skipped.length} passée${skipped.length>1?"s":""}`);
+    subEl.textContent=toAdd===0?`${skipped.length} cartes passées — rien de sélectionné cette fois. C'est normal.`:parts.join(" · ");
+  }
+
+  const pinsEl=document.getElementById("gi-res-pins");
+  if(pinsEl&&toAdd>0){
+    let html="";
+    if(pinned.length>0){
+      html+=`<div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-faint);margin-bottom:0.75rem;">📌 Épinglées</div>`;
+      html+=pinned.map(s=>`<div style="padding:10px 14px;border-radius:var(--radius);border:1px solid var(--accent);background:rgba(200,184,154,0.06);font-size:0.9rem;font-weight:500;margin-bottom:6px;display:flex;align-items:center;gap:8px;"><span style="color:var(--accent);font-size:0.75rem;">📌</span><span>Je suis ${s.text}</span></div>`).join("");
+    }
+    if(later.length>0){
+      html+=`<div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-faint);margin:${pinned.length>0?"1rem":0} 0 0.75rem;">🔖 À faire</div>`;
+      html+=later.map(s=>`<div style="padding:10px 14px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface);font-size:0.9rem;font-weight:500;margin-bottom:6px;display:flex;align-items:center;gap:8px;"><span style="color:var(--gold-text);font-size:0.75rem;">🔖</span><span>Je suis ${s.text}</span></div>`).join("");
+    }
+    pinsEl.innerHTML=html;
+  } else if(pinsEl){
+    pinsEl.innerHTML="";
+  }
+
+  // Mettre à jour le compteur/barre
+  document.getElementById("gi-counter").textContent=`${Math.min(gameIdx,GAME_SIZE)} / ${GAME_SIZE}`;
+  document.getElementById("gi-bar").style.width="100%";
+
+  // CTAs selon résultat
+  const ctaWrap=document.getElementById("gi-cta-wrap");
+  if(ctaWrap){
+    if(toAdd===0){
+      ctaWrap.innerHTML=`
+        <button onclick="renderGameInline()" style="padding:12px 22px;border-radius:var(--radius-lg);border:1px solid var(--accent);background:rgba(200,184,154,0.08);color:var(--accent);font-size:0.9rem;font-weight:600;font-family:inherit;cursor:pointer;">↻ Nouvelle session</button>
+        <button onclick="setHomeTab('reconnexion')" style="padding:12px 22px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text);font-size:0.9rem;font-family:inherit;cursor:pointer;">🗂 Explorer les thèmes</button>`;
+    } else {
+      ctaWrap.innerHTML=`
+        <button id="gi-validate" style="padding:13px 24px;border-radius:var(--radius-lg);border:1px solid var(--accent);background:rgba(200,184,154,0.1);color:var(--accent);font-size:0.95rem;font-weight:700;font-family:inherit;cursor:pointer;">✓ Ajouter à ma liste (${toAdd})</button>
+        <button onclick="renderGameInline()" style="padding:12px 18px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text-muted);font-size:0.85rem;font-family:inherit;cursor:pointer;">↻ Rejouer</button>`;
+      document.getElementById("gi-validate")?.addEventListener("click",gameValidate);
+    }
+  }
+}
+
+async function gameValidate(){
+  const btn=document.getElementById("gi-validate");
+  if(btn){btn.disabled=true;btn.textContent="Sauvegarde…";}
+  const pinned=gameSession.filter(s=>s.action==="pin");
+  const laterItems=gameSession.filter(s=>s.action==="later");
+  const selected=[...pinned,...laterItems];
+  if(selected.length===0){setHomeTab("pinned");return;}
+  try{
+    // 1. Épingler celles qui ne le sont pas encore (pinned + later → tous dans Ma liste)
+    const toPin=selected.map(s=>s.id).filter(id=>!pinnedIds.has(id));
+    for(const id of toPin){await togglePin(id,true);}
+    // 2. Les marquer comme travaillées (créer/mettre à jour la session du jour)
+    const date=new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
+    const allIds=selected.map(s=>s.id);
+    const existing=SESSIONS.find(s=>s.date===date);
+    if(existing){
+      const toAdd=allIds.filter(id=>!existing.ids.includes(id));
+      if(toAdd.length){
+        const newIds=[...existing.ids,...toAdd];
+        await sb(`sessions?id=eq.${existing.id}`,{method:"PATCH",body:{ids:newIds},prefer:"return=minimal"});
+        existing.ids=newIds;
+      }
+    } else {
+      const r=await sb("sessions",{method:"POST",body:{profile_id:currentProfile.id,date,ids:allIds},prefer:"return=representation"});
+      if(r&&r[0])SESSIONS.push({id:r[0].id,date,ids:allIds});
+      else SESSIONS.push({id:"local_"+Date.now(),date,ids:allIds});
+    }
+    const total=selected.length;
+    showToast(`✓ ${total} identité${total>1?"s":""} ajoutée${total>1?"s":""} à ta liste`);
+    setHomeTab("pinned");
+  }catch(e){
+    const total=pinned.length+laterItems.length;
+    if(btn){btn.disabled=false;btn.textContent=`✓ Ajouter à ma liste (${total})`;}
+    showToast("Quelque chose a bloqué — réessaie");
+  }
+}
+
+/* ===== MA PROGRESSION ===== */
+function renderProgressionInline(){
+  const grid=document.getElementById("home-themes-grid");
+  const wids=workedIds();
+  const totalWorked=wids.size;
+  const totalIdentities=DATA.length;
+  const totalSessions=SESSIONS.length;
+
+  // IRT logs
+  const irtKey=`irt_log_${currentProfile?.id}`;
+  let irtLogs=[];
+  try{irtLogs=JSON.parse(localStorage.getItem(irtKey)||"[]");}catch(e){}
+
+  // Exercises done
+  const exKey=`ex_done_${currentProfile?.id||"guest"}`;
+  let exDone=[];
+  try{exDone=JSON.parse(localStorage.getItem(exKey)||"[]");}catch(e){}
+
+  // Global progress %
+  const globalPct=totalIdentities>0?Math.round((totalWorked/totalIdentities)*100):0;
+
+  // Per-theme progression
+  const themeRows=SCAN_THEMES.map(theme=>{
+    const allIds=theme.chapters.flatMap(c=>c.ids);
+    const uniqueIds=[...new Set(allIds)];
+    const doneCount=uniqueIds.filter(id=>wids.has(id)).length;
+    const pct=uniqueIds.length>0?Math.round((doneCount/uniqueIds.length)*100):0;
+    return{theme,uniqueIds,doneCount,pct};
+  }).filter(r=>r.doneCount>0).sort((a,b)=>b.pct-a.pct);
+
+  // Milestone message
+  function getMilestone(pct,sessions,irt){
+    if(sessions===0)return{msg:"Tu viens de commencer. Chaque identité explorée est un pas vers toi.",icon:"🌱"};
+    if(pct>=80)return{msg:"Tu as parcouru l'essentiel du chemin. Tu t'appartiens davantage chaque jour.",icon:"🔥"};
+    if(pct>=50)return{msg:"Tu es dans le cœur du travail. La transformation est en marche.",icon:"⚡"};
+    if(pct>=30)return{msg:"Tu as passé le cap de la résistance. Continue — la profondeur t'attend.",icon:"🌀"};
+    if(irt>=5)return{msg:"Tes séances IRT montrent un engagement réel. Le corps se libère.",icon:"🎧"};
+    if(sessions>=10)return{msg:"Dix sessions validées. Tu as prouvé que tu tiens.",icon:"✨"};
+    return{msg:"Tu avances. Chaque exploration laisse une trace que les mots ne voient pas.",icon:"🪷"};
+  }
+  const milestone=getMilestone(globalPct,totalSessions,irtLogs.length);
+
+  // IRT history
+  let irtHtml="";
+  if(irtLogs.length>0){
+    const recent=[...irtLogs].reverse().slice(0,5);
+    irtHtml=`
+    <div style="margin-bottom:1.5rem;">
+      <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-faint);margin-bottom:0.75rem;">Dernières séances IRT</div>
+      ${recent.map(log=>{
+        const before=parseInt(log.before)||0;
+        const after=parseInt(log.after)||0;
+        const delta=before-after;
+        const deltaColor=delta>0?"var(--green-text)":delta<0?"var(--red-text)":"var(--text-muted)";
+        const deltaIcon=delta>0?"↓":"↑";
+        const dateStr=log.date?new Date(log.date).toLocaleDateString("fr-FR",{day:"numeric",month:"short"}):"";
+        return`<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface);margin-bottom:6px;">
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:0.88rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${log.identity||"—"}</div>
+            ${dateStr?`<div style="font-size:11px;color:var(--text-faint);margin-top:2px;">${dateStr}</div>`:""}
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
+            <span style="font-size:12px;color:var(--text-muted);">${before}</span>
+            <span style="font-size:11px;color:var(--text-faint);">→</span>
+            <span style="font-size:12px;color:var(--text-muted);">${after}</span>
+            ${delta!==0?`<span style="font-size:12px;font-weight:700;color:${deltaColor};margin-left:2px;">${deltaIcon}${Math.abs(delta)}</span>`:""}
+          </div>
+        </div>`;
+      }).join("")}
+    </div>`;
+  }
+
+  // Theme bars
+  let themeHtml="";
+  if(themeRows.length>0){
+    themeHtml=`
+    <div style="margin-bottom:1.5rem;">
+      <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-faint);margin-bottom:0.75rem;">Thèmes explorés</div>
+      ${themeRows.map(({theme,doneCount,uniqueIds,pct})=>`
+        <div style="margin-bottom:12px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
+            <div style="font-size:0.88rem;font-weight:500;">${theme.icon} ${theme.title}</div>
+            <div style="font-size:11px;color:var(--text-muted);">${doneCount}/${uniqueIds.length}</div>
+          </div>
+          <div style="height:5px;border-radius:3px;background:var(--surface3);overflow:hidden;">
+            <div style="height:100%;border-radius:3px;background:var(--accent);width:${pct}%;transition:width 0.4s;"></div>
+          </div>
+        </div>
+      `).join("")}
+    </div>`;
+  } else {
+    themeHtml=`<div style="padding:1.5rem;text-align:center;color:var(--text-faint);font-size:0.88rem;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--surface);margin-bottom:1.5rem;">
+      Commence à valider des identités pour voir ta progression par thème.
+    </div>`;
+  }
+
+  // Exercises
+  const exCount=exDone.length;
+  const exTotal=typeof EXERCISES!=="undefined"?EXERCISES.length:7;
+
+  grid.innerHTML=`
+    <div style="max-width:520px;">
+      <!-- Milestone -->
+      <div style="padding:1.25rem 1.5rem;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);margin-bottom:1.5rem;display:flex;align-items:flex-start;gap:12px;">
+        <span style="font-size:1.75rem;flex-shrink:0;">${milestone.icon}</span>
+        <p style="font-size:0.93rem;line-height:1.6;color:var(--text);font-style:italic;">${milestone.msg}</p>
+      </div>
+
+      <!-- Chiffres clés -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1.5rem;">
+        <div style="padding:14px 8px;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--surface);text-align:center;">
+          <div style="font-size:1.5rem;font-weight:700;">${totalWorked}</div>
+          <div style="font-size:9px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-top:3px;">Identités</div>
+        </div>
+        <div style="padding:14px 8px;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--surface);text-align:center;">
+          <div style="font-size:1.5rem;font-weight:700;">${totalSessions}</div>
+          <div style="font-size:9px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-top:3px;">Sessions</div>
+        </div>
+        <div style="padding:14px 8px;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--surface);text-align:center;">
+          <div style="font-size:1.5rem;font-weight:700;">${irtLogs.length}</div>
+          <div style="font-size:9px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-top:3px;">IRT</div>
+        </div>
+        <div style="padding:14px 8px;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--surface);text-align:center;">
+          <div style="font-size:1.5rem;font-weight:700;">${exCount}</div>
+          <div style="font-size:9px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-top:3px;">Exercices</div>
+        </div>
+      </div>
+
+      <!-- Barre globale -->
+      <div style="margin-bottom:1.5rem;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <div style="font-size:0.9rem;font-weight:600;">Progression globale</div>
+          <div style="font-size:0.88rem;color:var(--text-muted);">${globalPct}%</div>
+        </div>
+        <div style="height:8px;border-radius:4px;background:var(--surface3);overflow:hidden;">
+          <div style="height:100%;border-radius:4px;background:linear-gradient(90deg,var(--accent),#e8d5b7);width:${globalPct}%;transition:width 0.5s;"></div>
+        </div>
+        <div style="font-size:11px;color:var(--text-faint);margin-top:5px;">${totalWorked} identités traversées sur ${totalIdentities}</div>
+      </div>
+
+      ${themeHtml}
+      ${irtHtml}
+
+      ${exCount>0?`
+      <div style="margin-bottom:1.5rem;">
+        <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-faint);margin-bottom:0.75rem;">Exercices complétés</div>
+        <div style="height:5px;border-radius:3px;background:var(--surface3);overflow:hidden;margin-bottom:6px;">
+          <div style="height:100%;border-radius:3px;background:var(--purple-text);width:${Math.round(exCount/exTotal*100)}%;"></div>
+        </div>
+        <div style="font-size:11px;color:var(--text-faint);">${exCount} / ${exTotal} exercices</div>
+      </div>`:""}
+
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button onclick="setHomeTab('exercises')" style="padding:10px 16px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface);color:var(--text);font-size:0.85rem;font-family:inherit;cursor:pointer;">⚡ Exercices →</button>
+        <button onclick="setHomeTab('irt')" style="padding:10px 16px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface);color:var(--text);font-size:0.85rem;font-family:inherit;cursor:pointer;">🎧 Séance IRT →</button>
+        <button onclick="setHomeTab('journal')" style="padding:10px 16px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface);color:var(--text);font-size:0.85rem;font-family:inherit;cursor:pointer;">📓 Journal →</button>
+      </div>
+    </div>
+  `;
+}
 
 function renderDictionnaireInline(){
   const grid=document.getElementById("home-themes-grid");
@@ -5503,16 +6066,29 @@ async function validateFromDico(id,btnEl){
   const date=new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
   try{
     const existing=SESSIONS.find(s=>s.date===date);
-    if(existing&&!existing.ids.includes(id)){
-      const newIds=[...existing.ids,id];
-      await sb(`sessions?id=eq.${existing.id}`,{method:"PATCH",body:{ids:newIds},prefer:"return=minimal"});
-      existing.ids=newIds;
-    } else if(!existing){
+    if(existing){
+      if(!existing.ids.includes(id)){
+        const newIds=[...existing.ids,id];
+        await sb(`sessions?id=eq.${existing.id}`,{method:"PATCH",body:{ids:newIds},prefer:"return=minimal"});
+        existing.ids=newIds; // mise à jour locale immédiate
+      }
+      // si déjà dedans, rien à faire — on rafraîchit quand même
+    } else {
       const r=await sb("sessions",{method:"POST",body:{profile_id:currentProfile.id,date,ids:[id]},prefer:"return=representation"});
-      if(r&&r[0])SESSIONS.push({id:r[0].id,date,ids:[id]});
+      if(r&&r[0]){
+        SESSIONS.push({id:r[0].id,date,ids:[id]});
+      } else {
+        // Fallback : on met à jour localement même si Supabase ne renvoie pas de données
+        SESSIONS.push({id:"local_"+Date.now(),date,ids:[id]});
+      }
     }
-    renderHomeThemes();
-    renderDicoBody();
+    // Rafraîchit la vue active sans écraser d'autres onglets
+    const activeMobile=document.querySelector(".home-mobile-tab.active");
+    const activeSide=document.querySelector(".home-sidebar-btn.active");
+    const activeTab=(activeMobile?.dataset?.tab)||(activeSide?.id?.replace("home-","")?.replace("-btn",""))||"";
+    if(activeTab==="pinned")renderPinnedTab();
+    else if(activeTab==="dico"||document.getElementById("dico-body"))renderDicoBody();
+    else renderHomeThemes();
   }catch(e){
     showToast("Quelque chose a bloqué — réessaie");
     if(btnEl){btnEl.disabled=false;btnEl.textContent="✓ Valider";}
