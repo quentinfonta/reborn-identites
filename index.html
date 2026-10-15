@@ -176,6 +176,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
 .prob-id-row:not(.worked):hover{background:var(--surface3);}
 .prob-theme{margin-bottom:0;}
 .prob-theme-header:hover{opacity:0.92;}
+.prob-theme-header{flex-wrap:nowrap;min-width:0;}
+.prob-theme-header>div{min-width:0;overflow:hidden;}
+.prob-theme-header>div>div:first-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+@media(max-width:600px){.prob-theme-header{padding:11px 12px!important;gap:8px!important;}}
 
 .home-footer{display:flex;gap:12px;align-items:center;}
 .home-footer-btn{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--radius);border:1px solid var(--border);background:none;color:var(--text-faint);font-size:12px;font-family:inherit;cursor:pointer;}
