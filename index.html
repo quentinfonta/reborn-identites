@@ -3402,7 +3402,7 @@ async function enterProfile(id,name){
   checked.clear();reviewDates={};scanChecked.clear();pinnedIds.clear();
   await loadData();
   loadOnboarding();
-  const hasOnboarding=currentProfile.objectives&&currentProfile.objectives.length>0;
+  const hasOnboarding=(currentProfile.objectives&&currentProfile.objectives.length>0)||SESSIONS.length>0||pinnedIds.size>0;
   if(!hasOnboarding){
     startOnboarding();
   } else {
@@ -5735,12 +5735,12 @@ function renderGameInline(){
             <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;">Passé</span>
           </button>
           <button id="gi-later" style="flex:1;max-width:120px;display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px 10px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text-muted);font-family:inherit;cursor:pointer;transition:all 0.15s;" onmouseenter="this.style.borderColor='var(--border-strong)';this.style.color='var(--text)'" onmouseleave="this.style.borderColor='var(--border-md)';this.style.color='var(--text-muted)'">
-            <span style="font-size:22px;">🔖</span>
-            <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;">À faire</span>
-          </button>
-          <button id="gi-yes" style="flex:1;max-width:120px;display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px 10px;border-radius:var(--radius-lg);border:1px solid var(--accent);background:rgba(200,184,154,0.1);color:var(--accent);font-family:inherit;cursor:pointer;transition:all 0.15s;" onmouseenter="this.style.background='rgba(200,184,154,0.18)'" onmouseleave="this.style.background='rgba(200,184,154,0.1)'">
             <span style="font-size:22px;">📌</span>
             <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;">Épinglé</span>
+          </button>
+          <button id="gi-yes" style="flex:1;max-width:120px;display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px 10px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text-muted);font-family:inherit;cursor:pointer;transition:all 0.15s;" onmouseenter="this.style.borderColor='var(--accent)';this.style.color='var(--accent)';this.style.background='rgba(200,184,154,0.08)'" onmouseleave="this.style.borderColor='var(--border-md)';this.style.color='var(--text-muted)';this.style.background='var(--surface)'">
+            <span style="font-size:22px;">✅</span>
+            <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;">Validé</span>
           </button>
         </div>
         <!-- dots session -->
@@ -5773,7 +5773,7 @@ function gameShowCard(){
   if(!wrap)return;
 
   // Texte
-  document.getElementById("gi-identity").textContent="Je suis "+entry.text;
+  document.getElementById("gi-identity").textContent=entry.text;
   const catLabel=entry.cat||"";
   document.getElementById("gi-cat").textContent=catLabel;
 
@@ -5825,8 +5825,8 @@ function gameShowResults(){
   const subEl=document.getElementById("gi-res-sub");
   if(subEl){
     const parts=[];
-    if(pinned.length>0)parts.push(`${pinned.length} épinglée${pinned.length>1?"s":""}`);
-    if(later.length>0)parts.push(`${later.length} à faire`);
+    if(pinned.length>0)parts.push(`${pinned.length} validée${pinned.length>1?"s":""}`);
+    if(later.length>0)parts.push(`${later.length} épinglée${later.length>1?"s":""}`);
     if(skipped.length>0)parts.push(`${skipped.length} passée${skipped.length>1?"s":""}`);
     subEl.textContent=toAdd===0?`${skipped.length} cartes passées — rien de sélectionné cette fois. C'est normal.`:parts.join(" · ");
   }
@@ -5835,12 +5835,12 @@ function gameShowResults(){
   if(pinsEl&&toAdd>0){
     let html="";
     if(pinned.length>0){
-      html+=`<div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-faint);margin-bottom:0.75rem;">📌 Épinglées</div>`;
-      html+=pinned.map(s=>`<div style="padding:10px 14px;border-radius:var(--radius);border:1px solid var(--accent);background:rgba(200,184,154,0.06);font-size:0.9rem;font-weight:500;margin-bottom:6px;display:flex;align-items:center;gap:8px;"><span style="color:var(--accent);font-size:0.75rem;">📌</span><span>Je suis ${s.text}</span></div>`).join("");
+      html+=`<div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-faint);margin-bottom:0.75rem;">✅ Validées</div>`;
+      html+=pinned.map(s=>`<div style="padding:10px 14px;border-radius:var(--radius);border:1px solid var(--accent);background:rgba(200,184,154,0.06);font-size:0.9rem;font-weight:500;margin-bottom:6px;display:flex;align-items:center;gap:8px;"><span style="color:var(--accent);font-size:0.75rem;">✅</span><span>${s.text}</span></div>`).join("");
     }
     if(later.length>0){
-      html+=`<div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-faint);margin:${pinned.length>0?"1rem":0} 0 0.75rem;">🔖 À faire</div>`;
-      html+=later.map(s=>`<div style="padding:10px 14px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface);font-size:0.9rem;font-weight:500;margin-bottom:6px;display:flex;align-items:center;gap:8px;"><span style="color:var(--gold-text);font-size:0.75rem;">🔖</span><span>Je suis ${s.text}</span></div>`).join("");
+      html+=`<div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-faint);margin:${pinned.length>0?"1rem":0} 0 0.75rem;">📌 Épinglées</div>`;
+      html+=later.map(s=>`<div style="padding:10px 14px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface);font-size:0.9rem;font-weight:500;margin-bottom:6px;display:flex;align-items:center;gap:8px;"><span style="font-size:0.75rem;">📌</span><span>${s.text}</span></div>`).join("");
     }
     pinsEl.innerHTML=html;
   } else if(pinsEl){
@@ -5870,35 +5870,39 @@ function gameShowResults(){
 async function gameValidate(){
   const btn=document.getElementById("gi-validate");
   if(btn){btn.disabled=true;btn.textContent="Sauvegarde…";}
-  const pinned=gameSession.filter(s=>s.action==="pin");
-  const laterItems=gameSession.filter(s=>s.action==="later");
-  const selected=[...pinned,...laterItems];
+  const validated=gameSession.filter(s=>s.action==="pin");   // validées = épinglées + session
+  const pinOnly=gameSession.filter(s=>s.action==="later");   // épinglées seulement
+  const selected=[...validated,...pinOnly];
   if(selected.length===0){setHomeTab("pinned");return;}
   try{
-    // 1. Épingler celles qui ne le sont pas encore (pinned + later → tous dans Ma liste)
+    // 1. Épingler toutes les sélectionnées (validées + épinglées → Ma liste)
     const toPin=selected.map(s=>s.id).filter(id=>!pinnedIds.has(id));
     for(const id of toPin){await togglePin(id,true);}
-    // 2. Les marquer comme travaillées (créer/mettre à jour la session du jour)
-    const date=new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
-    const allIds=selected.map(s=>s.id);
-    const existing=SESSIONS.find(s=>s.date===date);
-    if(existing){
-      const toAdd=allIds.filter(id=>!existing.ids.includes(id));
-      if(toAdd.length){
-        const newIds=[...existing.ids,...toAdd];
-        await sb(`sessions?id=eq.${existing.id}`,{method:"PATCH",body:{ids:newIds},prefer:"return=minimal"});
-        existing.ids=newIds;
+    // 2. Créer une session uniquement pour les validées
+    if(validated.length>0){
+      const date=new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
+      const validatedIds=validated.map(s=>s.id);
+      const existing=SESSIONS.find(s=>s.date===date);
+      if(existing){
+        const toAdd=validatedIds.filter(id=>!existing.ids.includes(id));
+        if(toAdd.length){
+          const newIds=[...existing.ids,...toAdd];
+          await sb(`sessions?id=eq.${existing.id}`,{method:"PATCH",body:{ids:newIds},prefer:"return=minimal"});
+          existing.ids=newIds;
+        }
+      } else {
+        const r=await sb("sessions",{method:"POST",body:{profile_id:currentProfile.id,date,ids:validatedIds},prefer:"return=representation"});
+        if(r&&r[0])SESSIONS.push({id:r[0].id,date,ids:validatedIds});
+        else SESSIONS.push({id:"local_"+Date.now(),date,ids:validatedIds});
       }
-    } else {
-      const r=await sb("sessions",{method:"POST",body:{profile_id:currentProfile.id,date,ids:allIds},prefer:"return=representation"});
-      if(r&&r[0])SESSIONS.push({id:r[0].id,date,ids:allIds});
-      else SESSIONS.push({id:"local_"+Date.now(),date,ids:allIds});
     }
-    const total=selected.length;
-    showToast(`✓ ${total} identité${total>1?"s":""} ajoutée${total>1?"s":""} à ta liste`);
+    const parts=[];
+    if(validated.length>0)parts.push(`${validated.length} validée${validated.length>1?"s":""}`);
+    if(pinOnly.length>0)parts.push(`${pinOnly.length} épinglée${pinOnly.length>1?"s":""}`);
+    showToast(`✓ ${parts.join(" · ")} ajoutée${selected.length>1?"s":""} à ta liste`);
     setHomeTab("pinned");
   }catch(e){
-    const total=pinned.length+laterItems.length;
+    const total=validated.length+pinOnly.length;
     if(btn){btn.disabled=false;btn.textContent=`✓ Ajouter à ma liste (${total})`;}
     showToast("Quelque chose a bloqué — réessaie");
   }
