@@ -2796,10 +2796,10 @@ async function unvalidateId(id){
 async function togglePin(id,silent=false){
   if(pinnedIds.has(id)){
     pinnedIds.delete(id);
-    try{await fetch(SB_URL+"/rest/v1/pins?profile_id=eq."+currentProfile.id+"&identity_id=eq."+id,{method:"DELETE",headers:{"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY}});}catch(e){pinnedIds.add(id);if(!silent)showToast("Erreur — réessaie");return;}
+    try{await sb(`pins?profile_id=eq.${currentProfile.id}&identity_id=eq.${id}`,{method:"DELETE",prefer:"return=minimal"});}catch(e){pinnedIds.add(id);if(!silent)showToast("Erreur — réessaie");return;}
   }else{
     pinnedIds.add(id);
-    try{await fetch(SB_URL+"/rest/v1/pins",{method:"POST",headers:{"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"application/json","Prefer":"return=minimal"},body:JSON.stringify({profile_id:currentProfile.id,identity_id:id})});}catch(e){pinnedIds.delete(id);if(!silent)showToast("Erreur — réessaie");return;}
+    try{await sb("pins",{method:"POST",body:{profile_id:currentProfile.id,identity_id:id},prefer:"return=minimal"});}catch(e){pinnedIds.delete(id);if(!silent)showToast("Erreur — réessaie");return;}
   }
   // Update badge count on pinned tab
   const pinnedMobileBtn=document.querySelector(".home-mobile-tab[data-tab='pinned']");
@@ -3991,8 +3991,7 @@ function renderProblematiquesTheme(t,isExpanded,badge){
           ${isWorked
             ? `<span style="font-size:10px;background:var(--green-bg);color:var(--green-text);border-radius:20px;padding:2px 8px;flex-shrink:0;">✓ Travaillée</span>
                <button title="Annuler" onclick="event.stopPropagation();unvalidateId(${d.id});" style="background:none;border:none;cursor:pointer;font-size:11px;color:var(--text-faint);padding:2px 4px;flex-shrink:0;">↩</button>`
-            : `<button onclick="event.stopPropagation();togglePin(${d.id}).then(()=>renderHomeThemes());" style="flex-shrink:0;font-size:0.7rem;background:${pinBg};border:1px solid ${pinBorder};color:${pinColor};border-radius:var(--radius);padding:3px 9px;cursor:pointer;font-family:inherit;transition:all 0.15s;" title="${pinTitle}">${pinLabel}</button>
-               <button onclick="event.stopPropagation();validateFromDico(${d.id});" style="flex-shrink:0;font-size:0.7rem;background:none;border:1px solid rgba(100,180,100,0.25);color:var(--green-text);border-radius:var(--radius);padding:3px 9px;cursor:pointer;font-family:inherit;transition:all 0.15s;" title="Marquer comme travaillée">✓</button>`
+            : ``
           }
         </div>`;
       });
@@ -4122,7 +4121,7 @@ function renderSearchResults(){
         <span style="font-size:10px;color:var(--text-faint);flex-shrink:0;margin-right:4px;">${d.cat}</span>
         ${isWorked
           ? `<button title="Retirer la validation" onclick="event.stopPropagation();unvalidateId(${d.id});" style="background:none;border:none;cursor:pointer;font-size:12px;color:var(--red-text);opacity:0.6;flex-shrink:0;padding:2px 4px;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.6">↩</button>`
-          : `<button style="font-size:0.7rem;background:${isPinned?"rgba(200,184,154,0.12)":"none"};border:1px solid ${isPinned?"rgba(200,184,154,0.4)":"transparent"};color:${isPinned?"var(--accent)":"var(--text-faint)"};border-radius:4px;padding:2px 8px;cursor:pointer;flex-shrink:0;font-family:inherit;" onclick="event.stopPropagation();togglePin(${d.id}).then(()=>renderSearchResults());" title="${isPinned?"Retirer de la liste":"Ajouter à ma liste"}">${isPinned?"📌 Liste":"+ Liste"}</button>`
+          : ``
         }
       </div>`;
     }).join("");
