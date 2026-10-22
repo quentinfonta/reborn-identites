@@ -4546,6 +4546,17 @@ function renderPinnedTab(){
   const grid=document.getElementById("home-themes-grid");
   const widsPin=workedIds();
 
+  // État vide : aucune identité épinglée ni travaillée
+  if(pinnedIds.size===0 && widsPin.size===0){
+    grid.innerHTML=`<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:3rem 1.5rem;min-height:60vh;">
+      <div style="font-size:48px;margin-bottom:1.5rem;">🃏</div>
+      <div style="font-size:1.1rem;font-weight:600;color:var(--text);margin-bottom:0.5rem;">Ta liste est vide pour l'instant</div>
+      <div style="font-size:0.88rem;color:var(--text-muted);max-width:320px;margin-bottom:2rem;line-height:1.6;">Commence par explorer les identités avec le jeu de cartes — épingle celles qui te parlent pour les travailler ensuite.</div>
+      <button onclick="setHomeTab('game')" style="padding:13px 28px;border-radius:var(--radius-lg);border:1px solid var(--accent);background:transparent;color:var(--accent);font-size:0.92rem;font-weight:500;font-family:inherit;cursor:pointer;transition:background 0.15s;" onmouseenter="this.style.background='rgba(200,184,154,0.1)'" onmouseleave="this.style.background='transparent'">→ Lancer le jeu de cartes</button>
+    </div>`;
+    return;
+  }
+
   // Barre de recherche + proposition (toujours présente)
   const searchSection=`<div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border);">
     <div style="font-size:11px;font-weight:600;color:var(--text-faint);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:0.75rem;">+ Ajouter à ma liste</div>
@@ -4690,11 +4701,9 @@ function renderPinnedTab(){
             <div style="font-size:0.9rem;font-weight:500;">${d.text}</div>
             <div style="font-size:10px;color:var(--text-faint);margin-top:2px;">${d.cat} · ${d.role==="source"?"source":d.role==="coping"?"coping":"verdict"}</div>
           </div>
-          <button onclick="toggleNotePanel(${d.id})" title="Note" style="background:none;border:none;cursor:pointer;font-size:0.85rem;flex-shrink:0;opacity:${hasNote?0.9:0.3};transition:opacity 0.15s;" onmouseenter="this.style.opacity=0.9" onmouseleave="this.style.opacity=${hasNote?0.9:0.3}">📝</button>
           <button onclick="validateFromDico(${d.id},this).then(()=>{renderPinnedTab();showToast('✓ Validée');})" style="font-size:0.72rem;color:var(--green-text);background:var(--green-bg);border:1px solid var(--green-border);border-radius:var(--radius);padding:5px 11px;flex-shrink:0;font-weight:600;cursor:pointer;font-family:inherit;transition:opacity 0.15s;" onmouseenter="this.style.opacity=0.75" onmouseleave="this.style.opacity=1">✓ Valider</button>
           <button onclick="togglePin(${d.id}).then(()=>renderPinnedTab());" style="background:none;border:none;cursor:pointer;font-size:1rem;opacity:0.3;flex-shrink:0;transition:opacity 0.15s;" onmouseenter="this.style.opacity=0.8" onmouseleave="this.style.opacity=0.3" title="Retirer de la liste">✕</button>
         </div>
-        ${noteCardHtml(d)}
       </div>`;
     });
     html+=`</div>`;
@@ -4715,11 +4724,9 @@ function renderPinnedTab(){
         <div style="display:flex;align-items:center;gap:10px;">
           <span style="color:var(--green-text);font-size:0.85rem;flex:1;">${d.text}</span>
           <span style="font-size:0.7rem;color:var(--text-faint);background:var(--surface2);padding:2px 6px;border-radius:4px;flex-shrink:0;">${d.cat}</span>
-          <button onclick="toggleNotePanel(${d.id})" title="Note" style="background:none;border:none;cursor:pointer;font-size:0.8rem;flex-shrink:0;opacity:${hasNote?0.9:0.3};transition:opacity 0.15s;" onmouseenter="this.style.opacity=0.9" onmouseleave="this.style.opacity=${hasNote?0.9:0.3}">📝</button>
           <button onclick="unvalidateId(${d.id});" title="Retirer la validation" style="font-size:0.72rem;background:none;border:none;color:var(--red-text);border-radius:5px;padding:3px 6px;cursor:pointer;flex-shrink:0;opacity:0.6;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.6">↩</button>
           <button onclick="togglePin(${d.id}).then(()=>renderPinnedTab());" style="background:none;border:none;cursor:pointer;font-size:0.85rem;opacity:0.3;flex-shrink:0;transition:opacity 0.15s;" onmouseenter="this.style.opacity=0.7" onmouseleave="this.style.opacity=0.3" title="Retirer de la liste">✕</button>
         </div>
-        ${noteCardHtml(d)}
       </div>`;
     });
     html+=`</div></div>`;
