@@ -3961,48 +3961,23 @@ function renderProblematiquesTheme(t,isExpanded,badge){
     </div>`;
 
   if(isExpanded&&ids.length){
-    // Grouper par rôle source / verdict / coping
-    const byRole={source:[],verdict:[],coping:[]};
-    ids.forEach(d=>{byRole[d.role]?byRole[d.role].push(d):byRole.source.push(d);});
-    const roleLabel={source:"Identités racines",verdict:"Jugements intériorisés",coping:"Mécanismes d'adaptation"};
-    const roleColors={source:"var(--red-text)",verdict:"var(--purple-text)",coping:"var(--accent)"};
+    html+=`<div class="prob-theme-body" style="border:1px solid var(--accent);border-top:none;border-radius:0 0 var(--radius-lg) var(--radius-lg);overflow:hidden;padding:4px 4px 8px;">`;
 
-    html+=`<div class="prob-theme-body" style="border:1px solid var(--accent);border-top:none;border-radius:0 0 var(--radius-lg) var(--radius-lg);overflow:hidden;">`;
-
-    ["source","verdict","coping"].forEach(role=>{
-      const group=byRole[role];
-      if(!group.length)return;
-      html+=`<div style="padding:0 4px;">
-        <div style="font-size:10px;color:${roleColors[role]};font-weight:600;letter-spacing:0.5px;padding:8px 12px 4px;text-transform:uppercase;">${roleLabel[role]}</div>`;
-      group.forEach(d=>{
-        const isWorked=wids.has(d.id);
-        const isPinned=pinnedIds.has(d.id);
-        const pinTitle=isPinned?"Retirer de la liste":"Ajouter à ma liste";
-        const pinLabel=isPinned?"📌":"+ Liste";
-        const pinBg=isPinned?"rgba(200,184,154,0.12)":"none";
-        const pinBorder=isPinned?"rgba(200,184,154,0.35)":"rgba(200,184,154,0.15)";
-        const pinColor=isPinned?"var(--accent)":"var(--text-faint)";
-        const rowColor=isWorked?"var(--text-muted)":"var(--text)";
-        const rowCursor=isWorked?"opacity:0.55;":"cursor:pointer;";
-        html+=`<div class="prob-id-row${isWorked?" worked":""}" data-prob-id="${d.id}" style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:var(--radius);margin:2px 0;${rowCursor}">
-          <div style="flex:1;min-width:0;">
-            <div style="font-size:12.5px;color:${rowColor};">${d.text}</div>
-          </div>
-          ${isWorked
-            ? `<span style="font-size:10px;background:var(--green-bg);color:var(--green-text);border-radius:20px;padding:2px 8px;flex-shrink:0;">✓ Travaillée</span>
-               <button title="Annuler" onclick="event.stopPropagation();unvalidateId(${d.id});" style="background:none;border:none;cursor:pointer;font-size:11px;color:var(--text-faint);padding:2px 4px;flex-shrink:0;">↩</button>`
-            : ``
-          }
-        </div>`;
-      });
-      html+="</div>";
+    ids.forEach(d=>{
+      const isWorked=wids.has(d.id);
+      const isPinned=pinnedIds.has(d.id);
+      const rowColor=isWorked?"var(--text-muted)":"var(--text)";
+      html+=`<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:var(--radius);margin:2px 0;${isWorked?"opacity:0.55;":""}">
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:12.5px;color:${rowColor};">${d.text}</div>
+        </div>
+        ${isWorked
+          ? `<span style="font-size:10px;background:var(--green-bg);color:var(--green-text);border-radius:20px;padding:2px 8px;flex-shrink:0;">✓</span>`
+          : `<button onclick="event.stopPropagation();togglePin(${d.id}).then(()=>renderHomeThemes());" style="background:${isPinned?"rgba(200,184,154,0.12)":"none"};border:1px solid ${isPinned?"rgba(200,184,154,0.35)":"rgba(200,184,154,0.15)"};color:${isPinned?"var(--accent)":"var(--text-faint)"};border-radius:var(--radius);padding:4px 10px;cursor:pointer;font-size:11px;font-family:inherit;flex-shrink:0;">${isPinned?"📌 Épinglé":"+ Épingler"}</button>`
+        }
+      </div>`;
     });
 
-    // Footer : lancer scan complet
-    html+=`<div style="padding:10px 12px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
-      <span style="font-size:11px;color:var(--text-faint);">${total} identités dans ce thème</span>
-      <button onclick="event.stopPropagation();scanThemeId='${t.id}';scanChapterIdx=0;scanChecked.clear();document.getElementById('scan-profile-name').textContent=currentProfile?currentProfile.name:'';showScreen('scan-screen');renderScan();" style="font-size:0.75rem;background:none;border:1px solid rgba(200,184,154,0.25);color:var(--accent);border-radius:var(--radius);padding:5px 12px;cursor:pointer;font-family:inherit;" onmouseenter="this.style.background='rgba(200,184,154,0.08)'" onmouseleave="this.style.background='none'">Scan guidé →</button>
-    </div>`;
     html+="</div>";
   }
 
