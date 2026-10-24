@@ -77,10 +77,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
 .home-stat-lbl{font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;}
 .home-stat-sub{font-size:12px;color:var(--text-muted);margin-top:4px;}
 .home-mobile-nav{display:none;width:100%;margin-bottom:1.5rem;flex-direction:column;gap:8px;}
-.home-mobile-tabs{display:flex;gap:4px;background:var(--surface2);border-radius:20px;padding:3px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;white-space:nowrap;}
+.home-mobile-tabs{display:flex;gap:0;background:var(--surface2);border-radius:20px;padding:3px;overflow:hidden;}
 .home-mobile-tabs::-webkit-scrollbar{display:none;}
-.home-mobile-tab{padding:7px 14px;border-radius:20px;border:none;background:transparent;color:var(--text-faint);font-size:12px;font-family:inherit;cursor:pointer;white-space:nowrap;transition:all 0.15s;}
-.home-mobile-tab.active{background:var(--surface);color:var(--text);font-weight:500;}
+.home-mobile-tab{flex:1;padding:9px 6px;border-radius:17px;border:none;background:transparent;color:var(--text-faint);font-size:11px;font-family:inherit;cursor:pointer;white-space:nowrap;transition:all 0.15s;display:flex;flex-direction:column;align-items:center;gap:2px;line-height:1.2;}
+.home-mobile-tab.active{background:var(--surface);color:var(--text);font-weight:600;}
+.home-mobile-tab .step-num{font-size:9px;font-weight:700;letter-spacing:0.5px;opacity:0.5;text-transform:uppercase;}
+.home-mobile-tab.active .step-num{opacity:1;color:var(--accent);}
 .home-mobile-switch{display:flex;align-items:center;justify-content:center;gap:6px;padding:7px 14px;border-radius:var(--radius);border:1px solid var(--border);background:none;color:var(--text-faint);font-size:12px;font-family:inherit;cursor:pointer;align-self:flex-start;}
 .block-screen{display:none;overflow-y:auto;height:100vh;}
 .block-screen.show{display:block;position:fixed;top:0;left:0;width:100%;z-index:200;background:var(--bg);}
@@ -610,17 +612,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
       <button class="home-mobile-switch" id="home-switch-mobile"><i class="ti ti-switch-horizontal"></i> Changer</button>
     </div>
     <div class="home-mobile-tabs">
-      <button class="home-mobile-tab active" data-tab="pinned" style="font-weight:600;">📌 Ma liste</button>
-      <button class="home-mobile-tab" data-tab="game">🃏 Cartes</button>
-      <button class="home-mobile-tab" data-tab="reconnexion">🗂 Thèmes</button>
-      <button class="home-mobile-tab" data-tab="diagnostic">🔍 Diagnostic</button>
-      <button class="home-mobile-tab" data-tab="dictionnaire">📖 Dico</button>
-      <button class="home-mobile-tab" data-tab="progression">📈 Progression</button>
-      <button class="home-mobile-tab" data-tab="exercises">⚡ Exercices</button>
-      <button class="home-mobile-tab" data-tab="journal">📓 Journal</button>
-      <button class="home-mobile-tab" data-tab="irt">🎧 IRT</button>
-      <button class="home-mobile-tab" data-tab="objectives">🎯 Objectifs</button>
-      <button class="home-mobile-tab" data-tab="history" style="opacity:0.6;">📅 Historique</button>
+      <button class="home-mobile-tab active" data-tab="reconnexion"><span class="step-num">Étape 1</span>🌊 Ressentir</button>
+      <button class="home-mobile-tab" data-tab="dictionnaire"><span class="step-num">Étape 2</span>🔍 Identifier</button>
+      <button class="home-mobile-tab" data-tab="pinned"><span class="step-num">Étape 3</span>📌 Travailler</button>
     </div>
   </div>
   <!-- MAIN -->
@@ -4003,19 +3997,29 @@ function renderHomeThemes(){
   const hasObjectives=objThemeIds.size>0;
   const objs=currentProfile?.objectives||[];
 
+  // Thème Corps — toujours en premier
+  const corpsTheme=SCAN_THEMES.find(t=>t.id==="corps");
+  if(corpsTheme){
+    html+=`<div style="font-size:10px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;font-weight:600;">🌊 Point de départ</div>`;
+    html+=renderProblematiquesTheme(corpsTheme,expandedThemeId===corpsTheme.id,null);
+    html+="<div style='height:10px;'></div>";
+  }
+
   if(hasObjectives){
-    const objThemes=SCAN_THEMES.filter(t=>objThemeIds.has(t.id));
-    html+=`<div style="font-size:10px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;font-weight:600;">🎯 Prioritaires</div>`;
-    objThemes.forEach(t=>{
-      const matchObj=objs.find(o=>(o.topics||[]).some(tp=>
-        t.title.toLowerCase().includes(tp.toLowerCase())||tp.toLowerCase().includes(t.title.toLowerCase())
-      ))||objs[0];
-      const badge=matchObj?`${matchObj.emoji} ${matchObj.label}`:null;
-      html+=renderProblematiquesTheme(t,expandedThemeId===t.id,badge);
-      html+="<div style='height:6px;'></div>";
-    });
+    const objThemes=SCAN_THEMES.filter(t=>objThemeIds.has(t.id)&&t.id!=="corps");
+    if(objThemes.length){
+      html+=`<div style="font-size:10px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;font-weight:600;">🎯 Prioritaires</div>`;
+      objThemes.forEach(t=>{
+        const matchObj=objs.find(o=>(o.topics||[]).some(tp=>
+          t.title.toLowerCase().includes(tp.toLowerCase())||tp.toLowerCase().includes(t.title.toLowerCase())
+        ))||objs[0];
+        const badge=matchObj?`${matchObj.emoji} ${matchObj.label}`:null;
+        html+=renderProblematiquesTheme(t,expandedThemeId===t.id,badge);
+        html+="<div style='height:6px;'></div>";
+      });
+    }
     html+=`<div style="font-size:10px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin:14px 0 10px;font-weight:600;">Tous les thèmes</div>`;
-    const otherThemes=SCAN_THEMES.filter(t=>!objThemeIds.has(t.id));
+    const otherThemes=SCAN_THEMES.filter(t=>!objThemeIds.has(t.id)&&t.id!=="corps");
     otherThemes.forEach(t=>{
       html+=renderProblematiquesTheme(t,expandedThemeId===t.id,null);
       html+="<div style='height:6px;'></div>";
@@ -4028,7 +4032,7 @@ function renderHomeThemes(){
       </div>
       <button onclick="startOnboarding()" style="flex-shrink:0;padding:7px 14px;border-radius:var(--radius);border:1px solid var(--accent);background:rgba(200,184,154,0.08);color:var(--accent);font-size:0.78rem;font-family:inherit;cursor:pointer;font-weight:600;">Configurer</button>
     </div>`;
-    SCAN_THEMES.forEach(t=>{
+    SCAN_THEMES.filter(t=>t.id!=="corps").forEach(t=>{
       html+=renderProblematiquesTheme(t,expandedThemeId===t.id,null);
       html+="<div style='height:6px;'></div>";
     });
