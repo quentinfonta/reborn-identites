@@ -583,33 +583,29 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
       <div id="home-objectives-wrap" style="margin-top:0.75rem;"></div>
     </div>
     <div class="home-sidebar-nav">
-      <!-- 3 étapes principales -->
-      <div style="font-size:9px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-faint);padding:8px 14px 6px;opacity:0.7;">Étapes</div>
-      <button class="home-sidebar-btn" id="home-reconnexion-btn" style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:11px 14px;">
-        <span style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;opacity:0.5;color:var(--accent);">Étape 1</span>
-        <span>🌊 Ressentir</span>
+      <button class="home-sidebar-btn active" id="home-game-btn" style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:11px 14px;">
+        <span style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;opacity:0.5;color:var(--accent);">Découvrir</span>
+        <span>🃏 Jeu de cartes</span>
       </button>
-      <button class="home-sidebar-btn" id="home-dictionnaire-btn" style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:11px 14px;">
-        <span style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;opacity:0.5;color:var(--accent);">Étape 2</span>
-        <span>🔍 Identifier</span>
+      <button class="home-sidebar-btn" id="home-diagnostic-btn" style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:11px 14px;">
+        <span style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;opacity:0.5;color:var(--accent);">Cibler</span>
+        <span>🔍 Diagnostic</span>
       </button>
-      <button class="home-sidebar-btn active" id="home-pinned-btn" style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:11px 14px;">
-        <span style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;opacity:0.5;color:var(--accent);">Étape 3</span>
-        <span>📌 Travailler</span>
+      <button class="home-sidebar-btn" id="home-pinned-btn" style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:11px 14px;">
+        <span style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;opacity:0.5;color:var(--accent);">Travailler</span>
+        <span>📌 Ma liste</span>
       </button>
-      <!-- Séparateur outils -->
-      <div style="height:1px;background:var(--border);margin:12px 0 8px;"></div>
-      <button class="home-sidebar-btn" id="home-game-btn">🃏 Jeu de cartes</button>
-      <button class="home-sidebar-btn" id="home-diagnostic-btn">🔍 Diagnostic</button>
-      <button class="home-sidebar-btn" id="home-irt-btn">🎧 Séance IRT</button>
-      <button class="home-sidebar-btn" id="home-progression-btn" style="color:var(--text-faint);">📈 Progression</button>
-      <!-- masqués mais présents pour que setHomeTab() fonctionne -->
+      <!-- boutons fantômes pour compatibilité setHomeTab() -->
+      <button id="home-reconnexion-btn" style="display:none;"></button>
+      <button id="home-dictionnaire-btn" style="display:none;"></button>
+      <button id="home-irt-btn" style="display:none;"></button>
+      <button id="home-progression-btn" style="display:none;"></button>
       <button id="home-exercises-btn" style="display:none;"></button>
       <button id="home-journal-btn" style="display:none;"></button>
+      <button id="home-history-btn" style="display:none;"></button>
+      <button id="home-objectives-btn" style="display:none;"></button>
     </div>
     <div class="home-sidebar-footer">
-      <button class="home-sidebar-btn" id="home-objectives-btn" style="font-size:13px;">🎯 Mes objectifs</button>
-      <button class="home-sidebar-btn" id="home-history-btn" style="font-size:12px;color:var(--text-faint);opacity:0.7;">📅 Historique</button>
       <button class="home-footer-btn" id="home-switch-btn"><i class="ti ti-switch-horizontal"></i> Changer de profil</button>
     </div>
   </div>
@@ -620,9 +616,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
       <button class="home-mobile-switch" id="home-switch-mobile"><i class="ti ti-switch-horizontal"></i> Changer</button>
     </div>
     <div class="home-mobile-tabs">
-      <button class="home-mobile-tab active" data-tab="reconnexion"><span class="step-num">Étape 1</span>🌊 Ressentir</button>
-      <button class="home-mobile-tab" data-tab="dictionnaire"><span class="step-num">Étape 2</span>🔍 Identifier</button>
-      <button class="home-mobile-tab" data-tab="pinned"><span class="step-num">Étape 3</span>📌 Travailler</button>
+      <button class="home-mobile-tab active" data-tab="game">🃏 Jeu de cartes</button>
+      <button class="home-mobile-tab" data-tab="diagnostic">🔍 Diagnostic</button>
+      <button class="home-mobile-tab" data-tab="pinned">📌 Ma liste</button>
     </div>
   </div>
   <!-- MAIN -->
@@ -2756,7 +2752,7 @@ let DATA=[...DEFAULT_DATA];
 let currentProfile=null,SESSIONS=[],checked=new Set(),reviewDates={},pinnedIds=new Set();
 let currentExercise=null,currentExPart=0;
 let levelFilter=0,query="";
-let scanThemeId=null,scanChapterIdx=0,scanChecked=new Set(),lastHomeTab="reconnexion",journalEditing=false;
+let scanThemeId=null,scanChapterIdx=0,scanChecked=new Set(),lastHomeTab="game",journalEditing=false;
 let pinTarget=null,pinVal="";
 let sessionSize=5;
 
@@ -2944,7 +2940,7 @@ function skipOnboarding(){
   currentProfile.objectives=[];
   currentProfile.priorityTopics=[];
   showScreen("home-screen");
-  setHomeTab("reconnexion"); // appelle déjà renderHomeStats()
+  setHomeTab("game"); // appelle déjà renderHomeStats()
 }
 
 function showObjectivesPanel(){
@@ -3095,14 +3091,14 @@ async function confirmOnboarding(){
         Tes thèmes prioritaires sont prêts.<br>
         ${firstObj?`Ta première étape : explorer <strong style="color:var(--accent);">${firstObj.emoji} ${firstObj.label}</strong>.`:"Commence par scanner un thème qui résonne."}
       </div>
-      <button onclick="showScreen('home-screen');setHomeTab('reconnexion');renderHomeStats();renderHomeObjectives();"
+      <button onclick="showScreen('home-screen');setHomeTab('game');renderHomeStats();renderHomeObjectives();"
         style="margin-top:0.5rem;padding:14px 32px;border-radius:var(--radius-lg);border:1px solid var(--accent);background:rgba(200,184,154,0.08);color:var(--accent);font-size:1rem;font-weight:600;font-family:inherit;cursor:pointer;">
         Voir mes thèmes →
       </button>
     </div>`;
   } else {
     showScreen("home-screen");
-    setHomeTab("reconnexion"); // appelle déjà renderHomeStats()
+    setHomeTab("game"); // appelle déjà renderHomeStats()
     renderHomeObjectives();
   }
 }
@@ -3131,7 +3127,7 @@ function loadOnboarding(){
 
 function openObjectif(obj){
   // Va sur l'onglet reconnexion — les thèmes prioritaires y sont déjà mis en avant
-  setHomeTab("reconnexion");
+  setHomeTab("game");
   setTimeout(()=>{
     homeSearchQuery=obj.label.toLowerCase();
     const srch=document.getElementById("home-search");
@@ -3412,7 +3408,7 @@ async function enterProfile(id,name){
   } else {
     showScreen("home-screen");
     // Si l'utilisateur a des identités épinglées → sa to-do list, sinon → reconnexion pour découvrir ses thèmes
-    setHomeTab(pinnedIds.size>0?"pinned":"reconnexion"); // appelle déjà renderHomeStats()
+    setHomeTab(pinnedIds.size>0?"pinned":"game"); // appelle déjà renderHomeStats()
     renderHomeObjectives();
   }
   setTimeout(checkInactivity,1000);
@@ -4077,7 +4073,7 @@ let homeSearchQuery="";
 document.getElementById("home-search")?.addEventListener("input",e=>{
   homeSearchQuery=e.target.value.trim().toLowerCase();
   if(homeSearchQuery){renderSearchResults();}
-  else{setHomeTab("reconnexion");}
+  else{setHomeTab("game");}
 });
 
 let searchChecked=new Set();
@@ -4380,46 +4376,29 @@ function setHomeTab(tab){
   grid.style.display="flex";
   grid.style.flexDirection="column";
 
-  if(tab==="reconnexion"){
-    const objs=currentProfile.objectives||[];
-    document.getElementById("home-sub").innerHTML='<span style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);opacity:0.8;margin-right:8px;">Étape 1</span>'+(objs.length?"🌊 Ressentir — tes thèmes":"🌊 Ressentir — explore les thèmes");
-    if(srch){srch.style.display="block";srch.value="";homeSearchQuery="";}
-    if(statsBar)statsBar.style.display="flex";
-    if(objAccueil)objAccueil.style.display="block";
-    renderHomeStats();
-    renderHomeThemes();
+  if(statsBar)statsBar.style.display="none";
+  if(objAccueil)objAccueil.style.display="none";
+  if(srch)srch.style.display="none";
+
+  if(tab==="game"){
+    document.getElementById("home-sub").textContent="🃏 Jeu de cartes";
+    renderGameInline();
+  } else if(tab==="diagnostic"){
+    document.getElementById("home-sub").textContent="🔍 Diagnostic";
+    renderDiagnosticInline();
+  } else if(tab==="pinned"){
+    document.getElementById("home-sub").textContent="📌 Ma liste";
+    renderPinnedTab();
+  } else if(tab==="reconnexion"||tab==="dictionnaire"){
+    // redirige vers jeu de cartes
+    document.getElementById("home-sub").textContent="🃏 Jeu de cartes";
+    renderGameInline();
+    // corriger l'état actif
+    document.querySelectorAll(".home-sidebar-btn").forEach(b=>b.classList.remove("active"));
+    document.getElementById("home-game-btn")?.classList.add("active");
+    document.querySelectorAll(".home-mobile-tab").forEach(b=>b.classList.toggle("active",b.dataset.tab==="game"));
   } else {
-    if(statsBar)statsBar.style.display="none";
-    if(objAccueil)objAccueil.style.display="none";
-    if(srch)srch.style.display="none";
-    if(tab==="journal"){
-      document.getElementById("home-sub").textContent="Journal";
-      renderJournalInline();
-    } else if(tab==="exercises"){
-      document.getElementById("home-sub").textContent="Exercices";
-      renderExercisesInline();
-    } else if(tab==="history"){
-      document.getElementById("home-sub").textContent="Historique";
-      renderHistoryInline();
-    } else if(tab==="diagnostic"){
-      document.getElementById("home-sub").textContent="Diagnostic";
-      renderDiagnosticInline();
-    } else if(tab==="pinned"){
-      document.getElementById("home-sub").innerHTML='<span style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);opacity:0.8;margin-right:8px;">Étape 3</span>📌 Travailler — ma liste';
-      renderPinnedTab();
-    } else if(tab==="dictionnaire"){
-      document.getElementById("home-sub").innerHTML='<span style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);opacity:0.8;margin-right:8px;">Étape 2</span>🔍 Identifier — dictionnaire';
-      renderDictionnaireInline();
-    } else if(tab==="irt"){
-      document.getElementById("home-sub").textContent="Séance IRT";
-      renderIrtInline();
-    } else if(tab==="progression"){
-      document.getElementById("home-sub").textContent="Ma progression";
-      renderProgressionInline();
-    } else if(tab==="game"){
-      document.getElementById("home-sub").textContent="Jeu de cartes";
-      renderGameInline();
-    }
+    // tous les autres onglets cachés → rien
   }
 }
 
@@ -4645,7 +4624,7 @@ function renderPinnedTab(){
             <div style="font-size:0.75rem;color:var(--text-faint);margin-top:1px;">Analyse ton ressenti</div>
           </div>
         </button>
-        <button onclick="setHomeTab('reconnexion')" style="padding:14px 14px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text);font-family:inherit;cursor:pointer;text-align:left;display:flex;align-items:center;gap:10px;transition:border-color 0.15s;" onmouseenter="this.style.borderColor='var(--border-strong)'" onmouseleave="this.style.borderColor='var(--border-md)'">
+        <button onclick="setHomeTab('game')" style="padding:14px 14px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text);font-family:inherit;cursor:pointer;text-align:left;display:flex;align-items:center;gap:10px;transition:border-color 0.15s;" onmouseenter="this.style.borderColor='var(--border-strong)'" onmouseleave="this.style.borderColor='var(--border-md)'">
           <span style="font-size:1.3rem;">🗂</span>
           <div>
             <div style="font-size:0.88rem;font-weight:600;">Thèmes</div>
@@ -5665,7 +5644,7 @@ function renderExercisesInline(){
 }
 
 document.getElementById("onb-confirm-btn")?.addEventListener("click",confirmOnboarding);
-document.getElementById("home-reconnexion-btn").addEventListener("click",()=>setHomeTab("reconnexion"));
+document.getElementById("home-reconnexion-btn").addEventListener("click",()=>setHomeTab("game"));
 document.getElementById("home-pinned-btn")?.addEventListener("click",()=>setHomeTab("pinned"));
 document.getElementById("home-journal-btn").addEventListener("click",()=>{
   document.getElementById("sidebar-more-section").style.display="flex";
@@ -5701,10 +5680,27 @@ let gameDeckTouchStartX=0;
 let gameDeckTouchStartY=0;
 
 function gameDeckIdsForTheme(theme){
-  // Collecter tous les ids des chapitres du thème, filtrer ceux non travaillés
-  const allIds=theme.chapters.flatMap(ch=>ch.ids||[]);
+  // Les ids dans SCAN_THEMES sont des mots-clés ("figé","abandonné"…)
+  // DATA a des entrées {id:376, text:"Je suis figé", cat:…}
+  // On extrait le mot après "Je suis " ou "Je me sens " pour matcher
+  const keywords=new Set(theme.chapters.flatMap(ch=>ch.ids||[]));
   const wids=workedIds();
-  return allIds.filter(id=>DATA.find(d=>d.id===id)&&!wids.has(id));
+  return DATA
+    .filter(d=>{
+      if(wids.has(d.id))return false;
+      const raw=d.text.toLowerCase();
+      // Extraire le mot-clé principal : tout après "je suis ", "je me sens ", "je me ", "j'ai été "
+      const word=raw
+        .replace(/^je suis /,"")
+        .replace(/^je me sens /,"")
+        .replace(/^je me /,"")
+        .replace(/^j'ai été /,"")
+        .replace(/^j'(?:ai|étais) /,"")
+        .trim()
+        .split(" ")[0];
+      return keywords.has(word);
+    })
+    .map(d=>d.id);
 }
 
 function renderGameInline(){
@@ -5776,8 +5772,8 @@ function gameDeckStart(themeId){
   } else {
     const theme=SCAN_THEMES.find(t=>t.id===themeId);
     if(!theme)return;
-    const ids=gameDeckIdsForTheme(theme);
-    gameDeckQueue=ids.map(id=>DATA.find(d=>d.id===id)).filter(Boolean).sort(()=>Math.random()-0.5);
+    const ids=new Set(gameDeckIdsForTheme(theme));
+    gameDeckQueue=DATA.filter(d=>ids.has(d.id)).sort(()=>Math.random()-0.5);
   }
 
   if(gameDeckQueue.length===0){
@@ -6699,7 +6695,7 @@ function renderScan(){
       scanChecked.clear();
       document.getElementById("scan-sticky-header").innerHTML="";
       showScreen("home-screen");
-      setHomeTab(lastHomeTab||"reconnexion");
+      setHomeTab(lastHomeTab||"game");
     } else {
       saveJournalNote?.();
       scanChapterIdx--;
@@ -6836,7 +6832,7 @@ function showScanResults(theme){
     document.getElementById("scan-res-mylist")?.addEventListener("click",goToList);
   }
   document.getElementById("scan-res-retry").addEventListener("click",()=>{scanThemeId=null;scanChecked.clear();renderScan();});
-  document.getElementById("scan-res-home").addEventListener("click",()=>{showScreen("home-screen");setHomeTab("reconnexion");});
+  document.getElementById("scan-res-home").addEventListener("click",()=>{showScreen("home-screen");setHomeTab("game");});
 }
 
 document.getElementById("scan-validate-btn")?.addEventListener("click",async(e)=>{
@@ -6857,7 +6853,7 @@ document.getElementById("scan-home-btn")?.addEventListener("click",()=>{
   scanThemeId=null;scanChapterIdx=0;scanChecked.clear();
   document.getElementById("scan-sticky-header").innerHTML="";
   showScreen("home-screen");
-  setHomeTab(lastHomeTab||"reconnexion");
+  setHomeTab(lastHomeTab||"game");
 });
 
 
