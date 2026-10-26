@@ -2803,7 +2803,7 @@ async function togglePin(id,silent=false){
   const pinnedMobileBtn=document.querySelector(".home-mobile-tab[data-tab='pinned']");
   if(pinnedMobileBtn){
     const countBadge=pinnedIds.size>0?` <span style="background:var(--accent);color:#000;border-radius:8px;padding:0 5px;font-size:9px;font-weight:700;">${pinnedIds.size}</span>`:"";
-    pinnedMobileBtn.innerHTML=`<span class="step-num">Étape 3</span>📌 Travailler${countBadge}`;
+    pinnedMobileBtn.innerHTML=`📌 Ma liste${countBadge}`;
   }
   const pinnedSideBtn=document.getElementById("home-pinned-btn");
   if(pinnedSideBtn){
@@ -3801,7 +3801,7 @@ async function loadData(){
   const pinnedMobileBtn=document.querySelector(".home-mobile-tab[data-tab='pinned']");
   if(pinnedMobileBtn){
     const cb=pinnedIds.size>0?` <span style="background:var(--accent);color:#000;border-radius:8px;padding:0 5px;font-size:9px;font-weight:700;">${pinnedIds.size}</span>`:"";
-    pinnedMobileBtn.innerHTML=`<span class="step-num">Étape 3</span>📌 Travailler${cb}`;
+    pinnedMobileBtn.innerHTML=`📌 Ma liste${cb}`;
   }
   const pinnedSideBtn=document.getElementById("home-pinned-btn");
   if(pinnedSideBtn){
@@ -5704,7 +5704,12 @@ function gameDeckIdsForTheme(theme){
 }
 
 function renderGameInline(){
-  // Vue 1 : sélection du deck
+  // Démarre directement avec toutes les cartes
+  gameDeckStart('__all__');
+}
+
+function _renderGameInlineDEPRECATED(){
+  // Vue 1 : sélection du deck (désactivée)
   gameDeckId=null;
   gameDeckQueue=[];
   gameDeckIdx=0;
@@ -5712,7 +5717,6 @@ function renderGameInline(){
   const grid=document.getElementById("home-themes-grid");
   if(!grid)return;
 
-  // Construire la grille de decks
   let html=`<div id="gd-wrap" style="max-width:540px;width:100%;margin:0 auto;">`;
   html+=`<div style="text-align:center;margin-bottom:1.5rem;">
     <div style="font-size:0.8rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);opacity:0.75;margin-bottom:0.3rem;">Jeu de cartes</div>
@@ -5795,11 +5799,8 @@ function gameDeckRenderPlay(){
 
     <!-- header deck -->
     <div style="width:100%;display:flex;align-items:center;gap:10px;margin-bottom:1.25rem;">
-      <button onclick="renderGameInline()" style="padding:6px 10px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface);color:var(--text-muted);font-size:12px;font-family:inherit;cursor:pointer;flex-shrink:0;">← Decks</button>
-      <div style="flex:1;text-align:center;">
-        <span style="font-size:1rem;">${theme.icon}</span>
-        <span style="font-size:0.82rem;font-weight:600;color:var(--text);margin-left:6px;">${theme.title}</span>
-      </div>
+      <div style="font-size:0.82rem;font-weight:600;color:var(--text);">🃏 Jeu de cartes</div>
+      <div style="flex:1;"></div>
       <div id="gd-counter-badge" style="font-size:11px;color:var(--text-faint);white-space:nowrap;flex-shrink:0;">1 / ${total}</div>
     </div>
 
@@ -6008,8 +6009,8 @@ function gameDeckShowResults(){
     html+=`<div style="display:flex;flex-direction:column;gap:10px;margin-top:1.5rem;">
       <button id="gd-validate" style="padding:14px 24px;border-radius:var(--radius-lg);border:1px solid var(--accent);background:rgba(200,184,154,0.1);color:var(--accent);font-size:1rem;font-weight:700;font-family:inherit;cursor:pointer;width:100%;">📌 Ajouter à ma liste (${toAdd}) →</button>
       <div style="display:flex;gap:10px;">
-        <button onclick="gameDeckStart('${gameDeckId}')" style="flex:1;padding:11px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text-muted);font-size:0.85rem;font-family:inherit;cursor:pointer;">↻ Rejouer ce deck</button>
-        <button onclick="renderGameInline()" style="flex:1;padding:11px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text-muted);font-size:0.85rem;font-family:inherit;cursor:pointer;">← Autres decks</button>
+        <button onclick="gameDeckStart('__all__')" style="flex:1;padding:11px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text-muted);font-size:0.85rem;font-family:inherit;cursor:pointer;">↻ Rejouer</button>
+        <button onclick="setHomeTab('pinned')" style="flex:1;padding:11px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text-muted);font-size:0.85rem;font-family:inherit;cursor:pointer;">📌 Ma liste</button>
       </div>
     </div>`;
   } else {
@@ -6018,8 +6019,8 @@ function gameDeckShowResults(){
       Aucune identité sélectionnée cette fois.<br><span style="font-size:0.8rem;opacity:0.7;">C'est normal — ça viendra avec le temps.</span>
     </div>
     <div style="display:flex;gap:10px;justify-content:center;">
-      <button onclick="gameDeckStart('${gameDeckId}')" style="padding:12px 20px;border-radius:var(--radius-lg);border:1px solid var(--accent);background:rgba(200,184,154,0.07);color:var(--accent);font-size:0.9rem;font-weight:600;font-family:inherit;cursor:pointer;">↻ Rejouer ce deck</button>
-      <button onclick="renderGameInline()" style="padding:12px 20px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text);font-size:0.9rem;font-family:inherit;cursor:pointer;">← Autres decks</button>
+      <button onclick="gameDeckStart('__all__')" style="padding:12px 20px;border-radius:var(--radius-lg);border:1px solid var(--accent);background:rgba(200,184,154,0.07);color:var(--accent);font-size:0.9rem;font-weight:600;font-family:inherit;cursor:pointer;">↻ Rejouer</button>
+      <button onclick="setHomeTab('pinned')" style="padding:12px 20px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text);font-size:0.9rem;font-family:inherit;cursor:pointer;">📌 Ma liste</button>
     </div>`;
   }
 
