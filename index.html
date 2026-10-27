@@ -580,7 +580,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
     <div>
       <div class="home-sidebar-brand">REBORN</div>
       <div class="home-sidebar-name">Bonjour, <span id="home-name"></span> 👋</div>
-      <div id="home-objectives-wrap" style="margin-top:0.75rem;"></div>
+      <div id="home-objectives-wrap" style="display:none;"></div>
     </div>
     <div class="home-sidebar-nav">
       <button class="home-sidebar-btn active" id="home-game-btn" style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:11px 14px;">
@@ -592,7 +592,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
         <span>🔍 Diagnostic</span>
       </button>
       <button class="home-sidebar-btn" id="home-pinned-btn" style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:11px 14px;">
-        <span style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;opacity:0.5;color:var(--accent);">Travailler</span>
+        
         <span>📌 Ma liste</span>
       </button>
       <!-- boutons fantômes pour compatibilité setHomeTab() -->
@@ -624,7 +624,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
   <!-- MAIN -->
   <div class="home-main">
     <div id="home-stats-bar" style="display:flex;gap:1.5rem;margin-bottom:2.5rem;flex-wrap:wrap;"></div>
-    <div id="home-objectives-accueil" style="margin-bottom:1.5rem;"></div>
+    <div id="home-objectives-accueil" style="display:none;"></div>
     <div id="home-sub" style="font-size:22px;font-weight:600;margin-bottom:1.5rem;color:var(--text);">Ma liste</div>
     <div style="margin-bottom:2rem;">
       <input type="text" id="home-search" placeholder="Rechercher une identité ou un thème…" style="width:100%;box-sizing:border-box;padding:12px 16px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface2);color:var(--text);font-size:14px;font-family:inherit;outline:none;">
@@ -2808,7 +2808,7 @@ async function togglePin(id,silent=false){
   const pinnedSideBtn=document.getElementById("home-pinned-btn");
   if(pinnedSideBtn){
     const countBadge=pinnedIds.size>0?` <span style="background:var(--accent);color:#000;border-radius:8px;padding:0 5px;font-size:9px;font-weight:700;">${pinnedIds.size}</span>`:"";
-    pinnedSideBtn.innerHTML=`<span style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;opacity:0.5;color:var(--accent);">Étape 3</span><span>📌 Travailler${countBadge}</span>`;
+    pinnedSideBtn.innerHTML=`<span>📌 Ma liste${countBadge}</span>`;
   }
   // Mettre à jour l'icône 📌 dans la vue scan sans tout re-render
   document.querySelectorAll("[data-pin-scan]").forEach(el=>{
@@ -3190,7 +3190,7 @@ function openObjectif(obj){
   },50);
 }
 
-function renderHomeObjectives(){
+function renderHomeObjectives(){return;// désactivé
   const el=document.getElementById("home-objectives-wrap");
   if(el){
     const objs=currentProfile.objectives||[];
@@ -3806,7 +3806,7 @@ async function loadData(){
   const pinnedSideBtn=document.getElementById("home-pinned-btn");
   if(pinnedSideBtn){
     const cb=pinnedIds.size>0?` <span style="background:var(--accent);color:#000;border-radius:8px;padding:0 5px;font-size:9px;font-weight:700;">${pinnedIds.size}</span>`:"";
-    pinnedSideBtn.innerHTML=`<span style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;opacity:0.5;color:var(--accent);">Étape 3</span><span>📌 Travailler${cb}</span>`;
+    pinnedSideBtn.innerHTML=`<span>📌 Ma liste${cb}</span>`;
   }
 }
 
@@ -5675,7 +5675,7 @@ let dicoShowWorked=false;
 let gameDeckId=null;       // id du SCAN_THEMES en cours
 let gameDeckQueue=[];      // [{id, text, cat}] — cartes du deck courant
 let gameDeckIdx=0;
-let gameDeckSession=[];    // {id, text, action: "pin"|"later"|"skip"}
+let gameDeckSession=[];    // {id, text, action: "pin"|"skip"}
 let gameDeckTouchStartX=0;
 let gameDeckTouchStartY=0;
 
@@ -5772,7 +5772,7 @@ function gameDeckStart(themeId){
     // Shuffle de tout
     const wids=workedIds();
     const all=DATA.filter(d=>!wids.has(d.id));
-    gameDeckQueue=[...all].sort(()=>Math.random()-0.5);
+    gameDeckQueue=[...all].sort(()=>Math.random()-0.5).slice(0,15);
   } else {
     const theme=SCAN_THEMES.find(t=>t.id===themeId);
     if(!theme)return;
@@ -5792,7 +5792,7 @@ function gameDeckStart(themeId){
 function gameDeckRenderPlay(){
   const grid=document.getElementById("home-themes-grid");
   if(!grid)return;
-  const theme=gameDeckId==="__all__"?{icon:"🎲",title:"Tout mélanger"}:SCAN_THEMES.find(t=>t.id===gameDeckId)||{icon:"🃏",title:"Deck"};
+  const theme={icon:"🃏",title:"15 cartes jouées"};
   const total=gameDeckQueue.length;
 
   grid.innerHTML=`<div id="gd-play-wrap" style="max-width:480px;width:100%;margin:0 auto;display:flex;flex-direction:column;align-items:center;">
@@ -5841,32 +5841,24 @@ function gameDeckRenderPlay(){
 
     <!-- INSTRUCTIONS swipe -->
     <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-faint);margin-bottom:1.5rem;opacity:0.7;">
-      <span>← passe</span>
-      <span style="margin:0 4px;opacity:0.4;">·</span>
-      <span>↑ peut-être</span>
-      <span style="margin:0 4px;opacity:0.4;">·</span>
+      <span>← passer</span>
+      <span style="margin:0 8px;opacity:0.4;">·</span>
       <span>→ c'est moi</span>
     </div>
 
     <!-- BOUTONS -->
-    <div style="display:flex;gap:10px;justify-content:center;width:100%;margin-bottom:1.5rem;">
-      <button id="gd-btn-skip" onclick="gameDeckAction('skip')" style="flex:1;max-width:130px;display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 8px;border-radius:14px;border:1px solid var(--border-md);background:var(--surface);color:var(--text-muted);font-family:inherit;cursor:pointer;transition:all 0.15s;"
-        onmouseenter="this.style.borderColor='#e05';this.style.color='#e05';this.style.background='rgba(238,0,85,0.05)'"
-        onmouseleave="this.style.borderColor='var(--border-md)';this.style.color='var(--text-muted)';this.style.background='var(--surface)'">
-        <span style="font-size:1.4rem;">✕</span>
-        <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;">Non</span>
-      </button>
-      <button id="gd-btn-later" onclick="gameDeckAction('later')" style="flex:1;max-width:130px;display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 8px;border-radius:14px;border:1px solid var(--border-md);background:var(--surface);color:var(--text-muted);font-family:inherit;cursor:pointer;transition:all 0.15s;"
+    <div style="display:flex;gap:16px;justify-content:center;width:100%;margin-bottom:1.5rem;">
+      <button id="gd-btn-skip" onclick="gameDeckAction('skip')" style="flex:1;max-width:160px;display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 8px;border-radius:14px;border:1px solid var(--border-md);background:var(--surface);color:var(--text-muted);font-family:inherit;cursor:pointer;transition:all 0.15s;"
         onmouseenter="this.style.borderColor='var(--border-strong)';this.style.color='var(--text)'"
         onmouseleave="this.style.borderColor='var(--border-md)';this.style.color='var(--text-muted)'">
-        <span style="font-size:1.4rem;">〜</span>
-        <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;">Peut-être</span>
+        <span style="font-size:1.6rem;">→</span>
+        <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;">Passer</span>
       </button>
-      <button id="gd-btn-yes" onclick="gameDeckAction('pin')" style="flex:1;max-width:130px;display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 8px;border-radius:14px;border:1px solid rgba(200,184,154,0.5);background:rgba(200,184,154,0.07);color:var(--accent);font-family:inherit;cursor:pointer;transition:all 0.15s;"
+      <button id="gd-btn-yes" onclick="gameDeckAction('pin')" style="flex:1;max-width:160px;display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 8px;border-radius:14px;border:1px solid rgba(200,184,154,0.5);background:rgba(200,184,154,0.07);color:var(--accent);font-family:inherit;cursor:pointer;transition:all 0.15s;"
         onmouseenter="this.style.borderColor='var(--accent)';this.style.background='rgba(200,184,154,0.14)'"
         onmouseleave="this.style.borderColor='rgba(200,184,154,0.5)';this.style.background='rgba(200,184,154,0.07)'">
-        <span style="font-size:1.4rem;">✓</span>
-        <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;">C'est moi</span>
+        <span style="font-size:1.6rem;">✓</span>
+        <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;">C'est moi</span>
       </button>
     </div>
 
@@ -5883,7 +5875,6 @@ function gameDeckRenderPlay(){
       const dx=e.changedTouches[0].clientX-gameDeckTouchStartX;
       const dy=e.changedTouches[0].clientY-gameDeckTouchStartY;
       if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)){gameDeckAction(dx>0?"pin":"skip");}
-      else if(dy<-40&&Math.abs(dy)>Math.abs(dx)){gameDeckAction("later");}
     },{passive:true});
   }
 
@@ -5937,7 +5928,7 @@ function gameDeckUpdateDots(){
   if(!dotsEl)return;
   const shown=Math.min(gameDeckSession.length,20);
   dotsEl.innerHTML=gameDeckSession.slice(-shown).map(s=>{
-    const col=s.action==="pin"?"var(--accent)":s.action==="later"?"var(--text-muted)":"var(--surface3)";
+    const col=s.action==="pin"?"var(--accent)":"var(--surface3)";
     const op=s.action==="skip"?"0.35":"1";
     return`<div style="width:7px;height:7px;border-radius:50%;background:${col};opacity:${op};transition:all 0.15s;"></div>`;
   }).join("");
@@ -5954,7 +5945,7 @@ function gameDeckAction(action){
 
   const card=document.getElementById("gd-card");
   if(card){
-    card.style.animation=action==="pin"?"cardOutRight 0.24s cubic-bezier(0.55,0,1,0.45) forwards":action==="later"?"cardOutUp 0.24s cubic-bezier(0.55,0,1,0.45) forwards":"cardOutLeft 0.24s cubic-bezier(0.55,0,1,0.45) forwards";
+    card.style.animation=action==="pin"?"cardOutRight 0.24s cubic-bezier(0.55,0,1,0.45) forwards":"cardOutLeft 0.24s cubic-bezier(0.55,0,1,0.45) forwards";
   }
 
   setTimeout(()=>{
@@ -5967,11 +5958,10 @@ function gameDeckAction(action){
 function gameDeckShowResults(){
   const grid=document.getElementById("home-themes-grid");
   if(!grid)return;
-  const theme=gameDeckId==="__all__"?{icon:"🎲",title:"Tout mélanger"}:SCAN_THEMES.find(t=>t.id===gameDeckId)||{icon:"🃏",title:"Deck"};
+  const theme={icon:"🃏",title:"15 cartes jouées"};
 
   const pinned=gameDeckSession.filter(s=>s.action==="pin");
-  const later=gameDeckSession.filter(s=>s.action==="later");
-  const toAdd=pinned.length+later.length;
+  const toAdd=pinned.length;
   const total=gameDeckQueue.length;
 
   let html=`<div style="max-width:480px;width:100%;margin:0 auto;">`;
@@ -5997,13 +5987,7 @@ function gameDeckShowResults(){
       html+=pinned.map(s=>`<div style="padding:11px 14px;border-radius:var(--radius);border:1px solid rgba(200,184,154,0.35);background:rgba(200,184,154,0.06);font-size:0.9rem;font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:8px;"><span style="color:var(--accent);">✓</span><span>${s.text}</span></div>`).join("");
       html+=`</div>`;
     }
-    // Peut-être
-    if(later.length>0){
-      html+=`<div style="margin-bottom:1.25rem;">
-        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-faint);margin-bottom:0.65rem;">〜 Peut-être (${later.length})</div>`;
-      html+=later.map(s=>`<div style="padding:11px 14px;border-radius:var(--radius);border:1px solid var(--border-md);background:var(--surface);font-size:0.9rem;font-weight:500;margin-bottom:6px;display:flex;align-items:center;gap:8px;color:var(--text-muted);"><span>〜</span><span>${s.text}</span></div>`).join("");
-      html+=`</div>`;
-    }
+
 
     // CTA principal
     html+=`<div style="display:flex;flex-direction:column;gap:10px;margin-top:1.5rem;">
@@ -6036,11 +6020,9 @@ async function gameDeckValidate(){
   const btn=document.getElementById("gd-validate");
   if(btn){btn.disabled=true;btn.textContent="Sauvegarde…";}
   const validated=gameDeckSession.filter(s=>s.action==="pin");
-  const pinLater=gameDeckSession.filter(s=>s.action==="later");
-  const selected=[...validated,...pinLater];
-  if(selected.length===0){setHomeTab("pinned");return;}
+  if(validated.length===0){setHomeTab("pinned");return;}
   try{
-    const toPin=selected.map(s=>s.id).filter(id=>!pinnedIds.has(id));
+    const toPin=validated.map(s=>s.id).filter(id=>!pinnedIds.has(id));
     for(const id of toPin){await togglePin(id,true);}
     if(validated.length>0){
       const date=new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
@@ -6055,14 +6037,10 @@ async function gameDeckValidate(){
         else SESSIONS.push({id:"local_"+Date.now(),date,ids:validatedIds});
       }
     }
-    const parts=[];
-    if(validated.length>0)parts.push(`${validated.length} "C'est moi"`);
-    if(pinLater.length>0)parts.push(`${pinLater.length} "Peut-être"`);
-    showToast(`📌 ${parts.join(" · ")} → dans ta liste`);
+    showToast(`📌 ${validated.length} identité${validated.length>1?"s":""} ajoutée${validated.length>1?"s":""} à ta liste`);
     setHomeTab("pinned");
   }catch(e){
-    const total=validated.length+pinLater.length;
-    if(btn){btn.disabled=false;btn.textContent=`📌 Ajouter à ma liste (${total}) →`;}
+    if(btn){btn.disabled=false;btn.textContent=`📌 Ajouter à ma liste (${validated.length}) →`;}
     showToast("Quelque chose a bloqué — réessaie");
   }
 }
