@@ -592,16 +592,29 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
         <span>🔍 Diagnostic</span>
       </button>
       <button class="home-sidebar-btn" id="home-pinned-btn" style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:11px 14px;">
-        
+        <span style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;opacity:0.5;color:var(--accent);">Travailler</span>
         <span>📌 Ma liste</span>
+      </button>
+      <button class="home-sidebar-btn" id="home-dictionnaire-btn" style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:11px 14px;">
+        <span style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;opacity:0.5;color:var(--accent);">Explorer</span>
+        <span>📚 Dictionnaire</span>
+      </button>
+      <button class="home-sidebar-btn" id="home-progression-btn" style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:11px 14px;">
+        <span style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;opacity:0.5;color:var(--accent);">Suivre</span>
+        <span>📊 Progression</span>
+      </button>
+      <button class="home-sidebar-btn" id="home-irt-btn" style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:11px 14px;">
+        <span style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;opacity:0.5;color:var(--accent);">Pratiquer</span>
+        <span>🧘 IRT</span>
+      </button>
+      <button class="home-sidebar-btn" id="home-exercises-btn" style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:11px 14px;">
+        <span>💪 Exercices</span>
+      </button>
+      <button class="home-sidebar-btn" id="home-journal-btn" style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:11px 14px;">
+        <span>📓 Journal</span>
       </button>
       <!-- boutons fantômes pour compatibilité setHomeTab() -->
       <button id="home-reconnexion-btn" style="display:none;"></button>
-      <button id="home-dictionnaire-btn" style="display:none;"></button>
-      <button id="home-irt-btn" style="display:none;"></button>
-      <button id="home-progression-btn" style="display:none;"></button>
-      <button id="home-exercises-btn" style="display:none;"></button>
-      <button id="home-journal-btn" style="display:none;"></button>
       <button id="home-history-btn" style="display:none;"></button>
       <button id="home-objectives-btn" style="display:none;"></button>
     </div>
@@ -616,9 +629,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
       <button class="home-mobile-switch" id="home-switch-mobile"><i class="ti ti-switch-horizontal"></i> Changer</button>
     </div>
     <div class="home-mobile-tabs">
-      <button class="home-mobile-tab active" data-tab="game">🃏 Jeu de cartes</button>
+      <button class="home-mobile-tab active" data-tab="game">🃏 Cartes</button>
       <button class="home-mobile-tab" data-tab="diagnostic">🔍 Diagnostic</button>
       <button class="home-mobile-tab" data-tab="pinned">📌 Ma liste</button>
+      <button class="home-mobile-tab" data-tab="dictionnaire">📚 Dico</button>
+      <button class="home-mobile-tab" data-tab="progression">📊 Progression</button>
+      <button class="home-mobile-tab" data-tab="irt">🧘 IRT</button>
+      <button class="home-mobile-tab" data-tab="exercises">💪 Exercices</button>
+      <button class="home-mobile-tab" data-tab="journal">📓 Journal</button>
     </div>
   </div>
   <!-- MAIN -->
@@ -6024,19 +6042,8 @@ async function gameDeckValidate(){
   try{
     const toPin=validated.map(s=>s.id).filter(id=>!pinnedIds.has(id));
     for(const id of toPin){await togglePin(id,true);}
-    if(validated.length>0){
-      const date=new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
-      const validatedIds=validated.map(s=>s.id);
-      const existing=SESSIONS.find(s=>s.date===date);
-      if(existing){
-        const toAdd=validatedIds.filter(id=>!existing.ids.includes(id));
-        if(toAdd.length){const newIds=[...existing.ids,...toAdd];await sb(`sessions?id=eq.${existing.id}`,{method:"PATCH",body:{ids:newIds},prefer:"return=minimal"});existing.ids=newIds;}
-      } else {
-        const r=await sb("sessions",{method:"POST",body:{profile_id:currentProfile.id,date,ids:validatedIds},prefer:"return=representation"});
-        if(r&&r[0])SESSIONS.push({id:r[0].id,date,ids:validatedIds});
-        else SESSIONS.push({id:"local_"+Date.now(),date,ids:validatedIds});
-      }
-    }
+    // Le jeu de cartes épingle seulement — pas de session enregistrée
+    // (valider = travailler l'identité en coaching, depuis Ma liste)
     showToast(`📌 ${validated.length} identité${validated.length>1?"s":""} ajoutée${validated.length>1?"s":""} à ta liste`);
     setHomeTab("pinned");
   }catch(e){
