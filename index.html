@@ -3418,6 +3418,7 @@ async function enterProfile(id,name){
   document.getElementById("home-name").textContent=name;
   const mname=document.getElementById("home-name-mobile");if(mname)mname.textContent=name;
   checked.clear();reviewDates={};scanChecked.clear();pinnedIds.clear();
+  loadPinnedOrder(id);
   await loadData();
   loadOnboarding();
   const hasOnboarding=(currentProfile.objectives&&currentProfile.objectives.length>0)||SESSIONS.length>0||pinnedIds.size>0;
@@ -4407,16 +4408,28 @@ function setHomeTab(tab){
   } else if(tab==="pinned"){
     document.getElementById("home-sub").textContent="📌 Ma liste";
     renderPinnedTab();
-  } else if(tab==="reconnexion"||tab==="dictionnaire"){
-    // redirige vers jeu de cartes
+  } else if(tab==="dictionnaire"){
+    document.getElementById("home-sub").textContent="📚 Dictionnaire";
+    renderDicoBody();
+  } else if(tab==="progression"){
+    document.getElementById("home-sub").textContent="📊 Progression";
+    renderProgressionInline();
+  } else if(tab==="irt"){
+    document.getElementById("home-sub").textContent="🧘 IRT";
+    renderIrtInline();
+  } else if(tab==="exercises"){
+    document.getElementById("home-sub").textContent="💪 Exercices";
+    renderExercisesInline();
+  } else if(tab==="journal"){
+    document.getElementById("home-sub").textContent="📓 Journal";
+    renderJournalInline();
+  } else if(tab==="reconnexion"){
+    document.getElementById("home-sub").textContent="🔗 Reconnexion";
+    renderReconnexionInline();
+  } else {
+    // onglet inconnu → jeu de cartes
     document.getElementById("home-sub").textContent="🃏 Jeu de cartes";
     renderGameInline();
-    // corriger l'état actif
-    document.querySelectorAll(".home-sidebar-btn").forEach(b=>b.classList.remove("active"));
-    document.getElementById("home-game-btn")?.classList.add("active");
-    document.querySelectorAll(".home-mobile-tab").forEach(b=>b.classList.toggle("active",b.dataset.tab==="game"));
-  } else {
-    // tous les autres onglets cachés → rien
   }
 }
 
@@ -4658,7 +4671,7 @@ function renderPinnedTab(){
   }
 
   const pins=[...pinnedIds].map(id=>DATA.find(d=>d.id===id)).filter(Boolean);
-  const toWork=pins.filter(d=>!widsPin.has(d.id)).sort((a,b)=>(a.depth||3)-(b.depth||3));
+  const toWork=sortByPinnedOrder(pins.filter(d=>!widsPin.has(d.id)));
   const worked=pins.filter(d=>widsPin.has(d.id));
   const totalPinned=pins.length;
   const nWorked=worked.length;
@@ -4691,14 +4704,15 @@ function renderPinnedTab(){
     </div>
   </div>`;
 
-  // Section "À travailler" — identités non encore validées
+  // Section "À travailler" — identités non encore validées (drag & drop)
   if(toWork.length>0){
     html+=`<div style="margin-bottom:1.75rem;">
-      <div style="font-size:11px;font-weight:600;color:var(--text-faint);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:0.75rem;">À travailler — ${toWork.length}</div>`;
+      <div style="font-size:11px;font-weight:600;color:var(--text-faint);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:0.75rem;">À travailler — ${toWork.length}</div>
+      <div id="pinned-towork-list">`;
     toWork.forEach(d=>{
-      const hasNote=getIdentityNote(d.id).trim().length>0;
-      html+=`<div style="padding:12px 14px;background:var(--surface);border:1px solid var(--border-md);border-radius:var(--radius);margin-bottom:8px;">
+      html+=`<div draggable="true" data-pid="${d.id}" class="pinned-drag-item" style="padding:12px 14px;background:var(--surface);border:1px solid var(--border-md);border-radius:var(--radius);margin-bottom:8px;cursor:default;transition:opacity 0.15s,border-color 0.15s;">
         <div style="display:flex;align-items:center;gap:10px;">
+          <span class="drag-handle" title="Réorganiser" style="font-size:14px;color:var(--text-faint);cursor:grab;flex-shrink:0;line-height:1;opacity:0.45;user-select:none;" onmouseenter="this.style.opacity=0.9" onmouseleave="this.style.opacity=0.45">⠿</span>
           <span style="width:7px;height:7px;border-radius:50%;background:${depthColor(d.depth)};flex-shrink:0;"></span>
           <div style="flex:1;min-width:0;">
             <div style="font-size:0.9rem;font-weight:500;">${d.text}</div>
@@ -4709,16 +4723,16 @@ function renderPinnedTab(){
         </div>
       </div>`;
     });
-    html+=`</div>`;
+    html+=`</div></div>`;
   }
 
   // Section "Déjà validées" — repliable si plusieurs
   if(worked.length>0){
-    const showWorked=worked.length<=3;
+    const showWorked=worked.length<=3||pinnedWorkedOpen;
     html+=`<div style="margin-bottom:1.5rem;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
         <div style="font-size:11px;font-weight:600;color:var(--green-text);text-transform:uppercase;letter-spacing:1.5px;">✓ Validées — ${worked.length}</div>
-        ${worked.length>3?`<button onclick="const s=document.getElementById('pinned-worked-list');const isHidden=s.style.display==='none';s.style.display=isHidden?'flex':'none';this.textContent=isHidden?'Masquer':'Voir tout';" style="font-size:0.75rem;background:none;border:none;color:var(--text-faint);cursor:pointer;text-decoration:underline;">Voir tout</button>`:""}
+        ${worked.length>3?`<button onclick="pinnedWorkedOpen=!pinnedWorkedOpen;const s=document.getElementById('pinned-worked-list');s.style.display=pinnedWorkedOpen?'flex':'none';this.textContent=pinnedWorkedOpen?'Masquer':'Voir tout';" style="font-size:0.75rem;background:none;border:none;color:var(--text-faint);cursor:pointer;text-decoration:underline;">${showWorked?"Masquer":"Voir tout"}</button>`:""}
       </div>
       <div id="pinned-worked-list" style="display:${showWorked?"flex":"none"};flex-direction:column;gap:6px;">`;
     worked.forEach(d=>{
@@ -4744,6 +4758,43 @@ function renderPinnedTab(){
   grid.innerHTML=html+searchSection;
   const inp=document.getElementById("pinned-search-input");
   if(inp)inp.addEventListener("input",function(){renderPinnedSearch(this.value);});
+
+  // Drag & drop pour réorganiser "À travailler"
+  const list=document.getElementById("pinned-towork-list");
+  if(list){
+    let dragSrc=null;
+    list.querySelectorAll(".pinned-drag-item").forEach(item=>{
+      item.addEventListener("dragstart",e=>{
+        dragSrc=item;
+        e.dataTransfer.effectAllowed="move";
+        setTimeout(()=>item.style.opacity="0.4",0);
+      });
+      item.addEventListener("dragend",()=>{
+        item.style.opacity="1";
+        list.querySelectorAll(".pinned-drag-item").forEach(i=>i.style.borderColor="");
+        dragSrc=null;
+      });
+      item.addEventListener("dragover",e=>{
+        e.preventDefault();
+        e.dataTransfer.dropEffect="move";
+        if(item!==dragSrc){item.style.borderColor="var(--accent)";}
+      });
+      item.addEventListener("dragleave",()=>item.style.borderColor="");
+      item.addEventListener("drop",e=>{
+        e.preventDefault();
+        if(!dragSrc||dragSrc===item)return;
+        const items=[...list.querySelectorAll(".pinned-drag-item")];
+        const fromIdx=items.indexOf(dragSrc);
+        const toIdx=items.indexOf(item);
+        if(fromIdx<toIdx)item.after(dragSrc);else item.before(dragSrc);
+        // Sauvegarder le nouvel ordre
+        pinnedOrder=[...list.querySelectorAll(".pinned-drag-item")].map(el=>+el.dataset.pid);
+        savePinnedOrder(currentProfile.id);
+        item.style.borderColor="";
+      });
+    });
+  }
+
   // Scroll vers le haut pour voir la barre de progression
   requestAnimationFrame(()=>{
     const container=grid.closest(".home-main")||grid.parentElement;
@@ -5690,6 +5741,25 @@ let dicoShowWorked=false;
 
 /* ===== JEU DE CARTES ===== */
 // ===== JEU DE CARTES — DECK THÉMATIQUE =====
+let pinnedWorkedOpen=false; // état déployé/replié de la section VALIDÉES
+let pinnedOrder=[];        // ordre manuel des identités "À travailler" [id, id, ...]
+
+function loadPinnedOrder(profileId){
+  try{const raw=localStorage.getItem("pinnedOrder_"+profileId);pinnedOrder=raw?JSON.parse(raw):[];}catch(e){pinnedOrder=[];}
+}
+function savePinnedOrder(profileId){
+  try{localStorage.setItem("pinnedOrder_"+profileId,JSON.stringify(pinnedOrder));}catch(e){}
+}
+function sortByPinnedOrder(items){
+  // Place les items dans l'ordre sauvegardé ; ceux non présents vont à la fin
+  const pos=Object.fromEntries(pinnedOrder.map((id,i)=>[id,i]));
+  return [...items].sort((a,b)=>{
+    const ai=pos[a.id]??9999;
+    const bi=pos[b.id]??9999;
+    if(ai!==bi)return ai-bi;
+    return (a.depth||3)-(b.depth||3); // fallback par depth
+  });
+}
 let gameDeckId=null;       // id du SCAN_THEMES en cours
 let gameDeckQueue=[];      // [{id, text, cat}] — cartes du deck courant
 let gameDeckIdx=0;
@@ -5722,8 +5792,27 @@ function gameDeckIdsForTheme(theme){
 }
 
 function renderGameInline(){
-  // Démarre directement avec toutes les cartes
-  gameDeckStart('__all__');
+  // Écran de reconnexion corporelle — optionnel avant le jeu
+  const grid=document.getElementById("home-themes-grid");
+  if(!grid)return;
+  grid.innerHTML=`
+    <div style="max-width:420px;width:100%;margin:0 auto;text-align:center;padding:3rem 1.2rem;">
+      <div style="font-size:3rem;margin-bottom:1.4rem;">🫁</div>
+      <div style="font-size:1.1rem;font-weight:700;color:var(--text-main);margin-bottom:1.1rem;letter-spacing:0.01em;">Avant de commencer</div>
+      <div style="font-size:0.92rem;color:var(--text-muted);line-height:1.85;margin-bottom:2.2rem;">
+        Ferme les yeux quelques secondes.<br>
+        Pose une main sur ton ventre. Respire.<br><br>
+        <em style="color:var(--accent);">Qu'est-ce que tu ressens là, maintenant ?</em>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:14px;">
+        <button onclick="gameDeckStart('__all__')" style="padding:13px 28px;border-radius:var(--radius-lg);border:1.5px solid var(--accent);background:rgba(200,184,154,0.1);color:var(--accent);font-size:0.97rem;font-weight:700;font-family:inherit;cursor:pointer;width:100%;max-width:260px;">
+          Je suis prêt →
+        </button>
+        <button onclick="gameDeckStart('__all__')" style="background:none;border:none;color:var(--text-faint);font-size:0.8rem;font-family:inherit;cursor:pointer;text-decoration:underline;padding:4px 8px;">
+          Passer
+        </button>
+      </div>
+    </div>`;
 }
 
 function _renderGameInlineDEPRECATED(){
