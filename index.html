@@ -5791,28 +5791,89 @@ function gameDeckIdsForTheme(theme){
     .map(d=>d.id);
 }
 
+// Étape 1 : reconnexion au corps
 function renderGameInline(){
-  // Écran de reconnexion corporelle — optionnel avant le jeu
   const grid=document.getElementById("home-themes-grid");
   if(!grid)return;
   grid.innerHTML=`
     <div style="max-width:420px;width:100%;margin:0 auto;text-align:center;padding:3rem 1.2rem;">
-      <div style="font-size:3rem;margin-bottom:1.4rem;">🫁</div>
-      <div style="font-size:1.1rem;font-weight:700;color:var(--text-main);margin-bottom:1.1rem;letter-spacing:0.01em;">Avant de commencer</div>
+      <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);opacity:0.7;margin-bottom:1rem;">Étape 1 · Reconnexion</div>
+      <div style="font-size:3rem;margin-bottom:1.2rem;">🫁</div>
+      <div style="font-size:1.1rem;font-weight:700;color:var(--text-main);margin-bottom:1rem;letter-spacing:0.01em;">Avant de commencer</div>
       <div style="font-size:0.92rem;color:var(--text-muted);line-height:1.85;margin-bottom:2.2rem;">
         Ferme les yeux quelques secondes.<br>
         Pose une main sur ton ventre. Respire.<br><br>
         <em style="color:var(--accent);">Qu'est-ce que tu ressens là, maintenant ?</em>
       </div>
       <div style="display:flex;flex-direction:column;align-items:center;gap:14px;">
-        <button onclick="gameDeckStart('__all__')" style="padding:13px 28px;border-radius:var(--radius-lg);border:1.5px solid var(--accent);background:rgba(200,184,154,0.1);color:var(--accent);font-size:0.97rem;font-weight:700;font-family:inherit;cursor:pointer;width:100%;max-width:260px;">
+        <button onclick="renderGameThemeSelect()" style="padding:13px 28px;border-radius:var(--radius-lg);border:1.5px solid var(--accent);background:rgba(200,184,154,0.1);color:var(--accent);font-size:0.97rem;font-weight:700;font-family:inherit;cursor:pointer;width:100%;max-width:260px;">
           Je suis prêt →
         </button>
-        <button onclick="gameDeckStart('__all__')" style="background:none;border:none;color:var(--text-faint);font-size:0.8rem;font-family:inherit;cursor:pointer;text-decoration:underline;padding:4px 8px;">
+        <button onclick="renderGameThemeSelect()" style="background:none;border:none;color:var(--text-faint);font-size:0.8rem;font-family:inherit;cursor:pointer;text-decoration:underline;padding:4px 8px;">
           Passer
         </button>
       </div>
     </div>`;
+}
+
+// Étape 2 : choix du thème avec badges "Recommandé"
+function renderGameThemeSelect(){
+  const grid=document.getElementById("home-themes-grid");
+  if(!grid)return;
+  gameDeckId=null;gameDeckQueue=[];gameDeckIdx=0;gameDeckSession=[];
+
+  const priorityTopics=(currentProfile&&currentProfile.priorityTopics)||[];
+
+  let html=`<div id="gd-wrap" style="max-width:540px;width:100%;margin:0 auto;">`;
+  html+=`<div style="text-align:center;margin-bottom:1.5rem;">
+    <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);opacity:0.7;margin-bottom:0.5rem;">Étape 2 · Thème</div>
+    <div style="font-size:1.1rem;font-weight:700;margin-bottom:0.3rem;">Quel thème résonne ?</div>
+    <div style="font-size:0.82rem;color:var(--text-muted);">Les thèmes <span style="color:var(--accent);font-weight:600;">recommandés</span> correspondent à tes objectifs</div>
+  </div>`;
+
+  html+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem;">`;
+  SCAN_THEMES.forEach(theme=>{
+    const remaining=gameDeckIdsForTheme(theme).length;
+    const total=theme.chapters.flatMap(ch=>ch.ids||[]).length;
+    const done=total-remaining;
+    const pct=total>0?Math.round((done/total)*100):0;
+    // Vérifie si ce thème est "Recommandé" : les cartes du thème couvrent des cats prioritaires
+    const themeIds=new Set(gameDeckIdsForTheme(theme));
+    const themeDataAll=DATA.filter(d=>themeIds.has(d.id)||theme.chapters.flatMap(ch=>ch.ids||[]).some(w=>d.text.toLowerCase().includes(w)));
+    const isRecommended=priorityTopics.length>0&&themeDataAll.some(d=>priorityTopics.includes(d.cat));
+    const borderCol=isRecommended?'rgba(200,184,154,0.55)':'var(--border-md)';
+    const bgCol=isRecommended?'rgba(200,184,154,0.07)':'var(--surface)';
+    html+=`<div onclick="gameDeckStart('${theme.id}')" style="cursor:pointer;padding:16px 14px;border-radius:var(--radius-lg);border:1px solid ${borderCol};background:${bgCol};transition:all 0.18s;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden;"
+      onmouseenter="this.style.borderColor='var(--accent)';this.style.background='rgba(200,184,154,0.1)'"
+      onmouseleave="this.style.borderColor='${borderCol}';this.style.background='${bgCol}'">
+      ${isRecommended?`<div style="position:absolute;top:7px;right:7px;font-size:7.5px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);background:rgba(200,184,154,0.18);padding:2px 6px;border-radius:20px;border:1px solid rgba(200,184,154,0.3);">✦ Recommandé</div>`:''}
+      <div style="font-size:1.5rem;line-height:1;">${theme.icon}</div>
+      <div style="font-size:0.87rem;font-weight:700;line-height:1.3;color:var(--text);margin-top:${isRecommended?'8':'0'}px;">${theme.title}</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:2px;">
+        <div style="flex:1;height:3px;background:var(--surface3);border-radius:2px;overflow:hidden;">
+          <div style="height:100%;width:${pct}%;background:var(--accent);border-radius:2px;"></div>
+        </div>
+        <div style="font-size:10px;color:var(--text-faint);white-space:nowrap;">${remaining} carte${remaining!==1?'s':''}</div>
+      </div>
+    </div>`;
+  });
+  html+=`</div>`;
+
+  // Option "Tout mélanger"
+  const allRemaining=DATA.filter(d=>!workedIds().has(d.id)).length;
+  html+=`<div onclick="gameDeckStart('__all__')" style="cursor:pointer;padding:14px 16px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);transition:all 0.18s;display:flex;align-items:center;gap:14px;margin-bottom:0.5rem;"
+    onmouseenter="this.style.borderColor='var(--accent)';this.style.background='rgba(200,184,154,0.05)'"
+    onmouseleave="this.style.borderColor='var(--border-md)';this.style.background='var(--surface)'">
+    <div style="font-size:1.5rem;">🎲</div>
+    <div style="flex:1;">
+      <div style="font-size:0.88rem;font-weight:700;color:var(--text);">Tout mélanger</div>
+      <div style="font-size:0.76rem;color:var(--text-faint);">${allRemaining} identités disponibles</div>
+    </div>
+    <div style="font-size:1.1rem;color:var(--text-faint);opacity:0.5;">›</div>
+  </div>`;
+
+  html+=`</div>`;
+  grid.innerHTML=html;
 }
 
 function _renderGameInlineDEPRECATED(){
