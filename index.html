@@ -76,14 +76,34 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
 .home-stat-val{font-size:28px;font-weight:700;margin-bottom:2px;}
 .home-stat-lbl{font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;}
 .home-stat-sub{font-size:12px;color:var(--text-muted);margin-top:4px;}
-.home-mobile-nav{display:none;width:100%;margin-bottom:1.5rem;flex-direction:column;gap:8px;}
-.home-mobile-tabs{display:flex;gap:0;background:var(--surface2);border-radius:20px;padding:3px;overflow:hidden;}
-.home-mobile-tabs::-webkit-scrollbar{display:none;}
-.home-mobile-tab{flex:1;padding:9px 6px;border-radius:17px;border:none;background:transparent;color:var(--text-faint);font-size:11px;font-family:inherit;cursor:pointer;white-space:nowrap;transition:all 0.15s;display:flex;flex-direction:column;align-items:center;gap:2px;line-height:1.2;}
-.home-mobile-tab.active{background:var(--surface);color:var(--text);font-weight:600;}
-.home-mobile-tab .step-num{font-size:9px;font-weight:700;letter-spacing:0.5px;opacity:0.5;text-transform:uppercase;}
-.home-mobile-tab.active .step-num{opacity:1;color:var(--accent);}
-.home-mobile-switch{display:flex;align-items:center;justify-content:center;gap:6px;padding:7px 14px;border-radius:var(--radius);border:1px solid var(--border);background:none;color:var(--text-faint);font-size:12px;font-family:inherit;cursor:pointer;align-self:flex-start;}
+/* BOTTOM NAV mobile */
+.home-mobile-nav{display:none;width:100%;flex-direction:column;gap:0;}
+.home-mobile-topbar{display:flex;align-items:center;justify-content:space-between;width:100%;padding:0 2px;margin-bottom:1.2rem;}
+.home-mobile-switch{display:flex;align-items:center;justify-content:center;gap:6px;padding:6px 12px;border-radius:var(--radius);border:1px solid var(--border);background:none;color:var(--text-faint);font-size:12px;font-family:inherit;cursor:pointer;}
+/* Bottom bar fixe */
+.home-bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:50;background:rgba(10,10,10,0.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--border);display:none;flex-direction:row;align-items:stretch;padding-bottom:env(safe-area-inset-bottom,0px);}
+@media(max-width:767px){.home-bottom-nav{display:flex!important;}}
+.home-bottom-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:10px 4px 8px;border:none;background:transparent;color:var(--text-faint);font-size:10px;font-family:inherit;cursor:pointer;transition:color 0.15s;position:relative;}
+.home-bottom-tab .btab-icon{font-size:20px;line-height:1;transition:transform 0.15s;}
+.home-bottom-tab .btab-label{font-weight:500;letter-spacing:0.2px;}
+.home-bottom-tab.active{color:var(--accent);}
+.home-bottom-tab.active .btab-icon{transform:translateY(-1px);}
+.home-bottom-tab .btab-dot{position:absolute;top:8px;right:calc(50% - 14px);width:7px;height:7px;border-radius:50%;background:var(--accent);display:none;}
+.home-bottom-tab .btab-badge{position:absolute;top:6px;right:calc(50% - 16px);background:var(--accent);color:#000;border-radius:8px;padding:1px 5px;font-size:9px;font-weight:700;display:none;}
+/* Drawer "Plus" */
+.home-more-drawer{position:fixed;bottom:0;left:0;right:0;z-index:60;background:var(--surface);border-top:1px solid var(--border-md);border-radius:20px 20px 0 0;transform:translateY(100%);transition:transform 0.28s cubic-bezier(0.4,0,0.2,1);padding:1rem 1rem calc(1rem + env(safe-area-inset-bottom,0px));}
+.home-more-drawer.open{transform:translateY(0);}
+.home-more-drawer-handle{width:36px;height:4px;background:var(--border-strong);border-radius:2px;margin:0 auto 1rem;}
+.home-more-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.home-more-item{display:flex;flex-direction:column;align-items:center;gap:5px;padding:14px 8px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface2);font-size:11px;color:var(--text-muted);cursor:pointer;font-family:inherit;transition:background 0.15s;}
+.home-more-item.active{border-color:var(--accent);color:var(--accent);background:rgba(200,184,154,0.06);}
+.home-more-item .mitem-icon{font-size:22px;}
+.home-more-overlay{display:none;position:fixed;inset:0;z-index:55;background:rgba(0,0,0,0.5);}
+.home-more-overlay.open{display:block;}
+/* espace bas pour éviter que le contenu passe sous la bottom nav */
+@media(max-width:767px){.home-themes-grid{padding-bottom:6rem!important;}}
+.home-mobile-tabs{display:none;}
+.home-mobile-tab{display:none;}
 .block-screen{display:none;overflow-y:auto;height:100vh;}
 .block-screen.show{display:block;position:fixed;top:0;left:0;width:100%;z-index:200;background:var(--bg);}
 
@@ -622,21 +642,53 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
       <button class="home-footer-btn" id="home-switch-btn"><i class="ti ti-switch-horizontal"></i> Changer de profil</button>
     </div>
   </div>
-  <!-- MOBILE NAV -->
+  <!-- MOBILE TOP BAR -->
   <div class="home-mobile-nav">
-    <div style="display:flex;align-items:center;justify-content:space-between;width:100%;padding:0 2px;">
+    <div class="home-mobile-topbar">
       <div style="font-size:15px;font-weight:600;">Bonjour, <span id="home-name-mobile"></span> 👋</div>
       <button class="home-mobile-switch" id="home-switch-mobile"><i class="ti ti-switch-horizontal"></i> Changer</button>
     </div>
-    <div class="home-mobile-tabs">
-      <button class="home-mobile-tab active" data-tab="game">🃏 Cartes</button>
-      <button class="home-mobile-tab" data-tab="diagnostic">🔍 Diagnostic</button>
-      <button class="home-mobile-tab" data-tab="pinned">📌 Ma liste</button>
-      <button class="home-mobile-tab" data-tab="dictionnaire">📚 Dico</button>
-      <button class="home-mobile-tab" data-tab="progression">📊 Progression</button>
-      <button class="home-mobile-tab" data-tab="irt">🧘 IRT</button>
-      <button class="home-mobile-tab" data-tab="exercises">💪 Exercices</button>
-      <button class="home-mobile-tab" data-tab="journal">📓 Journal</button>
+  </div>
+  <!-- BOTTOM NAV FIXE -->
+  <div class="home-bottom-nav">
+    <button class="home-bottom-tab active" data-tab="game" onclick="mobileTabClick('game')">
+      <span class="btab-icon">🃏</span>
+      <span class="btab-label">Cartes</span>
+    </button>
+    <button class="home-bottom-tab" data-tab="diagnostic" onclick="mobileTabClick('diagnostic')">
+      <span class="btab-icon">🔍</span>
+      <span class="btab-label">Diagnostic</span>
+    </button>
+    <button class="home-bottom-tab" data-tab="pinned" onclick="mobileTabClick('pinned')">
+      <span class="btab-icon">📌</span>
+      <span class="btab-label">Ma liste</span>
+      <span class="btab-badge" id="btab-pinned-badge"></span>
+    </button>
+    <button class="home-bottom-tab" id="btab-more-btn" onclick="toggleMoreDrawer()">
+      <span class="btab-icon">···</span>
+      <span class="btab-label">Plus</span>
+    </button>
+  </div>
+  <!-- OVERLAY + DRAWER "Plus" -->
+  <div class="home-more-overlay" id="more-overlay" onclick="closeMoreDrawer()"></div>
+  <div class="home-more-drawer" id="more-drawer">
+    <div class="home-more-drawer-handle"></div>
+    <div class="home-more-grid">
+      <button class="home-more-item" data-tab="progression" onclick="mobileTabFromDrawer('progression')">
+        <span class="mitem-icon">📊</span>Progression
+      </button>
+      <button class="home-more-item" data-tab="irt" onclick="mobileTabFromDrawer('irt')">
+        <span class="mitem-icon">🧘</span>IRT
+      </button>
+      <button class="home-more-item" data-tab="dictionnaire" onclick="mobileTabFromDrawer('dictionnaire')">
+        <span class="mitem-icon">📚</span>Dico
+      </button>
+      <button class="home-more-item" data-tab="exercises" onclick="mobileTabFromDrawer('exercises')">
+        <span class="mitem-icon">💪</span>Exercices
+      </button>
+      <button class="home-more-item" data-tab="journal" onclick="mobileTabFromDrawer('journal')">
+        <span class="mitem-icon">📓</span>Journal
+      </button>
     </div>
   </div>
   <!-- MAIN -->
@@ -2818,16 +2870,7 @@ async function togglePin(id,silent=false){
     try{await sb("pins",{method:"POST",body:{profile_id:currentProfile.id,identity_id:id},prefer:"return=minimal"});}catch(e){pinnedIds.delete(id);if(!silent)showToast("Erreur — réessaie");return;}
   }
   // Update badge count on pinned tab
-  const pinnedMobileBtn=document.querySelector(".home-mobile-tab[data-tab='pinned']");
-  if(pinnedMobileBtn){
-    const countBadge=pinnedIds.size>0?` <span style="background:var(--accent);color:#000;border-radius:8px;padding:0 5px;font-size:9px;font-weight:700;">${pinnedIds.size}</span>`:"";
-    pinnedMobileBtn.innerHTML=`📌 Ma liste${countBadge}`;
-  }
-  const pinnedSideBtn=document.getElementById("home-pinned-btn");
-  if(pinnedSideBtn){
-    const countBadge=pinnedIds.size>0?` <span style="background:var(--accent);color:#000;border-radius:8px;padding:0 5px;font-size:9px;font-weight:700;">${pinnedIds.size}</span>`:"";
-    pinnedSideBtn.innerHTML=`<span>📌 Ma liste${countBadge}</span>`;
-  }
+  updatePinnedBadge();
   // Mettre à jour l'icône 📌 dans la vue scan sans tout re-render
   document.querySelectorAll("[data-pin-scan]").forEach(el=>{
     const elId=+el.dataset.pinScan;
@@ -3817,16 +3860,7 @@ async function loadData(){
   try{const s=localStorage.getItem("reviews_"+currentProfile.id);if(s)reviewDates=JSON.parse(s)||{};}catch(e){reviewDates={};}
   try{const pins=await sb("pins?profile_id=eq."+currentProfile.id+"&select=identity_id");(pins||[]).forEach(p=>pinnedIds.add(p.identity_id));}catch(e){}
   // Update pinned tab badges after load
-  const pinnedMobileBtn=document.querySelector(".home-mobile-tab[data-tab='pinned']");
-  if(pinnedMobileBtn){
-    const cb=pinnedIds.size>0?` <span style="background:var(--accent);color:#000;border-radius:8px;padding:0 5px;font-size:9px;font-weight:700;">${pinnedIds.size}</span>`:"";
-    pinnedMobileBtn.innerHTML=`📌 Ma liste${cb}`;
-  }
-  const pinnedSideBtn=document.getElementById("home-pinned-btn");
-  if(pinnedSideBtn){
-    const cb=pinnedIds.size>0?` <span style="background:var(--accent);color:#000;border-radius:8px;padding:0 5px;font-size:9px;font-weight:700;">${pinnedIds.size}</span>`:"";
-    pinnedSideBtn.innerHTML=`<span>📌 Ma liste${cb}</span>`;
-  }
+  updatePinnedBadge();
 }
 
 /* ===== HOME THEMES ===== */
@@ -4360,7 +4394,52 @@ function renderIrtInline(){
   `;
 }
 
-// Mobile tabs sync with setHomeTab
+// ---- Badge "Ma liste" centralisé ----
+function updatePinnedBadge(){
+  const count=pinnedIds.size;
+  // Bottom nav badge
+  const badge=document.getElementById("btab-pinned-badge");
+  if(badge){badge.textContent=count>0?count:"";badge.style.display=count>0?"block":"none";}
+  // Sidebar badge
+  const sideBtn=document.getElementById("home-pinned-btn");
+  if(sideBtn){
+    const cb=count>0?` <span style="background:var(--accent);color:#000;border-radius:8px;padding:0 5px;font-size:9px;font-weight:700;">${count}</span>`:"";
+    sideBtn.innerHTML=`📌 Ma liste${cb}`;
+  }
+}
+
+// ---- BOTTOM NAV helpers ----
+function mobileTabClick(tab){
+  // Ferme le drawer si ouvert
+  closeMoreDrawer();
+  // Active le bon bouton bottom nav
+  document.querySelectorAll(".home-bottom-tab").forEach(b=>b.classList.remove("active"));
+  const btn=document.querySelector(`.home-bottom-tab[data-tab="${tab}"]`);
+  if(btn)btn.classList.add("active");
+  setHomeTab(tab);
+}
+function mobileTabFromDrawer(tab){
+  closeMoreDrawer();
+  // Désactive les 3 principaux, active visuellement "Plus" (indique qu'on est dans ce groupe)
+  document.querySelectorAll(".home-bottom-tab").forEach(b=>b.classList.remove("active"));
+  document.getElementById("btab-more-btn").classList.add("active");
+  // Met en évidence l'item drawer actif
+  document.querySelectorAll(".home-more-item").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));
+  setHomeTab(tab);
+}
+function toggleMoreDrawer(){
+  const drawer=document.getElementById("more-drawer");
+  const overlay=document.getElementById("more-overlay");
+  const isOpen=drawer.classList.contains("open");
+  if(isOpen){closeMoreDrawer();}
+  else{drawer.classList.add("open");overlay.classList.add("open");}
+}
+function closeMoreDrawer(){
+  document.getElementById("more-drawer").classList.remove("open");
+  document.getElementById("more-overlay").classList.remove("open");
+}
+
+// Mobile tabs sync with setHomeTab (legacy, kept for sidebar compat)
 document.querySelectorAll(".home-mobile-tab").forEach(btn=>{
   btn.addEventListener("click",()=>{
     document.querySelectorAll(".home-mobile-tab").forEach(b=>b.classList.remove("active"));
@@ -4381,6 +4460,17 @@ function setHomeTab(tab){
   const sideBtn=document.getElementById("home-"+tab+"-btn");
   if(sideBtn)sideBtn.classList.add("active");
   document.querySelectorAll(".home-mobile-tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));
+  // Sync bottom nav
+  const mainTabs=["game","diagnostic","pinned"];
+  const drawerTabs=["progression","irt","dictionnaire","exercises","journal"];
+  document.querySelectorAll(".home-bottom-tab[data-tab]").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));
+  if(drawerTabs.includes(tab)){
+    document.querySelectorAll(".home-bottom-tab").forEach(b=>b.classList.remove("active"));
+    document.getElementById("btab-more-btn").classList.add("active");
+    document.querySelectorAll(".home-more-item").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));
+  } else {
+    document.querySelectorAll(".home-more-item").forEach(b=>b.classList.remove("active"));
+  }
   const grid=document.getElementById("home-themes-grid");
   const srch=document.getElementById("home-search");
 
