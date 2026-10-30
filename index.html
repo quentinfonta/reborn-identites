@@ -74,6 +74,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
 .home-sidebar-btn-primary:hover{background:rgba(200,184,154,0.13);border-color:rgba(200,184,154,0.35);}
 .home-sidebar-btn-primary.active{background:rgba(200,184,154,0.14);border-color:rgba(200,184,154,0.4);box-shadow:0 0 0 1px rgba(200,184,154,0.15) inset;}
 .home-sidebar-btn-primary-sup{font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);opacity:0.9;}
+/* CTA secondaire — Ma liste / Travailler */
+.home-sidebar-btn-secondary{display:flex;flex-direction:column;align-items:flex-start;gap:1px;padding:11px 16px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text);font-size:14px;font-weight:500;font-family:inherit;cursor:pointer;text-align:left;transition:all 0.18s;width:100%;margin-bottom:6px;}
+.home-sidebar-btn-secondary:hover{background:var(--surface2);border-color:var(--border-strong);}
+.home-sidebar-btn-secondary.active{background:var(--surface2);border-color:var(--border-strong);}
+.home-sidebar-btn-secondary-sup{font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-faint);}
 /* Séparateur groupe */
 .home-sidebar-sep{font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-faint);padding:14px 4px 5px;opacity:0.6;}
 /* Boutons secondaires */
@@ -674,16 +679,20 @@ input:focus-visible,textarea:focus-visible{outline:none;}
       <div id="home-objectives-wrap" style="display:none;"></div>
     </div>
     <div class="home-sidebar-nav">
-      <!-- CTA primaire -->
+      <!-- CTA primaire — Découvrir -->
       <button class="home-sidebar-btn-primary active" id="home-game-btn">
         <span class="home-sidebar-btn-primary-sup">Commencer</span>
         <span>🃏 Jeu de cartes</span>
+      </button>
+      <!-- CTA secondaire — Travailler -->
+      <button class="home-sidebar-btn-secondary" id="home-pinned-btn">
+        <span class="home-sidebar-btn-secondary-sup">Travailler</span>
+        <span>📌 Ma liste</span>
       </button>
       <!-- Groupe Exploration -->
       <div class="home-sidebar-sep">Explorer</div>
       <button class="home-sidebar-btn" id="home-diagnostic-btn">🔍 Diagnostic</button>
       <button class="home-sidebar-btn" id="home-dictionnaire-btn">📚 Dictionnaire</button>
-      <button class="home-sidebar-btn" id="home-pinned-btn">📌 Ma liste</button>
       <!-- Groupe Pratique -->
       <div class="home-sidebar-sep">Pratiquer</div>
       <button class="home-sidebar-btn" id="home-irt-btn">🧘 IRT</button>
@@ -2914,7 +2923,7 @@ async function unvalidateId(id){
     renderHomeThemes();
     // refresh les vues ouvertes
     const activeMobile=document.querySelector(".home-mobile-tab.active");
-    const activeSide=document.querySelector(".home-sidebar-btn.active,.home-sidebar-btn-primary.active");
+    const activeSide=document.querySelector(".home-sidebar-btn.active,.home-sidebar-btn-primary.active,.home-sidebar-btn-secondary.active");
     if((activeMobile&&activeMobile.dataset.tab==="pinned")||(activeSide&&activeSide.id==="home-pinned-btn"))renderPinnedTab();
     // refresh scan si ouvert
     if(document.getElementById("scan-screen")?.classList.contains("show"))renderScan();
@@ -2946,7 +2955,7 @@ async function togglePin(id,silent=false){
   });
   // Si on est sur l'onglet épinglés, refresh directement
   const activeMobile=document.querySelector(".home-mobile-tab.active");
-  const activeSide=document.querySelector(".home-sidebar-btn.active,.home-sidebar-btn-primary.active");
+  const activeSide=document.querySelector(".home-sidebar-btn.active,.home-sidebar-btn-primary.active,.home-sidebar-btn-secondary.active");
   if((activeMobile&&activeMobile.dataset.tab==="pinned")||(activeSide&&activeSide.id==="home-pinned-btn")){
     renderPinnedTab();
   }
@@ -4535,7 +4544,7 @@ function setHomeTab(tab){
     journalEditing=false;
   }
   if(tab!=="irt"&&tab!=="objectives")lastHomeTab=tab;
-  document.querySelectorAll(".home-sidebar-btn,.home-sidebar-btn-primary").forEach(b=>b.classList.remove("active"));
+  document.querySelectorAll(".home-sidebar-btn,.home-sidebar-btn-primary,.home-sidebar-btn-secondary").forEach(b=>b.classList.remove("active"));
   const sideBtn=document.getElementById("home-"+tab+"-btn");
   if(sideBtn)sideBtn.classList.add("active");
   document.querySelectorAll(".home-mobile-tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));
@@ -4877,10 +4886,16 @@ function renderPinnedTab(){
 
   // Section "À travailler" — identités non encore validées (drag & drop)
   if(toWork.length>0){
+    const TOWORK_FOLD=5;
+    const toWorkFolded=toWork.length>TOWORK_FOLD&&!window._pinnedToworkOpen;
+    const visibleToWork=toWorkFolded?toWork.slice(0,TOWORK_FOLD):toWork;
     html+=`<div style="margin-bottom:1.75rem;">
-      <div style="font-size:11px;font-weight:600;color:var(--text-faint);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:0.75rem;">À travailler — ${toWork.length}</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
+        <div style="font-size:11px;font-weight:600;color:var(--text-faint);text-transform:uppercase;letter-spacing:1.5px;">À travailler — ${toWork.length}</div>
+        ${toWork.length>TOWORK_FOLD?`<button onclick="window._pinnedToworkOpen=!window._pinnedToworkOpen;renderPinnedTab();" style="font-size:0.75rem;background:none;border:none;color:var(--text-faint);cursor:pointer;text-decoration:underline;">${toWorkFolded?`Voir tout (${toWork.length-TOWORK_FOLD} de plus)`:"Réduire"}</button>`:""}
+      </div>
       <div id="pinned-towork-list">`;
-    toWork.forEach(d=>{
+    visibleToWork.forEach(d=>{
       html+=`<div draggable="true" data-pid="${d.id}" class="pinned-drag-item" style="padding:12px 14px;background:var(--surface);border:1px solid var(--border-md);border-radius:var(--radius);margin-bottom:8px;cursor:default;transition:opacity 0.15s,border-color 0.15s;">
         <div style="display:flex;align-items:center;gap:10px;">
           <span class="drag-handle" title="Réorganiser" style="font-size:14px;color:var(--text-faint);cursor:grab;flex-shrink:0;line-height:1;opacity:0.45;user-select:none;" onmouseenter="this.style.opacity=0.9" onmouseleave="this.style.opacity=0.45">⠿</span>
@@ -4889,12 +4904,16 @@ function renderPinnedTab(){
             <div style="font-size:0.9rem;font-weight:500;">${d.text}</div>
             <div style="font-size:10px;color:var(--text-faint);margin-top:2px;">${d.cat} · ${d.role==="source"?"source":d.role==="coping"?"coping":"verdict"}</div>
           </div>
-          <button onclick="(function(){const txt='${d.text.replace(/\\/g,'\\\\').replace(/'/g,"\\'")}';setHomeTab('irt');setTimeout(()=>{const el=document.getElementById('irt-log-identity');if(el){el.value=txt;el.focus();}},150);})()" title="Lancer une séance IRT sur cette identité" style="font-size:0.72rem;color:var(--text-muted);background:var(--surface2);border:1px solid var(--border-md);border-radius:var(--radius);padding:5px 9px;flex-shrink:0;cursor:pointer;font-family:inherit;transition:opacity 0.15s;" onmouseenter="this.style.opacity=0.7" onmouseleave="this.style.opacity=1">🎧</button>
           <button onclick="validateFromDico(${d.id},this).then(()=>{renderPinnedTab();showToast('✓ Validée');})" style="font-size:0.72rem;color:var(--green-text);background:var(--green-bg);border:1px solid var(--green-border);border-radius:var(--radius);padding:5px 11px;flex-shrink:0;font-weight:600;cursor:pointer;font-family:inherit;transition:opacity 0.15s;" onmouseenter="this.style.opacity=0.75" onmouseleave="this.style.opacity=1">✓ Valider</button>
           <button onclick="togglePin(${d.id}).then(()=>renderPinnedTab());" style="background:none;border:none;cursor:pointer;font-size:1rem;opacity:0.3;flex-shrink:0;transition:opacity 0.15s;" onmouseenter="this.style.opacity=0.8" onmouseleave="this.style.opacity=0.3" title="Retirer de la liste">✕</button>
         </div>
       </div>`;
     });
+    if(toWorkFolded){
+      html+=`<div style="text-align:center;padding:6px 0;">
+        <button onclick="window._pinnedToworkOpen=true;renderPinnedTab();" style="font-size:0.8rem;background:none;border:1px solid var(--border-md);color:var(--text-muted);border-radius:var(--radius);padding:7px 18px;cursor:pointer;font-family:inherit;transition:border-color 0.15s;" onmouseenter="this.style.borderColor='var(--border-strong)'" onmouseleave="this.style.borderColor='var(--border-md)'">+ ${toWork.length-TOWORK_FOLD} de plus</button>
+      </div>`;
+    }
     html+=`</div></div>`;
   }
 
