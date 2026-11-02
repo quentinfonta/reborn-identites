@@ -679,33 +679,16 @@ input:focus-visible,textarea:focus-visible{outline:none;}
       <div id="home-objectives-wrap" style="display:none;"></div>
     </div>
     <div class="home-sidebar-nav">
-      <!-- 1 · Accueil dashboard -->
-      <button class="home-sidebar-btn-primary active" id="home-themes-btn">
-        <span class="home-sidebar-btn-primary-sup">1 · Aujourd'hui</span>
-        <span>🏠 Accueil</span>
-      </button>
-      <!-- 2 · Découvrir -->
-      <button class="home-sidebar-btn-secondary" id="home-game-btn">
-        <span class="home-sidebar-btn-secondary-sup">2 · Découvrir</span>
-        <span>🃏 Jeu de cartes</span>
-      </button>
-      <!-- 3 · Épingler -->
-      <button class="home-sidebar-btn-secondary" id="home-pinned-btn">
-        <span class="home-sidebar-btn-secondary-sup">3 · Épingler</span>
-        <span>📌 Ma liste</span>
-      </button>
-      <!-- 4 · Travailler -->
-      <button class="home-sidebar-btn-secondary" id="home-irt-btn">
-        <span class="home-sidebar-btn-secondary-sup">4 · Travailler</span>
-        <span>🧘 IRT</span>
-      </button>
-      <!-- Secondaire -->
-      <div class="home-sidebar-sep">Aller plus loin</div>
-      <button class="home-sidebar-btn" id="home-dictionnaire-btn">📚 Dictionnaire</button>
-      <button class="home-sidebar-btn" id="home-exercises-btn">💪 Exercices</button>
-      <button class="home-sidebar-btn" id="home-journal-btn">📓 Journal</button>
-      <button class="home-sidebar-btn" id="home-progression-btn">📊 Progression</button>
+      <button class="home-sidebar-btn-primary active" id="home-themes-btn">🏠 Accueil</button>
+      <button class="home-sidebar-btn-secondary" id="home-game-btn">🃏 Découvrir</button>
+      <button class="home-sidebar-btn-secondary" id="home-work-btn">🧘 Travailler</button>
       <!-- boutons fantômes pour compatibilité setHomeTab() -->
+      <button id="home-pinned-btn" style="display:none;"></button>
+      <button id="home-irt-btn" style="display:none;"></button>
+      <button id="home-dictionnaire-btn" style="display:none;"></button>
+      <button id="home-exercises-btn" style="display:none;"></button>
+      <button id="home-journal-btn" style="display:none;"></button>
+      <button id="home-progression-btn" style="display:none;"></button>
       <button id="home-diagnostic-btn" style="display:none;"></button>
       <button id="home-reconnexion-btn" style="display:none;"></button>
       <button id="home-history-btn" style="display:none;"></button>
@@ -730,41 +713,16 @@ input:focus-visible,textarea:focus-visible{outline:none;}
     </button>
     <button class="home-bottom-tab" data-tab="game" onclick="mobileTabClick('game')">
       <span class="btab-icon">🃏</span>
-      <span class="btab-label">Jeu</span>
+      <span class="btab-label">Découvrir</span>
     </button>
-    <button class="home-bottom-tab" data-tab="pinned" onclick="mobileTabClick('pinned')">
-      <span class="btab-icon">📌</span>
-      <span class="btab-label">Ma liste</span>
-      <span class="btab-badge" id="btab-pinned-badge"></span>
-    </button>
-    <button class="home-bottom-tab" data-tab="irt" onclick="mobileTabClick('irt')">
+    <button class="home-bottom-tab" data-tab="work" onclick="mobileTabClick('work')">
       <span class="btab-icon">🧘</span>
-      <span class="btab-label">IRT</span>
-    </button>
-    <button class="home-bottom-tab" id="btab-more-btn" onclick="toggleMoreDrawer()">
-      <span class="btab-icon">···</span>
-      <span class="btab-label">Plus</span>
+      <span class="btab-label">Travailler</span>
     </button>
   </div>
-  <!-- OVERLAY + DRAWER "Plus" -->
-  <div class="home-more-overlay" id="more-overlay" onclick="closeMoreDrawer()"></div>
-  <div class="home-more-drawer" id="more-drawer">
-    <div class="home-more-drawer-handle"></div>
-    <div class="home-more-grid">
-      <button class="home-more-item" data-tab="dictionnaire" onclick="mobileTabFromDrawer('dictionnaire')">
-        <span class="mitem-icon">📚</span>Dictionnaire
-      </button>
-      <button class="home-more-item" data-tab="exercises" onclick="mobileTabFromDrawer('exercises')">
-        <span class="mitem-icon">💪</span>Exercices
-      </button>
-      <button class="home-more-item" data-tab="journal" onclick="mobileTabFromDrawer('journal')">
-        <span class="mitem-icon">📓</span>Journal
-      </button>
-      <button class="home-more-item" data-tab="progression" onclick="mobileTabFromDrawer('progression')">
-        <span class="mitem-icon">📊</span>Progression
-      </button>
-    </div>
-  </div>
+  <!-- OVERLAY + DRAWER fantômes pour compatibilité -->
+  <div class="home-more-overlay" id="more-overlay" onclick="closeMoreDrawer()" style="display:none;"></div>
+  <div class="home-more-drawer" id="more-drawer" style="display:none;"></div>
   <!-- MAIN -->
   <div class="home-main">
     <div id="home-stats-bar" style="display:flex;gap:1.5rem;margin-bottom:2.5rem;flex-wrap:wrap;"></div>
@@ -4214,8 +4172,8 @@ function renderHomeThemes(){
         ${alreadyWorkedToday
           ? `<div style="font-size:0.75rem;color:#6bc46b;font-weight:600;flex-shrink:0;">✓ Fait</div>`
           : `<div style="display:flex;gap:7px;flex-shrink:0;">
-               <button onclick="startIrtSession(${d.id})" style="padding:7px 12px;border-radius:var(--radius);border:1px solid rgba(200,184,154,0.3);background:rgba(200,184,154,0.07);color:var(--accent);font-size:0.75rem;font-family:inherit;cursor:pointer;font-weight:600;white-space:nowrap;" onmouseenter="this.style.background='rgba(200,184,154,0.14)'" onmouseleave="this.style.background='rgba(200,184,154,0.07)'">🧘 Travailler</button>
-               <button onclick="quickMarkWorked(${d.id},this)" style="padding:7px 12px;border-radius:var(--radius);border:1px solid var(--border);background:none;color:var(--text-muted);font-size:0.75rem;font-family:inherit;cursor:pointer;white-space:nowrap;" onmouseenter="this.style.borderColor='rgba(107,196,107,0.5)';this.style.color='#6bc46b'" onmouseleave="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">✓ Travaillée</button>
+               <button onclick="startIrtSession(${d.id})" style="padding:8px 16px;border-radius:var(--radius);border:1.5px solid rgba(200,184,154,0.45);background:rgba(200,184,154,0.1);color:var(--accent);font-size:0.8rem;font-family:inherit;cursor:pointer;font-weight:700;white-space:nowrap;letter-spacing:0.01em;" onmouseenter="this.style.background='rgba(200,184,154,0.2)';this.style.borderColor='rgba(200,184,154,0.7)'" onmouseleave="this.style.background='rgba(200,184,154,0.1)';this.style.borderColor='rgba(200,184,154,0.45)'">🧘 Travailler</button>
+               <button onclick="quickMarkWorked(${d.id},this)" title="Marquer comme travaillée" style="width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:none;color:var(--text-faint);font-size:0.95rem;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.15s;" onmouseenter="this.style.borderColor='rgba(107,196,107,0.6)';this.style.color='#6bc46b';this.style.background='rgba(107,196,107,0.08)'" onmouseleave="this.style.borderColor='var(--border)';this.style.color='var(--text-faint)';this.style.background='none'">✓</button>
              </div>`
         }
       </div>`;
@@ -4261,7 +4219,9 @@ function renderHomeThemes(){
 async function quickMarkWorked(id,btn){
   if(!btn)btn=event.currentTarget;
   btn.disabled=true;
+  const orig=btn.textContent;
   btn.textContent="…";
+  btn.style.fontSize="0.7rem";
   try{
     const today=new Date().toISOString().slice(0,10);
     const existing=SESSIONS.find(s=>s.date===today);
@@ -4277,7 +4237,8 @@ async function quickMarkWorked(id,btn){
     renderHomeThemes();
   }catch(e){
     btn.disabled=false;
-    btn.textContent="✓ Travaillée";
+    btn.textContent=orig;
+    btn.style.fontSize="";
     showToast("Erreur — réessaie");
   }
 }
@@ -4628,10 +4589,8 @@ function mobileTabClick(tab){
 }
 function mobileTabFromDrawer(tab){
   closeMoreDrawer();
-  // Désactive les 3 principaux, active visuellement "Plus" (indique qu'on est dans ce groupe)
   document.querySelectorAll(".home-bottom-tab").forEach(b=>b.classList.remove("active"));
-  document.getElementById("btab-more-btn").classList.add("active");
-  // Met en évidence l'item drawer actif
+  document.getElementById("btab-more-btn")?.classList.add("active");
   document.querySelectorAll(".home-more-item").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));
   setHomeTab(tab);
 }
@@ -4664,17 +4623,21 @@ function setHomeTab(tab){
     journalEditing=false;
   }
   if(tab!=="irt"&&tab!=="objectives")lastHomeTab=tab;
+  // Sous-onglets mappés vers leur parent visible
+  const workSubTabs=["pinned","irt","exercises","progression","journal"];
+  const decoSubTabs=["dictionnaire"];
+  const parentTab=workSubTabs.includes(tab)?"work":decoSubTabs.includes(tab)?"game":tab;
+
   document.querySelectorAll(".home-sidebar-btn,.home-sidebar-btn-primary,.home-sidebar-btn-secondary").forEach(b=>b.classList.remove("active"));
-  const sideBtn=document.getElementById("home-"+tab+"-btn");
+  const sideBtn=document.getElementById("home-"+parentTab+"-btn");
   if(sideBtn)sideBtn.classList.add("active");
-  document.querySelectorAll(".home-mobile-tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));
+  document.querySelectorAll(".home-mobile-tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===parentTab));
   // Sync bottom nav
-  const mainTabs=["themes","game","pinned","irt"];
-  const drawerTabs=["progression","diagnostic","dictionnaire","exercises","journal"];
-  document.querySelectorAll(".home-bottom-tab[data-tab]").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));
+  const mainTabs=["themes","game","work"];
+  const drawerTabs=["diagnostic"];
+  document.querySelectorAll(".home-bottom-tab[data-tab]").forEach(b=>b.classList.toggle("active",b.dataset.tab===parentTab));
   if(drawerTabs.includes(tab)){
     document.querySelectorAll(".home-bottom-tab").forEach(b=>b.classList.remove("active"));
-    document.getElementById("btab-more-btn").classList.add("active");
     document.querySelectorAll(".home-more-item").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));
   } else {
     document.querySelectorAll(".home-more-item").forEach(b=>b.classList.remove("active"));
@@ -4703,40 +4666,42 @@ function setHomeTab(tab){
   const subEl=document.getElementById("home-sub");
   if(subEl&&tab!=="themes"){subEl.style.display="";subEl.style.marginBottom="";}
 
-  if(tab==="game"){
-    document.getElementById("home-sub").textContent="🃏 Jeu de cartes";
-    renderGameInline();
+  if(tab==="themes"){
+    if(subEl)subEl.style.display="none";
+    renderHomeThemes();
+  } else if(tab==="game"){
+    if(subEl){subEl.style.display="none";}
+    renderDecouvrirInline();
+  } else if(tab==="work"){
+    if(subEl)subEl.style.display="none";
+    renderWorkInline();
   } else if(tab==="diagnostic"){
-    document.getElementById("home-sub").textContent="🔍 Diagnostic";
+    if(subEl)subEl.textContent="🔍 Diagnostic";
     renderDiagnosticInline();
   } else if(tab==="pinned"){
-    document.getElementById("home-sub").textContent="📌 Ma liste";
-    renderPinnedTab();
+    if(subEl)subEl.style.display="none";
+    renderWorkInline("pinned");
   } else if(tab==="dictionnaire"){
-    document.getElementById("home-sub").textContent="📚 Dictionnaire";
-    renderDictionnaireInline();
+    if(subEl)subEl.style.display="none";
+    renderDecouvrirInline("dictionnaire");
   } else if(tab==="progression"){
-    document.getElementById("home-sub").textContent="📊 Progression";
-    renderProgressionInline();
+    if(subEl)subEl.style.display="none";
+    renderWorkInline("progression");
   } else if(tab==="irt"){
-    document.getElementById("home-sub").textContent="🧘 IRT";
-    renderIrtInline();
+    if(subEl)subEl.style.display="none";
+    renderWorkInline("irt");
   } else if(tab==="exercises"){
-    document.getElementById("home-sub").textContent="💪 Exercices";
-    renderExercisesInline();
+    if(subEl)subEl.style.display="none";
+    renderWorkInline("exercises");
   } else if(tab==="journal"){
-    document.getElementById("home-sub").textContent="📓 Journal";
-    renderJournalInline();
+    if(subEl)subEl.style.display="none";
+    renderWorkInline("journal");
   } else if(tab==="reconnexion"){
-    document.getElementById("home-sub").textContent="🔗 Reconnexion";
+    if(subEl)subEl.textContent="🔗 Reconnexion";
     renderReconnexionInline();
-  } else if(tab==="themes"){
-    document.getElementById("home-sub").style.display="none";
-    renderHomeThemes();
   } else {
-    // onglet inconnu → jeu de cartes
-    document.getElementById("home-sub").textContent="🃏 Jeu de cartes";
-    renderGameInline();
+    if(subEl)subEl.style.display="none";
+    renderHomeThemes();
   }
   // Fade-in du contenu après rendu
   if(grid){
@@ -6048,6 +6013,7 @@ document.getElementById("home-diagnostic-btn")?.addEventListener("click",()=>set
 document.getElementById("home-dictionnaire-btn")?.addEventListener("click",()=>setHomeTab("dictionnaire"));
 document.getElementById("home-progression-btn")?.addEventListener("click",()=>setHomeTab("progression"));
 document.getElementById("home-game-btn")?.addEventListener("click",()=>setHomeTab("game"));
+document.getElementById("home-work-btn")?.addEventListener("click",()=>setHomeTab("work"));
 
 let dicoSort="alpha"; // "alpha" | "cat" | "depth"
 let dicoShowWorked=false;
@@ -6106,6 +6072,105 @@ function gameDeckIdsForTheme(theme){
 }
 
 // Étape 1 : reconnexion au corps
+// ─── WORK TAB ────────────────────────────────────────────────────────────────
+let workSubTab="pinned"; // état courant sous-onglet Travailler
+
+function renderWorkInline(sub){
+  if(sub)workSubTab=sub;
+  const grid=document.getElementById("home-themes-grid");
+  if(!grid)return;
+
+  const pills=[
+    {id:"pinned",label:"📌 Épinglées"},
+    {id:"irt",label:"🧘 IRT"},
+    {id:"exercises",label:"💪 Exercices"},
+    {id:"progression",label:"📊 Progression"},
+    {id:"journal",label:"📓 Journal"},
+  ];
+
+  const pillNav=`<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border);">
+    ${pills.map(p=>{
+      const active=workSubTab===p.id;
+      return `<button onclick="renderWorkInline('${p.id}')"
+        style="padding:7px 14px;border-radius:20px;border:1px solid ${active?"var(--accent)":"var(--border-md)"};
+               background:${active?"rgba(200,184,154,0.12)":"transparent"};
+               color:${active?"var(--accent)":"var(--text-muted)"};
+               font-size:0.78rem;font-weight:${active?"600":"400"};font-family:inherit;cursor:pointer;
+               transition:all 0.15s;white-space:nowrap;">${p.label}</button>`;
+    }).join("")}
+  </div>`;
+
+  // On injecte le nav pill dans le grid, puis on appelle le bon renderer
+  grid.innerHTML=`<div id="work-pills">${pillNav}</div><div id="work-content"></div>`;
+
+  // Appel du bon renderer dans #work-content
+  const content=document.getElementById("work-content");
+  if(!content)return;
+
+  // On detourne les renderers existants en ciblant temporairement work-content
+  const origId="home-themes-grid";
+  const fakeTarget=content;
+  // Ruse : on remplace temporairement l'id
+  grid.id="home-themes-grid-bak";
+  content.id="home-themes-grid";
+
+  if(workSubTab==="pinned")       renderPinnedTab();
+  else if(workSubTab==="irt")     renderIrtInline();
+  else if(workSubTab==="exercises")renderExercisesInline();
+  else if(workSubTab==="progression")renderProgressionInline();
+  else if(workSubTab==="journal") renderJournalInline();
+
+  // Restaure les ids
+  content.id="work-content";
+  grid.id=origId;
+
+  // Réinjecte les pills (les renderers ont écrasé grid.innerHTML)
+  grid.innerHTML=`<div id="work-pills">${pillNav}</div>`+content.innerHTML;
+}
+
+// ─── DÉCOUVRIR TAB ───────────────────────────────────────────────────────────
+let decoSubTab="game"; // état courant sous-onglet Découvrir
+
+function renderDecouvrirInline(sub){
+  if(sub)decoSubTab=sub;
+  const grid=document.getElementById("home-themes-grid");
+  if(!grid)return;
+
+  const pills=[
+    {id:"game",label:"🃏 Jeu de cartes"},
+    {id:"dictionnaire",label:"📚 Dictionnaire"},
+  ];
+
+  const pillNav=`<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border);">
+    ${pills.map(p=>{
+      const active=decoSubTab===p.id;
+      return `<button onclick="renderDecouvrirInline('${p.id}')"
+        style="padding:7px 14px;border-radius:20px;border:1px solid ${active?"var(--accent)":"var(--border-md)"};
+               background:${active?"rgba(200,184,154,0.12)":"transparent"};
+               color:${active?"var(--accent)":"var(--text-muted)"};
+               font-size:0.78rem;font-weight:${active?"600":"400"};font-family:inherit;cursor:pointer;
+               transition:all 0.15s;white-space:nowrap;">${p.label}</button>`;
+    }).join("")}
+  </div>`;
+
+  grid.innerHTML=`<div id="deco-pills">${pillNav}</div><div id="deco-content"></div>`;
+
+  const content=document.getElementById("deco-content");
+  if(!content)return;
+
+  grid.id="home-themes-grid-bak";
+  content.id="home-themes-grid";
+
+  if(decoSubTab==="game")         renderGameInline();
+  else if(decoSubTab==="dictionnaire") renderDictionnaireInline();
+
+  content.id="deco-content";
+  grid.id="home-themes-grid";
+
+  grid.innerHTML=`<div id="deco-pills">${pillNav}</div>`+content.innerHTML;
+}
+
+// ─── JEU DE CARTES ───────────────────────────────────────────────────────────
 function renderGameInline(){
   const grid=document.getElementById("home-themes-grid");
   if(!grid)return;
