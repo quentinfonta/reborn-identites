@@ -679,29 +679,34 @@ input:focus-visible,textarea:focus-visible{outline:none;}
       <div id="home-objectives-wrap" style="display:none;"></div>
     </div>
     <div class="home-sidebar-nav">
-      <!-- CTA primaire — Découvrir -->
-      <button class="home-sidebar-btn-primary active" id="home-game-btn">
-        <span class="home-sidebar-btn-primary-sup">Commencer</span>
+      <!-- 1 · Accueil dashboard -->
+      <button class="home-sidebar-btn-primary active" id="home-themes-btn">
+        <span class="home-sidebar-btn-primary-sup">1 · Aujourd'hui</span>
+        <span>🏠 Accueil</span>
+      </button>
+      <!-- 2 · Découvrir -->
+      <button class="home-sidebar-btn-secondary" id="home-game-btn">
+        <span class="home-sidebar-btn-secondary-sup">2 · Découvrir</span>
         <span>🃏 Jeu de cartes</span>
       </button>
-      <!-- CTA secondaire — Travailler -->
+      <!-- 3 · Épingler -->
       <button class="home-sidebar-btn-secondary" id="home-pinned-btn">
-        <span class="home-sidebar-btn-secondary-sup">Travailler</span>
+        <span class="home-sidebar-btn-secondary-sup">3 · Épingler</span>
         <span>📌 Ma liste</span>
       </button>
-      <!-- Groupe Exploration -->
-      <div class="home-sidebar-sep">Explorer</div>
-      <button class="home-sidebar-btn" id="home-diagnostic-btn">🔍 Diagnostic</button>
+      <!-- 4 · Travailler -->
+      <button class="home-sidebar-btn-secondary" id="home-irt-btn">
+        <span class="home-sidebar-btn-secondary-sup">4 · Travailler</span>
+        <span>🧘 IRT</span>
+      </button>
+      <!-- Secondaire -->
+      <div class="home-sidebar-sep">Aller plus loin</div>
       <button class="home-sidebar-btn" id="home-dictionnaire-btn">📚 Dictionnaire</button>
-      <!-- Groupe Pratique -->
-      <div class="home-sidebar-sep">Pratiquer</div>
-      <button class="home-sidebar-btn" id="home-irt-btn">🧘 IRT</button>
       <button class="home-sidebar-btn" id="home-exercises-btn">💪 Exercices</button>
       <button class="home-sidebar-btn" id="home-journal-btn">📓 Journal</button>
-      <!-- Groupe Suivi -->
-      <div class="home-sidebar-sep">Suivre</div>
       <button class="home-sidebar-btn" id="home-progression-btn">📊 Progression</button>
       <!-- boutons fantômes pour compatibilité setHomeTab() -->
+      <button id="home-diagnostic-btn" style="display:none;"></button>
       <button id="home-reconnexion-btn" style="display:none;"></button>
       <button id="home-history-btn" style="display:none;"></button>
       <button id="home-objectives-btn" style="display:none;"></button>
@@ -719,18 +724,22 @@ input:focus-visible,textarea:focus-visible{outline:none;}
   </div>
   <!-- BOTTOM NAV FIXE -->
   <div class="home-bottom-nav">
-    <button class="home-bottom-tab active" data-tab="game" onclick="mobileTabClick('game')">
-      <span class="btab-icon">🃏</span>
-      <span class="btab-label">Cartes</span>
+    <button class="home-bottom-tab active" data-tab="themes" onclick="mobileTabClick('themes')">
+      <span class="btab-icon">🏠</span>
+      <span class="btab-label">Accueil</span>
     </button>
-    <button class="home-bottom-tab" data-tab="diagnostic" onclick="mobileTabClick('diagnostic')">
-      <span class="btab-icon">🔍</span>
-      <span class="btab-label">Diagnostic</span>
+    <button class="home-bottom-tab" data-tab="game" onclick="mobileTabClick('game')">
+      <span class="btab-icon">🃏</span>
+      <span class="btab-label">Jeu</span>
     </button>
     <button class="home-bottom-tab" data-tab="pinned" onclick="mobileTabClick('pinned')">
       <span class="btab-icon">📌</span>
       <span class="btab-label">Ma liste</span>
       <span class="btab-badge" id="btab-pinned-badge"></span>
+    </button>
+    <button class="home-bottom-tab" data-tab="irt" onclick="mobileTabClick('irt')">
+      <span class="btab-icon">🧘</span>
+      <span class="btab-label">IRT</span>
     </button>
     <button class="home-bottom-tab" id="btab-more-btn" onclick="toggleMoreDrawer()">
       <span class="btab-icon">···</span>
@@ -742,20 +751,17 @@ input:focus-visible,textarea:focus-visible{outline:none;}
   <div class="home-more-drawer" id="more-drawer">
     <div class="home-more-drawer-handle"></div>
     <div class="home-more-grid">
-      <button class="home-more-item" data-tab="progression" onclick="mobileTabFromDrawer('progression')">
-        <span class="mitem-icon">📊</span>Progression
-      </button>
-      <button class="home-more-item" data-tab="irt" onclick="mobileTabFromDrawer('irt')">
-        <span class="mitem-icon">🧘</span>IRT
-      </button>
       <button class="home-more-item" data-tab="dictionnaire" onclick="mobileTabFromDrawer('dictionnaire')">
-        <span class="mitem-icon">📚</span>Dico
+        <span class="mitem-icon">📚</span>Dictionnaire
       </button>
       <button class="home-more-item" data-tab="exercises" onclick="mobileTabFromDrawer('exercises')">
         <span class="mitem-icon">💪</span>Exercices
       </button>
       <button class="home-more-item" data-tab="journal" onclick="mobileTabFromDrawer('journal')">
         <span class="mitem-icon">📓</span>Journal
+      </button>
+      <button class="home-more-item" data-tab="progression" onclick="mobileTabFromDrawer('progression')">
+        <span class="mitem-icon">📊</span>Progression
       </button>
     </div>
   </div>
@@ -2890,7 +2896,7 @@ let DATA=[...DEFAULT_DATA];
 let currentProfile=null,SESSIONS=[],checked=new Set(),reviewDates={},pinnedIds=new Set();
 let currentExercise=null,currentExPart=0;
 let levelFilter=0,query="";
-let scanThemeId=null,scanChapterIdx=0,scanChecked=new Set(),lastHomeTab="game",journalEditing=false;
+let scanThemeId=null,scanChapterIdx=0,scanChecked=new Set(),lastHomeTab="themes",journalEditing=false;
 let pinTarget=null,pinVal="";
 let sessionSize=5;
 
@@ -3544,8 +3550,8 @@ async function enterProfile(id,name){
     startOnboarding();
   } else {
     showScreen("home-screen");
-    // Si l'utilisateur a des identités épinglées → sa to-do list, sinon → reconnexion pour découvrir ses thèmes
-    setHomeTab(pinnedIds.size>0?"pinned":"game"); // appelle déjà renderHomeStats()
+    // Toujours afficher le dashboard d'accueil en premier
+    setHomeTab("themes");
     renderHomeObjectives();
   }
   setTimeout(checkInactivity,1000);
@@ -4128,70 +4134,152 @@ function toggleProblematique(tid){
   }
 }
 
+// Rafraîchit le dashboard accueil seulement si on est dessus
+function refreshHomeDashboardIfVisible(){
+  const activeBtn=document.querySelector(".home-sidebar-btn-primary.active,.home-sidebar-btn.active");
+  const activeId=activeBtn?.id;
+  if(activeId==="home-themes-btn"||lastHomeTab==="themes"){
+    renderHomeThemes();
+  }
+}
+
 function renderHomeThemes(){
   const grid=document.getElementById("home-themes-grid");
   if(!grid){return;}
+
+  // ── DASHBOARD DU JOUR ──────────────────────────────────────────────
+  const firstName=(currentProfile?.name||"").split(" ")[0]||"toi";
+  const now=new Date();
+  const todayStr=now.toISOString().slice(0,10);
+  const hour=now.getHours();
+  const greeting=hour<12?"Bonjour":hour<18?"Bon après-midi":"Bonsoir";
+
+  const wids=workedIds();
+  const totalWorked=wids.size;
+  const totalData=DATA.length;
+  const totalPinned=pinnedIds.size;
+  const pct=totalData>0?Math.round(totalWorked/totalData*100):0;
+
+  // Travaillées aujourd'hui (via sessions)
+  const todaySessions=SESSIONS.filter(s=>s.date===todayStr);
+  const todayWorkedIds=new Set(todaySessions.flatMap(s=>s.ids));
+  const todayCount=todayWorkedIds.size;
+
+  // Épinglées non encore travaillées
+  const pinnedArr=[...pinnedIds].filter(id=>!wids.has(id));
+  const pinnedDatas=pinnedArr.map(id=>DATA.find(d=>d.id===id)).filter(Boolean);
+
   let html="";
 
-  const objThemeIds=getObjectiveThemeIds();
-  const hasObjectives=objThemeIds.size>0;
-  const objs=currentProfile?.objectives||[];
+  // ── En-tête greeting ──────────────────────────────────────────────
+  html+=`<div style="margin-bottom:1.8rem;">
+    <div style="font-size:1.4rem;font-weight:700;color:var(--text);margin-bottom:4px;">${greeting}, ${firstName} 👋</div>
+    <div style="font-size:0.82rem;color:var(--text-faint);">${totalPinned>0?`${totalPinned} identité${totalPinned>1?"s":""} dans ta liste à travailler`:"Commence par explorer le jeu de cartes pour remplir ta liste."}</div>
+  </div>`;
 
-  // Bandeau jeu de cartes — découverte rapide
-  const totalWorked=workedIds().size;
-  html+=`<div onclick="setHomeTab('game')" style="cursor:pointer;display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:var(--radius-lg);border:1px solid rgba(200,184,154,0.3);background:rgba(200,184,154,0.06);margin-bottom:1.2rem;transition:background 0.15s;" onmouseenter="this.style.background='rgba(200,184,154,0.1)'" onmouseleave="this.style.background='rgba(200,184,154,0.06)'">
+  // ── Tuiles stats ──────────────────────────────────────────────────
+  html+=`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.8rem;">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 16px;text-align:center;">
+      <div style="font-size:1.5rem;font-weight:700;color:var(--accent);line-height:1;">${todayCount}</div>
+      <div style="font-size:0.7rem;color:var(--text-faint);margin-top:4px;line-height:1.3;">travaillées<br>aujourd'hui</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 16px;text-align:center;">
+      <div style="font-size:1.5rem;font-weight:700;color:${totalPinned>0?"var(--accent)":"var(--text-faint)"};line-height:1;">${totalPinned}</div>
+      <div style="font-size:0.7rem;color:var(--text-faint);margin-top:4px;line-height:1.3;">épinglées<br>à travailler</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 16px;text-align:center;">
+      <div style="font-size:1.5rem;font-weight:700;color:var(--text-muted);line-height:1;">${pct}%</div>
+      <div style="font-size:0.7rem;color:var(--text-faint);margin-top:4px;line-height:1.3;">progression<br>globale</div>
+    </div>
+  </div>`;
+
+  // Barre de progression globale
+  html+=`<div style="margin-bottom:2rem;">
+    <div style="height:4px;background:var(--surface2);border-radius:4px;overflow:hidden;">
+      <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,var(--accent),rgba(200,184,154,0.6));border-radius:4px;transition:width 0.6s cubic-bezier(0.22,1,0.36,1);"></div>
+    </div>
+    <div style="font-size:0.7rem;color:var(--text-faint);margin-top:5px;">${totalWorked} / ${totalData} identités libérées</div>
+  </div>`;
+
+  // ── Identités épinglées à travailler ─────────────────────────────
+  if(pinnedDatas.length>0){
+    html+=`<div style="font-size:10px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;font-weight:600;">📌 Ta liste du jour</div>`;
+    pinnedDatas.forEach(d=>{
+      const alreadyWorkedToday=todayWorkedIds.has(d.id);
+      html+=`<div style="display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:var(--radius-lg);border:1px solid ${alreadyWorkedToday?"rgba(100,200,100,0.25)":"var(--border-md)"};background:${alreadyWorkedToday?"rgba(100,200,100,0.06)":"var(--surface)"};margin-bottom:8px;transition:background 0.15s;">
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:0.88rem;font-weight:600;color:${alreadyWorkedToday?"var(--text-faint)":"var(--text)"};${alreadyWorkedToday?"text-decoration:line-through;opacity:0.6":""}">${d.text}</div>
+          <div style="font-size:0.7rem;color:var(--text-faint);margin-top:2px;">${d.cat}</div>
+        </div>
+        ${alreadyWorkedToday
+          ? `<div style="font-size:0.75rem;color:#6bc46b;font-weight:600;flex-shrink:0;">✓ Fait</div>`
+          : `<div style="display:flex;gap:7px;flex-shrink:0;">
+               <button onclick="startIrtSession(${d.id})" style="padding:7px 12px;border-radius:var(--radius);border:1px solid rgba(200,184,154,0.3);background:rgba(200,184,154,0.07);color:var(--accent);font-size:0.75rem;font-family:inherit;cursor:pointer;font-weight:600;white-space:nowrap;" onmouseenter="this.style.background='rgba(200,184,154,0.14)'" onmouseleave="this.style.background='rgba(200,184,154,0.07)'">🧘 Travailler</button>
+               <button onclick="quickMarkWorked(${d.id},this)" style="padding:7px 12px;border-radius:var(--radius);border:1px solid var(--border);background:none;color:var(--text-muted);font-size:0.75rem;font-family:inherit;cursor:pointer;white-space:nowrap;" onmouseenter="this.style.borderColor='rgba(107,196,107,0.5)';this.style.color='#6bc46b'" onmouseleave="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">✓ Travaillée</button>
+             </div>`
+        }
+      </div>`;
+    });
+    html+=`<div style="height:0.5rem;"></div>`;
+
+    // CTA IRT si plus de 2 épinglées
+    if(pinnedDatas.length>=2){
+      html+=`<div onclick="setHomeTab('irt')" style="cursor:pointer;display:flex;align-items:center;gap:12px;padding:13px 15px;border-radius:var(--radius-lg);border:1px solid rgba(200,184,154,0.2);background:rgba(200,184,154,0.04);margin-bottom:1.5rem;transition:background 0.15s;" onmouseenter="this.style.background='rgba(200,184,154,0.09)'" onmouseleave="this.style.background='rgba(200,184,154,0.04)'">
+        <div style="font-size:24px;flex-shrink:0;">🧘</div>
+        <div style="flex:1;">
+          <div style="font-size:0.82rem;font-weight:600;color:var(--accent);margin-bottom:2px;">Séance guidée IRT</div>
+          <div style="font-size:0.72rem;color:var(--text-faint);">Travaille tes identités une par une avec le protocole complet.</div>
+        </div>
+        <div style="color:var(--text-faint);opacity:0.5;font-size:18px;">›</div>
+      </div>`;
+    }
+  } else {
+    // Aucune identité épinglée — inviter à découvrir
+    html+=`<div style="text-align:center;padding:2rem 1rem;margin-bottom:1.5rem;">
+      <div style="font-size:2rem;margin-bottom:12px;">📌</div>
+      <div style="font-size:0.88rem;font-weight:600;color:var(--text);margin-bottom:6px;">Ta liste est vide</div>
+      <div style="font-size:0.78rem;color:var(--text-faint);line-height:1.6;max-width:280px;margin:0 auto 16px;">Explore le jeu de cartes pour découvrir les identités qui résonnent en toi, puis épingle celles à travailler.</div>
+    </div>`;
+  }
+
+  // ── CTA Jeu de cartes ─────────────────────────────────────────────
+  html+=`<div onclick="setHomeTab('game')" style="cursor:pointer;display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:var(--radius-lg);border:1px solid rgba(200,184,154,0.3);background:rgba(200,184,154,0.06);margin-bottom:0.8rem;transition:background 0.15s;" onmouseenter="this.style.background='rgba(200,184,154,0.12)'" onmouseleave="this.style.background='rgba(200,184,154,0.06)'">
     <div style="font-size:28px;flex-shrink:0;">🃏</div>
     <div style="flex:1;">
-      <div style="font-size:0.88rem;font-weight:600;color:var(--accent);margin-bottom:2px;">Jeu de cartes — Ressentir</div>
-      <div style="font-size:0.75rem;color:var(--text-faint);line-height:1.4;">Découvre les identités une par une. Celles qui résonnent vont dans ta liste.</div>
+      <div style="font-size:0.88rem;font-weight:600;color:var(--accent);margin-bottom:2px;">Jeu de cartes — Découvrir</div>
+      <div style="font-size:0.75rem;color:var(--text-faint);line-height:1.4;">Explore les thèmes et épingle les identités qui résonnent.</div>
     </div>
     <div style="font-size:20px;color:var(--text-faint);opacity:0.5;">›</div>
   </div>`;
 
-  // Thème Corps — toujours en premier
-  const corpsTheme=SCAN_THEMES.find(t=>t.id==="corps");
-  if(corpsTheme){
-    html+=`<div style="font-size:10px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;font-weight:600;">🌊 Point de départ — Corps</div>`;
-    html+=renderProblematiquesTheme(corpsTheme,expandedThemeId===corpsTheme.id,null);
-    html+="<div style='height:10px;'></div>";
-  }
-
-  if(hasObjectives){
-    const objThemes=SCAN_THEMES.filter(t=>objThemeIds.has(t.id)&&t.id!=="corps");
-    if(objThemes.length){
-      html+=`<div style="font-size:10px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;font-weight:600;">🎯 Prioritaires</div>`;
-      objThemes.forEach(t=>{
-        const matchObj=objs.find(o=>(o.topics||[]).some(tp=>
-          t.title.toLowerCase().includes(tp.toLowerCase())||tp.toLowerCase().includes(t.title.toLowerCase())
-        ))||objs[0];
-        const badge=matchObj?`${matchObj.emoji} ${matchObj.label}`:null;
-        html+=renderProblematiquesTheme(t,expandedThemeId===t.id,badge);
-        html+="<div style='height:6px;'></div>";
-      });
-    }
-    html+=`<div style="font-size:10px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin:14px 0 10px;font-weight:600;">Tous les thèmes</div>`;
-    const otherThemes=SCAN_THEMES.filter(t=>!objThemeIds.has(t.id)&&t.id!=="corps");
-    otherThemes.forEach(t=>{
-      html+=renderProblematiquesTheme(t,expandedThemeId===t.id,null);
-      html+="<div style='height:6px;'></div>";
-    });
-  } else {
-    html+=`<div style="background:rgba(200,184,154,0.05);border:1px solid rgba(200,184,154,0.2);border-radius:var(--radius-lg);padding:14px 16px;margin-bottom:1.2rem;display:flex;align-items:center;justify-content:space-between;gap:12px;">
-      <div>
-        <div style="font-size:0.82rem;font-weight:600;color:var(--accent);margin-bottom:2px;">🎯 Définis tes objectifs</div>
-        <div style="font-size:0.75rem;color:var(--text-faint);line-height:1.5;">Pour voir tes thèmes prioritaires et mieux orienter ton travail.</div>
-      </div>
-      <button onclick="startOnboarding()" style="flex-shrink:0;padding:7px 14px;border-radius:var(--radius);border:1px solid var(--accent);background:rgba(200,184,154,0.08);color:var(--accent);font-size:0.78rem;font-family:inherit;cursor:pointer;font-weight:600;">Configurer</button>
-    </div>`;
-    SCAN_THEMES.filter(t=>t.id!=="corps").forEach(t=>{
-      html+=renderProblematiquesTheme(t,expandedThemeId===t.id,null);
-      html+="<div style='height:6px;'></div>";
-    });
-  }
-
   grid.innerHTML=html;
   grid.style.display="flex";
   grid.style.flexDirection="column";
+}
+
+// Marquer une identité comme travaillée directement depuis l'accueil (sans IRT)
+async function quickMarkWorked(id,btn){
+  if(!btn)btn=event.currentTarget;
+  btn.disabled=true;
+  btn.textContent="…";
+  try{
+    const today=new Date().toISOString().slice(0,10);
+    const existing=SESSIONS.find(s=>s.date===today);
+    if(existing){
+      const newIds=[...new Set([...existing.ids,id])];
+      await sb(`sessions?id=eq.${existing.id}`,{method:"PATCH",body:{ids:newIds}});
+      existing.ids=newIds;
+    } else {
+      const r=await sb("sessions",{method:"POST",body:{profile_id:currentProfile.id,date:today,ids:[id]},prefer:"return=representation"});
+      if(r&&r[0])SESSIONS.push({id:r[0].id,date:today,ids:[id]});
+    }
+    showToast("✓ Marquée comme travaillée");
+    renderHomeThemes();
+  }catch(e){
+    btn.disabled=false;
+    btn.textContent="✓ Travaillée";
+    showToast("Erreur — réessaie");
+  }
 }
 
 
@@ -4343,10 +4431,42 @@ function renderIrtInline(){
   grid.style.flexDirection="column";
   grid.style.overflowY="visible";
 
+  // Section épinglées à travailler
+  const wids=workedIds();
+  const toWork=DATA.filter(d=>pinnedIds.has(d.id)&&!wids.has(d.id));
+
+  let pinnedSection="";
+  if(toWork.length>0){
+    pinnedSection=`<div style="margin-bottom:2rem;">
+      <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:0.75rem;">Travailler maintenant</div>
+      <div style="font-size:13px;color:var(--text-muted);margin-bottom:1rem;">Choisis une identité — tu seras guidé à travers les 3 étapes.</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        ${toWork.map(d=>`
+          <div onclick="startIrtSession(${d.id})" style="cursor:pointer;padding:14px 16px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);display:flex;align-items:center;gap:12px;transition:all 0.15s;"
+            onmouseenter="this.style.borderColor='var(--accent)';this.style.background='rgba(200,184,154,0.05)'"
+            onmouseleave="this.style.borderColor='var(--border-md)';this.style.background='var(--surface)'">
+            <span style="width:8px;height:8px;border-radius:50%;background:${depthColor(d.depth)};flex-shrink:0;"></span>
+            <div style="flex:1;min-width:0;">
+              <div style="font-size:0.9rem;font-weight:600;color:var(--text);">${d.text}</div>
+              <div style="font-size:10px;color:var(--text-faint);margin-top:2px;">${d.cat}</div>
+            </div>
+            <span style="font-size:0.8rem;color:var(--accent);opacity:0.7;">🧘 →</span>
+          </div>`).join("")}
+      </div>
+    </div>
+    <div style="height:1px;background:var(--border);margin-bottom:2rem;"></div>`;
+  } else {
+    pinnedSection=`<div style="margin-bottom:2rem;padding:16px;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--surface);text-align:center;color:var(--text-faint);font-size:0.85rem;line-height:1.7;">
+      Aucune identité épinglée à travailler.<br>
+      <span style="font-size:0.8rem;opacity:0.7;">Épingle des identités depuis le Jeu de cartes ou le Dictionnaire.</span>
+    </div>
+    <div style="height:1px;background:var(--border);margin-bottom:2rem;"></div>`;
+  }
+
   // Reset log form state
-  grid.innerHTML=`
+  grid.innerHTML=pinnedSection+`
     <div style="margin-bottom:2rem;">
-      <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:0.5rem;">Formation</div>
+      <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-faint);margin-bottom:0.5rem;">Formation</div>
       <div style="font-size:1.4rem;font-weight:700;margin-bottom:0.75rem;line-height:1.3;">Séance de désintensification émotionnelle</div>
       <div style="font-size:0.87rem;color:var(--text-muted);line-height:1.7;">Cette page décrit comment mener une séance IRT — une approche de désintensification émotionnelle inspirée de l'EMDR, adaptée au travail sur les identités. Elle n'est pas un outil clinique : c'est un protocole de travail personnel.</div>
       <div style="margin-top:0.75rem;padding:10px 14px;border-radius:var(--radius);border:1px solid rgba(200,184,154,0.2);background:rgba(200,184,154,0.04);font-size:12px;color:var(--text-muted);line-height:1.6;">
@@ -4549,8 +4669,8 @@ function setHomeTab(tab){
   if(sideBtn)sideBtn.classList.add("active");
   document.querySelectorAll(".home-mobile-tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));
   // Sync bottom nav
-  const mainTabs=["game","diagnostic","pinned"];
-  const drawerTabs=["progression","irt","dictionnaire","exercises","journal"];
+  const mainTabs=["themes","game","pinned","irt"];
+  const drawerTabs=["progression","diagnostic","dictionnaire","exercises","journal"];
   document.querySelectorAll(".home-bottom-tab[data-tab]").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));
   if(drawerTabs.includes(tab)){
     document.querySelectorAll(".home-bottom-tab").forEach(b=>b.classList.remove("active"));
@@ -4579,6 +4699,10 @@ function setHomeTab(tab){
   if(objAccueil)objAccueil.style.display="none";
   if(srch)srch.style.display="none";
 
+  // Réafficher le titre par défaut (le case themes le masque)
+  const subEl=document.getElementById("home-sub");
+  if(subEl&&tab!=="themes"){subEl.style.display="";subEl.style.marginBottom="";}
+
   if(tab==="game"){
     document.getElementById("home-sub").textContent="🃏 Jeu de cartes";
     renderGameInline();
@@ -4606,6 +4730,9 @@ function setHomeTab(tab){
   } else if(tab==="reconnexion"){
     document.getElementById("home-sub").textContent="🔗 Reconnexion";
     renderReconnexionInline();
+  } else if(tab==="themes"){
+    document.getElementById("home-sub").style.display="none";
+    renderHomeThemes();
   } else {
     // onglet inconnu → jeu de cartes
     document.getElementById("home-sub").textContent="🃏 Jeu de cartes";
@@ -4904,7 +5031,7 @@ function renderPinnedTab(){
             <div style="font-size:0.9rem;font-weight:500;">${d.text}</div>
             <div style="font-size:10px;color:var(--text-faint);margin-top:2px;">${d.cat} · ${d.role==="source"?"source":d.role==="coping"?"coping":"verdict"}</div>
           </div>
-          <button onclick="validateFromDico(${d.id},this).then(()=>{renderPinnedTab();showToast('✓ Validée');})" style="font-size:0.72rem;color:var(--green-text);background:var(--green-bg);border:1px solid var(--green-border);border-radius:var(--radius);padding:5px 11px;flex-shrink:0;font-weight:600;cursor:pointer;font-family:inherit;transition:opacity 0.15s;" onmouseenter="this.style.opacity=0.75" onmouseleave="this.style.opacity=1">✓ Valider</button>
+          <button onclick="validateFromDico(${d.id},this).then(()=>{renderPinnedTab();showToast('✓ Validée');})"style="font-size:0.72rem;color:var(--green-text);background:var(--green-bg);border:1px solid var(--green-border);border-radius:var(--radius);padding:5px 11px;flex-shrink:0;font-weight:600;cursor:pointer;font-family:inherit;transition:opacity 0.15s;" onmouseenter="this.style.opacity=0.75" onmouseleave="this.style.opacity=1">✓ Valider</button>
           <button onclick="togglePin(${d.id}).then(()=>renderPinnedTab());" style="background:none;border:none;cursor:pointer;font-size:1rem;opacity:0.3;flex-shrink:0;transition:opacity 0.15s;" onmouseenter="this.style.opacity=0.8" onmouseleave="this.style.opacity=0.3" title="Retirer de la liste">✕</button>
         </div>
       </div>`;
@@ -5909,6 +6036,8 @@ function renderExercisesInline(){
 }
 
 document.getElementById("onb-confirm-btn")?.addEventListener("click",confirmOnboarding);
+document.getElementById("home-themes-btn")?.addEventListener("click",()=>setHomeTab("themes"));
+document.getElementById("home-irt-btn")?.addEventListener("click",()=>setHomeTab("irt"));
 document.getElementById("home-reconnexion-btn").addEventListener("click",()=>setHomeTab("game"));
 document.getElementById("home-pinned-btn")?.addEventListener("click",()=>setHomeTab("pinned"));
 document.getElementById("home-journal-btn")?.addEventListener("click",()=>setHomeTab("journal"));
@@ -5960,6 +6089,7 @@ function gameDeckIdsForTheme(theme){
   return DATA
     .filter(d=>{
       if(wids.has(d.id))return false;
+      if(pinnedIds&&pinnedIds.has(d.id))return false;
       const raw=d.text.toLowerCase();
       // Extraire le mot-clé principal : tout après "je suis ", "je me sens ", "je me ", "j'ai été "
       const word=raw
@@ -6044,7 +6174,7 @@ function renderGameThemeSelect(){
   html+=`</div>`;
 
   // Option "Tout mélanger"
-  const allRemaining=DATA.filter(d=>!workedIds().has(d.id)).length;
+  const allRemaining=DATA.filter(d=>!workedIds().has(d.id)&&!(pinnedIds&&pinnedIds.has(d.id))).length;
   html+=`<div onclick="gameDeckStart('__all__')" style="cursor:pointer;padding:14px 16px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);transition:all 0.18s;display:flex;align-items:center;gap:14px;margin-bottom:0.5rem;"
     onmouseenter="this.style.borderColor='var(--accent)';this.style.background='rgba(200,184,154,0.05)'"
     onmouseleave="this.style.borderColor='var(--border-md)';this.style.background='var(--surface)'">
@@ -6068,7 +6198,7 @@ function gameDeckStart(themeId){
   if(themeId==="__all__"){
     // Shuffle de tout
     const wids=workedIds();
-    const all=DATA.filter(d=>!wids.has(d.id));
+    const all=DATA.filter(d=>!wids.has(d.id)&&!(pinnedIds&&pinnedIds.has(d.id)));
     gameDeckQueue=[...all].sort(()=>Math.random()-0.5).slice(0,15);
   } else {
     const theme=SCAN_THEMES.find(t=>t.id===themeId);
@@ -6419,18 +6549,112 @@ async function gameDeckValidate(){
   const btn=document.getElementById("gd-validate");
   if(btn){btn.disabled=true;btn.textContent="Sauvegarde…";}
   const validated=gameDeckSession.filter(s=>s.action==="pin");
-  if(validated.length===0){setHomeTab("pinned");return;}
+  if(validated.length===0){gameDeckShowRoundComplete(0);return;}
   try{
     const toPin=validated.map(s=>s.id).filter(id=>!pinnedIds.has(id));
     for(const id of toPin){await togglePin(id,true);}
-    // Le jeu de cartes épingle seulement — pas de session enregistrée
-    // (valider = travailler l'identité en coaching, depuis Ma liste)
-    showToast(`✅ ${validated.length} identité${validated.length>1?"s":""} ajoutée${validated.length>1?"s":""} à ta liste`,"success");
-    setHomeTab("pinned");
+    gameDeckShowRoundComplete(validated.length);
   }catch(e){
     if(btn){btn.disabled=false;btn.textContent=`📌 Ajouter à ma liste (${validated.length}) →`;}
     showToast("Quelque chose a bloqué — réessaie");
   }
+}
+
+function gameDeckShowRoundComplete(addedCount){
+  const grid=document.getElementById("home-themes-grid");
+  if(!grid)return;
+  const themeObj=gameDeckId&&gameDeckId!=="__all__"?SCAN_THEMES.find(t=>t.id===gameDeckId):null;
+  const theme=themeObj?{icon:themeObj.icon,title:themeObj.title}:{icon:"🎲",title:"Tout mélanger"};
+  const total=gameDeckQueue.length;
+  const skipped=gameDeckSession.filter(s=>s.action==="skip").length;
+
+  // Statistiques globales à jour (après épinglage)
+  const totalPinned=pinnedIds?pinnedIds.size:0;
+  const totalWorked=workedIds().size;
+  const totalDone=new Set([...workedIds(),...(pinnedIds||[])]).size;
+  const globalPct=DATA.length>0?Math.round((totalDone/DATA.length)*100):0;
+
+  // Compteurs thèmes mis à jour
+  let themeProgressHtml="";
+  if(themeObj){
+    const remaining=gameDeckIdsForTheme(themeObj).length;
+    const themeTotal=themeObj.chapters.flatMap(ch=>ch.ids||[]).length;
+    const done=themeTotal-remaining;
+    const pct=themeTotal>0?Math.round((done/themeTotal)*100):0;
+    themeProgressHtml=`
+      <div style="background:var(--surface2);border:1px solid var(--border-md);border-radius:var(--radius-lg);padding:14px 16px;margin-bottom:1rem;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+          <span style="font-size:1.4rem;">${themeObj.icon}</span>
+          <div style="flex:1;">
+            <div style="font-size:13px;font-weight:600;">${themeObj.title}</div>
+            <div style="font-size:10px;color:var(--text-faint);margin-top:1px;">${done} / ${themeTotal} cartes explorées</div>
+          </div>
+          <div style="font-size:13px;font-weight:700;color:var(--accent);">${pct}%</div>
+        </div>
+        <div style="height:5px;background:var(--surface3);border-radius:3px;overflow:hidden;">
+          <div style="height:100%;width:${pct}%;background:var(--accent);border-radius:3px;transition:width 0.6s ease;"></div>
+        </div>
+        ${remaining===0?`<div style="font-size:11px;color:var(--accent);margin-top:8px;text-align:center;font-weight:600;">🎉 Thème complété !</div>`:`<div style="font-size:10px;color:var(--text-faint);margin-top:6px;text-align:right;">${remaining} carte${remaining!==1?"s":""} restante${remaining!==1?"s":""}</div>`}
+      </div>`;
+  }
+
+  grid.innerHTML=`<div style="max-width:480px;width:100%;margin:0 auto;">
+
+    <!-- En-tête -->
+    <div style="text-align:center;margin-bottom:1.75rem;">
+      <div style="font-size:2.5rem;margin-bottom:0.5rem;">${addedCount>0?"🎯":"✌️"}</div>
+      <div style="font-size:1.2rem;font-weight:700;margin-bottom:0.4rem;">Ronde terminée</div>
+      <div style="font-size:0.85rem;color:var(--text-muted);">
+        ${total} carte${total!==1?"s":""} jouée${total!==1?"s":""}
+        ${addedCount>0?` · <strong style="color:var(--accent);">${addedCount} ajoutée${addedCount>1?"s":""} à ta liste</strong>`:""}
+      </div>
+    </div>
+
+    <!-- Stats de la ronde -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:1.25rem;">
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:12px 8px;text-align:center;">
+        <div style="font-size:1.4rem;font-weight:700;color:var(--accent);">${addedCount}</div>
+        <div style="font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-faint);margin-top:2px;">Épinglées</div>
+      </div>
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:12px 8px;text-align:center;">
+        <div style="font-size:1.4rem;font-weight:700;color:var(--text-muted);">${skipped}</div>
+        <div style="font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-faint);margin-top:2px;">Passées</div>
+      </div>
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:12px 8px;text-align:center;">
+        <div style="font-size:1.4rem;font-weight:700;color:var(--text);">${globalPct}%</div>
+        <div style="font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-faint);margin-top:2px;">Progression</div>
+      </div>
+    </div>
+
+    <!-- Progression du thème -->
+    ${themeProgressHtml}
+
+    <!-- Progression globale -->
+    <div style="background:var(--surface2);border:1px solid var(--border-md);border-radius:var(--radius-lg);padding:14px 16px;margin-bottom:1.5rem;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <div style="font-size:12px;font-weight:600;color:var(--text);">Progression globale</div>
+        <div style="font-size:12px;color:var(--text-faint);">${totalDone} / ${DATA.length}</div>
+      </div>
+      <div style="height:5px;background:var(--surface3);border-radius:3px;overflow:hidden;">
+        <div style="height:100%;width:${globalPct}%;background:var(--accent);border-radius:3px;"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:6px;">
+        <div style="font-size:10px;color:var(--text-faint);">📌 ${totalPinned} en liste · ✓ ${totalWorked} travaillées</div>
+        <div style="font-size:10px;font-weight:600;color:var(--accent);">${globalPct}%</div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <button onclick="renderGameInline()" style="padding:13px 20px;border-radius:var(--radius-lg);border:1px solid var(--accent);background:rgba(200,184,154,0.1);color:var(--accent);font-size:0.95rem;font-weight:700;font-family:inherit;cursor:pointer;width:100%;">
+        ↻ Nouvelle ronde
+      </button>
+      <div style="display:flex;gap:8px;">
+        <button onclick="setHomeTab('pinned')" style="flex:1;padding:11px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text-muted);font-size:0.85rem;font-family:inherit;cursor:pointer;">📌 Ma liste (${totalPinned})</button>
+        <button onclick="setHomeTab('progression')" style="flex:1;padding:11px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text-muted);font-size:0.85rem;font-family:inherit;cursor:pointer;">📊 Progression</button>
+      </div>
+    </div>
+  </div>`;
 }
 
 // gameValidate = gameDeckValidate (unified)
@@ -6770,6 +6994,202 @@ function dicoRow(d,wids,depthColor,depthLabel,showPriorityBadge){
   </div>`;
 }
 
+/* ===== MODE GUIDÉ IRT ===== */
+function startIrtSession(id){
+  const d=DATA.find(x=>x.id===id);
+  if(!d)return;
+
+  // Overlay plein écran
+  const overlay=document.createElement("div");
+  overlay.id="irt-session-overlay";
+  overlay.style.cssText=`position:fixed;inset:0;background:#080808;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;font-family:inherit;`;
+
+  const PHASES=[
+    {
+      key:"accepter",
+      label:"Accepter",
+      num:"1",
+      instruction:"Lis cette identité à voix haute ou dans ta tête.\nAccepte qu'elle soit là, sans la juger.",
+      orbeColor:"rgba(200,184,154,0.18)",
+      orbeGlow:"rgba(200,184,154,0.08)",
+      duration:20,
+    },
+    {
+      key:"ressentir",
+      label:"Ressentir",
+      num:"2",
+      instruction:"Ferme les yeux.\nOù est-ce que tu le sens dans ton corps ?",
+      orbeColor:"rgba(150,170,200,0.18)",
+      orbeGlow:"rgba(150,170,200,0.07)",
+      duration:25,
+    },
+    {
+      key:"liberer",
+      label:"Libérer",
+      num:"3",
+      instruction:"Pose les deux mains sur tes tempes.\nLaisse cette émotion remonter et sortir.",
+      orbeColor:"rgba(180,140,140,0.18)",
+      orbeGlow:"rgba(180,140,140,0.07)",
+      duration:30,
+    },
+  ];
+
+  let phaseIdx=0;
+  let breathCount=0;
+  let breathPhase="in"; // "in" | "out"
+  let breathTimer=null;
+  let phaseTimer=null;
+
+  function renderPhase(){
+    const ph=PHASES[phaseIdx];
+    overlay.innerHTML=`
+      <div style="position:absolute;top:1.5rem;left:1.5rem;right:1.5rem;display:flex;align-items:center;justify-content:space-between;">
+        <div style="display:flex;gap:10px;">
+          ${PHASES.map((p,i)=>`<div style="width:28px;height:3px;border-radius:2px;background:${i<=phaseIdx?"var(--accent)":"rgba(255,255,255,0.1)"};transition:background 0.4s;"></div>`).join("")}
+        </div>
+        <button onclick="closeIrtSession()" style="background:none;border:none;color:rgba(255,255,255,0.3);font-size:1.2rem;cursor:pointer;padding:4px 8px;font-family:inherit;" onmouseenter="this.style.color='rgba(255,255,255,0.7)'" onmouseleave="this.style.color='rgba(255,255,255,0.3)'">✕</button>
+      </div>
+
+      <div style="text-align:center;max-width:380px;width:100%;display:flex;flex-direction:column;align-items:center;gap:2rem;">
+
+        <!-- Phase label -->
+        <div>
+          <div style="font-size:9px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);opacity:0.7;margin-bottom:4px;">${ph.num} · ${ph.label}</div>
+          <div style="font-size:1.6rem;font-weight:700;color:#f0ede8;line-height:1.2;">${d.text}</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.35);margin-top:4px;">${d.cat}</div>
+        </div>
+
+        <!-- Orbe respiratoire -->
+        <div style="position:relative;width:160px;height:160px;display:flex;align-items:center;justify-content:center;">
+          <div id="irt-orbe" style="
+            width:120px;height:120px;
+            border-radius:50%;
+            background:${ph.orbeColor};
+            box-shadow:0 0 60px 20px ${ph.orbeGlow};
+            transition:transform 4s ease-in-out, box-shadow 4s ease-in-out;
+            transform:scale(1);
+          "></div>
+          <div id="irt-breath-label" style="position:absolute;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.35);">inspire</div>
+        </div>
+
+        <!-- Instruction -->
+        <div style="font-size:0.9rem;color:rgba(255,255,255,0.5);line-height:1.8;text-align:center;white-space:pre-line;">${ph.instruction}</div>
+
+        <!-- Suivant -->
+        <div style="display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;">
+          <button id="irt-next-btn" onclick="irtNextPhase()" style="padding:12px 32px;border-radius:12px;border:1px solid rgba(200,184,154,0.3);background:rgba(200,184,154,0.07);color:var(--accent);font-size:0.9rem;font-weight:700;font-family:inherit;cursor:pointer;width:100%;max-width:260px;">
+            ${phaseIdx<PHASES.length-1?"Étape suivante →":"Terminer →"}
+          </button>
+        </div>
+      </div>
+    `;
+    startBreath(ph);
+    startPhaseTimer(ph);
+  }
+
+  function startBreath(ph){
+    clearInterval(breathTimer);
+    const orbe=()=>document.getElementById("irt-orbe");
+    const lbl=()=>document.getElementById("irt-breath-label");
+    breathPhase="in";
+    function tick(){
+      const o=orbe(); const l=lbl();
+      if(!o)return;
+      if(breathPhase==="in"){
+        o.style.transform="scale(1.35)";
+        o.style.boxShadow=`0 0 80px 30px ${ph.orbeGlow}`;
+        if(l){l.textContent="inspire";}
+        breathPhase="out";
+        breathTimer=setTimeout(tick,4000);
+      } else {
+        o.style.transform="scale(1)";
+        o.style.boxShadow=`0 0 40px 10px ${ph.orbeGlow}`;
+        if(l){l.textContent="expire";}
+        breathPhase="in";
+        breathTimer=setTimeout(tick,6000);
+      }
+    }
+    tick();
+  }
+
+  function startPhaseTimer(ph){
+    // Pas de timer — la personne avance à son rythme
+  }
+
+  window.irtNextPhase=function(){
+    clearInterval(breathTimer);
+    clearInterval(phaseTimer);
+    phaseIdx++;
+    if(phaseIdx<PHASES.length){
+      renderPhase();
+    } else {
+      renderIrtEnd();
+    }
+  };
+
+  function renderIrtEnd(){
+    // Liste des épinglées restantes (hors celle qu'on vient de travailler si validée)
+    const wids=workedIds();
+    const remaining=DATA.filter(x=>pinnedIds.has(x.id)&&!wids.has(x.id)&&x.id!==id);
+
+    overlay.innerHTML=`
+      <div style="position:absolute;top:1.5rem;right:1.5rem;">
+        <button onclick="closeIrtSession()" style="background:none;border:none;color:rgba(255,255,255,0.3);font-size:1.2rem;cursor:pointer;padding:4px 8px;font-family:inherit;">✕</button>
+      </div>
+      <div style="max-width:400px;width:100%;display:flex;flex-direction:column;align-items:center;gap:1.5rem;">
+
+        <!-- Résumé -->
+        <div style="text-align:center;">
+          <div style="font-size:2rem;margin-bottom:0.5rem;">🌿</div>
+          <div style="font-size:1.1rem;font-weight:700;color:#f0ede8;margin-bottom:0.4rem;">Travail terminé</div>
+          <div style="font-size:0.85rem;color:rgba(255,255,255,0.35);">"${d.text}"</div>
+        </div>
+
+        <!-- Actions sur cette identité -->
+        <div style="display:flex;gap:8px;width:100%;max-width:320px;">
+          <button onclick="closeIrtSession()" style="flex:1;padding:11px;border-radius:10px;border:1px solid rgba(200,184,154,0.25);background:rgba(200,184,154,0.07);color:var(--accent);font-size:0.82rem;font-weight:600;font-family:inherit;cursor:pointer;">Garder épinglé</button>
+          <button onclick="validateFromDico(${id},this).then(()=>{renderPinnedTab();renderIrtInline();showToast('✓ Travaillée');renderIrtEndNext();})" style="flex:1;padding:11px;border-radius:10px;border:1px solid rgba(255,255,255,0.08);background:none;color:rgba(255,255,255,0.35);font-size:0.82rem;font-family:inherit;cursor:pointer;">✓ Travaillée</button>
+        </div>
+
+        ${remaining.length>0?`
+        <!-- Continuer avec une autre -->
+        <div style="width:100%;border-top:1px solid rgba(255,255,255,0.06);padding-top:1.25rem;">
+          <div style="font-size:9px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-bottom:0.75rem;text-align:center;">Continuer avec</div>
+          <div style="display:flex;flex-direction:column;gap:6px;max-height:240px;overflow-y:auto;">
+            ${remaining.map(x=>`
+              <div onclick="startIrtSession(${x.id});document.getElementById('irt-session-overlay')?.remove();" style="cursor:pointer;padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.07);background:rgba(255,255,255,0.03);display:flex;align-items:center;gap:10px;transition:all 0.15s;"
+                onmouseenter="this.style.borderColor='rgba(200,184,154,0.35)';this.style.background='rgba(200,184,154,0.05)'"
+                onmouseleave="this.style.borderColor='rgba(255,255,255,0.07)';this.style.background='rgba(255,255,255,0.03)'">
+                <span style="width:6px;height:6px;border-radius:50%;background:${depthColor(x.depth)};flex-shrink:0;"></span>
+                <div style="flex:1;min-width:0;">
+                  <div style="font-size:0.87rem;font-weight:500;color:#f0ede8;">${x.text}</div>
+                  <div style="font-size:10px;color:rgba(255,255,255,0.25);margin-top:1px;">${x.cat}</div>
+                </div>
+                <span style="font-size:12px;color:rgba(200,184,154,0.5);">→</span>
+              </div>`).join("")}
+          </div>
+        </div>`:""}
+      </div>
+    `;
+  }
+  window.renderIrtEndNext=function(){
+    // Rafraîchit la liste "Continuer avec" après validation
+    const wids2=workedIds();
+    const rem=DATA.filter(x=>pinnedIds.has(x.id)&&!wids2.has(x.id)&&x.id!==id);
+    // Simple re-render de la section
+    renderIrtEnd();
+  };
+
+  window.closeIrtSession=function(){
+    clearInterval(breathTimer);
+    clearInterval(phaseTimer);
+    document.getElementById("irt-session-overlay")?.remove();
+  };
+
+  document.body.appendChild(overlay);
+  renderPhase();
+}
+
 async function validateFromDico(id,btnEl){
   if(!currentProfile)return;
   if(btnEl){btnEl.disabled=true;btnEl.textContent="…";}
@@ -6798,7 +7218,7 @@ async function validateFromDico(id,btnEl){
     const activeTab=(activeMobile?.dataset?.tab)||(activeSide?.id?.replace("home-","")?.replace("-btn",""))||"";
     if(activeTab==="pinned")renderPinnedTab();
     else if(activeTab==="dico"||document.getElementById("dico-body"))renderDicoBody();
-    else renderHomeThemes();
+    else if(activeTab==="themes"||!activeTab)renderHomeThemes();
   }catch(e){
     showToast("Quelque chose a bloqué — réessaie");
     if(btnEl){btnEl.disabled=false;btnEl.textContent="✓ Valider";}
