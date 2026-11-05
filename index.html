@@ -6088,7 +6088,7 @@ function renderWorkInline(sub){
     {id:"journal",label:"📓 Journal"},
   ];
 
-  const pillNav=`<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border);">
+  const pillNav=`<div id="work-pills" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border);">
     ${pills.map(p=>{
       const active=workSubTab===p.id;
       return `<button onclick="renderWorkInline('${p.id}')"
@@ -6100,32 +6100,21 @@ function renderWorkInline(sub){
     }).join("")}
   </div>`;
 
-  // On injecte le nav pill dans le grid, puis on appelle le bon renderer
-  grid.innerHTML=`<div id="work-pills">${pillNav}</div><div id="work-content"></div>`;
-
-  // Appel du bon renderer dans #work-content
-  const content=document.getElementById("work-content");
-  if(!content)return;
-
-  // On detourne les renderers existants en ciblant temporairement work-content
-  const origId="home-themes-grid";
-  const fakeTarget=content;
-  // Ruse : on remplace temporairement l'id
-  grid.id="home-themes-grid-bak";
-  content.id="home-themes-grid";
-
-  if(workSubTab==="pinned")       renderPinnedTab();
-  else if(workSubTab==="irt")     renderIrtInline();
-  else if(workSubTab==="exercises")renderExercisesInline();
+  // 1) On appelle le renderer directement (il écrit dans home-themes-grid)
+  if(workSubTab==="pinned")          renderPinnedTab();
+  else if(workSubTab==="irt")        renderIrtInline();
+  else if(workSubTab==="exercises")  renderExercisesInline();
   else if(workSubTab==="progression")renderProgressionInline();
-  else if(workSubTab==="journal") renderJournalInline();
+  else if(workSubTab==="journal")    renderJournalInline();
 
-  // Restaure les ids
-  content.id="work-content";
-  grid.id=origId;
+  // 2) Supprimer les pills déjà présentes (évite la duplication au reclique)
+  const existing=document.getElementById("work-pills");
+  if(existing)existing.remove();
 
-  // Réinjecte les pills (les renderers ont écrasé grid.innerHTML)
-  grid.innerHTML=`<div id="work-pills">${pillNav}</div>`+content.innerHTML;
+  // 3) Prépend les nouvelles pills (listeners du contenu déjà attachés)
+  const pillsDiv=document.createElement("div");
+  pillsDiv.innerHTML=pillNav;
+  grid.insertBefore(pillsDiv.firstElementChild, grid.firstChild);
 }
 
 // ─── DÉCOUVRIR TAB ───────────────────────────────────────────────────────────
@@ -6141,7 +6130,7 @@ function renderDecouvrirInline(sub){
     {id:"dictionnaire",label:"📚 Dictionnaire"},
   ];
 
-  const pillNav=`<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border);">
+  const pillNav=`<div id="deco-pills" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border);">
     ${pills.map(p=>{
       const active=decoSubTab===p.id;
       return `<button onclick="renderDecouvrirInline('${p.id}')"
@@ -6153,21 +6142,18 @@ function renderDecouvrirInline(sub){
     }).join("")}
   </div>`;
 
-  grid.innerHTML=`<div id="deco-pills">${pillNav}</div><div id="deco-content"></div>`;
-
-  const content=document.getElementById("deco-content");
-  if(!content)return;
-
-  grid.id="home-themes-grid-bak";
-  content.id="home-themes-grid";
-
-  if(decoSubTab==="game")         renderGameInline();
+  // 1) Appel direct du renderer (écrit dans home-themes-grid, listeners préservés)
+  if(decoSubTab==="game")              renderGameInline();
   else if(decoSubTab==="dictionnaire") renderDictionnaireInline();
 
-  content.id="deco-content";
-  grid.id="home-themes-grid";
+  // 2) Supprimer les pills déjà présentes (évite la duplication au reclique)
+  const existing=document.getElementById("deco-pills");
+  if(existing)existing.remove();
 
-  grid.innerHTML=`<div id="deco-pills">${pillNav}</div>`+content.innerHTML;
+  // 3) Prépend les nouvelles pills (listeners du contenu déjà attachés)
+  const pillsDiv=document.createElement("div");
+  pillsDiv.innerHTML=pillNav;
+  grid.insertBefore(pillsDiv.firstElementChild, grid.firstChild);
 }
 
 // ─── JEU DE CARTES ───────────────────────────────────────────────────────────
