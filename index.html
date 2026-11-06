@@ -7261,13 +7261,15 @@ function startIrtSession(id){
   }
 
   function startBreath(ph){
+    clearTimeout(breathTimer);
     clearInterval(breathTimer);
+    breathTimer=null;
     const orbe=()=>document.getElementById("irt-orbe");
     const lbl=()=>document.getElementById("irt-breath-label");
     breathPhase="in";
     function tick(){
       const o=orbe(); const l=lbl();
-      if(!o)return;
+      if(!o||breathTimer===null)return; // orbe disparu ou breath stoppé → stop
       if(breathPhase==="in"){
         o.style.transform="scale(1.35)";
         o.style.boxShadow=`0 0 80px 30px ${ph.orbeGlow}`;
@@ -7282,6 +7284,7 @@ function startIrtSession(id){
         breathTimer=setTimeout(tick,6000);
       }
     }
+    breathTimer=1; // valeur sentinelle non-null pour autoriser le 1er tick
     tick();
   }
 
@@ -7290,7 +7293,9 @@ function startIrtSession(id){
   }
 
   window.irtNextPhase=function(){
+    clearTimeout(breathTimer);
     clearInterval(breathTimer);
+    breathTimer=null; // sentinelle → tick() s'arrête
     clearInterval(phaseTimer);
     phaseIdx++;
     if(phaseIdx<PHASES.length){
@@ -7354,7 +7359,9 @@ function startIrtSession(id){
   };
 
   window.closeIrtSession=function(){
+    clearTimeout(breathTimer);
     clearInterval(breathTimer);
+    breathTimer=null;
     clearInterval(phaseTimer);
     document.getElementById("irt-session-overlay")?.remove();
   };
