@@ -2501,13 +2501,17 @@ const SCAN_THEMES=[
     desc:"Ce qui t'empêche de ressentir quoi que ce soit",
     chapters:[
       {title:"Ce qui t'empêche",intro:"Avant d'accéder à quoi que ce soit, quelque chose en toi résiste. C'est normal. C'est une protection.",
-       ids:["blindé","cuirassé","cadenassé","verrouillé","barricadé","emmuré","enkysté","cristallisé","fossilisé","sclérosé","congelé","durci","cloisonné","compartimenté"]},
+       ids:["blindé","cuirassé","cadenassé","verrouillé","barricadé","emmuré","enkysté","cristallisé","fossilisé","sclérosé","congelé","durci","cloisonné","compartimenté","clos"],
+       essentials:["blindé","fermé","congelé","clos","barricadé","durci"]},
       {title:"Coupé de toi",intro:"Pour ne plus souffrir, tu t'es coupé de tes propres sensations.",
-       ids:["dissocié","détaché","coupé","anesthésié","engourdi","absent","flottant","neutralisé","désactivé","sectionné","fragmenté","morcelé","disloqué"]},
+       ids:["dissocié","détaché","coupé","anesthésié","engourdi","absent","flottant","neutralisé","désactivé","sectionné","fragmenté","morcelé","disloqué"],
+       essentials:["dissocié","coupé","engourdi","absent","anesthésié"]},
       {title:"Ce que tu réprimes",intro:"Tu contrôles, tu retiens, tu empêches quelque chose de sortir.",
-       ids:["retenu","réprimé","refoulé","inhibé","censuré","autocensuré","muselé","bâillonné","contenu","bridé","freiné","empêché","corsété","stoppé"]},
+       ids:["retenu","réprimé","refoulé","inhibé","censuré","autocensuré","muselé","bâillonné","contenu","bridé","freiné","empêché","corsété","stoppé"],
+       essentials:["retenu","refoulé","muselé","inhibé","censuré"]},
       {title:"S'ouvrir",intro:"L'ouverture n'est pas un effort. C'est juste arrêter de se fermer.",
-       ids:["ouvert","dilaté","déployé","relâché","détendu","décrispé","desserré","libéré","affranchi","délivré","délié","décroché","dégagé","apaisé","calmé"]}
+       ids:["ouvert","dilaté","déployé","relâché","détendu","décrispé","desserré","libéré","affranchi","délivré","délié","décroché","dégagé","apaisé","calmé"],
+       essentials:["libéré","relâché","ouvert","apaisé","délivré"]}
     ]
   },
   {
@@ -2515,15 +2519,20 @@ const SCAN_THEMES=[
     desc:"Retrouver la connexion à son corps et ses sensations",
     chapters:[
       {title:"Ce qui t'empêche",intro:"Quelque chose t'empêche d'habiter ton corps pleinement.",
-       ids:["dissocié","coupé","anesthésié","engourdi","absent","figé","gelé","blindé","enkysté","durci","congelé"]},
+       ids:["dissocié","coupé","anesthésié","engourdi","absent","figé","gelé","blindé","enkysté","durci","congelé"],
+       essentials:["dissocié","figé","engourdi","coupé","absent"]},
       {title:"Le corps bloqué",intro:"Ton corps a appris à se figer pour se protéger.",
-       ids:["figé","gelé","glacé","contracté","noué","tendu","serré","raidi","bandé","recroquevillé","voûté","affaissé","tassé","aplati","engourdi","ankylosé","prostré"]},
+       ids:["figé","gelé","glacé","contracté","noué","tendu","serré","raidi","bandé","recroquevillé","voûté","affaissé","tassé","aplati","engourdi","ankylosé","prostré"],
+       essentials:["figé","bloqué","noué","tendu","contracté","raidi"]},
       {title:"Le corps qui souffre",intro:"Les blessures que le corps a portées.",
-       ids:["blessé","meurtri","endolori","courbaturé","frappé","battu","étouffé","suffoqué","comprimé","écrasé","alourdi","lesté","consumé","brûlé","épuisé","vidé","lessivé","claqué","éreinté","exténué"]},
+       ids:["blessé","meurtri","endolori","courbaturé","frappé","battu","étouffé","suffoqué","comprimé","écrasé","alourdi","lesté","consumé","brûlé","épuisé","vidé","lessivé","claqué","éreinté","exténué"],
+       essentials:["blessé","frappé","écrasé","épuisé","étouffé","battu"]},
       {title:"Le corps coupé",intro:"Parfois tu t'es coupé de ton corps pour ne plus ressentir.",
-       ids:["dissocié","détaché","coupé","séparé","fragmenté","morcelé","anesthésié","engourdi","endormi","assoupi","sectionné","disloqué"]},
+       ids:["dissocié","détaché","coupé","séparé","fragmenté","morcelé","anesthésié","engourdi","endormi","assoupi","sectionné","disloqué"],
+       essentials:["dissocié","coupé","engourdi","séparé","anesthésié"]},
       {title:"Le corps qui revient",intro:"Ton corps sait comment revenir à la vie.",
-       ids:["détendu","relâché","décrispé","desserré","réchauffé","ancré","enraciné","centré","stabilisé","ouvert","dilaté","déployé","soulevé","allégé","dégagé","dynamisé","revitalisé","rechargé","régénéré","ressourcé","reposé","restauré"]}
+       ids:["détendu","relâché","décrispé","desserré","réchauffé","ancré","enraciné","centré","stabilisé","ouvert","dilaté","déployé","soulevé","allégé","dégagé","dynamisé","revitalisé","rechargé","régénéré","ressourcé","reposé","restauré"],
+       essentials:["relâché","ancré","centré","reposé","réchauffé","allégé"]}
     ]
   },
   {
@@ -2531,15 +2540,20 @@ const SCAN_THEMES=[
     desc:"Sortir du figement et retrouver l'élan",
     chapters:[
       {title:"Ce qui t'empêche",intro:"Avant même d'agir, quelque chose en toi t'en empêche.",
-       ids:["blindé","enkysté","cristallisé","figé","paralysé","congelé","durci","retenu","réprimé","refoulé","inhibé","stoppé"]},
+       ids:["blindé","enkysté","cristallisé","figé","paralysé","congelé","durci","retenu","réprimé","refoulé","inhibé","stoppé"],
+       essentials:["figé","paralysé","bloqué","retenu","congelé"]},
       {title:"Le figement dans le corps",intro:"Le corps porte l'impossibilité d'agir.",
-       ids:["figé","paralysé","tétanisé","pétrifié","immobilisé","bloqué","coincé","rivé","collé","scotché","vissé","planté","engourdi","ankylosé","enkysté","cristallisé","fossilisé","sclérosé"]},
+       ids:["figé","paralysé","tétanisé","pétrifié","immobilisé","bloqué","coincé","rivé","collé","scotché","vissé","planté","engourdi","ankylosé","enkysté","cristallisé","fossilisé","sclérosé"],
+       essentials:["figé","paralysé","bloqué","immobilisé","tétanisé"]},
       {title:"Ce qui t'a stoppé",intro:"Des expériences t'ont appris à ne pas agir.",
-       ids:["stoppé","arrêté","empêché","retenu","bridé","freiné","entravé","censuré","réprimé","inhibé","jugé","condamné","puni","sanctionné","ridiculisé","humilié","raté","échoué","défait","sabordé"]},
+       ids:["stoppé","arrêté","empêché","retenu","bridé","freiné","entravé","censuré","réprimé","inhibé","jugé","condamné","puni","sanctionné","ridiculisé","humilié","raté","échoué","défait","sabordé"],
+       essentials:["jugé","puni","humilié","ridiculisé","raté","arrêté"]},
       {title:"Ce que tu t'es dit",intro:"Tu as intégré la conviction que tu ne pouvais pas.",
-       ids:["démuni","dépourvu","démis","résigné","capitulé","abdiqué","découragé","défait","déprimé","désemparé","épuisé"]},
+       ids:["démuni","dépourvu","démis","résigné","capitulé","abdiqué","découragé","défait","déprimé","désemparé","épuisé","reculé","différé"],
+       essentials:["résigné","découragé","reculé","différé","défait","démuni"]},
       {title:"L'élan retrouvé",intro:"L'élan est en toi. Il attendait juste d'être libéré.",
-       ids:["libéré","débloqué","délivré","affranchi","propulsé","lancé","galvanisé","dynamisé","électrisé","animé","motivé","enthousiasmé","décidé","déterminé","acharné","engagé","voué","investi","habité","porté","appelé","forgé","trempé","aiguisé","rodé"]}
+       ids:["libéré","débloqué","délivré","affranchi","propulsé","lancé","galvanisé","dynamisé","électrisé","animé","motivé","enthousiasmé","décidé","déterminé","acharné","engagé","voué","investi","habité","porté","appelé","forgé","trempé","aiguisé","rodé"],
+       essentials:["libéré","lancé","décidé","motivé","animé","engagé"]}
     ]
   },
   {
@@ -2547,15 +2561,20 @@ const SCAN_THEMES=[
     desc:"Sortir de la peur et retrouver un sentiment de sécurité",
     chapters:[
       {title:"Ce qui t'empêche",intro:"Quelque chose t'empêche de te sentir en sécurité même maintenant.",
-       ids:["blindé","cuirassé","vigilant","alarmé","hérissé","tendu","contracté","raidi","enkysté","durci","barricadé"]},
+       ids:["blindé","cuirassé","vigilant","alarmé","hérissé","tendu","contracté","raidi","enkysté","durci","barricadé"],
+       essentials:["alarmé","tendu","vigilant","hérissé","barricadé"]},
       {title:"Ce que le corps ressent",intro:"Le danger s'inscrit d'abord dans le corps.",
-       ids:["figé","paralysé","tétanisé","pétrifié","tremblé","hérissé","alarmé","électrisé","tendu","contracté","noué","étouffé","suffoqué"]},
+       ids:["figé","paralysé","tétanisé","pétrifié","tremblé","hérissé","alarmé","électrisé","tendu","contracté","noué","étouffé","suffoqué"],
+       essentials:["figé","tétanisé","noué","étouffé","tremblé"]},
       {title:"Ce que tu as vécu",intro:"Des situations ont créé un sentiment de danger permanent.",
-       ids:["menacé","ciblé","visé","traqué","pourchassé","espionné","pisté","attaqué","assailli","agressé","violé","frappé","battu","percuté"]},
+       ids:["menacé","ciblé","visé","traqué","pourchassé","espionné","pisté","attaqué","assailli","agressé","violé","frappé","battu","percuté"],
+       essentials:["menacé","attaqué","frappé","agressé","traqué","battu"]},
       {title:"Ce que tu as conclu",intro:"Tu as appris que le monde n'est pas sûr.",
-       ids:["insécurisé","alarmé","apeuré","paniqué","hanté","taraudé","tourmenté","inquiété","stressé","terrorisé","angoissé"]},
+       ids:["insécurisé","alarmé","apeuré","paniqué","hanté","taraudé","tourmenté","inquiété","stressé","terrorisé","angoissé"],
+       essentials:["apeuré","paniqué","terrorisé","angoissé","hanté"]},
       {title:"La sécurité retrouvée",intro:"Tu peux retrouver un espace intérieur de sécurité.",
-       ids:["sécurisé","protégé","gardé","sauvé","défendu","soutenu","accompagné","ancré","enraciné","centré","stabilisé","rassuré","calmé","apaisé"]}
+       ids:["sécurisé","protégé","gardé","sauvé","défendu","soutenu","accompagné","ancré","enraciné","centré","stabilisé","rassuré","calmé","apaisé"],
+       essentials:["sécurisé","protégé","rassuré","ancré","apaisé"]}
     ]
   },
   {
@@ -2563,15 +2582,20 @@ const SCAN_THEMES=[
     desc:"Sortir du contrôle et s'ouvrir à la vie",
     chapters:[
       {title:"Ce qui t'empêche",intro:"Quelque chose t'empêche de lâcher — une peur profonde que tout s'effondre si tu le fais.",
-       ids:["blindé","enkysté","durci","congelé","cristallisé","retenu","contrôlé","surveillé","cadenassé","verrouillé","barricadé"]},
+       ids:["blindé","enkysté","durci","congelé","cristallisé","retenu","contrôlé","surveillé","cadenassé","verrouillé","barricadé"],
+       essentials:["contrôlé","retenu","surveillé","durci","barricadé"]},
       {title:"Le contrôle dans le corps",intro:"Contrôler coûte physiquement très cher.",
-       ids:["tendu","contracté","raidi","noué","serré","bandé","bloqué","vissé","rivé","alourdi","lesté","écrasé","épuisé","drainé"]},
+       ids:["tendu","contracté","raidi","noué","serré","bandé","bloqué","vissé","rivé","alourdi","lesté","écrasé","épuisé","drainé"],
+       essentials:["tendu","noué","contracté","écrasé","épuisé"]},
       {title:"Pourquoi tu contrôles",intro:"Contrôler c'est une façon de te protéger de ce que tu as vécu.",
-       ids:["trahi","abandonné","menacé","insécurisé","alarmé","apeuré","hanté","taraudé","angoissé","inquiété","terrorisé","traumatisé","blessé","meurtri"]},
+       ids:["trahi","abandonné","menacé","insécurisé","alarmé","apeuré","hanté","taraudé","angoissé","inquiété","terrorisé","traumatisé","blessé","meurtri"],
+       essentials:["trahi","abandonné","menacé","apeuré","traumatisé","blessé"]},
       {title:"Ce que le contrôle a créé",intro:"À force de tout vouloir maîtriser, tu t'es enfermé.",
-       ids:["contrôlé","surveillé","épié","cadenassé","fermé","retranché","blindé","cuirassé","muselé","encagé","enchaîné","emprisonné","corsété"]},
+       ids:["contrôlé","surveillé","épié","cadenassé","fermé","retranché","blindé","cuirassé","muselé","encagé","enchaîné","emprisonné","corsété"],
+       essentials:["encagé","enchaîné","emprisonné","muselé","fermé"]},
       {title:"La liberté de lâcher",intro:"Lâcher prise c'est faire confiance à la vie.",
-       ids:["relâché","détendu","décrispé","desserré","allégé","soulagé","dégagé","ouvert","dilaté","déployé","libéré","affranchi","délivré","délié","décroché","apaisé","calmé","rassuré","sécurisé","ancré","centré","stabilisé"]}
+       ids:["relâché","détendu","décrispé","desserré","allégé","soulagé","dégagé","ouvert","dilaté","déployé","libéré","affranchi","délivré","délié","décroché","apaisé","calmé","rassuré","sécurisé","ancré","centré","stabilisé"],
+       essentials:["relâché","allégé","soulagé","libéré","apaisé","ancré"]}
     ]
   },
   {
@@ -2579,15 +2603,20 @@ const SCAN_THEMES=[
     desc:"Sortir de la peur d'être abandonné et se sentir enfin chez soi",
     chapters:[
       {title:"Ce qui t'empêche",intro:"Quelque chose t'empêche de toucher cette blessure — parce qu'elle est profonde.",
-       ids:["blindé","enkysté","anesthésié","dissocié","coupé","congelé","durci","retenu","refoulé","cadenassé","barricadé"]},
+       ids:["blindé","enkysté","anesthésié","dissocié","coupé","congelé","durci","retenu","refoulé","cadenassé","barricadé"],
+       essentials:["blindé","congelé","dissocié","coupé","anesthésié"]},
       {title:"Ce que le corps porte",intro:"L'abandon laisse un vide physique très réel.",
-       ids:["affamé","sevré","vidé","gelé","engourdi","secoué","tremblé","noué","contracté","étouffé","prostré","effondré"]},
+       ids:["affamé","sevré","vidé","gelé","engourdi","secoué","tremblé","noué","contracté","étouffé","prostré","effondré"],
+       essentials:["vidé","affamé","effondré","noué","étouffé"]},
       {title:"Ce que tu as vécu",intro:"Tu as été laissé, ignoré, oublié.",
-       ids:["abandonné","délaissé","négligé","ignoré","oublié","rejeté","relégué","sacrifié","déserté","esseulé","isolé","séparé","arraché","éloigné"]},
+       ids:["abandonné","délaissé","négligé","ignoré","oublié","rejeté","relégué","sacrifié","déserté","esseulé","isolé","séparé","arraché","éloigné"],
+       essentials:["abandonné","délaissé","rejeté","oublié","ignoré","seul","isolé","lâché","largué","quitté"]},
       {title:"Ce que tu as conclu",intro:"L'abandon t'a appris que tu n'étais pas assez pour qu'on reste.",
-       ids:["raté","rejeté","méprisé","oublié","dévalorisé","honteux","coupable","responsabilisé","blâmé"]},
+       ids:["raté","rejeté","méprisé","oublié","dévalorisé","honteux","coupable","responsabilisé","blâmé"],
+       essentials:["rejeté","dévalorisé","coupable","honteux","raté"]},
       {title:"Appartenir à nouveau",intro:"Tu mérites qu'on reste. Tu mérites d'appartenir.",
-       ids:["choisi","désiré","aimé","préféré","attendu","voulu","gardé","protégé","soutenu","accompagné","guidé","épaulé","intégré","appartenu","lié","rattaché","uni","allié","accueilli","reçu","comblé","nourri","sécurisé","réintégré"]}
+       ids:["choisi","désiré","aimé","préféré","attendu","voulu","gardé","protégé","soutenu","accompagné","guidé","épaulé","intégré","appartenu","lié","rattaché","uni","allié","accueilli","reçu","comblé","nourri","sécurisé","réintégré"],
+       essentials:["choisi","aimé","protégé","accueilli","soutenu","gardé"]}
     ]
   },
   {
@@ -2595,17 +2624,23 @@ const SCAN_THEMES=[
     desc:"Retrouver le droit d'être aimé et de recevoir",
     chapters:[
       {title:"Ce qui t'empêche",intro:"Quelque chose t'empêche de recevoir l'amour même quand il est là.",
-       ids:["blindé","cuirassé","fermé","cadenassé","enkysté","anesthésié","dissocié","retenu","refoulé","durci","barricadé","congelé"]},
+       ids:["blindé","cuirassé","fermé","cadenassé","enkysté","anesthésié","dissocié","retenu","refoulé","durci","barricadé","congelé"],
+       essentials:["fermé","blindé","retenu","refoulé","durci"]},
       {title:"Ce que ton corps porte",intro:"Avant même les mots, le manque d'amour s'inscrit dans le corps.",
-       ids:["affamé","sevré","vidé","gelé","engourdi","étreint","bercé","câliné","caressé","embrassé","tenu","porté","effleuré"]},
+       ids:["affamé","sevré","vidé","gelé","engourdi","étreint","bercé","câliné","caressé","embrassé","tenu","porté","effleuré"],
+       essentials:["affamé","sevré","vidé","engourdi","gelé"]},
       {title:"Ce que tu as ressenti",intro:"Les émotions qui ont accompagné le manque d'amour.",
-       ids:["abandonné","rejeté","ignoré","oublié","délaissé","esseulé","détesté","haï","fui","évité","dédaigné","snobé"]},
+       ids:["abandonné","rejeté","ignoré","oublié","délaissé","esseulé","détesté","haï","fui","évité","dédaigné","snobé"],
+       essentials:["abandonné","rejeté","ignoré","oublié","délaissé","détesté","haï","fui"]},
       {title:"Ce que tu as conclu",intro:"Face au manque, tu as tiré des conclusions sur ta valeur.",
-       ids:["rabaissé","dévalorisé","méprisé","minimisé","sous-estimé","humilié","avili","souillé","sali","taché","déprécié"]},
+       ids:["rabaissé","dévalorisé","méprisé","minimisé","sous-estimé","humilié","avili","souillé","sali","taché","déprécié"],
+       essentials:["dévalorisé","humilié","méprisé","rabaissé","avili"]},
       {title:"Ce que tu t'es dit",intro:"Les programmes installés pour survivre au manque d'amour.",
-       ids:["conditionné","blindé","cadenassé","fermé","retranché","muselé","contrôlé","autocensuré","refoulé","réprimé","inhibé"]},
+       ids:["conditionné","blindé","cadenassé","fermé","retranché","muselé","contrôlé","autocensuré","refoulé","réprimé","inhibé"],
+       essentials:["conditionné","muselé","fermé","refoulé","contrôlé"]},
       {title:"L'amour retrouvé",intro:"L'amour n'est pas quelque chose à mériter. Il est ton droit naturel.",
-       ids:["aimé","choisi","désiré","préféré","chéri","adoré","séduit","conquis","étreint","enlacé","bercé","câliné","protégé","gardé","soutenu","accompagné","comblé","nourri","rassasié","rempli","régalé","sécurisé"]}
+       ids:["aimé","choisi","désiré","préféré","chéri","adoré","séduit","conquis","étreint","enlacé","bercé","câliné","protégé","gardé","soutenu","accompagné","comblé","nourri","rassasié","rempli","régalé","sécurisé"],
+       essentials:["aimé","choisi","chéri","protégé","comblé","nourri"]}
     ]
   },
   {
@@ -2613,15 +2648,20 @@ const SCAN_THEMES=[
     desc:"Retrouver ses limites et son intégrité",
     chapters:[
       {title:"Ce qui t'empêche",intro:"Quelque chose t'empêche d'accéder à cette blessure — souvent de la honte ou de la dissociation.",
-       ids:["dissocié","anesthésié","engourdi","coupé","blindé","enkysté","honteux","muselé","refoulé","retenu","congelé"]},
+       ids:["dissocié","anesthésié","engourdi","coupé","blindé","enkysté","honteux","muselé","refoulé","retenu","congelé"],
+       essentials:["dissocié","honteux","muselé","engourdi","retenu"]},
       {title:"Ce que le corps a subi",intro:"Les limites franchies s'inscrivent d'abord dans la chair.",
-       ids:["frappé","battu","cogné","heurté","percuté","mordu","griffé","écorché","contusionné","bousculé","agrippé","repoussé","transpercé","envahi","fouetté","cinglé","mutilé","flagellé"]},
+       ids:["frappé","battu","cogné","heurté","percuté","mordu","griffé","écorché","contusionné","bousculé","agrippé","repoussé","transpercé","envahi","fouetté","cinglé","mutilé","flagellé"],
+       essentials:["frappé","battu","envahi","violé","bousculé","mordu"]},
       {title:"Ce que tu as ressenti",intro:"Quand ton espace intime a été violé.",
-       ids:["violé","profané","désacralisé","outragé","avili","souillé","sali","objectivé","chosifié","marchandisé","sexualisé","érotisé","fantasmé","déshabillé","exposé","convoité","dévoré","mangé","consommé","avalé","happé","absorbé"]},
+       ids:["violé","profané","désacralisé","outragé","avili","souillé","sali","objectivé","chosifié","marchandisé","sexualisé","érotisé","fantasmé","déshabillé","exposé","convoité","dévoré","mangé","consommé","avalé","happé","absorbé"],
+       essentials:["violé","profané","outragé","avili","souillé","exposé"]},
       {title:"Ce que tu t'es dit",intro:"Face à la violation, tu as tiré des conclusions sur tes limites.",
-       ids:["coupable","honteux","responsabilisé","humilié","avili","souillé","abîmé","marqué","taché","sali"]},
+       ids:["coupable","honteux","responsabilisé","humilié","avili","souillé","abîmé","marqué","taché","sali"],
+       essentials:["coupable","honteux","humilié","abîmé","marqué"]},
       {title:"L'intégrité retrouvée",intro:"Tes limites sont sacrées. Ton corps t'appartient.",
-       ids:["sacré","purifié","réapproprié","restauré","blanchi","lavé","réhabilité","dignifié","respecté","honoré","protégé","défendu","préservé"]}
+       ids:["sacré","purifié","réapproprié","restauré","blanchi","lavé","réhabilité","dignifié","respecté","honoré","protégé","défendu","préservé"],
+       essentials:["respecté","protégé","restauré","réhabilité","purifié"]}
     ]
   },
   {
@@ -2629,15 +2669,20 @@ const SCAN_THEMES=[
     desc:"Sortir de la méfiance et retrouver la confiance",
     chapters:[
       {title:"Ce qui t'empêche",intro:"Quelque chose t'empêche de faire confiance même quand c'est safe.",
-       ids:["blindé","cuirassé","barricadé","enkysté","durci","congelé","cadenassé","verrouillé","retranché","fermé","retenu","refoulé"]},
+       ids:["blindé","cuirassé","barricadé","enkysté","durci","congelé","cadenassé","verrouillé","retranché","fermé","retenu","refoulé","clos"],
+       essentials:["méfiant","fermé","barricadé","clos","durci","vigilant"]},
       {title:"Ce que le corps garde",intro:"La méfiance s'est installée dans le corps comme une armure.",
-       ids:["tendu","contracté","raidi","blindé","cuirassé","fermé","rivé","vissé","hérissé","alarmé"]},
+       ids:["tendu","contracté","raidi","blindé","cuirassé","fermé","rivé","vissé","hérissé","alarmé"],
+       essentials:["tendu","hérissé","contracté","alarmé","raidi"]},
       {title:"Ce qui s'est passé",intro:"Quelqu'un ou quelque chose a brisé ta confiance.",
-       ids:["trahi","trompé","dupé","floué","berné","leurré","manipulé","abusé","exploité","utilisé","sacrifié","doublé","calomnié","diffamé","dénigré"]},
+       ids:["trahi","trompé","dupé","floué","berné","leurré","manipulé","abusé","exploité","utilisé","sacrifié","doublé","calomnié","diffamé","dénigré"],
+       essentials:["trahi","trompé","manipulé","abusé","exploité","utilisé"]},
       {title:"Ce que tu as installé",intro:"Pour te protéger, tu as mis en place des mécanismes de défense.",
-       ids:["contrôlé","surveillé","épié","retranché","cadenassé","fermé","distant","retiré","distancié","réservé"]},
+       ids:["contrôlé","surveillé","épié","retranché","cadenassé","fermé","distant","retiré","distancié","réservé"],
+       essentials:["surveillé","épié","fermé","distant","retiré"]},
       {title:"La confiance retrouvée",intro:"La confiance n'est pas de la naïveté. C'est de la force.",
-       ids:["rassuré","sécurisé","protégé","garanti","soutenu","accompagné","guidé","réconforté","apaisé","réconcilié","détrompé","éclairé"]}
+       ids:["rassuré","sécurisé","protégé","garanti","soutenu","accompagné","guidé","réconforté","apaisé","réconcilié","détrompé","éclairé"],
+       essentials:["rassuré","sécurisé","soutenu","réconforté","apaisé"]}
     ]
   },
   {
@@ -2645,15 +2690,20 @@ const SCAN_THEMES=[
     desc:"Guérir des blessures de trahison et retrouver la paix",
     chapters:[
       {title:"Ce qui t'empêche",intro:"Quelque chose t'empêche de toucher cette blessure — souvent une colère ou une honte enfouie.",
-       ids:["blindé","enkysté","durci","congelé","anesthésié","dissocié","retenu","refoulé","barricadé","cadenassé","muselé"]},
+       ids:["blindé","enkysté","durci","congelé","anesthésié","dissocié","retenu","refoulé","barricadé","cadenassé","muselé"],
+       essentials:["blindé","durci","anesthésié","refoulé","muselé"]},
       {title:"Ce que le corps a gardé",intro:"La trahison laisse des traces physiques profondes.",
-       ids:["tendu","contracté","raidi","blindé","cuirassé","fermé","hérissé","noué","figé","sonné","assommé","choqué"]},
+       ids:["tendu","contracté","raidi","blindé","cuirassé","fermé","hérissé","noué","figé","sonné","assommé","choqué"],
+       essentials:["sonné","choqué","noué","figé","hérissé"]},
       {title:"Ce qui s'est passé",intro:"Tu as été trahi par quelqu'un en qui tu avais confiance.",
-       ids:["trahi","trompé","dupé","floué","berné","leurré","manipulé","abusé","exploité","utilisé","sacrifié","doublé","calomnié","diffamé","dénigré","déçu","désabusé","désenchanté","consterné","atterré","navré"]},
+       ids:["trahi","trompé","dupé","floué","berné","leurré","manipulé","abusé","exploité","utilisé","sacrifié","doublé","calomnié","diffamé","dénigré","déçu","désabusé","désenchanté","consterné","atterré","navré"],
+       essentials:["trahi","trompé","manipulé","sacrifié","déçu","abusé"]},
       {title:"Ce que tu as installé",intro:"Pour ne plus souffrir, tu t'es fermé.",
-       ids:["distant","retiré","distancié","réservé","blindé","cadenassé","fermé","retranché","surveillé","contrôlé","épié"]},
+       ids:["distant","retiré","distancié","réservé","blindé","cadenassé","fermé","retranché","surveillé","contrôlé","épié"],
+       essentials:["fermé","distant","retiré","surveillé","épié"]},
       {title:"La paix retrouvée",intro:"La confiance retrouvée est plus forte que la trahison subie.",
-       ids:["réconcilié","rassuré","réconforté","apaisé","calmé","soulagé","détrompé","éclairé","pardonné","affranchi","libéré","ouvert","déployé","soutenu","accompagné"]}
+       ids:["réconcilié","rassuré","réconforté","apaisé","calmé","soulagé","détrompé","éclairé","pardonné","affranchi","libéré","ouvert","déployé","soutenu","accompagné"],
+       essentials:["réconcilié","pardonné","apaisé","soulagé","libéré"]}
     ]
   },
   {
@@ -2661,15 +2711,20 @@ const SCAN_THEMES=[
     desc:"Se libérer du regard des autres et de la honte",
     chapters:[
       {title:"Ce qui t'empêche",intro:"La honte elle-même t'empêche d'accéder à la honte. C'est son paradoxe.",
-       ids:["honteux","muselé","caché","dissimulé","masqué","voilé","blindé","enkysté","anesthésié","refoulé","retenu","congelé"]},
+       ids:["honteux","muselé","caché","dissimulé","masqué","voilé","blindé","enkysté","anesthésié","refoulé","retenu","congelé"],
+       essentials:["honteux","caché","muselé","masqué","refoulé"]},
       {title:"La honte dans le corps",intro:"La honte a une texture physique très reconnaissable.",
-       ids:["contracté","recroquevillé","voûté","caché","dissimulé","masqué","voilé","étouffé","noué","figé","tremblé","baissé","détourné","fléchi"]},
+       ids:["contracté","recroquevillé","voûté","caché","dissimulé","masqué","voilé","étouffé","noué","figé","tremblé","baissé","détourné","fléchi"],
+       essentials:["recroquevillé","voûté","étouffé","tremblé","figé"]},
       {title:"Ce qui a créé la honte",intro:"Quelqu'un ou quelque chose t'a fait sentir honteux.",
-       ids:["humilié","ridiculisé","moqué","bafoué","conspué","exposé","montré","flagellé","fustigé","avili","souillé","sali","profané","désacralisé","castré","stérilisé"]},
+       ids:["humilié","ridiculisé","moqué","bafoué","conspué","exposé","montré","flagellé","fustigé","avili","souillé","sali","profané","désacralisé","castré","stérilisé"],
+       essentials:["humilié","ridiculisé","moqué","exposé","avili","bafoué"]},
       {title:"Ce que tu t'es dit",intro:"La honte t'a amené à te cacher et à te diminuer.",
-       ids:["honteux","souillé","taché","marqué","abîmé","raté","coupable","blâmé","condamné","damné","maudit"]},
+       ids:["honteux","souillé","taché","marqué","abîmé","raté","coupable","blâmé","condamné","damné","maudit"],
+       essentials:["honteux","coupable","raté","marqué","condamné"]},
       {title:"Au-delà de la honte",intro:"Tu n'es pas ta honte. Tu en es sorti.",
-       ids:["pardonné","absout","acquitté","gracié","amnistié","racheté","réhabilité","blanchi","lavé","purifié","libéré","affranchi","délivré","dignifié","élevé","révéré","sacré","honoré","célébré","reconnu","accepté"]}
+       ids:["pardonné","absout","acquitté","gracié","amnistié","racheté","réhabilité","blanchi","lavé","purifié","libéré","affranchi","délivré","dignifié","élevé","révéré","sacré","honoré","célébré","reconnu","accepté"],
+       essentials:["pardonné","réhabilité","libéré","accepté","honoré"]}
     ]
   },
   {
@@ -2677,15 +2732,20 @@ const SCAN_THEMES=[
     desc:"Se libérer du poids de la culpabilité",
     chapters:[
       {title:"Ce qui t'empêche",intro:"La culpabilité elle-même t'empêche de la toucher — tu penses mériter de la porter.",
-       ids:["blindé","enkysté","durci","retenu","refoulé","muselé","cadenassé","congelé","dissocié","anesthésié","barricadé"]},
+       ids:["blindé","enkysté","durci","retenu","refoulé","muselé","cadenassé","congelé","dissocié","anesthésié","barricadé"],
+       essentials:["blindé","retenu","refoulé","durci","muselé"]},
       {title:"Le poids dans le corps",intro:"La culpabilité pèse physiquement.",
-       ids:["lesté","alourdi","écrasé","plombé","comprimé","noué","contracté","étouffé","prostré","effondré","affaissé"]},
+       ids:["lesté","alourdi","écrasé","plombé","comprimé","noué","contracté","étouffé","prostré","effondré","affaissé"],
+       essentials:["alourdi","écrasé","plombé","noué","étouffé"]},
       {title:"Ce qu'on t'a mis sur les épaules",intro:"On t'a chargé de responsabilités qui n'étaient pas les tiennes.",
-       ids:["culpabilisé","accusé","incriminé","blâmé","condamné","jugé","sanctionné","puni","châtié","grondé","réprimandé","responsabilisé","surresponsabilisé","inculpé"]},
+       ids:["culpabilisé","accusé","incriminé","blâmé","condamné","jugé","sanctionné","puni","châtié","grondé","réprimandé","responsabilisé","surresponsabilisé","inculpé"],
+       essentials:["culpabilisé","accusé","puni","blâmé","jugé","grondé"]},
       {title:"Ce que tu portes encore",intro:"Tu continues à te punir pour des choses passées.",
-       ids:["coupable","honteux","damné","maudit","sabordé","rabaissé","indigne","condamné"]},
+       ids:["coupable","honteux","damné","maudit","sabordé","rabaissé","indigne","condamné"],
+       essentials:["coupable","honteux","condamné","indigne","damné"]},
       {title:"Le pardon et la liberté",intro:"Tu as le droit de te pardonner.",
-       ids:["pardonné","absout","acquitté","gracié","amnistié","racheté","réhabilité","blanchi","lavé","libéré","affranchi","délivré","soulagé","allégé","dégagé","assumé"]}
+       ids:["pardonné","absout","acquitté","gracié","amnistié","racheté","réhabilité","blanchi","lavé","libéré","affranchi","délivré","soulagé","allégé","dégagé","assumé"],
+       essentials:["pardonné","libéré","soulagé","allégé","réhabilité"]}
     ]
   },
   {
@@ -2693,15 +2753,20 @@ const SCAN_THEMES=[
     desc:"Cicatriser ce qui a été blessé en soi",
     chapters:[
       {title:"Ce qui t'empêche",intro:"Les blessures profondes sont souvent protégées par une couche de protection épaisse.",
-       ids:["blindé","enkysté","anesthésié","dissocié","coupé","durci","congelé","retenu","refoulé","barricadé","muselé"]},
+       ids:["blindé","enkysté","anesthésié","dissocié","coupé","durci","congelé","retenu","refoulé","barricadé","muselé"],
+       essentials:["blindé","anesthésié","durci","coupé","refoulé"]},
       {title:"La blessure dans le corps",intro:"Les blessures ont une adresse physique précise.",
-       ids:["blessé","meurtri","endolori","lacéré","écorché","contusionné","marqué","abîmé","perforé","transpercé","frappé","battu","cogné"]},
+       ids:["blessé","meurtri","endolori","lacéré","écorché","contusionné","marqué","abîmé","perforé","transpercé","frappé","battu","cogné"],
+       essentials:["blessé","frappé","battu","abîmé","marqué","meurtri"]},
       {title:"Ce qui t'a blessé",intro:"Des mots, des actes, des absences qui ont laissé des traces.",
-       ids:["humilié","rabaissé","trahi","abandonné","rejeté","ignoré","méprisé","violé","profané","outragé","bafoué","fustigé","flagellé","mutilé"]},
+       ids:["humilié","rabaissé","trahi","abandonné","rejeté","ignoré","méprisé","violé","profané","outragé","bafoué","fustigé","flagellé","mutilé"],
+       essentials:["humilié","trahi","abandonné","rejeté","méprisé","ignoré","bafoué"]},
       {title:"Ce que tu as porté",intro:"La blessure non traitée devient un poids qu'on porte partout.",
-       ids:["meurtri","traumatisé","hanté","taraudé","rongé","miné","sapé","usé","abîmé","détérioré","dégradé","épuisé","vidé","éteint"]},
+       ids:["meurtri","traumatisé","hanté","taraudé","rongé","miné","sapé","usé","abîmé","détérioré","dégradé","épuisé","vidé","éteint"],
+       essentials:["traumatisé","hanté","rongé","épuisé","usé","vidé"]},
       {title:"La cicatrice et la guérison",intro:"Une cicatrice n'est pas une faiblesse. C'est la preuve que tu as survécu.",
-       ids:["guéri","cicatrisé","réparé","restauré","ressuscité","ressourcé","renouvelé","régénéré","reconstruit","relevé","redressé","revitalisé","rechargé","reposé","soulagé","libéré"]}
+       ids:["guéri","cicatrisé","réparé","restauré","ressuscité","ressourcé","renouvelé","régénéré","reconstruit","relevé","redressé","revitalisé","rechargé","reposé","soulagé","libéré"],
+       essentials:["guéri","cicatrisé","soulagé","relevé","libéré"]}
     ]
   },
   {
@@ -2709,15 +2774,20 @@ const SCAN_THEMES=[
     desc:"Retrouver de l'énergie et de la vitalité",
     chapters:[
       {title:"Ce qui t'empêche",intro:"L'épuisement lui-même t'empêche d'y accéder — tu n'as plus l'énergie de ressentir.",
-       ids:["anesthésié","dissocié","engourdi","absent","neutralisé","désactivé","enkysté","congelé","résigné","capitulé","abdiqué"]},
+       ids:["anesthésié","dissocié","engourdi","absent","neutralisé","désactivé","enkysté","congelé","résigné","capitulé","abdiqué"],
+       essentials:["anesthésié","engourdi","absent","résigné","désactivé"]},
       {title:"Le corps épuisé",intro:"L'épuisement a un visage physique très concret.",
-       ids:["épuisé","vidé","éteint","drainé","lessivé","claqué","éreinté","exténué","prostré","effondré","affaissé","engourdi","ankylosé"]},
+       ids:["épuisé","vidé","éteint","drainé","lessivé","claqué","éreinté","exténué","prostré","effondré","affaissé","engourdi","ankylosé"],
+       essentials:["épuisé","vidé","éteint","éreinté","claqué","drainé"]},
       {title:"Ce qui t'a épuisé",intro:"L'épuisement ne vient pas de nulle part.",
-       ids:["surchargé","débordé","dépassé","submergé","écrasé","accablé","rongé","miné","sapé","usé","abîmé","sacrifié","exploité","utilisé"]},
+       ids:["surchargé","débordé","dépassé","submergé","écrasé","accablé","rongé","miné","sapé","usé","abîmé","sacrifié","exploité","utilisé"],
+       essentials:["surchargé","exploité","sacrifié","écrasé","usé","accablé"]},
       {title:"Ce que l'épuisement a créé",intro:"Un corps épuisé finit par couper le contact avec tout.",
-       ids:["dissocié","détaché","coupé","anesthésié","absent","résigné","capitulé","abdiqué","désengagé","déprimé","désemparé"]},
+       ids:["dissocié","détaché","coupé","anesthésié","absent","résigné","capitulé","abdiqué","désengagé","déprimé","désemparé"],
+       essentials:["dissocié","absent","résigné","capitulé","déprimé"]},
       {title:"L énergie retrouvée",intro:"L énergie revient quand on se repose vraiment.",
-       ids:["reposé","rechargé","revitalisé","régénéré","ressourcé","restauré","dynamisé","galvanisé","animé","soulagé","allégé","libéré","dégagé"]}
+       ids:["reposé","rechargé","revitalisé","régénéré","ressourcé","restauré","dynamisé","galvanisé","animé","soulagé","allégé","libéré","dégagé"],
+       essentials:["reposé","rechargé","restauré","allégé","soulagé"]}
     ]
   },
   {
@@ -2725,15 +2795,20 @@ const SCAN_THEMES=[
     desc:"Sortir du burnout et reconstruire",
     chapters:[
       {title:"Ce qui t'empêche",intro:"L effondrement fait peur à regarder en face — quelque chose te protège de sa profondeur.",
-       ids:["blindé","enkysté","anesthésié","dissocié","congelé","durci","retenu","refoulé","barricadé","résigné","capitulé"]},
+       ids:["blindé","enkysté","anesthésié","dissocié","congelé","durci","retenu","refoulé","barricadé","résigné","capitulé"],
+       essentials:["blindé","anesthésié","congelé","résigné","capitulé"]},
       {title:"L effondrement dans le corps",intro:"Quand tout s'effondre, le corps tombe en premier.",
-       ids:["effondré","brisé","démoli","ravagé","dévasté","anéanti","pulvérisé","écrasé","prostré","affaissé","tassé","vidé","éteint"]},
+       ids:["effondré","brisé","démoli","ravagé","dévasté","anéanti","pulvérisé","écrasé","prostré","affaissé","tassé","vidé","éteint"],
+       essentials:["effondré","brisé","anéanti","vidé","éteint","écrasé"]},
       {title:"Ce qui s'est effondré",intro:"Des certitudes, des relations, des illusions se sont brisées.",
-       ids:["trahi","abandonné","défait","vaincu","submergé","noyé","englouti","avalé","assommé","foudroyé","terrassé","sabordé"]},
+       ids:["trahi","abandonné","défait","vaincu","submergé","noyé","englouti","avalé","assommé","foudroyé","terrassé","sabordé"],
+       essentials:["trahi","abandonné","défait","submergé","terrassé","assommé"]},
       {title:"Dans le chaos",intro:"L effondrement crée un chaos qu'on ne sait pas comment traverser.",
-       ids:["perdu","égaré","déboussolé","désorienté","confus","dispersé","éparpillé","résigné","capitulé","désespéré","déprimé","épuisé"]},
+       ids:["perdu","égaré","déboussolé","désorienté","confus","dispersé","éparpillé","résigné","capitulé","désespéré","déprimé","épuisé","dissipé"],
+       essentials:["perdu","désorienté","désespéré","dissipé","confus","déprimé"]},
       {title:"Se relever",intro:"On ne revient pas de l'effondrement comme avant. On revient plus solide.",
-       ids:["reconstruit","relevé","redressé","ressuscité","restauré","régénéré","renouvelé","ressourcé","rechargé","revitalisé","forgé","trempé","aiguisé","rodé","libéré","affranchi"]}
+       ids:["reconstruit","relevé","redressé","ressuscité","restauré","régénéré","renouvelé","ressourcé","rechargé","revitalisé","forgé","trempé","aiguisé","rodé","libéré","affranchi"],
+       essentials:["relevé","reconstruit","restauré","libéré","forgé","trempé"]}
     ]
   },
   {
@@ -2741,15 +2816,20 @@ const SCAN_THEMES=[
     desc:"Sortir du contrôle et retrouver son autonomie",
     chapters:[
       {title:"Ce qui t'empêche",intro:"Quelque chose t'empêche d'accéder à ta liberté — souvent la peur de ce qui arriverait si tu étais vraiment libre.",
-       ids:["blindé","enkysté","durci","congelé","cadenassé","verrouillé","barricadé","retenu","refoulé","inhibé","censuré","autocensuré"]},
+       ids:["blindé","enkysté","durci","congelé","cadenassé","verrouillé","barricadé","retenu","refoulé","inhibé","censuré","autocensuré"],
+       essentials:["retenu","inhibé","censuré","congelé","barricadé"]},
       {title:"Ce que le corps porte",intro:"Le contrôle et l'enfermement s'inscrivent dans le corps.",
-       ids:["figé","bloqué","coincé","paralysé","rivé","collé","scotché","vissé","ligoté","entravé","enchaîné","attaché","emprisonné","encagé","comprimé","étouffé"]},
+       ids:["figé","bloqué","coincé","paralysé","rivé","collé","scotché","vissé","ligoté","entravé","enchaîné","attaché","emprisonné","encagé","comprimé","étouffé"],
+       essentials:["enchaîné","encagé","emprisonné","étouffé","entravé","bloqué"]},
       {title:"Ce qu'on t'a imposé",intro:"Des personnes ou des systèmes ont pris le contrôle sur toi.",
-       ids:["contrôlé","dirigé","gouverné","dominé","opprimé","soumis","asservi","subjugué","domestiqué","dressé","formaté","normé","codifié","embrigadé","manipulé","instrumentalisé"]},
+       ids:["contrôlé","dirigé","gouverné","dominé","opprimé","soumis","asservi","subjugué","domestiqué","dressé","formaté","normé","codifié","embrigadé","manipulé","instrumentalisé","enfiévré","emballé"],
+       essentials:["contrôlé","dominé","opprimé","dressé","enfiévré","emballé"]},
       {title:"Ce que tu t'es interdit",intro:"Tu as intégré les interdits jusqu'à les appliquer toi-même.",
-       ids:["censuré","autocensuré","réprimé","inhibé","muselé","bâillonné","refoulé","retenu","bridé","freiné","endigué","jugulé","empêché","corsété","cadenassé","fermé","verrouillé","prohibé","proscrit"]},
+       ids:["censuré","autocensuré","réprimé","inhibé","muselé","bâillonné","refoulé","retenu","bridé","freiné","endigué","jugulé","empêché","corsété","cadenassé","fermé","verrouillé","prohibé","proscrit"],
+       essentials:["censuré","muselé","réprimé","refoulé","inhibé","bridé"]},
       {title:"La liberté retrouvée",intro:"Tu es libre. Tu l'as toujours été au fond.",
-       ids:["libéré","affranchi","émancipé","délié","délivré","déconditionné","désenchaîné","autonomisé","autodéterminé","décroché","désimpliqué","dépris","dégagé","ouvert","déployé","propulsé"]}
+       ids:["libéré","affranchi","émancipé","délié","délivré","déconditionné","désenchaîné","autonomisé","autodéterminé","décroché","désimpliqué","dépris","dégagé","ouvert","déployé","propulsé"],
+       essentials:["libéré","affranchi","émancipé","délivré","dégagé","déployé"]}
     ]
   },
   {
@@ -2757,15 +2837,20 @@ const SCAN_THEMES=[
     desc:"Retrouver le sentiment de sa propre valeur",
     chapters:[
       {title:"Ce qui t'empêche",intro:"Quelque chose t'empêche de recevoir ta propre valeur — souvent la conviction profonde que tu ne la mérites pas.",
-       ids:["blindé","enkysté","anesthésié","durci","congelé","retenu","refoulé","muselé","honteux","coupable","barricadé"]},
+       ids:["blindé","enkysté","anesthésié","durci","congelé","retenu","refoulé","muselé","honteux","coupable","barricadé"],
+       essentials:["honteux","coupable","muselé","retenu","blindé"]},
       {title:"Ce que ça fait dans le corps",intro:"Le sentiment de ne rien valoir s'ancre dans le corps.",
-       ids:["affaissé","voûté","tassé","vidé","éteint","étouffé","contracté","retenu","bridé","écrasé","lesté","alourdi"]},
+       ids:["affaissé","voûté","tassé","vidé","éteint","étouffé","contracté","retenu","bridé","écrasé","lesté","alourdi"],
+       essentials:["affaissé","voûté","vidé","écrasé","étouffé"]},
       {title:"Ce qu'on t'a dit",intro:"D'où vient ce sentiment que tu ne vaux rien.",
-       ids:["rabaissé","dévalorisé","méprisé","humilié","ridiculisé","bafoué","dénigré","déprécié","discrédité","disqualifié","fustigé","grondé","réprimandé","sanctionné","puni","jugé","condamné","blâmé","accusé","étiqueté","catalogué","calomnié","sabordé"]},
+       ids:["rabaissé","dévalorisé","méprisé","humilié","ridiculisé","bafoué","dénigré","déprécié","discrédité","disqualifié","fustigé","grondé","réprimandé","sanctionné","puni","jugé","condamné","blâmé","accusé","étiqueté","catalogué","calomnié","sabordé"],
+       essentials:["dévalorisé","humilié","méprisé","rabaissé","puni","condamné","jugé"]},
       {title:"Ce que tu as conclu",intro:"Tu t'es dit que tu n'étais pas assez bien.",
-       ids:["honteux","coupable","raté","échoué","défait","rejeté","fabriqué","simulé","masqué","dévalué","disqualifié"]},
+       ids:["honteux","coupable","raté","échoué","défait","rejeté","fabriqué","simulé","masqué","dévalué","disqualifié"],
+       essentials:["honteux","raté","coupable","rejeté","dévalué"]},
       {title:"Ta valeur intrinsèque",intro:"Ta valeur n'a jamais eu besoin d'être gagnée.",
-       ids:["valorisé","reconnu","estimé","admiré","apprécié","célébré","félicité","loué","respecté","révéré","honoré","distingué","élevé","dignifié","consacré","couronné","élu","réhabilité"]}
+       ids:["valorisé","reconnu","estimé","admiré","apprécié","célébré","félicité","loué","respecté","révéré","honoré","distingué","élevé","dignifié","consacré","couronné","élu","réhabilité"],
+       essentials:["valorisé","reconnu","respecté","honoré","apprécié"]}
     ]
   },
   {
@@ -2773,15 +2858,20 @@ const SCAN_THEMES=[
     desc:"Avoir le droit d'être là et de prendre de la place",
     chapters:[
       {title:"Ce qui t'empêche",intro:"Quelque chose t'empêche de toucher le droit d'exister — souvent parce que ça a été nié très tôt.",
-       ids:["blindé","enkysté","anesthésié","dissocié","congelé","durci","retenu","refoulé","muselé","honteux","barricadé"]},
+       ids:["blindé","enkysté","anesthésié","dissocié","congelé","durci","retenu","refoulé","muselé","honteux","barricadé"],
+       essentials:["honteux","muselé","anesthésié","congelé","retenu"]},
       {title:"Ce que le corps a senti",intro:"Ne pas avoir le droit d'exister commence dans le corps.",
-       ids:["comprimé","écrasé","étouffé","oppressé","aplati","planté","collé","retenu","bridé","effacé","gommé"]},
+       ids:["comprimé","écrasé","étouffé","oppressé","aplati","planté","collé","retenu","bridé","effacé","gommé"],
+       essentials:["comprimé","étouffé","écrasé","effacé","bridé"]},
       {title:"Ce que tu as vécu",intro:"Quand ta présence était niée, ignorée ou trop lourde pour les autres.",
-       ids:["ignoré","oublié","effacé","supprimé","rayé","raturé","barré","annulé","censuré","écarté","relégué","marginalisé","ostracisé","banni","exclu"]},
+       ids:["ignoré","oublié","effacé","supprimé","rayé","raturé","barré","annulé","censuré","écarté","relégué","marginalisé","ostracisé","banni","exclu"],
+       essentials:["ignoré","effacé","exclu","écarté","banni","ostracisé","oublié"]},
       {title:"Ce que tu as conclu",intro:"Tu as décidé de prendre moins de place pour ne pas déranger.",
-       ids:["autocensuré","retenu","réprimé","inhibé","contenu","muselé","honteux","avili","culpabilisé","responsabilisé","blâmé"]},
+       ids:["autocensuré","retenu","réprimé","inhibé","contenu","muselé","honteux","avili","culpabilisé","responsabilisé","blâmé"],
+       essentials:["autocensuré","honteux","muselé","culpabilisé","retenu"]},
       {title:"Le droit d'exister",intro:"Tu as le droit d'exister pleinement, exactement tel que tu es.",
-       ids:["né","conçu","fondé","permis","autorisé","légitimé","validé","accepté","reconnu","vu","entériné","ratifié","voulu","attendu","désiré","choisi"]}
+       ids:["né","conçu","fondé","permis","autorisé","légitimé","validé","accepté","reconnu","vu","entériné","ratifié","voulu","attendu","désiré","choisi"],
+       essentials:["accepté","reconnu","voulu","choisi","légitimé","vu"]}
     ]
   },
   {
@@ -2789,15 +2879,20 @@ const SCAN_THEMES=[
     desc:"Revenir à soi et retrouver ses émotions",
     chapters:[
       {title:"Ce qui t'empêche",intro:"La dissociation elle-même t'empêche de la voir — tu es tellement coupé que tu ne sais plus que tu l'es.",
-       ids:["anesthésié","engourdi","absent","flottant","neutralisé","désactivé","enkysté","congelé","figé","gelé","cristallisé"]},
+       ids:["anesthésié","engourdi","absent","flottant","neutralisé","désactivé","enkysté","congelé","figé","gelé","cristallisé"],
+       essentials:["anesthésié","absent","engourdi","flottant","congelé"]},
       {title:"La déconnexion dans le corps",intro:"La dissociation c'est quand tu n'es plus vraiment là.",
-       ids:["dissocié","détaché","coupé","séparé","fragmenté","morcelé","flottant","absent","anesthésié","engourdi","endormi","assoupi","sectionné","disloqué","volatilisé"]},
+       ids:["dissocié","détaché","coupé","séparé","fragmenté","morcelé","flottant","absent","anesthésié","engourdi","endormi","assoupi","sectionné","disloqué","volatilisé"],
+       essentials:["dissocié","coupé","fragmenté","flottant","absent","séparé"]},
       {title:"Ce qui t'a coupé de toi",intro:"Des expériences trop douloureuses ont forcé la déconnexion.",
-       ids:["traumatisé","choqué","sidéré","sonné","assommé","foudroyé","terrassé","blessé","violé","profané","outragé","envahi","submergé","noyé","englouti"]},
+       ids:["traumatisé","choqué","sidéré","sonné","assommé","foudroyé","terrassé","blessé","violé","profané","outragé","envahi","submergé","noyé","englouti"],
+       essentials:["traumatisé","choqué","sonné","blessé","submergé","envahi"]},
       {title:"Ce que la dissociation a créé",intro:"Coupé de toi, tu as perdu accès à une partie de ta vie.",
-       ids:["perdu","égaré","confus","déboussolé","désorienté","éparpillé","dispersé","absent","vidé","éteint","anesthésié","neutralisé","désactivé"]},
+       ids:["perdu","égaré","confus","déboussolé","désorienté","éparpillé","dispersé","absent","vidé","éteint","anesthésié","neutralisé","désactivé"],
+       essentials:["perdu","confus","vidé","éteint","désorienté"]},
       {title:"Revenir à soi",intro:"Revenir dans son corps est le premier acte de guérison.",
-       ids:["reconnecté","revitalisé","rechargé","ancré","enraciné","centré","stabilisé","réchauffé","régénéré","ressuscité","restauré","ressourcé","reposé","libéré","déployé","ouvert"]}
+       ids:["reconnecté","revitalisé","rechargé","ancré","enraciné","centré","stabilisé","réchauffé","régénéré","ressuscité","restauré","ressourcé","reposé","libéré","déployé","ouvert"],
+       essentials:["reconnecté","ancré","centré","réchauffé","libéré"]}
     ]
   },
   {
@@ -2805,15 +2900,20 @@ const SCAN_THEMES=[
     desc:"Sortir du vide et retrouver ce qui compte vraiment",
     chapters:[
       {title:"Ce qui t'empêche",intro:"Quelque chose t'empêche d'accéder au sens — souvent un épuisement profond ou une conviction que rien ne vaut la peine.",
-       ids:["anesthésié","dissocié","engourdi","résigné","capitulé","abdiqué","enkysté","congelé","désespéré","blindé","barricadé"]},
+       ids:["anesthésié","dissocié","engourdi","résigné","capitulé","abdiqué","enkysté","congelé","désespéré","blindé","barricadé"],
+       essentials:["résigné","désespéré","anesthésié","capitulé","engourdi"]},
       {title:"Le vide dans le corps",intro:"La perte de sens laisse un vide physique.",
-       ids:["vidé","éteint","engourdi","prostré","affaissé","effondré","épuisé","lessivé","claqué","déprimé"]},
+       ids:["vidé","éteint","engourdi","prostré","affaissé","effondré","épuisé","lessivé","claqué","déprimé"],
+       essentials:["vidé","éteint","déprimé","effondré","épuisé"]},
       {title:"Ce que tu as traversé",intro:"Des événements ont vidé ton existence de sens.",
-       ids:["perdu","égaré","déboussolé","désorienté","confus","dispersé","éparpillé","désengagé","dépris","distancié","retiré","résigné","capitulé","abdiqué","désimpliqué"]},
+       ids:["perdu","égaré","déboussolé","désorienté","confus","dispersé","éparpillé","désengagé","dépris","distancié","retiré","résigné","capitulé","abdiqué","désimpliqué"],
+       essentials:["perdu","désorienté","désengagé","retiré","confus"]},
       {title:"Ce que ça a produit",intro:"Sans sens, tu t'es mis à douter de tout.",
-       ids:["ébranlé","vacillé","hésité","tergiversé","découragé","démotivé","défait","anéanti","dévasté","perturbé","déconcerté","troublé"]},
+       ids:["ébranlé","vacillé","hésité","tergiversé","découragé","démotivé","défait","anéanti","dévasté","perturbé","déconcerté","troublé"],
+       essentials:["ébranlé","découragé","défait","troublé","démotivé"]},
       {title:"Le sens retrouvé",intro:"Le sens n'est pas à trouver. Il est à retrouver en toi.",
-       ids:["engagé","déterminé","voué","consacré","habité","animé","porté","appelé","destiné","envoyé","investi","motivé","enthousiasmé","décidé","acharné","éveillé","accompli","réussi","grandi","mûri","fondé","né"]}
+       ids:["engagé","déterminé","voué","consacré","habité","animé","porté","appelé","destiné","envoyé","investi","motivé","enthousiasmé","décidé","acharné","éveillé","accompli","réussi","grandi","mûri","fondé","né"],
+       essentials:["engagé","habité","animé","appelé","décidé","motivé"]}
     ]
   },
   {
@@ -2821,15 +2921,20 @@ const SCAN_THEMES=[
     desc:"Se libérer des programmes reçus",
     chapters:[
       {title:"Ce qui t'empêche",intro:"Le conditionnement lui-même t'empêche de le voir — tu penses que c'est toi.",
-       ids:["blindé","enkysté","durci","congelé","cristallisé","formaté","normé","codifié","standardisé","retenu","refoulé","muselé"]},
+       ids:["blindé","enkysté","durci","congelé","cristallisé","formaté","normé","codifié","standardisé","retenu","refoulé","muselé"],
+       essentials:["formaté","normé","durci","refoulé","muselé"]},
       {title:"Le conditionnement dans le corps",intro:"Les programmes reçus finissent par habiter le corps.",
-       ids:["formaté","normé","codifié","standardisé","domestiqué","dressé","façonné","lissé","poli","taillé","corsé","rigidifié"]},
+       ids:["formaté","normé","codifié","standardisé","domestiqué","dressé","façonné","lissé","poli","taillé","corsé","rigidifié"],
+       essentials:["formaté","dressé","domestiqué","rigidifié","normé"]},
       {title:"Ce qu'on t'a programmé",intro:"Famille, société, école — des voix qui ont remplacé la tienne.",
-       ids:["conditionné","endoctriné","embrigadé","enrégimenté","assimilé","colonisé","asservi","subjugué","possédé","instrumentalisé","manipulé","dirigé","gouverné","contrôlé","surveillé","programmé"]},
+       ids:["conditionné","endoctriné","embrigadé","enrégimenté","assimilé","colonisé","asservi","subjugué","possédé","instrumentalisé","manipulé","dirigé","gouverné","contrôlé","surveillé","programmé"],
+       essentials:["conditionné","programmé","endoctriné","embrigadé","manipulé","dressé"]},
       {title:"Ce que ça a créé en toi",intro:"Tu t'es mis à penser, ressentir et agir selon leurs règles.",
-       ids:["censuré","autocensuré","réprimé","inhibé","refoulé","retenu","bridé","muselé","bâillonné","prohibé","proscrit","normé","codifié","étiqueté","catalogué","réduit"]},
+       ids:["censuré","autocensuré","réprimé","inhibé","refoulé","retenu","bridé","muselé","bâillonné","prohibé","proscrit","normé","codifié","étiqueté","catalogué","réduit"],
+       essentials:["censuré","muselé","réprimé","réduit","inhibé","bridé"]},
       {title:"Ta propre voix",intro:"Sous les programmes, tu as une voix. Elle t'appartient.",
-       ids:["déconditionné","déprogrammé","déconstruit","désenchaîné","affranchi","émancipé","autonomisé","autodéterminé","libéré","délivré","délié","éveillé","illuminé","éclairé","ouvert","déployé"]}
+       ids:["déconditionné","déprogrammé","déconstruit","désenchaîné","affranchi","émancipé","autonomisé","autodéterminé","libéré","délivré","délié","éveillé","illuminé","éclairé","ouvert","déployé"],
+       essentials:["déconditionné","affranchi","éveillé","libéré","émancipé"]}
     ]
   },
   {
@@ -2837,15 +2942,20 @@ const SCAN_THEMES=[
     desc:"Après l'effondrement, rebâtir sur des bases solides",
     chapters:[
       {title:"Ce qui t'empêche",intro:"Quelque chose t'empêche de te reconstruire — souvent la peur que ça s'effondre à nouveau.",
-       ids:["blindé","enkysté","anesthésié","durci","congelé","résigné","capitulé","désespéré","retenu","refoulé","barricadé"]},
+       ids:["blindé","enkysté","anesthésié","durci","congelé","résigné","capitulé","désespéré","retenu","refoulé","barricadé"],
+       essentials:["résigné","désespéré","congelé","durci","barricadé"]},
       {title:"Les décombres",intro:"Avant de reconstruire, il faut regarder ce qui est tombé.",
-       ids:["effondré","brisé","démoli","ravagé","dévasté","anéanti","pulvérisé","défait","vaincu","perdu","égaré","abandonné","sacrifié","sabordé"]},
+       ids:["effondré","brisé","démoli","ravagé","dévasté","anéanti","pulvérisé","défait","vaincu","perdu","égaré","abandonné","sacrifié","sabordé"],
+       essentials:["effondré","brisé","anéanti","défait","abandonné","perdu"]},
       {title:"Ce qui a tenu",intro:"Même dans l'effondrement, quelque chose en toi a résisté.",
-       ids:["résisté","tenu","survécu","enduré","persisté","continué","préservé","gardé","maintenu","stabilisé","ancré","enraciné"]},
+       ids:["résisté","tenu","survécu","enduré","persisté","continué","préservé","gardé","maintenu","stabilisé","ancré","enraciné"],
+       essentials:["survécu","tenu","enduré","résisté","ancré"]},
       {title:"Les premières pierres",intro:"Reconstruire commence par de petits gestes concrets.",
-       ids:["décidé","déterminé","engagé","investi","motivé","animé","habité","porté","appelé","forgé","trempé","aiguisé","rodé","affirmé","réaffirmé"]},
+       ids:["décidé","déterminé","engagé","investi","motivé","animé","habité","porté","appelé","forgé","trempé","aiguisé","rodé","affirmé","réaffirmé"],
+       essentials:["décidé","engagé","motivé","animé","forgé"]},
       {title:"La nouvelle fondation",intro:"Ce que tu reconstruis est plus solide que ce qui s'est effondré.",
-       ids:["reconstruit","relevé","redressé","ressuscité","restauré","régénéré","renouvelé","ressourcé","rechargé","revitalisé","accompli","réussi","grandi","mûri","établi","fondé","légitimé","dignifié","élevé"]}
+       ids:["reconstruit","relevé","redressé","ressuscité","restauré","régénéré","renouvelé","ressourcé","rechargé","revitalisé","accompli","réussi","grandi","mûri","établi","fondé","légitimé","dignifié","élevé"],
+       essentials:["reconstruit","relevé","restauré","établi","fondé","grandi"]}
     ]
   }
 ];
@@ -5090,9 +5200,9 @@ function renderPinnedTab(){
 const DIAG_SYNONYMS={
   "indifférence":["ignoré","invisible","transparent","effacé","oublié","inexistant","absent","exclu"],
   "indifferent":["ignoré","invisible","transparent","effacé","oublié"],
-  "rejet":["rejeté","abandonné","exclu","écarté","mis de côté","non accepté"],
-  "abandon":["abandonné","délaissé","seul","isolé","livré à moi-même"],
-  "colère":["en colère","rageur","frustré","révolté","agacé","irrité"],
+  "rejet":["rejeté","abandonné","exclu","écarté","stigmatisé"],
+  "abandon":["abandonné","délaissé","seul","isolé","largué"],
+  "colère":["enragé","rageur","frustré","révolté","agacé","irrité"],
   "honte":["honteux","humilié","dévalorisé","inférieur","nul","raté"],
   "peur":["effrayé","terrorisé","paniqué","angoissé","anxieux","apeuré","craintif","tétanisé","alarmé"],
   "tristesse":["triste","mélancolique","déprimé","abattu","effondré"],
@@ -5101,25 +5211,25 @@ const DIAG_SYNONYMS={
   "confiance":["méfiant","trahi","manipulé","dupé","floué"],
   "trahison":["trahi","manipulé","trompé","floué","dupé","abusé"],
   "culpabilité":["coupable","responsable","fautif","autopuni"],
-  "perfectionnisme":["imparfait","insuffisant","pas assez bien","raté","décevant"],
+  "perfectionnisme":["imparfait","insuffisant","dévalorisé","raté","décevant"],
   "controle":["contrôlé","dominé","écrasé","manipulé","opprimé"],
-  "inutile":["inutile","inutilisé","superflu","sans valeur","à l'écart"],
+  "inutile":["inutile","inutilisé","superflu","dévalorisé","exclu"],
   "nul":["incapable","incompétent","raté","mauvais","insuffisant"],
-  "jugement":["jugé","critiqué","condamné","pointé du doigt","stigmatisé"],
-  "comparison":["comparé","dépassé","inférieur","moins bien","jaloux"],
+  "jugement":["jugé","critiqué","condamné","stigmatisé","humilié"],
+  "comparison":["comparé","dépassé","inférieur","diminué","jaloux"],
   "jalousie":["jaloux","envieux","frustré","inférieur"],
   "anxiété":["anxieux","angoissé","stressé","tendu","crispé","paniqué"],
-  "stress":["stressé","débordé","sous pression","épuisé","tendu"],
-  "épuisement":["épuisé","vidé","à bout","fatigué","usé"],
+  "stress":["stressé","débordé","écrasé","épuisé","tendu"],
+  "épuisement":["épuisé","vidé","éreinté","fatigué","usé"],
   "fatigue":["fatigué","épuisé","vidé","usé","exténué"],
   "blocage":["bloqué","figé","paralysé","immobile","incapable"],
-  "procrastination":["procrastinateur","bloqué","paralysé","incapable de passer à l'action"],
+  "procrastination":["procrastinateur","bloqué","paralysé","reculé","différé"],
   "echec":["raté","échoué","perdant","insuffisant","incapable"],
-  "argent":["pauvre","endetté","précaire","financièrement bloqué","manque"],
+  "argent":["pauvre","endetté","précaire","bloqué","manque"],
   "famille":["contrôlé","jugé","enfermé","conditionné","programmé"],
   "relation":["rejeté","abandonné","trahi","incompris","seul"],
-  "amour":["non aimé","rejeté","abandonné","non choisi","seul"],
-  "corps":["honte corporelle","complexé","mal dans ma peau","dégoûté"],
+  "amour":["humilié","rejeté","abandonné","délaissé","seul"],
+  "corps":["humilié","complexé","dévalorisé","dégoûté"],
   "violence":["blessé","traumatisé","victime","abusé","violé"],
 };
 
@@ -5349,7 +5459,7 @@ function renderJournalInline(mode){
       if(hasUnsaved){
         if(!confirm("Tu as du contenu non sauvegardé. Quitter quand même ?"))return;
       }
-      renderJournalInline();
+      renderJournalInline();_ensureWorkPills();
     };
     document.getElementById("journal-list-btn")?.addEventListener("click",journalCancelFn);
     document.getElementById("journal-list-btn2")?.addEventListener("click",journalCancelFn);
@@ -5373,7 +5483,7 @@ function renderJournalInline(mode){
       try{localStorage.setItem(key,JSON.stringify(ents));}catch(e){}
       journalEditing=false;
       showToast("✅ Entrée enregistrée","success");
-      renderJournalInline();
+      renderJournalInline();_ensureWorkPills();
     });
     return;
   }
@@ -5381,7 +5491,7 @@ function renderJournalInline(mode){
   // Entry detail view
   if(typeof mode==="number"){
     const e=entries[mode];
-    if(!e)return renderJournalInline();
+    if(!e){renderJournalInline();_ensureWorkPills();return;}
     let bodyHtml="";
     if(e.type==="guided"&&e.answers){
       bodyHtml=JOURNAL_QUESTIONS.map((q,i)=>{
@@ -5405,13 +5515,13 @@ function renderJournalInline(mode){
       <div style="margin-top:2rem;padding-top:1rem;border-top:1px solid var(--border);">
         <button data-del-idx="${mode}" style="font-size:12px;color:var(--text-faint);background:none;border:none;cursor:pointer;padding:0;font-family:inherit;">Supprimer cette entrée</button>
       </div>`;
-    document.getElementById("journal-list-btn")?.addEventListener("click",()=>renderJournalInline());
+    document.getElementById("journal-list-btn")?.addEventListener("click",()=>{renderJournalInline();_ensureWorkPills();});
     grid.querySelector("[data-del-idx]")?.addEventListener("click",()=>{
       let ents=[];
       try{ents=JSON.parse(localStorage.getItem(key)||"[]");}catch(e){}
       ents.splice(mode,1);
       try{localStorage.setItem(key,JSON.stringify(ents));}catch(e){}
-      renderJournalInline();
+      renderJournalInline();_ensureWorkPills();
     });
     return;
   }
@@ -5445,9 +5555,9 @@ function renderJournalInline(mode){
         <div style="font-size:0.83rem;color:var(--text-muted);max-width:280px;line-height:1.65;margin-bottom:1.75rem;">Écrire sur ce que tu traverses, même deux lignes, ancre ce que tu vis dans ton corps et ton identité.</div>
         <button onclick="renderJournalInline('new')" style="padding:11px 24px;border-radius:var(--radius-lg);border:1px solid var(--accent);background:transparent;color:var(--accent);font-size:0.88rem;font-weight:600;font-family:inherit;cursor:pointer;transition:background 0.15s;" onmouseenter="this.style.background='rgba(200,184,154,0.1)'" onmouseleave="this.style.background='transparent'">✍️ Première entrée</button>
       </div>`}`;
-  document.getElementById("journal-new-btn")?.addEventListener("click",()=>renderJournalInline("new"));
+  document.getElementById("journal-new-btn")?.addEventListener("click",()=>{renderJournalInline("new");_ensureWorkPills();});
   grid.querySelectorAll("[data-entry-idx]").forEach(row=>{
-    row.addEventListener("click",()=>renderJournalInline(+row.dataset.entryIdx));
+    row.addEventListener("click",()=>{renderJournalInline(+row.dataset.entryIdx);_ensureWorkPills();});
   });
 }
 
@@ -5905,7 +6015,7 @@ function renderExerciseDetail(){
 
   grid.innerHTML=`
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.25rem;">
-      <button onclick="renderExercisesInline()" style="background:none;border:none;color:var(--text-faint);font-size:1.1rem;cursor:pointer;padding:4px;">←</button>
+      <button onclick="renderWorkInline('exercises')" style="background:none;border:none;color:var(--text-faint);font-size:1.1rem;cursor:pointer;padding:4px;">←</button>
       <div style="flex:1;">
         <div style="font-size:11px;color:var(--text-faint);margin-bottom:4px;">${ex.icon} ${ex.title}</div>
         <div style="height:3px;background:var(--border);border-radius:2px;overflow:hidden;">
@@ -5947,7 +6057,7 @@ function renderExerciseDetail(){
         <div style="font-size:3rem;">✅</div>
         <div style="font-size:1.2rem;font-weight:700;">Exercice complété</div>
         <div style="font-size:0.88rem;color:var(--text-futed);max-width:280px;line-height:1.6;">Bien joué. Ce que tu viens de traverser laisse une trace. Reviens demain si tu veux aller plus loin.</div>
-        <button onclick="renderExercisesInline()" style="margin-top:0.5rem;padding:12px 28px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text);font-size:0.9rem;font-family:inherit;cursor:pointer;">← Retour aux exercices</button>
+        <button onclick="renderWorkInline('exercises')" style="margin-top:0.5rem;padding:12px 28px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text);font-size:0.9rem;font-family:inherit;cursor:pointer;">← Retour aux exercices</button>
       </div>`;
     } else {
       currentExPart++;
@@ -6046,11 +6156,16 @@ let gameDeckSession=[];    // {id, text, action: "pin"|"skip"}
 let gameDeckTouchStartX=0;
 let gameDeckTouchStartY=0;
 
-function gameDeckIdsForTheme(theme){
+function gameDeckIdsForTheme(theme, useEssentials=false){
   // Les ids dans SCAN_THEMES sont des mots-clés ("figé","abandonné"…)
   // DATA a des entrées {id:376, text:"Je suis figé", cat:…}
   // On extrait le mot après "Je suis " ou "Je me sens " pour matcher
-  const keywords=new Set(theme.chapters.flatMap(ch=>ch.ids||[]));
+  // Si useEssentials=true, on filtre sur essentials (un seul mot pp, niveau enfant)
+  const keywords=new Set(
+    useEssentials
+      ? theme.chapters.flatMap(ch=>ch.essentials||ch.ids||[])
+      : theme.chapters.flatMap(ch=>ch.ids||[])
+  );
   const wids=workedIds();
   return DATA
     .filter(d=>{
@@ -6075,11 +6190,7 @@ function gameDeckIdsForTheme(theme){
 // ─── WORK TAB ────────────────────────────────────────────────────────────────
 let workSubTab="pinned"; // état courant sous-onglet Travailler
 
-function renderWorkInline(sub){
-  if(sub)workSubTab=sub;
-  const grid=document.getElementById("home-themes-grid");
-  if(!grid)return;
-
+function _buildWorkPillsHtml(){
   const pills=[
     {id:"pinned",label:"📌 Épinglées"},
     {id:"irt",label:"🧘 IRT"},
@@ -6087,8 +6198,7 @@ function renderWorkInline(sub){
     {id:"progression",label:"📊 Progression"},
     {id:"journal",label:"📓 Journal"},
   ];
-
-  const pillNav=`<div id="work-pills" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border);">
+  return `<div id="work-pills" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border);">
     ${pills.map(p=>{
       const active=workSubTab===p.id;
       return `<button onclick="renderWorkInline('${p.id}')"
@@ -6099,22 +6209,33 @@ function renderWorkInline(sub){
                transition:all 0.15s;white-space:nowrap;">${p.label}</button>`;
     }).join("")}
   </div>`;
+}
 
-  // 1) On appelle le renderer directement (il écrit dans home-themes-grid)
+// Injecte (ou remplace) les pills work en tête du grid — safe à appeler depuis n'importe quel renderer interne
+function _ensureWorkPills(){
+  const grid=document.getElementById("home-themes-grid");
+  if(!grid)return;
+  const existing=document.getElementById("work-pills");
+  if(existing)existing.remove();
+  const pillsDiv=document.createElement("div");
+  pillsDiv.innerHTML=_buildWorkPillsHtml();
+  grid.insertBefore(pillsDiv.firstElementChild, grid.firstChild);
+}
+
+function renderWorkInline(sub){
+  if(sub)workSubTab=sub;
+  const grid=document.getElementById("home-themes-grid");
+  if(!grid)return;
+
+  // 1) Appelle le renderer directement (il écrit dans home-themes-grid, listeners préservés)
   if(workSubTab==="pinned")          renderPinnedTab();
   else if(workSubTab==="irt")        renderIrtInline();
   else if(workSubTab==="exercises")  renderExercisesInline();
   else if(workSubTab==="progression")renderProgressionInline();
   else if(workSubTab==="journal")    renderJournalInline();
 
-  // 2) Supprimer les pills déjà présentes (évite la duplication au reclique)
-  const existing=document.getElementById("work-pills");
-  if(existing)existing.remove();
-
-  // 3) Prépend les nouvelles pills (listeners du contenu déjà attachés)
-  const pillsDiv=document.createElement("div");
-  pillsDiv.innerHTML=pillNav;
-  grid.insertBefore(pillsDiv.firstElementChild, grid.firstChild);
+  // 2) Prépend les pills (après que le renderer a écrit son contenu)
+  _ensureWorkPills();
 }
 
 // ─── DÉCOUVRIR TAB ───────────────────────────────────────────────────────────
@@ -6254,7 +6375,8 @@ function gameDeckStart(themeId){
   } else {
     const theme=SCAN_THEMES.find(t=>t.id===themeId);
     if(!theme)return;
-    const ids=new Set(gameDeckIdsForTheme(theme));
+    // Utilise les essentials (pp seul, niveau enfant) pour le jeu de cartes thématique
+    const ids=new Set(gameDeckIdsForTheme(theme, true));
     gameDeckQueue=DATA.filter(d=>ids.has(d.id)).sort(()=>Math.random()-0.5);
   }
 
