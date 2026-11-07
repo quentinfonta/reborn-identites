@@ -6153,6 +6153,7 @@ let gameDeckId=null;       // id du SCAN_THEMES en cours
 let gameDeckQueue=[];      // [{id, text, cat}] — cartes du deck courant
 let gameDeckIdx=0;
 let gameDeckSession=[];    // {id, text, action: "pin"|"skip"}
+let gameDeckSkipped=new Set(); // IDs skippés depuis l'ouverture du jeu (persist entre relances)
 let gameDeckTouchStartX=0;
 let gameDeckTouchStartY=0;
 
@@ -6306,7 +6307,7 @@ function renderGameInline(){
 function renderGameThemeSelect(){
   const grid=document.getElementById("home-themes-grid");
   if(!grid)return;
-  gameDeckId=null;gameDeckQueue=[];gameDeckIdx=0;gameDeckSession=[];
+  gameDeckId=null;gameDeckQueue=[];gameDeckIdx=0;gameDeckSession=[];gameDeckSkipped.clear();
 
   const priorityTopics=(currentProfile&&currentProfile.priorityTopics)||[];
 
@@ -6366,18 +6367,34 @@ function gameDeckStart(themeId){
   gameDeckId=themeId;
   gameDeckIdx=0;
   gameDeckSession=[];
+  // On NE reset PAS gameDeckSkipped ici — il persiste entre relances pour éviter les répétitions
 
   if(themeId==="__all__"){
-    // Shuffle de tout
+    // Shuffle de tout — exclure worked, pinned ET skippés cette session
     const wids=workedIds();
-    const all=DATA.filter(d=>!wids.has(d.id)&&!(pinnedIds&&pinnedIds.has(d.id)));
-    gameDeckQueue=[...all].sort(()=>Math.random()-0.5).slice(0,15);
+    const all=DATA.filter(d=>!wids.has(d.id)&&!(pinnedIds&&pinnedIds.has(d.id))&&!gameDeckSkipped.has(d.id));
+    // Si plus rien à proposer (tout skippé), on repart de zéro avec reset du skip
+    if(all.length===0){
+      gameDeckSkipped.clear();
+      const allFresh=DATA.filter(d=>!wids.has(d.id)&&!(pinnedIds&&pinnedIds.has(d.id)));
+      gameDeckQueue=[...allFresh].sort(()=>Math.random()-0.5).slice(0,15);
+    } else {
+      gameDeckQueue=[...all].sort(()=>Math.random()-0.5).slice(0,15);
+    }
   } else {
     const theme=SCAN_THEMES.find(t=>t.id===themeId);
     if(!theme)return;
     // Utilise les essentials (pp seul, niveau enfant) pour le jeu de cartes thématique
+    // Exclure également les skippés cette session
     const ids=new Set(gameDeckIdsForTheme(theme, true));
-    gameDeckQueue=DATA.filter(d=>ids.has(d.id)).sort(()=>Math.random()-0.5);
+    const filtered=DATA.filter(d=>ids.has(d.id)&&!gameDeckSkipped.has(d.id));
+    // Si tout skippé dans ce thème, reset et recommencer
+    if(filtered.length===0){
+      gameDeckSkipped.clear();
+      gameDeckQueue=DATA.filter(d=>ids.has(d.id)).sort(()=>Math.random()-0.5);
+    } else {
+      gameDeckQueue=filtered.sort(()=>Math.random()-0.5);
+    }
   }
 
   if(gameDeckQueue.length===0){
@@ -6633,6 +6650,7 @@ function gameDeckAction(action){
   if(gameDeckIdx>=gameDeckQueue.length)return;
   const entry=gameDeckQueue[gameDeckIdx];
   gameDeckSession.push({id:entry.id,text:entry.text,action});
+  if(action==="skip") gameDeckSkipped.add(entry.id);
 
   // Haptic
   if(navigator.vibrate){navigator.vibrate(action==="pin"?[8,0,8]:6);}
@@ -6663,6 +6681,7 @@ function gameDeckShowResults(){
   const theme=themeObj?{icon:themeObj.icon,title:themeObj.title}:{icon:"🎲",title:"Tout mélanger"};
 
   const pinned=gameDeckSession.filter(s=>s.action==="pin");
+  const skipped=gameDeckSession.filter(s=>s.action==="skip");
   const toAdd=pinned.length;
   const total=gameDeckQueue.length;
 
@@ -6670,7 +6689,7 @@ function gameDeckShowResults(){
 
   // Header résultat
   html+=`<div style="text-align:center;margin-bottom:1.75rem;">
-    <div style="font-size:2.2rem;margin-bottom:0.6rem;">${toAdd>0?"🎯":"✌️"}</div>
+    <div style="font-size:2.2rem;margin-bottom:0.6rem;">${toAdd>0?"🎯":skipped.length>0?"→":"✌️"}</div>
     <div style="font-size:1.15rem;font-weight:700;margin-bottom:0.3rem;">${theme.icon} ${theme.title}</div>
     <div style="font-size:0.85rem;color:var(--text-muted);">
       ${total} carte${total!==1?"s":""} jouée${total!==1?"s":""}
@@ -6690,22 +6709,37 @@ function gameDeckShowResults(){
       html+=`</div>`;
     }
 
+    // Passées
+    if(skipped.length>0){
+      html+=`<div style="margin-bottom:1.25rem;">
+        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-faint);margin-bottom:0.65rem;">→ Passé (${skipped.length})</div>`;
+      html+=skipped.map(s=>`<div style="padding:9px 14px;border-radius:var(--radius);border:1px solid var(--border);background:transparent;font-size:0.85rem;color:var(--text-muted);margin-bottom:5px;display:flex;align-items:center;gap:8px;opacity:0.65;"><span>→</span><span>${s.text}</span></div>`).join("");
+      html+=`</div>`;
+    }
 
     // CTA principal
     html+=`<div style="display:flex;flex-direction:column;gap:10px;margin-top:1.5rem;">
       <button id="gd-validate" style="padding:14px 24px;border-radius:var(--radius-lg);border:1px solid var(--accent);background:rgba(200,184,154,0.1);color:var(--accent);font-size:1rem;font-weight:700;font-family:inherit;cursor:pointer;width:100%;">📌 Ajouter à ma liste (${toAdd}) →</button>
       <div style="display:flex;gap:10px;">
-        <button onclick="gameDeckStart('__all__')" style="flex:1;padding:11px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text-muted);font-size:0.85rem;font-family:inherit;cursor:pointer;">↻ Rejouer</button>
+        <button onclick="gameDeckStart('${gameDeckId||"__all__"}')" style="flex:1;padding:11px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text-muted);font-size:0.85rem;font-family:inherit;cursor:pointer;">↻ Suite</button>
         <button onclick="setHomeTab('pinned')" style="flex:1;padding:11px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text-muted);font-size:0.85rem;font-family:inherit;cursor:pointer;">📌 Ma liste</button>
       </div>
     </div>`;
   } else {
     // Rien sélectionné
-    html+=`<div style="text-align:center;padding:1.5rem 0;color:var(--text-muted);font-size:0.9rem;margin-bottom:1.5rem;">
-      Aucune identité sélectionnée cette fois.<br><span style="font-size:0.8rem;opacity:0.7;">C'est normal — ça viendra avec le temps.</span>
-    </div>
+    if(skipped.length>0){
+      html+=`<div style="margin-bottom:1.5rem;">
+        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-faint);margin-bottom:0.65rem;">→ Passé (${skipped.length})</div>`;
+      html+=skipped.map(s=>`<div style="padding:9px 14px;border-radius:var(--radius);border:1px solid var(--border);background:transparent;font-size:0.85rem;color:var(--text-muted);margin-bottom:5px;display:flex;align-items:center;gap:8px;opacity:0.65;"><span>→</span><span>${s.text}</span></div>`).join("");
+      html+=`</div>`;
+    } else {
+      html+=`<div style="text-align:center;padding:1.5rem 0;color:var(--text-muted);font-size:0.9rem;margin-bottom:1.5rem;">
+        Aucune identité sélectionnée cette fois.<br><span style="font-size:0.8rem;opacity:0.7;">C'est normal — ça viendra avec le temps.</span>
+      </div>`;
+    }
+    html+=`
     <div style="display:flex;gap:10px;justify-content:center;">
-      <button onclick="gameDeckStart('__all__')" style="padding:12px 20px;border-radius:var(--radius-lg);border:1px solid var(--accent);background:rgba(200,184,154,0.07);color:var(--accent);font-size:0.9rem;font-weight:600;font-family:inherit;cursor:pointer;">↻ Rejouer</button>
+      <button onclick="gameDeckStart('${gameDeckId||"__all__"}')" style="padding:12px 20px;border-radius:var(--radius-lg);border:1px solid var(--accent);background:rgba(200,184,154,0.07);color:var(--accent);font-size:0.9rem;font-weight:600;font-family:inherit;cursor:pointer;">↻ Suite</button>
       <button onclick="setHomeTab('pinned')" style="padding:12px 20px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text);font-size:0.9rem;font-family:inherit;cursor:pointer;">📌 Ma liste</button>
     </div>`;
   }
