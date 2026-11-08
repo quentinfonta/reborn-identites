@@ -6159,13 +6159,15 @@ let gameDeckTouchStartX=0;
 let gameDeckTouchStartY=0;
 
 // Construit le Set de tous les mots-clés essentials de SCAN_THEMES
+// Le dernier chapitre de chaque thème est toujours un chapitre positif/ressource — on l'exclut
 function buildEssentialsSet(){
   const words=new Set();
-  SCAN_THEMES.forEach(theme=>
-    theme.chapters.forEach(ch=>{
+  SCAN_THEMES.forEach(theme=>{
+    const negChapters=theme.chapters.slice(0,-1); // exclure dernier chapitre (positif)
+    negChapters.forEach(ch=>{
       (ch.essentials||[]).forEach(w=>words.add(w.toLowerCase()));
-    })
-  );
+    });
+  });
   return words;
 }
 
@@ -6380,7 +6382,8 @@ function renderGameChapterSelect(themeId){
   const ess=buildEssentialsSet();
 
   // Construit les essentials du thème (pp d'être prioritaires)
-  const essWords=new Set(theme.chapters.flatMap(ch=>ch.essentials||[]));
+  // Exclure le dernier chapitre qui est toujours positif/ressource
+  const essWords=new Set(theme.chapters.slice(0,-1).flatMap(ch=>ch.essentials||[]));
   const essCards=DATA.filter(d=>{
     if(wids.has(d.id)||( pinnedIds&&pinnedIds.has(d.id)))return false;
     const word=d.text.toLowerCase()
@@ -6488,7 +6491,8 @@ function gameDeckStart(themeId, chapterId){
     let targetWords;
     if(!chapterId||chapterId==="__essentials__"){
       // Essentials du thème (pp d'être prioritaires)
-      targetWords=new Set(theme.chapters.flatMap(ch=>ch.essentials||[]));
+      // Exclure le dernier chapitre (positif/ressource) pour ne garder que les pp négatifs/neutres
+      targetWords=new Set(theme.chapters.slice(0,-1).flatMap(ch=>ch.essentials||[]));
     } else if(chapterId.startsWith("ch_")){
       const chIdx=parseInt(chapterId.replace("ch_",""),10);
       const ch=theme.chapters[chIdx];
@@ -6521,7 +6525,8 @@ function gameDeckStart(themeId, chapterId){
 
   if(gameDeckQueue.length===0){
     showToast("Plus de cartes dans ce deck — bien joué 🎉");
-    renderGameChapterSelect(themeId)||renderGameInline();
+    if(themeId&&themeId!=="__all__") renderGameChapterSelect(themeId);
+    else renderGameInline();
     return;
   }
 
