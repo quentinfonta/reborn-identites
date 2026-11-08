@@ -6150,12 +6150,38 @@ function sortByPinnedOrder(items){
   });
 }
 let gameDeckId=null;       // id du SCAN_THEMES en cours
+let gameDeckChapterId=null; // id du chapitre courant (__essentials__, ch_N, ou null)
 let gameDeckQueue=[];      // [{id, text, cat}] — cartes du deck courant
 let gameDeckIdx=0;
 let gameDeckSession=[];    // {id, text, action: "pin"|"skip"}
 let gameDeckSkipped=new Set(); // IDs skippés depuis l'ouverture du jeu (persist entre relances)
 let gameDeckTouchStartX=0;
 let gameDeckTouchStartY=0;
+
+// Construit le Set de tous les mots-clés essentials de SCAN_THEMES
+function buildEssentialsSet(){
+  const words=new Set();
+  SCAN_THEMES.forEach(theme=>
+    theme.chapters.forEach(ch=>{
+      (ch.essentials||[]).forEach(w=>words.add(w.toLowerCase()));
+    })
+  );
+  return words;
+}
+
+// Vérifie si une entrée DATA est un essential (pp d'être prioritaire)
+function isEssentialCard(d, essentialsSet){
+  const raw=d.text.toLowerCase();
+  const word=raw
+    .replace(/^je suis /,"")
+    .replace(/^je me sens /,"")
+    .replace(/^je me /,"")
+    .replace(/^j'ai été /,"")
+    .replace(/^j'(?:ai|étais) /,"")
+    .trim()
+    .split(" ")[0];
+  return essentialsSet.has(word);
+}
 
 function gameDeckIdsForTheme(theme, useEssentials=false){
   // Les ids dans SCAN_THEMES sont des mots-clés ("figé","abandonné"…)
@@ -6280,34 +6306,14 @@ function renderDecouvrirInline(sub){
 
 // ─── JEU DE CARTES ───────────────────────────────────────────────────────────
 function renderGameInline(){
-  const grid=document.getElementById("home-themes-grid");
-  if(!grid)return;
-  grid.innerHTML=`
-    <div style="max-width:420px;width:100%;margin:0 auto;text-align:center;padding:3rem 1.2rem;">
-      <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);opacity:0.7;margin-bottom:1rem;">Étape 1 · Reconnexion</div>
-      <div style="font-size:3rem;margin-bottom:1.2rem;">🫁</div>
-      <div style="font-size:1.1rem;font-weight:700;color:var(--text-main);margin-bottom:1rem;letter-spacing:0.01em;">Avant de commencer</div>
-      <div style="font-size:0.92rem;color:var(--text-muted);line-height:1.85;margin-bottom:2.2rem;">
-        Ferme les yeux quelques secondes.<br>
-        Pose une main sur ton ventre. Respire.<br><br>
-        <em style="color:var(--accent);">Qu'est-ce que tu ressens là, maintenant ?</em>
-      </div>
-      <div style="display:flex;flex-direction:column;align-items:center;gap:14px;">
-        <button onclick="renderGameThemeSelect()" style="padding:13px 28px;border-radius:var(--radius-lg);border:1.5px solid var(--accent);background:rgba(200,184,154,0.1);color:var(--accent);font-size:0.97rem;font-weight:700;font-family:inherit;cursor:pointer;width:100%;max-width:260px;">
-          Je suis prêt →
-        </button>
-        <button onclick="renderGameThemeSelect()" style="background:none;border:none;color:var(--text-faint);font-size:0.8rem;font-family:inherit;cursor:pointer;text-decoration:underline;padding:4px 8px;">
-          Passer
-        </button>
-      </div>
-    </div>`;
+  renderGameThemeSelect();
 }
 
 // Étape 2 : choix du thème avec badges "Recommandé"
 function renderGameThemeSelect(){
   const grid=document.getElementById("home-themes-grid");
   if(!grid)return;
-  gameDeckId=null;gameDeckQueue=[];gameDeckIdx=0;gameDeckSession=[];gameDeckSkipped.clear();
+  gameDeckId=null;gameDeckChapterId=null;gameDeckQueue=[];gameDeckIdx=0;gameDeckSession=[];gameDeckSkipped.clear();
 
   const priorityTopics=(currentProfile&&currentProfile.priorityTopics)||[];
 
@@ -6330,7 +6336,7 @@ function renderGameThemeSelect(){
     const isRecommended=priorityTopics.length>0&&themeDataAll.some(d=>priorityTopics.includes(d.cat));
     const borderCol=isRecommended?'rgba(200,184,154,0.55)':'var(--border-md)';
     const bgCol=isRecommended?'rgba(200,184,154,0.07)':'var(--surface)';
-    html+=`<div onclick="gameDeckStart('${theme.id}')" style="cursor:pointer;padding:16px 14px;border-radius:var(--radius-lg);border:1px solid ${borderCol};background:${bgCol};transition:all 0.18s;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden;"
+    html+=`<div onclick="renderGameChapterSelect('${theme.id}')" style="cursor:pointer;padding:16px 14px;border-radius:var(--radius-lg);border:1px solid ${borderCol};background:${bgCol};transition:all 0.18s;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden;"
       onmouseenter="this.style.borderColor='var(--accent)';this.style.background='rgba(200,184,154,0.1)'"
       onmouseleave="this.style.borderColor='${borderCol}';this.style.background='${bgCol}'">
       ${isRecommended?`<div style="position:absolute;top:7px;right:7px;font-size:7.5px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);background:rgba(200,184,154,0.18);padding:2px 6px;border-radius:20px;border:1px solid rgba(200,184,154,0.3);">✦ Recommandé</div>`:''}
@@ -6363,11 +6369,104 @@ function renderGameThemeSelect(){
   grid.innerHTML=html;
 }
 
-function gameDeckStart(themeId){
+// Étape 2b : choix du chapitre dans un thème
+function renderGameChapterSelect(themeId){
+  const grid=document.getElementById("home-themes-grid");
+  if(!grid)return;
+  const theme=SCAN_THEMES.find(t=>t.id===themeId);
+  if(!theme)return;
+
+  const wids=workedIds();
+  const ess=buildEssentialsSet();
+
+  // Construit les essentials du thème (pp d'être prioritaires)
+  const essWords=new Set(theme.chapters.flatMap(ch=>ch.essentials||[]));
+  const essCards=DATA.filter(d=>{
+    if(wids.has(d.id)||( pinnedIds&&pinnedIds.has(d.id)))return false;
+    const word=d.text.toLowerCase()
+      .replace(/^je suis /,"").replace(/^je me sens /,"")
+      .replace(/^je me /,"").replace(/^j'ai été /,"")
+      .replace(/^j'(?:ai|étais) /,"").trim().split(" ")[0];
+    return essWords.has(word);
+  });
+
+  let html=`<div style="max-width:540px;width:100%;margin:0 auto;">`;
+
+  // Header
+  html+=`<div style="display:flex;align-items:center;gap:10px;margin-bottom:1.5rem;">
+    <button onclick="renderGameThemeSelect()" style="background:none;border:none;color:var(--text-muted);font-size:1.1rem;cursor:pointer;padding:4px 6px;border-radius:8px;font-family:inherit;">←</button>
+    <div style="font-size:1.5rem;">${theme.icon}</div>
+    <div style="font-size:1rem;font-weight:700;color:var(--text);">${theme.title}</div>
+  </div>`;
+
+  // Chapitre 0 : Essentiels
+  const essRemaining=essCards.length;
+  const essTotal=essWords.size;
+  const essPct=essTotal>0?Math.round(((essTotal-essRemaining)/essTotal)*100):0;
+  html+=`<div onclick="gameDeckStart('${themeId}','__essentials__')" style="cursor:pointer;padding:14px 16px;border-radius:var(--radius-lg);border:1px solid rgba(200,184,154,0.5);background:rgba(200,184,154,0.07);transition:all 0.18s;display:flex;align-items:center;gap:14px;margin-bottom:0.75rem;"
+    onmouseenter="this.style.borderColor='var(--accent)';this.style.background='rgba(200,184,154,0.12)'"
+    onmouseleave="this.style.borderColor='rgba(200,184,154,0.5)';this.style.background='rgba(200,184,154,0.07)'">
+    <div style="font-size:1.3rem;">✦</div>
+    <div style="flex:1;">
+      <div style="font-size:0.88rem;font-weight:700;color:var(--accent);">Essentiels</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:4px;">
+        <div style="flex:1;height:3px;background:var(--surface3);border-radius:2px;overflow:hidden;">
+          <div style="height:100%;width:${essPct}%;background:var(--accent);border-radius:2px;"></div>
+        </div>
+        <div style="font-size:10px;color:var(--text-faint);white-space:nowrap;">${essRemaining} carte${essRemaining!==1?'s':''}</div>
+      </div>
+    </div>
+    <div style="font-size:1rem;color:var(--text-faint);opacity:0.5;">›</div>
+  </div>`;
+
+  // Chapitres du thème
+  theme.chapters.forEach((ch,i)=>{
+    const chWords=new Set(ch.ids||[]);
+    const chCards=DATA.filter(d=>{
+      if(wids.has(d.id)||(pinnedIds&&pinnedIds.has(d.id)))return false;
+      const word=d.text.toLowerCase()
+        .replace(/^je suis /,"").replace(/^je me sens /,"")
+        .replace(/^je me /,"").replace(/^j'ai été /,"")
+        .replace(/^j'(?:ai|étais) /,"").trim().split(" ")[0];
+      return chWords.has(word);
+    });
+    const chRemaining=chCards.length;
+    const chTotal=(ch.ids||[]).length;
+    const chPct=chTotal>0?Math.round(((chTotal-chRemaining)/chTotal)*100):0;
+    html+=`<div onclick="gameDeckStart('${themeId}','ch_${i}')" style="cursor:pointer;padding:12px 16px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);transition:all 0.18s;display:flex;align-items:center;gap:14px;margin-bottom:6px;"
+      onmouseenter="this.style.borderColor='var(--accent)';this.style.background='rgba(200,184,154,0.05)'"
+      onmouseleave="this.style.borderColor='var(--border-md)';this.style.background='var(--surface)'">
+      <div style="flex:1;">
+        <div style="font-size:0.85rem;font-weight:600;color:var(--text);">${ch.title||('Chapitre '+(i+1))}</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:4px;">
+          <div style="flex:1;height:2px;background:var(--surface3);border-radius:2px;overflow:hidden;">
+            <div style="height:100%;width:${chPct}%;background:var(--accent);border-radius:2px;opacity:0.6;"></div>
+          </div>
+          <div style="font-size:10px;color:var(--text-faint);white-space:nowrap;">${chRemaining} carte${chRemaining!==1?'s':''}</div>
+        </div>
+      </div>
+      <div style="font-size:1rem;color:var(--text-faint);opacity:0.5;">›</div>
+    </div>`;
+  });
+
+  html+=`</div>`;
+  grid.innerHTML=html;
+}
+
+function gameDeckStart(themeId, chapterId){
   gameDeckId=themeId;
+  gameDeckChapterId=chapterId||null;
   gameDeckIdx=0;
   gameDeckSession=[];
   // On NE reset PAS gameDeckSkipped ici — il persiste entre relances pour éviter les répétitions
+
+  const ess=buildEssentialsSet();
+  // Tri : essentials en premier (mélangés entre eux), puis les autres (mélangés entre eux)
+  function sortByEssential(arr){
+    const core=arr.filter(d=>isEssentialCard(d,ess)).sort(()=>Math.random()-0.5);
+    const rest=arr.filter(d=>!isEssentialCard(d,ess)).sort(()=>Math.random()-0.5);
+    return [...core,...rest];
+  }
 
   if(themeId==="__all__"){
     // Shuffle de tout — exclure worked, pinned ET skippés cette session
@@ -6377,29 +6476,52 @@ function gameDeckStart(themeId){
     if(all.length===0){
       gameDeckSkipped.clear();
       const allFresh=DATA.filter(d=>!wids.has(d.id)&&!(pinnedIds&&pinnedIds.has(d.id)));
-      gameDeckQueue=[...allFresh].sort(()=>Math.random()-0.5).slice(0,15);
+      gameDeckQueue=sortByEssential(allFresh).slice(0,15);
     } else {
-      gameDeckQueue=[...all].sort(()=>Math.random()-0.5).slice(0,15);
+      gameDeckQueue=sortByEssential(all).slice(0,15);
     }
   } else {
     const theme=SCAN_THEMES.find(t=>t.id===themeId);
     if(!theme)return;
-    // Utilise les essentials (pp seul, niveau enfant) pour le jeu de cartes thématique
-    // Exclure également les skippés cette session
-    const ids=new Set(gameDeckIdsForTheme(theme, true));
-    const filtered=DATA.filter(d=>ids.has(d.id)&&!gameDeckSkipped.has(d.id));
-    // Si tout skippé dans ce thème, reset et recommencer
+
+    // Détermine les mots-clés selon le chapitre choisi
+    let targetWords;
+    if(!chapterId||chapterId==="__essentials__"){
+      // Essentials du thème (pp d'être prioritaires)
+      targetWords=new Set(theme.chapters.flatMap(ch=>ch.essentials||[]));
+    } else if(chapterId.startsWith("ch_")){
+      const chIdx=parseInt(chapterId.replace("ch_",""),10);
+      const ch=theme.chapters[chIdx];
+      if(!ch)return;
+      targetWords=new Set(ch.ids||[]);
+    } else {
+      // Fallback : tous les ids du thème (essentials first)
+      targetWords=new Set(theme.chapters.flatMap(ch=>ch.ids||[]));
+    }
+
+    // Filtre DATA sur ces mots-clés en excluant worked/pinned/skippés
+    const wids=workedIds();
+    function matchesWords(d){
+      const word=d.text.toLowerCase()
+        .replace(/^je suis /,"").replace(/^je me sens /,"")
+        .replace(/^je me /,"").replace(/^j'ai été /,"")
+        .replace(/^j'(?:ai|étais) /,"").trim().split(" ")[0];
+      return targetWords.has(word);
+    }
+    const filtered=DATA.filter(d=>matchesWords(d)&&!wids.has(d.id)&&!(pinnedIds&&pinnedIds.has(d.id))&&!gameDeckSkipped.has(d.id));
+
     if(filtered.length===0){
       gameDeckSkipped.clear();
-      gameDeckQueue=DATA.filter(d=>ids.has(d.id)).sort(()=>Math.random()-0.5);
+      const allForTarget=DATA.filter(d=>matchesWords(d)&&!wids.has(d.id)&&!(pinnedIds&&pinnedIds.has(d.id)));
+      gameDeckQueue=sortByEssential(allForTarget);
     } else {
-      gameDeckQueue=filtered.sort(()=>Math.random()-0.5);
+      gameDeckQueue=sortByEssential(filtered);
     }
   }
 
   if(gameDeckQueue.length===0){
     showToast("Plus de cartes dans ce deck — bien joué 🎉");
-    renderGameInline();
+    renderGameChapterSelect(themeId)||renderGameInline();
     return;
   }
 
@@ -6450,6 +6572,8 @@ function gameDeckRenderPlay(){
         <!-- décor coin card -->
         <div style="position:absolute;top:14px;left:16px;font-size:11px;color:var(--text-faint);opacity:0.35;font-weight:700;letter-spacing:1px;text-transform:uppercase;" id="gd-cat-tl"></div>
         <div style="position:absolute;bottom:14px;right:16px;font-size:11px;color:var(--text-faint);opacity:0.35;font-weight:700;letter-spacing:1px;text-transform:uppercase;transform:rotate(180deg);" id="gd-cat-br"></div>
+        <!-- indicateur pp d'être prioritaire -->
+        <div id="gd-core-dot" style="position:absolute;top:14px;right:14px;width:7px;height:7px;border-radius:50%;background:var(--accent);opacity:0;box-shadow:0 0 6px var(--accent);transition:opacity 0.3s;"></div>
         <!-- icon déco -->
         <div id="gd-card-icon" style="font-size:2.2rem;margin-bottom:1rem;opacity:0.6;"></div>
         <!-- texte identité -->
@@ -6469,8 +6593,8 @@ function gameDeckRenderPlay(){
       <button id="gd-btn-skip" onclick="gameDeckAction('skip')" style="flex:1;max-width:160px;display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 8px;border-radius:14px;border:1px solid var(--border-md);background:var(--surface);color:var(--text-muted);font-family:inherit;cursor:pointer;transition:all 0.15s;"
         onmouseenter="this.style.borderColor='var(--border-strong)';this.style.color='var(--text)'"
         onmouseleave="this.style.borderColor='var(--border-md)';this.style.color='var(--text-muted)'">
-        <span style="font-size:1.6rem;">→</span>
-        <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;">Passer</span>
+        <span style="font-size:1.6rem;">〜</span>
+        <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;">Pas maintenant</span>
       </button>
       <button id="gd-btn-yes" onclick="gameDeckAction('pin')" style="flex:1;max-width:160px;display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 8px;border-radius:14px;border:1px solid rgba(200,184,154,0.5);background:rgba(200,184,154,0.07);color:var(--accent);font-family:inherit;cursor:pointer;transition:all 0.15s;"
         onmouseenter="this.style.borderColor='var(--accent)';this.style.background='rgba(200,184,154,0.14)'"
@@ -6619,6 +6743,13 @@ function gameDeckShowCard(){
   const bar=document.getElementById("gd-bar");
   if(bar)bar.style.width=`${(gameDeckIdx/total)*100}%`;
 
+  // Indicateur pp d'être prioritaire
+  const coreDot=document.getElementById("gd-core-dot");
+  if(coreDot){
+    const ess=buildEssentialsSet();
+    coreDot.style.opacity=isEssentialCard(entry,ess)?"0.85":"0";
+  }
+
   // Dots historique
   gameDeckUpdateDots();
 
@@ -6689,7 +6820,7 @@ function gameDeckShowResults(){
 
   // Header résultat
   html+=`<div style="text-align:center;margin-bottom:1.75rem;">
-    <div style="font-size:2.2rem;margin-bottom:0.6rem;">${toAdd>0?"🎯":skipped.length>0?"→":"✌️"}</div>
+    <div style="font-size:2.2rem;margin-bottom:0.6rem;">${toAdd>0?"🎯":"〜"}</div>
     <div style="font-size:1.15rem;font-weight:700;margin-bottom:0.3rem;">${theme.icon} ${theme.title}</div>
     <div style="font-size:0.85rem;color:var(--text-muted);">
       ${total} carte${total!==1?"s":""} jouée${total!==1?"s":""}
@@ -6702,44 +6833,29 @@ function gameDeckShowResults(){
 
   if(toAdd>0){
     // C'est moi
-    if(pinned.length>0){
-      html+=`<div style="margin-bottom:1.25rem;">
-        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:0.65rem;">✓ C'est moi (${pinned.length})</div>`;
-      html+=pinned.map(s=>`<div style="padding:11px 14px;border-radius:var(--radius);border:1px solid rgba(200,184,154,0.35);background:rgba(200,184,154,0.06);font-size:0.9rem;font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:8px;"><span style="color:var(--accent);">✓</span><span>${s.text}</span></div>`).join("");
-      html+=`</div>`;
-    }
-
-    // Passées
-    if(skipped.length>0){
-      html+=`<div style="margin-bottom:1.25rem;">
-        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-faint);margin-bottom:0.65rem;">→ Passé (${skipped.length})</div>`;
-      html+=skipped.map(s=>`<div style="padding:9px 14px;border-radius:var(--radius);border:1px solid var(--border);background:transparent;font-size:0.85rem;color:var(--text-muted);margin-bottom:5px;display:flex;align-items:center;gap:8px;opacity:0.65;"><span>→</span><span>${s.text}</span></div>`).join("");
-      html+=`</div>`;
-    }
+    html+=`<div style="margin-bottom:1.5rem;">`;
+    html+=pinned.map(s=>`<div style="padding:11px 14px;border-radius:var(--radius);border:1px solid rgba(200,184,154,0.35);background:rgba(200,184,154,0.06);font-size:0.9rem;font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:8px;"><span style="color:var(--accent);">✓</span><span>${s.text}</span></div>`).join("");
+    html+=`</div>`;
 
     // CTA principal
-    html+=`<div style="display:flex;flex-direction:column;gap:10px;margin-top:1.5rem;">
+    html+=`<div style="display:flex;flex-direction:column;gap:10px;margin-top:0.5rem;">
       <button id="gd-validate" style="padding:14px 24px;border-radius:var(--radius-lg);border:1px solid var(--accent);background:rgba(200,184,154,0.1);color:var(--accent);font-size:1rem;font-weight:700;font-family:inherit;cursor:pointer;width:100%;">📌 Ajouter à ma liste (${toAdd}) →</button>
       <div style="display:flex;gap:10px;">
-        <button onclick="gameDeckStart('${gameDeckId||"__all__"}')" style="flex:1;padding:11px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text-muted);font-size:0.85rem;font-family:inherit;cursor:pointer;">↻ Suite</button>
+        <button onclick="gameDeckStart('${gameDeckId||"__all__"}',gameDeckChapterId||undefined)" style="flex:1;padding:11px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text-muted);font-size:0.85rem;font-family:inherit;cursor:pointer;">↻ Suite</button>
         <button onclick="setHomeTab('pinned')" style="flex:1;padding:11px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text-muted);font-size:0.85rem;font-family:inherit;cursor:pointer;">📌 Ma liste</button>
       </div>
     </div>`;
   } else {
-    // Rien sélectionné
-    if(skipped.length>0){
-      html+=`<div style="margin-bottom:1.5rem;">
-        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-faint);margin-bottom:0.65rem;">→ Passé (${skipped.length})</div>`;
-      html+=skipped.map(s=>`<div style="padding:9px 14px;border-radius:var(--radius);border:1px solid var(--border);background:transparent;font-size:0.85rem;color:var(--text-muted);margin-bottom:5px;display:flex;align-items:center;gap:8px;opacity:0.65;"><span>→</span><span>${s.text}</span></div>`).join("");
-      html+=`</div>`;
-    } else {
-      html+=`<div style="text-align:center;padding:1.5rem 0;color:var(--text-muted);font-size:0.9rem;margin-bottom:1.5rem;">
-        Aucune identité sélectionnée cette fois.<br><span style="font-size:0.8rem;opacity:0.7;">C'est normal — ça viendra avec le temps.</span>
-      </div>`;
-    }
-    html+=`
+    // Rien retenu — message neutre, pas de liste des passées
+    html+=`<div style="text-align:center;padding:2rem 0 1.5rem;">
+      <div style="font-size:2rem;margin-bottom:0.75rem;">〜</div>
+      <div style="font-size:0.9rem;color:var(--text-muted);line-height:1.7;">
+        Rien ne résonnait là.<br>
+        <span style="font-size:0.82rem;opacity:0.6;">Ce n'est pas un résultat — c'est une information.</span>
+      </div>
+    </div>
     <div style="display:flex;gap:10px;justify-content:center;">
-      <button onclick="gameDeckStart('${gameDeckId||"__all__"}')" style="padding:12px 20px;border-radius:var(--radius-lg);border:1px solid var(--accent);background:rgba(200,184,154,0.07);color:var(--accent);font-size:0.9rem;font-weight:600;font-family:inherit;cursor:pointer;">↻ Suite</button>
+      <button onclick="gameDeckStart('${gameDeckId||"__all__"}',gameDeckChapterId||undefined)" style="padding:12px 20px;border-radius:var(--radius-lg);border:1px solid var(--accent);background:rgba(200,184,154,0.07);color:var(--accent);font-size:0.9rem;font-weight:600;font-family:inherit;cursor:pointer;">↻ Suite</button>
       <button onclick="setHomeTab('pinned')" style="padding:12px 20px;border-radius:var(--radius-lg);border:1px solid var(--border-md);background:var(--surface);color:var(--text);font-size:0.9rem;font-family:inherit;cursor:pointer;">📌 Ma liste</button>
     </div>`;
   }
